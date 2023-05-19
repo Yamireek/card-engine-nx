@@ -13,7 +13,8 @@ export type PrintedProps =
   | QuestProps
   | AttachmentProps
   | LocationProps
-  | TreacheryProps;
+  | TreacheryProps
+  | BackSideProps;
 
 export type HeroProps = {
   type: "hero";
@@ -89,10 +90,8 @@ export type TreacheryProps = {
   name: string;
 };
 
-export type CardDefinition = {
-  face: PrintedProps;
-  back: PrintedProps;
-  orientation: Orientation;
+export type BackSideProps = {
+  type: "back";
 };
 
 export type Tokens = Record<Token, number>;

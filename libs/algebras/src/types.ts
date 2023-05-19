@@ -12,4 +12,5 @@ export type Types = {
   CardTarget: Flavor<unknown, "CardTarget">;
   CardNum: Flavor<unknown, "CardNum">;
   Modifier: Flavor<unknown, "Modifier">;
+  Ability: Flavor<unknown, "Ability">;
 };
