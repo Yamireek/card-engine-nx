@@ -1,4 +1,4 @@
-import { Flavor } from "@card-engine-nx/basic-types";
+import { Flavor } from "@card-engine-nx/basic";
 
 export type Types = {
   Action: Flavor<unknown, "Action">;

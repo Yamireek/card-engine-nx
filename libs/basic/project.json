@@ -1,14 +1,14 @@
 {
-  "name": "basic-types",
+  "name": "basic",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/basic-types/src",
+  "sourceRoot": "libs/basic/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/basic-types/**/*.ts"]
+        "lintFilePatterns": ["libs/basic/**/*.ts"]
       }
     }
   },
