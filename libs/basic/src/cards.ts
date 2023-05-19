@@ -1,4 +1,4 @@
-import { Orientation, Sphere, Trait } from "./enums";
+import { Mark, Orientation, Sphere, Token, Trait } from "./enums";
 import { Flavor } from "./flavors";
 
 export type CardId = Flavor<number, "CardId">;
@@ -94,3 +94,7 @@ export type CardDefinition = {
   back: PrintedProps;
   orientation: Orientation;
 };
+
+export type Tokens = Record<Token, number>;
+
+export type Marks = Record<Mark, boolean>;
