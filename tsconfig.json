@@ -16,6 +16,7 @@
     "paths": {
       "@card-engine-nx/algebras": ["libs/algebras/src/index.ts"],
       "@card-engine-nx/basic": ["libs/basic/src/index.ts"],
+      "@card-engine-nx/engine": ["libs/engine/src/index.ts"],
       "@card-engine-nx/state": ["libs/state/src/index.ts"]
     },
     "jsx": "react-jsx",
