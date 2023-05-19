@@ -22,6 +22,17 @@ export const gameExecutor: Alg<Types & ExecutorTypes> = {
   seq(a) {
     throw new Error();
   },
+  addCard(def) {
+    throw new Error();
+  },
   card: cardExecutor,
   player: playerExecutor,
+  ability: {
+    ability1() {
+      throw new Error();
+    },
+    ability2() {
+      throw new Error();
+    },
+  },
 };

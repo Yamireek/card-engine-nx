@@ -1,8 +1,27 @@
-import { CardId, CardNumProp, PlayerId } from "@card-engine-nx/basic";
+import {
+  CardId,
+  CardNumProp,
+  Orientation,
+  PlayerId,
+  PrintedProps,
+} from "@card-engine-nx/basic";
 import { Types } from "./types";
+
+export type CardDefinition<T extends Types = Types> = {
+  front: PrintedProps & { abilities: T["Ability"][] };
+  back: PrintedProps & { abilities: T["Ability"][] };
+  orientation: Orientation;
+};
 
 export interface GameAlg<T extends Types> {
   seq(a: T["Action"][]): T["Action"];
+
+  addCard(def: CardDefinition<T>): T["Action"];
+}
+
+export interface AbilityAlg<T extends Types> {
+  ability1(): T["Ability"];
+  ability2(): T["Ability"];
 }
 
 export interface ExprAlg<T extends Types> {
@@ -40,4 +59,5 @@ export type Alg<T extends Types> = GameAlg<T> &
   ExprAlg<T> & {
     player: PlayerAlg<T>;
     card: CardAlg<T>;
+    ability: AbilityAlg<T>;
   };
