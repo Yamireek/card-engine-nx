@@ -1,4 +1,4 @@
-import { CardId, CardNumProp, PlayerId } from "@card-engine-nx/basic-types";
+import { CardId, CardNumProp, PlayerId } from "@card-engine-nx/basic";
 import { Types } from "./types";
 
 export interface GameAlg<T extends Types> {
