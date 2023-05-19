@@ -13,7 +13,9 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "@card-engine-nx/basic-types": ["libs/basic-types/src/index.ts"]
+    },
     "jsx": "react-jsx",
     "allowJs": false,
     "esModuleInterop": false,
