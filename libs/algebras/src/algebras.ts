@@ -29,7 +29,6 @@ export interface CardAlg<T extends Types> {
   action(target: T["CardTarget"], action: T["CardAction"]): T["Action"];
 
   seq(a: T["CardAction"][]): T["CardAction"];
-  incAtt(amount: T["Num"]): T["CardAction"];
 
   each(): T["CardTarget"];
   id(id: CardId): T["CardTarget"];
