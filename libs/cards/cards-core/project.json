@@ -1,5 +1,5 @@
 {
-  "name": "cards-cards-core",
+  "name": "cards-core",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/cards/cards-core/src",
   "projectType": "library",
