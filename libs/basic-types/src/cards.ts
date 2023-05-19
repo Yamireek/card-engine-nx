@@ -1,4 +1,9 @@
 import { Orientation, Sphere, Trait } from "./enums";
+import { Flavor } from "./flavors";
+
+export type CardId = Flavor<number, "CardId">;
+
+export type CardNumProp = "attack" | "defense" | "willpower";
 
 export type PrintedProps =
   | HeroProps
