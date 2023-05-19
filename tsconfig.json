@@ -14,6 +14,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@card-engine-nx/algebras": ["libs/algebras/src/index.ts"],
       "@card-engine-nx/basic-types": ["libs/basic-types/src/index.ts"]
     },
     "jsx": "react-jsx",
