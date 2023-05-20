@@ -14,11 +14,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@card-engine-nx/algebras": ["libs/algebras/src/index.ts"],
       "@card-engine-nx/basic": ["libs/basic/src/index.ts"],
-      "@card-engine-nx/cards/cards-core": [
-        "libs/cards/cards-core/src/index.ts"
-      ],
+      "@card-engine-nx/cards/core": ["libs/cards/core/src/index.ts"],
       "@card-engine-nx/engine": ["libs/engine/src/index.ts"],
       "@card-engine-nx/state": ["libs/state/src/index.ts"]
     },

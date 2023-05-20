@@ -1,14 +1,14 @@
 {
-  "name": "cards-core",
+  "name": "core",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/cards/cards-core/src",
+  "sourceRoot": "libs/cards/core/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/cards/cards-core/**/*.ts"]
+        "lintFilePatterns": ["libs/cards/core/**/*.ts"]
       }
     }
   },

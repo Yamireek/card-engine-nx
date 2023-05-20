@@ -1,3 +1,1 @@
-export * from './game';
-export * from './card';
-export * from './player';
+export const test = 'engine';

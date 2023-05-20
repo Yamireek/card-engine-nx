@@ -1,5 +1,5 @@
-import { Action } from "./action";
-import { State } from "./state";
+import { State } from './state';
+import { Action } from './types';
 
 export function createState(program?: Action): State {
   return {
@@ -16,7 +16,7 @@ export function createState(program?: Action): State {
       victoryDisplay: { cards: [], stack: true },
     },
     next: program ? [program] : [],
-    triggers: { end_of_phase: [], end_of_round: [] },    
+    triggers: { end_of_phase: [], end_of_round: [] },
     nextId: 1,
     cards: {},
     effects: [],
