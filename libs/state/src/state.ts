@@ -1,8 +1,8 @@
-import { CardId, GameZoneType, Phase, PlayerId } from "@card-engine-nx/basic";
-import { CardState } from "./card";
-import { PlayerState } from "./player";
-import { ZoneState } from "./zone";
-import { Action } from "./objects";
+import { CardId, GameZoneType, Phase, PlayerId } from '@card-engine-nx/basic';
+import { CardState } from './card';
+import { PlayerState } from './player';
+import { ZoneState } from './zone';
+import { Action } from './types';
 
 export type State = {
   round: number;
@@ -23,6 +23,6 @@ export type State = {
     options: Array<{ title: string; action: Action; image?: string }>;
   };
   next: Action[];
-  result?: "win" | "lost";
+  result?: 'win' | 'lost';
   nextId: CardId;
 };

@@ -1,4 +1,4 @@
-import { CardType, Mark, Orientation, Sphere, Token, Trait } from './enums';
+import { CardType, Mark, Sphere, Token, Trait } from './enums';
 import { Flavor } from './flavors';
 
 export type CardId = Flavor<number, 'CardId'>;
