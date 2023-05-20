@@ -1,24 +1,5 @@
 {
   "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2020", "dom"],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@card-engine-nx/basic": ["libs/basic/src/index.ts"],
-      "@card-engine-nx/cards/core": ["libs/cards/core/src/index.ts"],
-      "@card-engine-nx/engine": ["libs/engine/src/index.ts"],
-      "@card-engine-nx/state": ["libs/state/src/index.ts"]
-    },
     "jsx": "react-jsx",
     "allowJs": false,
     "esModuleInterop": false,
@@ -36,6 +17,10 @@
       "path": "./tsconfig.spec.json"
     }
   ],
-  "compileOnSave": false,
-  "exclude": ["node_modules", "tmp"]
+  "extends": "./tsconfig.base.json",
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }
