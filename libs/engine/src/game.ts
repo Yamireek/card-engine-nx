@@ -1,7 +1,7 @@
-import { Alg, Types } from "@card-engine-nx/algebras";
-import { ExecutorTypes } from "./types";
-import { cardExecutor } from "./card";
-import { playerExecutor } from "./player";
+import { Alg, Types } from '@card-engine-nx/algebras';
+import { cardExecutor } from './card';
+import { playerExecutor } from './player';
+import { ExecutorTypes, createCardState } from '@card-engine-nx/state';
 
 export const gameExecutor: Alg<Types & ExecutorTypes> = {
   and(v) {
@@ -23,16 +23,32 @@ export const gameExecutor: Alg<Types & ExecutorTypes> = {
     throw new Error();
   },
   addCard(def) {
-    throw new Error();
+    return (state) => {
+      const id = state.nextId;
+      state.cards[id] = createCardState(id, def, 'front', 'game');
+    };
   },
   card: cardExecutor,
   player: playerExecutor,
   ability: {
-    ability1() {
-      throw new Error();
+    selfModifier(params) {
+      return (state, card) => {
+        card.modifiers.push({
+          applied: false,
+          description: params.description,
+          modifier: params.modifier,
+        });
+      };
     },
-    ability2() {
-      throw new Error();
+  },
+  mod: {
+    increment(prop, amount) {
+      return (state, card, ctx) => {
+        const value = card.props[prop];
+        if (value !== undefined) {
+          card.props[prop] = value + amount(state, ctx);
+        }
+      };
     },
   },
 };

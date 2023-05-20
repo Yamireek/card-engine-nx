@@ -1,9 +1,7 @@
-import { Alg, Types } from "@card-engine-nx/algebras";
-
-export type Modifier = <T extends Types>(alg: Alg<T>) => T["Modifier"];
+import { Modifier } from './types';
 
 export type ModifierState = {
   description: string;
   modifier: Modifier;
-  until: "end_of_phase" | "end_of_round";
+  until?: 'end_of_phase' | 'end_of_round';
 };

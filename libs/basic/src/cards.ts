@@ -1,23 +1,24 @@
-import { Mark, Orientation, Sphere, Token, Trait } from "./enums";
-import { Flavor } from "./flavors";
+import { CardType, Mark, Orientation, Sphere, Token, Trait } from './enums';
+import { Flavor } from './flavors';
 
-export type CardId = Flavor<number, "CardId">;
+export type CardId = Flavor<number, 'CardId'>;
 
-export type CardNumProp = "attack" | "defense" | "willpower";
+export type CardNumProp = 'attack' | 'defense' | 'willpower';
 
-export type PrintedProps =
-  | HeroProps
-  | AllyProps
-  | EnemyProps
-  | EventProps
-  | QuestProps
-  | AttachmentProps
-  | LocationProps
-  | TreacheryProps
-  | BackSideProps;
+export type PrintedProps = {
+  type: CardType;
+  name?: string;
+  threatCost?: number;
+  willpower?: number;
+  attack?: number;
+  defense?: number;
+  hitPoints?: number;
+  traits?: Trait[];
+  sphere?: Sphere;
+};
 
 export type HeroProps = {
-  type: "hero";
+  type: 'hero';
   name: string;
   threatCost: number;
   willpower: number;
@@ -29,7 +30,7 @@ export type HeroProps = {
 };
 
 export type AllyProps = {
-  type: "ally";
+  type: 'ally';
   name: string;
   unique: boolean;
   cost: number;
@@ -42,14 +43,14 @@ export type AllyProps = {
 };
 
 export type EventProps = {
-  type: "event";
+  type: 'event';
   name: string;
   cost: number;
   sphere: Sphere;
 };
 
 export type AttachmentProps = {
-  type: "attachment";
+  type: 'attachment';
   name: string;
   unique: boolean;
   cost: number;
@@ -58,7 +59,7 @@ export type AttachmentProps = {
 };
 
 export type LocationProps = {
-  type: "location";
+  type: 'location';
   name: string;
   threat: number;
   questPoints: number;
@@ -67,7 +68,7 @@ export type LocationProps = {
 };
 
 export type EnemyProps = {
-  type: "enemy";
+  type: 'enemy';
   name: string;
   engagement: number;
   threat: number;
@@ -79,19 +80,19 @@ export type EnemyProps = {
 };
 
 export type QuestProps = {
-  type: "quest";
+  type: 'quest';
   name: string;
   sequence: number;
   questPoints: number;
 };
 
 export type TreacheryProps = {
-  type: "treachery";
+  type: 'treachery';
   name: string;
 };
 
 export type BackSideProps = {
-  type: "back";
+  type: 'back';
 };
 
 export type Tokens = Record<Token, number>;
