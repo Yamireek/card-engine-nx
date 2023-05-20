@@ -2,7 +2,7 @@ import { CardId, GameZoneType, Phase, PlayerId } from "@card-engine-nx/basic";
 import { CardState } from "./card";
 import { PlayerState } from "./player";
 import { ZoneState } from "./zone";
-import { Action } from "./action";
+import { Action } from "./objects";
 
 export type State = {
   round: number;

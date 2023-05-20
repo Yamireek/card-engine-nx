@@ -40,13 +40,13 @@ export function toView(state: State): View {
     for (const card of values(view.cards)) {
       for (const ability of card.abilities.filter((a) => !a.applied)) {
         allApplied = false;
-        ability.ability(state, card);
+        ability.ability.apply(state, card);
         ability.applied = true;
       }
 
       for (const modifier of card.modifiers.filter((m) => !m.applied)) {
         allApplied = false;
-        modifier.modifier(state, card, { selfCard: card.id });
+        modifier.modifier.apply(state, card, { selfCard: card.id });
         modifier.applied = true;
       }
     }

@@ -1,11 +1,24 @@
-import { CardId, Side, PlayerId, Marks, Tokens } from '@card-engine-nx/basic';
+import {
+  CardId,
+  Side,
+  PlayerId,
+  Marks,
+  Tokens,
+  Orientation,
+  PrintedProps,
+} from '@card-engine-nx/basic';
 import { ModifierState } from './modifier';
-import { CardDefinition, Types } from '@card-engine-nx/algebras';
-import { ExecutorTypes } from './types';
+import { Ability } from './types';
+
+export type CardDefinition = {
+  front: PrintedProps & { abilities: Ability[] };
+  back: PrintedProps & { abilities: Ability[] };
+  orientation: Orientation;
+};
 
 export type CardState = {
   id: CardId;
-  definition: CardDefinition<Types & ExecutorTypes>;
+  definition: CardDefinition;
   sideUp: Side;
   tapped: boolean;
   token: Tokens;
