@@ -1,9 +1,9 @@
-import { PlayerAlg, Types } from "@card-engine-nx/algebras";
-import { ExecutorTypes } from "./types";
+import { PlayerAlg, Types } from '@card-engine-nx/algebras';
+import { ExecutorTypes } from '@card-engine-nx/state';
 
 export const playerExecutor: PlayerAlg<Types & ExecutorTypes> = {
   action(target, action) {
-    throw new Error();
+    return (state) => action(state, target(state));
   },
   draw(amount) {
     throw new Error();
@@ -12,7 +12,7 @@ export const playerExecutor: PlayerAlg<Types & ExecutorTypes> = {
     throw new Error();
   },
   id(id) {
-    throw new Error();
+    return () => [id];
   },
   incThreat(amount) {
     throw new Error();
