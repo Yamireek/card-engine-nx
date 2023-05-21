@@ -9,7 +9,7 @@ const ratio = 430 / 600;
 export const CardDisplay = (props: {
   orientation: Orientation;
   height: number;
-  tapped: boolean;
+  tapped?: boolean;
   image: string;
   onMouseEnter?: () => void;
   onClick?: () => void;
