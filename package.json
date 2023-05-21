@@ -14,6 +14,8 @@
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@fontsource/material-icons": "^5.0.0",
+    "@fontsource/roboto": "^5.0.0",
     "@mui/material": "^5.13.1",
     "@swc/helpers": "~0.5.0",
     "@types/lodash": "^4.14.194",
