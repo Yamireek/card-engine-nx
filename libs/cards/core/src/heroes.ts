@@ -1,4 +1,3 @@
-import { ability, card, expr, modifier, target } from '@card-engine-nx/engine';
 import { hero } from '@card-engine-nx/state';
 
 export const gimli = hero(
@@ -12,11 +11,20 @@ export const gimli = hero(
     traits: ['dwarf', 'noble', 'warrior'],
     sphere: 'tactics',
   },
-  ability.selfModifier({
+  {
     description: 'Gimli gets +1 [attack] for each damage token on him.',
-    modifier: modifier.increment(
-      'attack',
-      expr.card(target.card.self(), card.expr.count('damage'))
-    ),
-  })
+    selfModifier: {
+      increment: {
+        prop: 'attack',
+        amount: {
+          fromCard: {
+            card: 'self',
+            value: {
+              tokens: 'damage',
+            },
+          },
+        },
+      },
+    },
+  }
 );
