@@ -1,9 +1,14 @@
-import { Token } from '@card-engine-nx/basic';
-import { CardExp } from '@card-engine-nx/state';
+import { CardId } from '@card-engine-nx/basic';
+import { State, CardNumberExpr } from '@card-engine-nx/state';
 
-export function count(token: Token): CardExp<number> {
-  return {
-    print: () => `count("${token}")`,
-    calc: (state, card) => card.token[token],
-  };
+export function calculateCardExpr(
+  expr: CardNumberExpr,
+  state: State,
+  cardId: CardId
+): number {
+  if (expr.tokens) {
+    return state.cards[cardId].token[expr.tokens];
+  }
+
+  throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);
 }

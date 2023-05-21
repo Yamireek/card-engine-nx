@@ -1,61 +1,37 @@
-import { CardId, PlayerId } from '@card-engine-nx/basic';
-import { CardState, State } from '.';
-import { CardView } from './view';
+import { CardId, Token } from '@card-engine-nx/basic';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
-export type Action<T = void> = {
-  print(): string;
-  execute(state: State): T;
-  result(state: State): ActionResult;
-};
+export type Action = 'empty';
 
-export type CardAction = {
-  print(): string;
-  execute(state: State, card: CardState): void;
-  result(state: State): ActionResult;
-};
+export type CardAction = 'empty' | { dealDamage?: number; heal?: number };
 
 export type Ability = {
   description: string;
-  print(): string;
-  apply(state: State, card: CardView): void;
+  selfModifier?: Modifier;
+  action?: Action;
 };
 
 export type Modifier = {
-  print(): string;
-  apply(state: State, card: CardView, ctx: Context): void;
+  increment?: {
+    prop: 'attack' | 'defense';
+    amount: NumberExpr;
+  };
 };
 
-export type Exp<T> = {
-  print(): string;
-  calc(state: State, ctx: Context): T;
+export type NumberExpr =
+  | number
+  | {
+      fromCard?: {
+        card: CardTarget;
+        value: CardNumberExpr;
+      };
+    };
+
+export type CardNumberExpr = {
+  tokens: Token;
 };
 
-export type CardExp<T> = {
-  print(): string;
-  calc(state: State, card: CardState): T;
-};
-
-export type CardTarget = {
-  print(): string;
-  get(state: State, ctx: Context): CardId[];
-};
+export type CardTarget = 'self' | 'each';
 
 export type Context = { selfCard?: CardId };
-
-export type ExecutorTypes = {
-  Action: (state: State, ctx: Context) => void;
-  Bool: () => boolean;
-  Num: (state: State, ctx: Context) => number;
-
-  PlayerAction: (state: State, playerId: PlayerId[]) => void;
-  PlayerTarget: (state: State) => PlayerId[];
-
-  CardAction: (state: State, cardIds: CardId[]) => void;
-  CardTarget: (state: State, ctx: Context) => CardId[];
-  CardNum: (state: State, card: CardState, ctx: Context) => number;
-
-  Ability: Ability;
-  Modifier: Modifier;
-};

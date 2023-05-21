@@ -1,15 +1,24 @@
-import { CardTarget, CardExp, Exp } from '@card-engine-nx/state';
+import { State, NumberExpr, Context } from '@card-engine-nx/state';
+import { getTargetedCard } from './card/target';
+import { calculateCardExpr } from './card/expr';
 
-export function card<T>(target: CardTarget, expr: CardExp<T>): Exp<T> {
-  return {
-    print: () => `expr(${target.print()}, ${expr.print()})`,
-    calc(state, ctx) {
-      const ids = target.get(state, ctx);
-      if (ids.length !== 1) {
-        throw new Error('Expected exactly one card');
-      } else {
-        return expr.calc(state, state.cards[ids[0]]);
-      }
-    },
-  };
+export function calculateExpr(
+  expr: NumberExpr,
+  state: State,
+  ctx: Context
+): number {
+  if (typeof expr === 'number') {
+    return expr;
+  }
+
+  if (expr.fromCard) {
+    const ids = getTargetedCard(expr.fromCard.card, state, ctx);
+    if (ids.length === 1) {
+      return calculateCardExpr(expr.fromCard.value, state, ids[0]);
+    } else {
+      throw new Error('multiple card');
+    }
+  }
+
+  throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);
 }

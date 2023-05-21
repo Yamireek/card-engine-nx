@@ -4,7 +4,6 @@ import {
   CardDefinition,
   State,
   createState,
-  toView,
 } from '@card-engine-nx/state';
 import { core } from '@card-engine-nx/cards/core';
 import {
@@ -14,13 +13,18 @@ import {
   PlayerZoneType,
   Side,
 } from '@card-engine-nx/basic';
+import {
+  createView,
+  executeAction,
+  executeCardAction,
+} from '@card-engine-nx/engine';
 
 export function nextStep(state: State) {
   const action = state.next.shift();
   if (!action) {
     return;
   } else {
-    action.execute(state);
+    executeAction(action);
   }
 }
 
@@ -119,12 +123,12 @@ export class GameEngine {
 
   addPlayer() {
     if (!this.state.players.A) {
-      this.do(addPlayer());
+      addPlayer().execute(this.state);
       return new PlayerProxy(this.state, 'A');
     }
 
     if (!this.state.players.B) {
-      this.do(addPlayer());
+      addPlayer().execute(this.state);
       return new PlayerProxy(this.state, 'B');
     }
 
@@ -180,12 +184,12 @@ export class CardProxy {
   constructor(private state: State, private id: CardId) {}
 
   update(cardAction: CardAction) {
-    cardAction.execute(this.state, this.state.cards[this.id]);
+    executeCardAction(cardAction, this.state.cards[this.id]);
     advanceToChoiceState(this.state);
   }
 
   get props() {
-    const view = toView(this.state);
+    const view = createView(this.state);
     return view.cards[this.id].props;
   }
 
@@ -209,39 +213,18 @@ export class PlayerProxy {
 
 it("Gimli's attack bonus", () => {
   const game = new GameEngine();
-  const gimli = game.addHero(core.hero.gimli);  
+  const gimli = game.addHero(core.hero.gimli);
   expect(gimli.props.attack).toEqual(2);
-  gimli.update(dealDamage(1));
+  gimli.update({ dealDamage: 1 });
   expect(gimli.props.attack).toEqual(3);
-  gimli.update(heal(1));
+  gimli.update({ heal: 1 });
   expect(gimli.props.attack).toEqual(2);
 });
 
-export function dealDamage(amount: number): CardAction {
-  return {
-    print: () => `dealDamage(${amount})`,
-    execute: (state, card) => (card.token.damage += amount),
-    result: () => {
-      throw new Error('Not implemented');
-    },
-  };
-}
-
-export function heal(amount: number): CardAction {
-  return {
-    print: () => `heal(${amount})`,
-    execute: (state, card) =>
-      (card.token.damage = Math.max(0, card.token.damage - amount)),
-    result: () => {
-      throw new Error('Not implemented');
-    },
-  };
-}
-
-export function addPlayer(): Action {
+export function addPlayer() {
   return {
     print: () => 'addPlayer()',
-    execute: (state) => {
+    execute: (state: State) => {
       const playerId = !state.players.A
         ? 'A'
         : !state.players.B
@@ -275,14 +258,10 @@ export type Zone =
     }
   | { owner: PlayerId; type: PlayerZoneType };
 
-export function addCard(
-  definition: CardDefinition,
-  side: Side,
-  zone: Zone
-): Action<CardId> {
+export function addCard(definition: CardDefinition, side: Side, zone: Zone) {
   return {
     print: () => 'addCard()',
-    execute: (state) => {
+    execute: (state: State) => {
       const id = state.nextId;
       state.cards[id] = {
         id,
