@@ -21,6 +21,8 @@ export const CardDisplay = (props: {
   const height =
     props.orientation === 'portrait' ? props.height : props.height * ratio;
 
+  const zoom = props.height / 600;
+
   return (
     <div
       style={{
@@ -43,74 +45,48 @@ export const CardDisplay = (props: {
       }}
     >
       <img src={props.image} width={width} height={height} alt="" />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginLeft: '0%',
-          marginTop: '3%',
-          minWidth: '70%',
-          justifyContent: 'space-evenly',
-          position: 'absolute',
-          top: 0,
-        }}
-      >
-        {props.mark?.questing && (
-          <div
-            style={{
-              position: 'relative',
-              width: 20,
-              height: 20,
-              margin: 1,
-              backgroundColor: 'white',
-            }}
-          >
-            <img
-              src="http://hallofbeorn.com/Images/willpower-med.png"
-              width={20}
-              height={20}
-              alt=""
-            />
-          </div>
-        )}
-        {(props.mark?.attacking || props.mark?.attacked) && (
-          <div
-            style={{
-              position: 'relative',
-              width: 20,
-              height: 20,
-              margin: 1,
-              backgroundColor: 'white',
-            }}
-          >
-            <img
-              src="http://hallofbeorn.com/Images/attack-small.png"
-              width={20}
-              height={20}
-              alt=""
-            />
-          </div>
-        )}
-        {props.mark?.defending && (
-          <div
-            style={{
-              position: 'relative',
-              width: 20,
-              height: 20,
-              margin: 1,
-              backgroundColor: 'white',
-            }}
-          >
-            <img
-              src="http://hallofbeorn.com/Images/defense-small.png"
-              width={20}
-              height={20}
-              alt=""
-            />
-          </div>
-        )}
-      </div>
+      {props.mark?.questing && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 107 * zoom,
+            left: 82 * zoom,
+            width: 28 * zoom,
+            height: 32 * zoom,
+            backgroundColor: 'yellow',
+            opacity: 0.5,
+          }}
+        />
+      )}
+
+      {(props.mark?.attacked || props.mark?.attacking) && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 152 * zoom,
+            left: 82 * zoom,
+            width: 28 * zoom,
+            height: 32 * zoom,
+            backgroundColor: 'yellow',
+            opacity: 0.5,
+          }}
+        />
+      )}
+
+      {props.mark?.defending && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 202 * zoom,
+            left: 82 * zoom,
+            width: 28 * zoom,
+            height: 32 * zoom,
+            backgroundColor: 'yellow',
+            opacity: 0.5,
+          }}
+        />
+      )}
+
       {props.token && (
         <div
           style={{
