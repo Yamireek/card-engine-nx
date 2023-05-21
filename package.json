@@ -6,10 +6,14 @@
     "start": "nx serve",
     "build": "nx build",
     "test": "vitest --ui",
-    "lint": "nx run-many --all --target=lint --verbose"
+    "lint": "nx run-many --all --target=lint --verbose",
+    "storybook": "nx storybook ui"
   },
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.13.1",
     "@swc/helpers": "~0.5.0",
     "@types/lodash": "^4.14.194",
     "lodash": "^4.17.21",
