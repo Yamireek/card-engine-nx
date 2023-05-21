@@ -4,7 +4,7 @@ import resourceImage from './../images/resource.png';
 import progressImage from './../images/progress.png';
 import { Card, CardActionArea, CardContent } from '@mui/material';
 
-const ratio = 429 / 600;
+const ratio = 430 / 600;
 
 export const CardDisplay = (props: {
   orientation: Orientation;
@@ -27,13 +27,13 @@ export const CardDisplay = (props: {
   return (
     <Card
       elevation={24}
-      style={{
-        border: props.onClick ? '2px solid yellow' : '2px solid white',
+      sx={{
         height,
         width,
         position: 'relative',
         transform: props.tapped ? 'rotate(45deg)' : 'initial',
         transition: 'transform 0.25s ease 0s',
+        boxShadow: props.onClick ? '0px 0px 20px yellow' : '0px 0px 5px black',
       }}
       onMouseEnter={() => {
         if (props.onMouseEnter) {
