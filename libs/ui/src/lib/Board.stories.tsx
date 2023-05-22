@@ -13,7 +13,7 @@ const Story: Meta<typeof Board> = {
       control: { type: 'range', min: 300, max: 5000, step: 5 },
     },
     rotate: {
-      control: { type: 'range', min: 0, max: 90, step: 1 },
+      control: { type: 'range', min: 0, max: 120, step: 1 },
     },
   },
 };
