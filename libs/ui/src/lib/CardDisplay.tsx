@@ -1,8 +1,8 @@
-import { Marks, Orientation, Tokens } from "@card-engine-nx/basic";
-import damageImage from "./../images/damage.png";
-import resourceImage from "./../images/resource.png";
-import progressImage from "./../images/progress.png";
-import { Card, CardActionArea, CardContent } from "@mui/material";
+import { Marks, Orientation, Tokens } from '@card-engine-nx/basic';
+import damageImage from './../images/damage.png';
+import resourceImage from './../images/resource.png';
+import progressImage from './../images/progress.png';
+import { Card, CardActionArea, CardContent } from '@mui/material';
 
 export const cardRatio = 430 / 600;
 
@@ -12,15 +12,16 @@ export const CardDisplay = (props: {
   tapped?: boolean;
   image: string;
   onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
   onClick?: () => void;
   mark?: Marks;
   token?: Tokens;
 }) => {
   const width =
-    props.orientation === "portrait" ? props.height * cardRatio : props.height;
+    props.orientation === 'portrait' ? props.height * cardRatio : props.height;
 
   const height =
-    props.orientation === "portrait" ? props.height : props.height * cardRatio;
+    props.orientation === 'portrait' ? props.height : props.height * cardRatio;
 
   const zoom = props.height / 600;
 
@@ -30,14 +31,19 @@ export const CardDisplay = (props: {
       sx={{
         height,
         width,
-        position: "relative",
-        transform: props.tapped ? "rotate(45deg)" : "initial",
-        transition: "transform 0.25s ease 0s",
-        boxShadow: props.onClick ? "0px 0px 20px yellow" : "0px 0px 5px black",
+        position: 'relative',
+        transform: props.tapped ? 'rotate(45deg)' : 'initial',
+        transition: 'transform 0.25s ease 0s',
+        boxShadow: props.onClick ? '0px 0px 20px yellow' : '0px 0px 5px black',
       }}
       onMouseEnter={() => {
         if (props.onMouseEnter) {
           props.onMouseEnter();
+        }
+      }}
+      onMouseLeave={() => {
+        if (props.onMouseLeave) {
+          props.onMouseLeave();
         }
       }}
       onClick={() => {
@@ -52,12 +58,12 @@ export const CardDisplay = (props: {
           {props.mark?.questing && (
             <div
               style={{
-                position: "absolute",
+                position: 'absolute',
                 top: 107 * zoom,
                 left: 82 * zoom,
                 width: 28 * zoom,
                 height: 32 * zoom,
-                backgroundColor: "yellow",
+                backgroundColor: 'yellow',
                 opacity: 0.5,
               }}
             />
@@ -66,12 +72,12 @@ export const CardDisplay = (props: {
           {(props.mark?.attacked || props.mark?.attacking) && (
             <div
               style={{
-                position: "absolute",
+                position: 'absolute',
                 top: 152 * zoom,
                 left: 82 * zoom,
                 width: 28 * zoom,
                 height: 32 * zoom,
-                backgroundColor: "yellow",
+                backgroundColor: 'yellow',
                 opacity: 0.5,
               }}
             />
@@ -80,12 +86,12 @@ export const CardDisplay = (props: {
           {props.mark?.defending && (
             <div
               style={{
-                position: "absolute",
+                position: 'absolute',
                 top: 202 * zoom,
                 left: 82 * zoom,
                 width: 28 * zoom,
                 height: 32 * zoom,
-                backgroundColor: "yellow",
+                backgroundColor: 'yellow',
                 opacity: 0.5,
               }}
             />
@@ -94,21 +100,21 @@ export const CardDisplay = (props: {
           {props.token && (
             <div
               style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                marginLeft: "30%",
-                marginTop: "20%",
-                minWidth: "70%",
-                justifyContent: "space-evenly",
-                position: "absolute",
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                marginLeft: '30%',
+                marginTop: '20%',
+                minWidth: '70%',
+                justifyContent: 'space-evenly',
+                position: 'absolute',
                 top: 0,
               }}
             >
               {props.token.progress ? (
                 <div
                   style={{
-                    position: "relative",
+                    position: 'relative',
                     width: 45,
                     height: 45,
                     margin: 1,
@@ -117,12 +123,12 @@ export const CardDisplay = (props: {
                   <img src={progressImage} width={42} height={42} alt="" />
                   <div
                     style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      color: "white",
-                      fontSize: "x-large",
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: 'white',
+                      fontSize: 'x-large',
                     }}
                   >
                     {props.token.progress}
@@ -132,7 +138,7 @@ export const CardDisplay = (props: {
               {props.token.resources ? (
                 <div
                   style={{
-                    position: "relative",
+                    position: 'relative',
                     width: 40,
                     height: 40,
                     margin: 2,
@@ -141,12 +147,12 @@ export const CardDisplay = (props: {
                   <img src={resourceImage} width={42} height={42} alt="" />
                   <div
                     style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      color: "white",
-                      fontSize: "x-large",
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: 'white',
+                      fontSize: 'x-large',
                     }}
                   >
                     {props.token.resources}
@@ -157,7 +163,7 @@ export const CardDisplay = (props: {
               {props.token.damage ? (
                 <div
                   style={{
-                    position: "relative",
+                    position: 'relative',
                     width: 40,
                     height: 40,
                     margin: 2,
@@ -166,12 +172,12 @@ export const CardDisplay = (props: {
                   <img src={damageImage} width={42} height={42} alt="" />
                   <div
                     style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      color: "white",
-                      fontSize: "x-large",
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      color: 'white',
+                      fontSize: 'x-large',
                     }}
                   >
                     {props.token.damage}
