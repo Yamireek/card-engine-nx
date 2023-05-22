@@ -12,6 +12,7 @@
   },
   "private": true,
   "dependencies": {
+    "@cutting/use-get-parent-size": "^2.0.1",
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@fontsource/material-icons": "^5.0.0",
@@ -23,6 +24,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-flip-toolkit": "^7.1.0",
+    "react-use": "^17.4.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

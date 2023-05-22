@@ -1,53 +1,59 @@
+import { useMeasure } from "react-use";
 import { CardDisplay, cardRatio } from "./CardDisplay";
 
 export const HandLayout = (props: {
   cardWidth: number;
-  cards: number;
-  spread: number;
+  cardImages: string[];
   rotate: number;
 }) => {
-  const cards = Array.from(Array(props.cards), (_, index) => index);
-  const spread = props.spread * props.cardWidth;
+  const [ref, { width }] = useMeasure();
   const rotate = props.rotate;
+  const cardHeight = props.cardWidth / cardRatio;
+  const spread = Math.min(
+    ((width - props.cardWidth) * 0.9) / props.cardImages.length,
+    props.cardWidth
+  );
 
   return (
     <div
+      ref={ref as any}
       style={{
-        display: "flex",
-        width: props.cardWidth,
-        margin: "auto",
-        left: 0,
-        right: 0,
+        width: "100%",
+        height: cardHeight,
       }}
     >
-      {cards.map((c, i) => (
-        <div
-          style={{
-            position: "absolute",
-            transform: `translateX(${
-              spread * i - ((cards.length - 1) * spread) / 2
-            }px) rotate(${rotate * i - ((cards.length - 1) * rotate) / 2}deg)`,
-            transition: "transform 0.25s ease 0s",
-          }}
-        >
-          <CardDisplay
-            height={props.cardWidth / cardRatio}
-            image="https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/Aragorn.jpg"
-            mark={{
-              attacking: true,
-              attacked: true,
-              defending: true,
-              questing: true,
+      <div
+        style={{
+          position: "relative",
+          width: props.cardWidth,
+          margin: "auto",
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+        }}
+      >
+        {props.cardImages.map((image, i) => (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              transform: `translateX(${
+                spread * i - ((props.cardImages.length - 1) * spread) / 2
+              }px) rotate(${
+                rotate * i - ((props.cardImages.length - 1) * rotate) / 2
+              }deg)`,
+              transition: "transform 0.25s ease 0s",
             }}
-            token={{
-              damage: 1,
-              progress: 1,
-              resources: 1,
-            }}
-            orientation="portrait"
-          />
-        </div>
-      ))}
+          >
+            <CardDisplay
+              height={props.cardWidth / cardRatio}
+              image={image}
+              orientation="portrait"
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
