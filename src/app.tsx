@@ -1,31 +1,51 @@
-import { CardDisplay, NextStepButton } from '@card-engine-nx/ui';
+import { Board, CardDisplay, NextStepButton } from '@card-engine-nx/ui';
+import {
+  CssBaseline,
+} from '@mui/material';
+import { HandLayout } from 'libs/ui/src/lib/HandLayout';
+import { cardImages } from 'libs/ui/src/lib/HandLayout.stories';
+
+const drawerWidth = 430;
 
 export const App = () => {
   return (
-    <>
-      <CardDisplay
-        height={600}
-        image="https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/Aragorn.jpg"
-        mark={{
-          attacking: true,
-          attacked: true,
-          defending: true,
-          questing: true,
+    <div
+      style={{
+        width: '100vw',
+        height: '100vh',
+        padding: 0,
+        margin: 0,
+        overflow: 'hidden',
+      }}
+    >
+      <CssBaseline />
+
+      <Board perspective={500} rotate={30} />
+
+      <div style={{ position: 'absolute', top: 0 }}>
+        <CardDisplay
+          height={600}
+          image={cardImages[0]}
+          orientation="portrait"
+        />
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
+          bottom: -100,
+          width: '100%',
         }}
-        token={{
-          damage: 1,
-          progress: 1,
-          resources: 1,
-        }}
-        tapped
-        orientation="portrait"
-      />
+      >
+        <HandLayout cardImages={cardImages} cardWidth={200} rotate={2} />
+      </div>
+
       <NextStepButton
-        title="xx"
+        title="Next step"
         onClick={() => {
-          return;
+          console.log('next');
         }}
       />
-    </>
+    </div>
   );
 };

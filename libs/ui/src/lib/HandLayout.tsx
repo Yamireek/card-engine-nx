@@ -1,5 +1,6 @@
-import { useMeasure } from "react-use";
-import { CardDisplay, cardRatio } from "./CardDisplay";
+import { useMeasure } from 'react-use';
+import { CardDisplay, cardRatio } from './CardDisplay';
+import { useState } from 'react';
 
 export const HandLayout = (props: {
   cardWidth: number;
@@ -13,20 +14,21 @@ export const HandLayout = (props: {
     ((width - props.cardWidth) * 0.9) / props.cardImages.length,
     props.cardWidth
   );
+  const [detail, setDetail] = useState<number | undefined>(undefined);
 
   return (
     <div
       ref={ref as any}
       style={{
-        width: "100%",
+        width: '100%',
         height: cardHeight,
       }}
     >
       <div
         style={{
-          position: "relative",
+          position: 'relative',
           width: props.cardWidth,
-          margin: "auto",
+          margin: 'auto',
           left: 0,
           right: 0,
           top: 0,
@@ -37,19 +39,30 @@ export const HandLayout = (props: {
           <div
             key={i}
             style={{
-              position: "absolute",
+              position: 'absolute',
               transform: `translateX(${
                 spread * i - ((props.cardImages.length - 1) * spread) / 2
               }px) rotate(${
                 rotate * i - ((props.cardImages.length - 1) * rotate) / 2
-              }deg)`,
-              transition: "transform 0.25s ease 0s",
+              }deg) ${
+                i === detail
+                  ? `translateY(-25px) translateX(-25px) rotate(${-(
+                      rotate * i -
+                      ((props.cardImages.length - 1) * rotate) / 2
+                    )}deg)`
+                  : ''
+              }`,
+              transition: 'transform 0.25s ease 0s',
             }}
           >
             <CardDisplay
               height={props.cardWidth / cardRatio}
               image={image}
               orientation="portrait"
+              onMouseEnter={() => {
+                setDetail(i);
+              }}
+              onMouseLeave={() => setDetail(undefined)}
             />
           </div>
         ))}
