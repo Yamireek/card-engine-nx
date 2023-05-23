@@ -19,6 +19,7 @@
       "@card-engine-nx/cards/core": ["libs/cards/core/src/index.ts"],
       "@card-engine-nx/engine": ["libs/engine/src/index.ts"],
       "@card-engine-nx/state": ["libs/state/src/index.ts"],
+      "@card-engine-nx/store": ["libs/store/src/index.ts"],
       "@card-engine-nx/ui": ["libs/ui/src/index.ts"]
     }
   },

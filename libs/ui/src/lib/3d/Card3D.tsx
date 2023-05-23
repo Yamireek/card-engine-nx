@@ -1,7 +1,7 @@
 import { Orientation } from '@card-engine-nx/basic';
-import { Point3D } from './types';
 import { CardDisplay } from '../CardDisplay';
 import { rotate, rotateX, rotateZ, transform, translate } from './utils';
+import { Point3D, Images } from '@card-engine-nx/store';
 
 export type Card3DProps = {
   id: number;
@@ -9,10 +9,7 @@ export type Card3DProps = {
   orientation: Orientation;
   position: Point3D;
   rotation: Point3D;
-  image: {
-    front: string;
-    back: string;
-  };
+  image: Images;
   animationDuration: string;
 };
 

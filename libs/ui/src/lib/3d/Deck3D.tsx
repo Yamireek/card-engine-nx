@@ -1,13 +1,22 @@
 import { Orientation } from '@card-engine-nx/basic';
 import { CSSProperties } from '@mui/material/styles/createMixins';
 import { CardDisplay } from '../CardDisplay';
-import { Point } from './types';
+import { Point } from '@card-engine-nx/store';
 
 const background: CSSProperties = {
   backgroundColor: 'gray',
   backgroundImage:
     'linear-gradient(0, rgba(255, 255, 255, .07) 50%, transparent 50%), linear-gradient(0, rgba(255, 255, 255, .13) 50%, transparent 50%), linear-gradient(0, transparent 50%, rgba(255, 255, 255, .17) 50%), linear-gradient(0, transparent 50%, rgba(255, 255, 255, .19) 50%)',
   backgroundSize: '13px 13px, 29px 29px, 37px 37px, 53px 53px',
+};
+
+export type Deck3DProps = {
+  id: number;
+  size: { width: number; height: number; cards: number };
+  orientation: Orientation;
+  position: Point;
+  image: string;
+  animationDuration: string;
 };
 
 export const Deck3D = (deck: Deck3DProps) => {
@@ -81,13 +90,4 @@ export const Deck3D = (deck: Deck3DProps) => {
       />
     </div>
   );
-};
-
-export type Deck3DProps = {
-  id: number;
-  size: { width: number; height: number; cards: number };
-  orientation: Orientation;
-  position: Point;
-  image: string;
-  animationDuration: string;
 };

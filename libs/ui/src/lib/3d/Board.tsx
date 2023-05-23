@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Point3D } from './types';
+import { Point3D } from '../../../../store/src/types';
 import { Deck3D, Deck3DProps } from './Deck3D';
 import { Card3D, Card3DProps } from './Card3D';
 import { cardImages } from './../storybook/cardImages';
