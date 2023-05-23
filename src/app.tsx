@@ -1,7 +1,6 @@
 import { Board, CardDisplay, NextStepButton } from '@card-engine-nx/ui';
 import { CssBaseline } from '@mui/material';
 import { HandLayout } from 'libs/ui/src/lib/HandLayout';
-import { cardImages } from 'libs/ui/src/lib/HandLayout.stories';
 
 const drawerWidth = 430;
 
@@ -18,9 +17,13 @@ export const App = () => {
     >
       <CssBaseline />
 
-      <Board perspective={1000} rotate={15} />
-
-      <div style={{ position: 'absolute', top: 0 }}>
+      <Board
+        perspective={500}
+        rotate={20}
+        width={1608 * 3}
+        height={1620 * 3}
+      />
+      {/* <div style={{ position: 'absolute', top: 0 }}>
         <CardDisplay
           height={600}
           image={cardImages[0]}
@@ -38,12 +41,13 @@ export const App = () => {
         <HandLayout cardImages={cardImages} cardWidth={200} rotate={2} />
       </div>
 
-      <NextStepButton
+      */}
+      {/* <NextStepButton
         title="Next step"
         onClick={() => {
           console.log('next');
         }}
-      />
+      /> */}
     </div>
   );
 };
