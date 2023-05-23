@@ -2,10 +2,16 @@ import { useState } from 'react';
 import { Point3D } from './types';
 import { Deck3D, Deck3DProps } from './Deck3D';
 import { Card3D, Card3DProps } from './Card3D';
-import { cardImages } from './../HandLayout.stories';
+import { cardImages } from './../storybook/cardImages';
 import boardImage from './../../images/board.jpg';
 
-export const Board = (props: { perspective: number; rotate: number }) => {
+export const Board = (props: {
+  perspective: number;
+  rotate: number;
+  width: number;
+  height: number;
+  imageUrl: string;
+}) => {
   const perspective = props.perspective;
   const rotate = props.rotate;
 
@@ -123,9 +129,8 @@ export const Board = (props: { perspective: number; rotate: number }) => {
       <div
         id="scene"
         style={{
-          width: 4000,
-          height: 4000,
-          border: '5px solid green',
+          width: props.width,
+          height: props.height,          
           transformOrigin: 'top left',
           transform: `rotateX(${rotate}deg) rotateZ(0deg) translate3d(${
             translate.x
@@ -136,10 +141,10 @@ export const Board = (props: { perspective: number; rotate: number }) => {
         <img
           style={{
             position: 'absolute',
-            transform: 'scale(5)',
-            transformOrigin: 'top left',
+            width: '100%',
+            height: '100%',
           }}
-          src={boardImage}
+          src={props.imageUrl}
           alt=""
         />
 

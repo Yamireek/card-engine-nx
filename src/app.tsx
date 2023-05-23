@@ -1,11 +1,7 @@
-import { Board, CardDisplay, NextStepButton, Point3D } from '@card-engine-nx/ui';
+import { Board, CardDisplay, NextStepButton } from '@card-engine-nx/ui';
 import { CssBaseline } from '@mui/material';
 import { HandLayout } from 'libs/ui/src/lib/HandLayout';
 import { cardImages } from 'libs/ui/src/lib/HandLayout.stories';
-import boardImage from './../libs/ui/src/images/board.jpg';
-import { useEffect, useState } from 'react';
-import { Deck3DProps, Deck3D } from './Deck3D';
-import { Card3DProps, Card3D } from '../libs/ui/src/lib/3d/Card3D';
 
 const drawerWidth = 430;
 

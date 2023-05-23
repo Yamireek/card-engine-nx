@@ -1,5 +1,6 @@
 import type { Meta } from '@storybook/react';
 import { Board } from './Board';
+import boardImage from './../../images/board.jpg';
 
 const Story: Meta<typeof Board> = {
   component: Board,
@@ -7,6 +8,9 @@ const Story: Meta<typeof Board> = {
   args: {
     perspective: 400,
     rotate: 45,
+    width: 1608 * 3,
+    height: 1620 * 3,
+    imageUrl: boardImage,
   },
   argTypes: {
     perspective: {
