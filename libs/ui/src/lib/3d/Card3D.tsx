@@ -1,6 +1,7 @@
 import { Orientation } from '@card-engine-nx/basic';
 import { Point3D } from './types';
 import { CardDisplay } from '../CardDisplay';
+import { rotate, rotateX, rotateZ, transform, translate } from './utils';
 
 export type Card3DProps = {
   id: number;
@@ -15,7 +16,7 @@ export type Card3DProps = {
   animationDuration: string;
 };
 
-export const Card3D = (props: Card3DProps) => {
+export const Card3D = (props: Card3DProps & { transform?: string }) => {
   return (
     <div
       key={props.id}
@@ -24,9 +25,12 @@ export const Card3D = (props: Card3DProps) => {
         height: props.size.height,
         width: props.size.width,
         transformOrigin: 'center center',
-        transform: `
-          translateX(${props.position.x}px) translateY(${props.position.y}px) translateZ(${props.position.z}px) 
-          rotateX(${props.rotation.x}deg) rotateY(${props.rotation.y}deg) rotateZ(${props.rotation.z}deg)`,
+        transform:
+          props.transform ??
+          transform(
+            translate(props.position.x, props.position.y, props.position.z),
+            rotate(props.rotation.x, props.rotation.y, props.rotation.z)
+          ),
         transitionProperty: 'transform',
         transitionDuration: props.animationDuration,
         transformStyle: 'preserve-3d',
@@ -47,7 +51,7 @@ export const Card3D = (props: Card3DProps) => {
       <div
         style={{
           position: 'absolute',
-          transform: `rotateX(180deg) rotateZ(180deg)`,
+          transform: transform(rotateX(180), rotateZ(180)),
           backfaceVisibility: 'hidden',
         }}
       >

@@ -35,6 +35,7 @@ export const CardDisplay = (props: {
         transform: props.tapped ? 'rotate(45deg)' : 'initial',
         transition: 'transform 0.25s ease 0s',
         boxShadow: props.onClick ? '0px 0px 20px yellow' : '0px 0px 5px black',
+        backgroundColor: 'black',
       }}
       onMouseEnter={() => {
         if (props.onMouseEnter) {
