@@ -54,7 +54,12 @@ export const CardDisplay = (props: {
     >
       <CardActionArea disabled={!props.onClick}>
         <CardContent sx={{ padding: 0 }}>
-          <img src={props.image} width={width} height={height} alt="" />
+          <img
+            src={props.image}
+            width={width === 430 ? undefined : width}
+            height={height === 600 ? undefined : height}
+            alt=""
+          />
           {props.mark?.questing && (
             <div
               style={{
