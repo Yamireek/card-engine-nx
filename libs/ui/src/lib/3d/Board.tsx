@@ -188,7 +188,7 @@ export const Board = (props: {
                   orientation={d.orientation}
                   position={d.position}
                   rotation={d.rotation}
-                  size={d.size}
+                  scale={d.scale}
                   // transform={transform(
                   //   translate(-215, -300, 0),
                   //   translate(-offset.x, -offset.y, offset.z - perspective),

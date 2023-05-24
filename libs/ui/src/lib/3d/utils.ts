@@ -23,5 +23,9 @@ export function translateZ(x: number) {
 }
 
 export function transform(...items: string[]) {
-  return items.join(' ');
+  return items.join(" ");
+}
+
+export function scale(amount: number) {
+  return `scale(${amount})`;
 }

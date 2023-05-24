@@ -40,17 +40,28 @@ export class ZoneModel extends Model({
   cards: prop<CardModel[]>(),
 }) {
   @computed
-  get slotSize(): Dimensions {
+  get cardScale(): number {
     const calculated = calculateItemMaxItemSize(
       this.size,
       cardSize,
       this.cards.length
     );
-    if (calculated.height >= 600) {
-      return cardSize;
+
+    const scale = calculated.height / cardSize.height;
+
+    if (scale >= 1) {
+      return 1;
     } else {
-      return calculated;
+      return scale;
     }
+  }
+
+  @computed
+  get cardSize(): Dimensions {
+    return {
+      height: this.cardScale * cardSize.height,
+      width: this.cardScale * cardSize.width,
+    };
   }
 }
 
@@ -88,22 +99,19 @@ export class CardModel extends Model({
 
   @computed
   get position(): Point3D {
-    const x = this.zone.size.width / this.zone.slotSize.width;
+    const x = this.zone.size.width / this.zone.cardSize.width;
     const width = Math.floor(x);
     return {
-      x: this.zone.location.x + this.zone.slotSize.width * (this.index % width),
+      x: this.zone.location.x + this.zone.cardSize.width * (this.index % width),
       y:
         this.zone.location.y +
-        this.zone.slotSize.height * Math.floor(this.index / width),
+        this.zone.cardSize.height * Math.floor(this.index / width),
       z: 0,
     };
   }
 
   @computed
-  get size(): Dimensions {
-    return {
-      width: this.zone.slotSize.width,
-      height: this.zone.slotSize.height,
-    };
+  get scale(): number {
+    return this.zone.cardScale;
   }
 }

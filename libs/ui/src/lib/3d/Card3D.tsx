@@ -1,11 +1,12 @@
 import { Orientation } from "@card-engine-nx/basic";
 import { CardDisplay } from "../CardDisplay";
-import { rotate, rotateX, rotateZ, transform, translate } from "./utils";
+import { rotate, rotateX, rotateZ, scale, transform, translate } from "./utils";
 import { Point3D, Images } from "@card-engine-nx/store";
+import { cardSize } from "libs/store/src/utils";
 
 export type Card3DProps = {
   id: string;
-  size: { width: number; height: number };
+  scale: number;
   orientation: Orientation;
   position: Point3D;
   rotation: Point3D;
@@ -19,13 +20,19 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
       key={props.id}
       style={{
         position: "absolute",
-        height: props.size.height,
-        width: props.size.width,
+        height: cardSize.height,
+        width: cardSize.width,
         transformOrigin: "center center",
         transform:
           props.transform ??
           transform(
-            translate(props.position.x, props.position.y, props.position.z),
+            translate(
+              props.position.x - cardSize.width / 2,
+              props.position.y - cardSize.height / 2,
+              props.position.z
+            ),
+            scale(props.scale),
+            translate(cardSize.width / 2, cardSize.height / 2,0),
             rotate(props.rotation.x, props.rotation.y, props.rotation.z)
           ),
         transitionProperty: "all",
@@ -42,7 +49,7 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
         }}
       >
         <CardDisplay
-          height={props.size.height}
+          scale={1}
           image={props.image.front}
           orientation={props.orientation}
         />
@@ -55,7 +62,7 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
         }}
       >
         <CardDisplay
-          height={props.size.height}
+          scale={1}
           image={props.image.back}
           orientation={props.orientation}
         />
