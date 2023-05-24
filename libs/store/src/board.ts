@@ -40,23 +40,6 @@ export class ZoneModel extends Model({
   size: prop<Dimensions>(),
   cards: prop<CardModel[]>(),
 }) {
-  // @computed
-  // get cardScale(): number {
-  //   const calculated = calculateItemMaxItemSize(
-  //     this.size,
-  //     cardSize,
-  //     this.cards.length
-  //   );
-
-  //   const scale = calculated.height / cardSize.height;
-
-  //   if (scale >= 1) {
-  //     return 1;
-  //   } else {
-  //     return scale;
-  //   }
-  // }
-
   @computed
   get cardSlotSize(): Dimensions {
     const targetSize: Dimensions = {
@@ -126,17 +109,36 @@ export class CardModel extends Model({
       this.zone.size.width / this.zone.cardSlotSize.width
     );
 
-    const spaceX = this.zone.cardSlotSize.width * 0.2;
-    const spaceY = this.zone.cardSlotSize.height * 0.2;
+    const column = this.index % columns;
+    const row = Math.floor(this.index / columns);
+
+    const rows = Math.floor(
+      this.zone.size.height / this.zone.cardSlotSize.height
+    );
+
+    const cardsInRow =
+      rows === row + 1
+        ? Math.floor(this.zone.cards.length % columns) === 0
+          ? columns
+          : Math.floor(this.zone.cards.length % columns)
+        : columns;
+
+    const spaceX =
+      this.zone.size.width - this.zone.cardSlotSize.width * cardsInRow;
+
+    const marginX = this.zone.cardSlotSize.width * 0.2;
+    const marginY = this.zone.cardSlotSize.height * 0.2;
+
     return {
       x:
         this.zone.location.x +
-        spaceX / 2 +
-        this.zone.cardSlotSize.width * (this.index % columns),
+        marginX / 2 +
+        +spaceX / 2 +
+        this.zone.cardSlotSize.width * column,
       y:
         this.zone.location.y +
-        spaceY / 2 +
-        this.zone.cardSlotSize.height * Math.floor(this.index / columns),
+        marginY / 2 +
+        this.zone.cardSlotSize.height * row,
       z: 0,
     };
   }

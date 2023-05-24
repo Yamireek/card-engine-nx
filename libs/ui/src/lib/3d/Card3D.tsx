@@ -1,8 +1,8 @@
-import { Orientation } from "@card-engine-nx/basic";
-import { CardDisplay } from "../CardDisplay";
-import { rotate, rotateX, rotateZ, scale, transform, translate } from "./utils";
-import { Point3D, Images } from "@card-engine-nx/store";
-import { cardSize } from "libs/store/src/utils";
+import { Orientation } from '@card-engine-nx/basic';
+import { CardDisplay } from '../CardDisplay';
+import { rotate, rotateX, rotateZ, scale, transform, translate } from './utils';
+import { Point3D, Images } from '@card-engine-nx/store';
+import { cardSize } from 'libs/store/src/utils';
 
 export type Card3DProps = {
   id: string;
@@ -19,10 +19,10 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
     <div
       key={props.id}
       style={{
-        position: "absolute",
+        position: 'absolute',
         height: cardSize.height,
         width: cardSize.width,
-        transformOrigin: "center center",
+        transformOrigin: 'center center',
         transform:
           props.transform ??
           transform(
@@ -32,20 +32,20 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
               props.position.z
             ),
             scale(props.scale),
-            translate(cardSize.width / 2, cardSize.height / 2,0),
+            translate(cardSize.width / 2, cardSize.height / 2, 0),
             rotate(props.rotation.x, props.rotation.y, props.rotation.z)
           ),
-        transitionProperty: "all",
-        transitionDuration: props.animationDuration || "0.5s",
-        transformStyle: "preserve-3d",
+        transitionProperty: 'all',
+        transitionDuration: props.animationDuration || '0.5s',
+        transformStyle: 'preserve-3d',
       }}
     >
       <div
         style={{
-          position: "absolute",
-          backfaceVisibility: "hidden",
-          width: "100%",
-          height: "100%",
+          position: 'absolute',
+          backfaceVisibility: 'hidden',
+          width: '100%',
+          height: '100%',
         }}
       >
         <CardDisplay
@@ -56,9 +56,9 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
       </div>
       <div
         style={{
-          position: "absolute",
+          position: 'absolute',
           transform: transform(rotateX(180), rotateZ(180)),
-          backfaceVisibility: "hidden",
+          backfaceVisibility: 'hidden',
         }}
       >
         <CardDisplay
