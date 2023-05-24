@@ -10,6 +10,12 @@ import {
 import { ModifierState } from './modifier';
 import { Ability } from './types';
 
+export type PlayerDeck = {
+  name: string;
+  heroes: CardDefinition[];
+  library: CardDefinition[];
+};
+
 export type CardDefinition = {
   front: PrintedProps & { abilities: Ability[] };
   back: PrintedProps & { abilities: Ability[] };

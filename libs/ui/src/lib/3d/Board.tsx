@@ -17,6 +17,7 @@ import { playerBack } from './../../images';
 import { cardSize, createBoardModel } from 'libs/store/src/utils';
 import { last } from 'lodash';
 import { createState } from '@card-engine-nx/state';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 export const Board = (props: {
   perspective: number;
@@ -30,64 +31,19 @@ export const Board = (props: {
   const rotate = props.rotate;
   const board = props.model;
 
-  const [offset, setTranslate] = useState<Point3D>({
-    x: -560,
-    y: -290,
-    z: perspective,
+  const [offset, setTranslate] = useLocalStorage<Point3D>('camera-offset', {
+    x: 0,
+    y: 0,
+    z: 100,
   });
 
-  console.log(offset);
+  // const [offset, setTranslate] = useState<Point3D>({
+  //   x: -920,
+  //   y: -1050,
+  //   z: 1210,
+  // });
 
-  // const board = useMemo(
-  //   () =>
-  //     new BoardModel({
-  //       height: props.height,
-  //       width: props.width,
-  //       zones: [
-  //         new ZoneModel({
-  //           cards: Array.from(Array(5).keys()).map(
-  //             (i) =>
-  //               new CardModel({
-  //                 id: i.toString(),
-  //                 images: {
-  //                   front: cardImages[0],
-  //                   back: cardImages[1],
-  //                 },
-  //                 orientation: "portrait",
-  //                 rotation: {
-  //                   x: 0,
-  //                   y: 0,
-  //                   z: 0,
-  //                 },
-  //                 attachments: [],
-  //               })
-  //           ),
-  //           location: { x: 0, y: 0 },
-  //           size: { width: 1000, height: 1000 },
-  //           orientation: "portrait",
-  //         }),
-  //         new ZoneModel({
-  //           cards: [],
-  //           location: { x: 1100, y: 0 },
-  //           size: { width: 1000, height: 1000 },
-  //           orientation: "portrait",
-  //         }),
-  //       ],
-  //       decks: [
-  //         new DeckModel({
-  //           cards: 60,
-  //           image: playerBack,
-  //           orientation: "portrait",
-  //           position: {
-  //             x: 2000,
-  //             y: 0,
-  //           },
-  //         }),
-  //       ],
-  //       cards: [],
-  //     }),
-  //   [props.height, props.width]
-  // );
+  console.log(offset);
 
   const moveOffset = (perspective - offset.z) / perspective;
 
