@@ -2,7 +2,6 @@ import { Marks, Orientation, Tokens } from '@card-engine-nx/basic';
 import damageImage from './../images/damage.png';
 import resourceImage from './../images/resource.png';
 import progressImage from './../images/progress.png';
-import { Card, CardActionArea, CardContent } from '@mui/material';
 import { scale } from './3d/utils';
 
 export const cardRatio = 430 / 600;

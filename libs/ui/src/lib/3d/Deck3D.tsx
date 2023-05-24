@@ -1,8 +1,7 @@
 import { Orientation } from '@card-engine-nx/basic';
 import { CSSProperties } from '@mui/material/styles/createMixins';
 import { CardDisplay } from '../CardDisplay';
-import { Point } from '@card-engine-nx/store';
-import { cardSize } from 'libs/store/src/utils';
+import { Point, cardSize } from '@card-engine-nx/store';
 
 const background: CSSProperties = {
   backgroundColor: 'gray',

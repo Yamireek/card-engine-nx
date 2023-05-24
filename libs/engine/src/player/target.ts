@@ -1,10 +1,5 @@
-import { CardId, PlayerId, keys } from '@card-engine-nx/basic';
-import {
-  State,
-  CardTarget,
-  Context,
-  PlayerTarget,
-} from '@card-engine-nx/state';
+import { PlayerId, keys } from '@card-engine-nx/basic';
+import { State, PlayerTarget } from '@card-engine-nx/state';
 
 export function getTargetPlayer(
   target: PlayerTarget,

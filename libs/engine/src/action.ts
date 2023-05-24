@@ -1,4 +1,4 @@
-import { Action, CardAction, State } from '@card-engine-nx/state';
+import { Action, State } from '@card-engine-nx/state';
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { Events } from './events';

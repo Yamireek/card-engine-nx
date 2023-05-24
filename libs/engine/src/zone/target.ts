@@ -1,12 +1,5 @@
-import { CardId, PlayerId, keys } from '@card-engine-nx/basic';
-import {
-  State,
-  CardTarget,
-  Context,
-  PlayerTarget,
-  ZoneState,
-} from '@card-engine-nx/state';
-import { ZoneId } from '../player/action';
+import { ZoneId } from '@card-engine-nx/basic';
+import { State, ZoneState } from '@card-engine-nx/state';
 
 export function getZoneState(zoneId: ZoneId, state: State): ZoneState {
   if (zoneId.owner === 'game') {

@@ -1,21 +1,6 @@
-import {
-  GameZoneType,
-  PlayerId,
-  PlayerZoneType,
-} from '@card-engine-nx/basic';
-import {
-  CardState,
-  CardAction,
-  PlayerState,
-  PlayerAction,
-  State,
-} from '@card-engine-nx/state';
+import { PlayerState, PlayerAction, State } from '@card-engine-nx/state';
 import { last } from 'lodash';
 import { Events } from '../events';
-
-export type ZoneId =
-  | { owner: 'game'; type: GameZoneType }
-  | { owner: PlayerId; type: PlayerZoneType };
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -34,12 +19,14 @@ export function executePlayerAction(
         state.cards[top].sideUp = 'front';
         player.zones.library.cards.pop();
         player.zones.hand.cards.push(top);
-        events.cardMoved(
-          top,
-          { type: 'library', owner: player.id },
-          { type: 'hand', owner: player.id },
-          'front'
-        );
+        if (events.onCardMoved) {
+          events.onCardMoved(
+            top,
+            { type: 'library', owner: player.id },
+            { type: 'hand', owner: player.id },
+            'front'
+          );
+        }
       }
     }
 

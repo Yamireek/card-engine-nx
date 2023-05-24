@@ -1,8 +1,7 @@
 import { Orientation } from '@card-engine-nx/basic';
 import { CardDisplay } from '../CardDisplay';
 import { rotate, rotateX, rotateZ, scale, transform, translate } from './utils';
-import { Point3D, Images } from '@card-engine-nx/store';
-import { cardSize } from 'libs/store/src/utils';
+import { Point3D, Images, cardSize } from '@card-engine-nx/store';
 
 export type Card3DProps = {
   id: string;

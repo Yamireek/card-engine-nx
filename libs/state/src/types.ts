@@ -1,5 +1,4 @@
-import { CardId, PlayerId, Token } from '@card-engine-nx/basic';
-import { ZoneId } from 'libs/engine/src/player/action';
+import { CardId, PlayerId, Token, ZoneId } from '@card-engine-nx/basic';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 

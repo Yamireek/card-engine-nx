@@ -18,6 +18,7 @@ export const HandLayout = (props: {
 
   return (
     <div
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ref={ref as any}
       style={{
         width: '100%',
@@ -56,7 +57,7 @@ export const HandLayout = (props: {
             }}
           >
             <CardDisplay
-              height={props.cardWidth / cardRatio}
+              scale={1}
               image={image}
               orientation="portrait"
               onMouseEnter={() => {

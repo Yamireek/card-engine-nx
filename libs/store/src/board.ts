@@ -8,10 +8,9 @@ import {
   modelAction,
 } from 'mobx-keystone';
 import { Dimensions, Images, Point, Point3D } from './types';
-import { Orientation } from '@card-engine-nx/basic';
+import { Orientation, ZoneId } from '@card-engine-nx/basic';
 import { calculateItemMaxItemSize, cardSize } from './utils';
 import { orderBy } from 'lodash';
-import { ZoneId } from 'libs/engine/src/player/action';
 
 @model('Board')
 export class BoardModel extends Model({

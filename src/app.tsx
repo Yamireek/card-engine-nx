@@ -1,14 +1,6 @@
-import { createState, hero } from '@card-engine-nx/state';
-import { Board, CardDisplay, NextStepButton } from '@card-engine-nx/ui';
+import { Board, createBoardModel, getCardImageUrl } from '@card-engine-nx/ui';
 import { CssBaseline } from '@mui/material';
-import {
-  cardSize,
-  createBoardModel,
-  getCardImageUrl,
-} from 'libs/store/src/utils';
-import { HandLayout } from 'libs/ui/src/lib/HandLayout';
 import { useMemo } from 'react';
-import { core } from '@card-engine-nx/cards/core';
 import { GameEngine } from './tests/GameEngine';
 import { coreTactics } from './decks/coreTactics';
 import { addCard } from './tests/addPlayer';
@@ -18,9 +10,10 @@ import {
   DeckModel,
   FloatingCardModel,
   ZoneModel,
+  cardSize,
 } from '@card-engine-nx/store';
-import { playerBack } from 'libs/ui/src/images';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const drawerWidth = 430;
 
 export const App = () => {
@@ -67,7 +60,7 @@ export const App = () => {
             { player: { action: { draw: 7 }, target: 'each' } },
             result.engine.state,
             {
-              cardMoved(cardId, source, destination, side) {
+              onCardMoved(cardId, source, destination, side) {
                 const cardState = result.engine.state.cards[cardId];
 
                 board.update(() => {
