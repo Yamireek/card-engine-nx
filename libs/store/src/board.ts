@@ -58,7 +58,7 @@ export class ZoneModel extends Model({
   }
 
   @computed
-  get cardSize(): Dimensions {
+  get cardSlotSize(): Dimensions {
     return {
       height: this.cardScale * cardSize.height,
       width: this.cardScale * cardSize.width,
@@ -110,13 +110,15 @@ export class CardModel extends Model({
 
   @computed
   get position(): Point3D {
-    const x = this.zone.size.width / this.zone.cardSize.width;
+    const x = this.zone.size.width / this.zone.cardSlotSize.width;
     const width = Math.floor(x);
     return {
-      x: this.zone.location.x + this.zone.cardSize.width * (this.index % width),
+      x:
+        this.zone.location.x +
+        this.zone.cardSlotSize.width * (this.index % width),
       y:
         this.zone.location.y +
-        this.zone.cardSize.height * Math.floor(this.index / width),
+        this.zone.cardSlotSize.height * Math.floor(this.index / width),
       z: 0,
     };
   }
