@@ -17,7 +17,7 @@ export const App = () => {
     >
       <CssBaseline />
 
-      <Board perspective={500} rotate={0} width={1608 * 3} height={1620 * 3} />
+      <Board perspective={1000} rotate={0} width={1608 * 3} height={1620 * 3} />
 
       {/* <div style={{ position: 'absolute', top: 0 }}>
         <CardDisplay
