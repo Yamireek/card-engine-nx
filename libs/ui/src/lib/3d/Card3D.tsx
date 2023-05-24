@@ -1,16 +1,16 @@
-import { Orientation } from '@card-engine-nx/basic';
-import { CardDisplay } from '../CardDisplay';
-import { rotate, rotateX, rotateZ, transform, translate } from './utils';
-import { Point3D, Images } from '@card-engine-nx/store';
+import { Orientation } from "@card-engine-nx/basic";
+import { CardDisplay } from "../CardDisplay";
+import { rotate, rotateX, rotateZ, transform, translate } from "./utils";
+import { Point3D, Images } from "@card-engine-nx/store";
 
 export type Card3DProps = {
-  id: number;
+  id: string;
   size: { width: number; height: number };
   orientation: Orientation;
   position: Point3D;
   rotation: Point3D;
   image: Images;
-  animationDuration: string;
+  animationDuration?: string;
 };
 
 export const Card3D = (props: Card3DProps & { transform?: string }) => {
@@ -18,25 +18,25 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
     <div
       key={props.id}
       style={{
-        position: 'absolute',
+        position: "absolute",
         height: props.size.height,
         width: props.size.width,
-        transformOrigin: 'center center',
+        transformOrigin: "center center",
         transform:
           props.transform ??
           transform(
             translate(props.position.x, props.position.y, props.position.z),
             rotate(props.rotation.x, props.rotation.y, props.rotation.z)
           ),
-        transitionProperty: 'transform',
+        transitionProperty: "transform",
         transitionDuration: props.animationDuration,
-        transformStyle: 'preserve-3d',
+        transformStyle: "preserve-3d",
       }}
     >
       <div
         style={{
-          position: 'absolute',
-          backfaceVisibility: 'hidden',
+          position: "absolute",
+          backfaceVisibility: "hidden",
         }}
       >
         <CardDisplay
@@ -47,9 +47,9 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
       </div>
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           transform: transform(rotateX(180), rotateZ(180)),
-          backfaceVisibility: 'hidden',
+          backfaceVisibility: "hidden",
         }}
       >
         <CardDisplay
