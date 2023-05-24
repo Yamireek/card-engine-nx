@@ -4,9 +4,18 @@ import { Deck3D, Deck3DProps } from "./Deck3D";
 import { Card3D, Card3DProps } from "./Card3D";
 import { cardImages } from "./../storybook/cardImages";
 import boardImage from "./../../images/board.jpg";
-import { BoardModel, CardModel, ZoneModel } from "@card-engine-nx/store";
+import {
+  BoardModel,
+  CardModel,
+  DeckModel,
+  FloatingCardModel,
+  ZoneModel,
+} from "@card-engine-nx/store";
 import { transform, translate } from "./utils";
 import { Observer } from "mobx-react";
+import { playerBack } from "./../../images";
+import { cardSize } from "libs/store/src/utils";
+import { last } from "lodash";
 
 export const Board = (props: {
   perspective: number;
@@ -33,7 +42,7 @@ export const Board = (props: {
         width: props.width,
         zones: [
           new ZoneModel({
-            cards: Array.from(Array(50).keys()).map(
+            cards: Array.from(Array(5).keys()).map(
               (i) =>
                 new CardModel({
                   id: i.toString(),
@@ -61,14 +70,23 @@ export const Board = (props: {
             orientation: "portrait",
           }),
         ],
-        decks: [],
+        decks: [
+          new DeckModel({
+            cards: 60,
+            image: playerBack,
+            orientation: "portrait",
+            position: {
+              x: 0,
+              y: 0,
+            },
+          }),
+        ],
+        cards: [],
       }),
     [props.height, props.width]
   );
 
   const moveOffset = (perspective - offset.z) / perspective;
-
-  const deckData: Deck3DProps[] = [];
 
   return (
     <div
@@ -137,7 +155,63 @@ export const Board = (props: {
           });
         }}
       >
-        Test
+        Move card
+      </button>
+
+      <button
+        onClick={() => {
+          board.update(() => {
+            board.cards.push(
+              new FloatingCardModel({
+                images: { front: cardImages[0], back: playerBack },
+                orientation: "portrait",
+                position: { x: 0, y: 0, z: 60 * 4 },
+                rotation: { x: 0, y: 180, z: 0 },
+                scale: 1,
+              })
+            );
+          });
+
+          setTimeout(() => {
+            board.update(() => {
+              const card = last(board.cards);
+              if (card) {
+                card.position = {
+                  ...card.position,
+                  z: card.position.z + cardSize.width / 2,
+                };
+              }
+            });
+          }, 0);
+
+          setTimeout(() => {
+            board.update(() => {
+              const card = last(board.cards);
+              if (card) {
+                card.rotation = { x: 0, y: 0, z: 0 };
+              }
+            });
+          }, 500);
+
+          setTimeout(() => {
+            board.update(() => {
+              const card = board.cards.pop();
+              if (card) {
+                board.zones[1].cards.push(
+                  new CardModel({
+                    id: card.id,
+                    attachments: [],
+                    images: { ...card.images },
+                    orientation: card.orientation,
+                    rotation: { x: 0, y: 0, z: 0 },
+                  })
+                );
+              }
+            });
+          }, 1000);
+        }}
+      >
+        Draw card
       </button>
       <div
         id="scene"
@@ -168,6 +242,7 @@ export const Board = (props: {
             <>
               {board.zones.map((z) => (
                 <div
+                  key={z.id}
                   style={{
                     position: "absolute",
                     backgroundColor: "green",
@@ -180,7 +255,7 @@ export const Board = (props: {
                 />
               ))}
 
-              {board.cards.map((d) => (
+              {board.allCards.map((d) => (
                 <Card3D
                   key={d.id}
                   id={d.id}
@@ -197,13 +272,20 @@ export const Board = (props: {
                   // )}
                 />
               ))}
+
+              {board.decks.map((d) => (
+                <Deck3D
+                  key={d.id}
+                  id={d.id}
+                  image={d.image}
+                  orientation={d.orientation}
+                  position={d.position}
+                  cards={d.cards}
+                />
+              ))}
             </>
           )}
         </Observer>
-
-        {deckData.map((d) => (
-          <Deck3D key={d.id} {...d} />
-        ))}
       </div>
     </div>
   );

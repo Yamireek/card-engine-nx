@@ -36,7 +36,7 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
             rotate(props.rotation.x, props.rotation.y, props.rotation.z)
           ),
         transitionProperty: "all",
-        transitionDuration: props.animationDuration || "1s",
+        transitionDuration: props.animationDuration || "0.5s",
         transformStyle: "preserve-3d",
       }}
     >
