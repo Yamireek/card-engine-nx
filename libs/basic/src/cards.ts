@@ -15,6 +15,8 @@ export type PrintedProps = {
   hitPoints?: number;
   traits?: Trait[];
   sphere?: Sphere;
+  sequence?: number;
+  questPoints?: number;
 };
 
 export type HeroProps = {

@@ -22,7 +22,8 @@ export type CardType =
   | 'treachery'
   | 'location'
   | 'quest'
-  | 'empty';
+  | 'player_back'
+  | 'encounter_back';
 
 export type Mark = 'questing' | 'attacked' | 'attacking' | 'defending';
 
@@ -51,7 +52,7 @@ export type Trait =
   | 'title'
   | 'noldor'
   | 'rohan'
-  | 'd鷑edain'
+  | 'dúnedain'
   | 'ranger'
   | 'creature'
   | 'spider'

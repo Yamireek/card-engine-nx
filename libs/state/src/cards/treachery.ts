@@ -1,19 +1,19 @@
-import { HeroProps } from '@card-engine-nx/basic';
+import { TreacheryProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
 import { Ability } from '../types';
 
-export function hero(
-  props: Omit<HeroProps, 'type'>,
+export function treachery(
+  props: Omit<TreacheryProps, 'type'>,
   ...abilities: Ability[]
 ): CardDefinition {
   return {
     front: {
       ...props,
       abilities,
-      type: 'hero',
+      type: 'treachery',
     },
     back: {
-      type: 'player_back',
+      type: 'encounter_back',
       abilities,
     },
     orientation: 'portrait',
