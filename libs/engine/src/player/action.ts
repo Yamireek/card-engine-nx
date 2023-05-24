@@ -1,6 +1,7 @@
 import { PlayerState, PlayerAction, State } from '@card-engine-nx/state';
 import { last } from 'lodash';
 import { Events } from '../events';
+import { calculateExpr } from '../expr';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -29,9 +30,14 @@ export function executePlayerAction(
         }
       }
     }
-
     return;
   }
 
-  throw new Error(`unknown card action: ${JSON.stringify(action)}`);
+  if (action.incrementThreat) {
+    const amount = calculateExpr(action.incrementThreat, state, {});
+    player.thread += amount;
+    return;
+  }
+
+  throw new Error(`unknown player action: ${JSON.stringify(action)}`);
 }
