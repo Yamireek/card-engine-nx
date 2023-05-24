@@ -76,7 +76,7 @@ export const Board = (props: {
             image: playerBack,
             orientation: "portrait",
             position: {
-              x: 0,
+              x: 2000,
               y: 0,
             },
           }),
@@ -165,7 +165,7 @@ export const Board = (props: {
               new FloatingCardModel({
                 images: { front: cardImages[0], back: playerBack },
                 orientation: "portrait",
-                position: { x: 0, y: 0, z: 60 * 4 },
+                position: { x: 2000, y: 0, z: 60 * 4 },
                 rotation: { x: 0, y: 180, z: 0 },
                 scale: 1,
               })
@@ -197,7 +197,7 @@ export const Board = (props: {
             board.update(() => {
               const card = board.cards.pop();
               if (card) {
-                board.zones[1].cards.push(
+                board.zones[0].cards.push(
                   new CardModel({
                     id: card.id,
                     attachments: [],
@@ -245,7 +245,8 @@ export const Board = (props: {
                   key={z.id}
                   style={{
                     position: "absolute",
-                    backgroundColor: "green",
+                    backgroundColor: "yellow",
+                    opacity: 0.1,
                     width: z.size.width,
                     height: z.size.height,
                     transform: transform(
