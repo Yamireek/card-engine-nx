@@ -3,12 +3,13 @@ import damageImage from "./../images/damage.png";
 import resourceImage from "./../images/resource.png";
 import progressImage from "./../images/progress.png";
 import { Card, CardActionArea, CardContent } from "@mui/material";
+import { scale } from "./3d/utils";
 
 export const cardRatio = 430 / 600;
 
 export const CardDisplay = (props: {
   orientation: Orientation;
-  height?: number;
+  scale: number;
   tapped?: boolean;
   image: string;
   onMouseEnter?: () => void;
@@ -20,16 +21,14 @@ export const CardDisplay = (props: {
   const width = "100%";
   const height = "100%";
 
-  const zoom = 1;
+  const zoom = props.scale;
 
   return (
     <Card
       elevation={24}
       sx={{
-        height,
-        width,
         position: "relative",
-        transform: props.tapped ? "rotate(45deg)" : "initial",
+        transform: scale(props.scale),
         transition: "transform 0.25s ease 0s",
         boxShadow: props.onClick ? "0px 0px 20px yellow" : "0px 0px 5px black",
         backgroundColor: "black",
@@ -52,12 +51,7 @@ export const CardDisplay = (props: {
     >
       <CardActionArea disabled={!props.onClick}>
         <CardContent sx={{ padding: 0 }}>
-          <img
-            src={props.image}
-            width={props.height === 600 ? undefined : width}
-            height={props.height === 600 ? undefined : height}
-            alt=""
-          />
+          <img src={props.image} alt="" />
           {props.mark?.questing && (
             <div
               style={{
