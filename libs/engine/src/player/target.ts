@@ -9,5 +9,9 @@ export function getTargetPlayer(
     return keys(state.players);
   }
 
-  throw new Error(`unknown card target: ${JSON.stringify(target)}`);
+  if (['A', 'B', 'C', 'D'].includes(target)) {
+    return [target];
+  }
+
+  throw new Error(`unknown player target: ${JSON.stringify(target)}`);
 }

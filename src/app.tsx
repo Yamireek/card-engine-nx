@@ -1,7 +1,7 @@
 import { Board, createBoardModel, getCardImageUrl } from '@card-engine-nx/ui';
 import { CssBaseline } from '@mui/material';
 import { useMemo } from 'react';
-import { GameEngine } from './tests/GameEngine';
+import { GameEngine, advanceToChoiceState } from './tests/GameEngine';
 import { coreTactics } from './decks/coreTactics';
 import { addCard } from './tests/addPlayer';
 import { executeAction } from '@card-engine-nx/engine';
@@ -31,6 +31,8 @@ export const App = () => {
       );
     }
 
+    window['state'] = engine.state;
+
     return { board: createBoardModel(engine.state), engine };
   }, []);
 
@@ -51,10 +53,30 @@ export const App = () => {
       <button
         onClick={() => {
           executeAction(
-            { shuffle: { zone: { owner: 'A', type: 'library' } } },
+            {
+              sequence: [
+                { shuffle: { zone: { owner: 'A', type: 'library' } } },
+                {
+                  player: {
+                    target: 'A',
+                    action: {
+                      incrementThreat: {
+                        fromCard: {
+                          sum: true,
+                          value: 'threadCost',
+                          card: { and: [{ owner: 'A', type: ['hero'] }] },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
             result.engine.state,
             {}
           );
+
+          advanceToChoiceState(result.engine.state, {});
 
           executeAction(
             { player: { action: { draw: 7 }, target: 'each' } },

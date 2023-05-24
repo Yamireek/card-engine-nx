@@ -29,5 +29,10 @@ export function executeAction(action: Action, state: State, events: Events) {
     return;
   }
 
+  if (action.sequence) {
+    state.next = [...action.sequence, ...state.next];
+    return;
+  }
+
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);
 }
