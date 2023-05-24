@@ -18,10 +18,11 @@ export class BoardModel extends Model({
   width: prop<number>(),
   zones: prop<ZoneModel[]>(),
   decks: prop<DeckModel[]>(),
+  cards: prop<FloatingCardModel[]>(),
 }) {
   @computed
-  get cards(): CardModel[] {
-    const cards = this.zones.flatMap((z) => z.cards);
+  get allCards(): Array<CardModel | FloatingCardModel> {
+    const cards = [...this.zones.flatMap((z) => z.cards), ...this.cards];
     return orderBy(cards, (c) => c.id);
   }
 
@@ -69,9 +70,19 @@ export class ZoneModel extends Model({
 export class DeckModel extends Model({
   id: idProp,
   image: prop<string>(),
-  location: prop<Point>(),
-  size: prop<Dimensions>(),
-  cards: prop<CardModel[]>(),
+  position: prop<Point>(),
+  orientation: prop<Orientation>(),
+  cards: prop<number>(),
+}) {}
+
+@model("FloatingCard")
+export class FloatingCardModel extends Model({
+  id: idProp,
+  images: prop<Images>(),
+  rotation: prop<Point3D>(),
+  orientation: prop<Orientation>(),
+  position: prop<Point3D>(),
+  scale: prop<number>(),
 }) {}
 
 @model("Card")
