@@ -1,16 +1,16 @@
-import { HeroProps } from '@card-engine-nx/basic';
+import { EventProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
 import { Ability } from '../types';
 
-export function hero(
-  props: Omit<HeroProps, 'type'>,
+export function event(
+  props: Omit<EventProps, 'type'>,
   ...abilities: Ability[]
 ): CardDefinition {
   return {
     front: {
       ...props,
       abilities,
-      type: 'hero',
+      type: 'event',
     },
     back: {
       type: 'player_back',
