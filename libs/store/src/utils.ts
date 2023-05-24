@@ -135,28 +135,28 @@ function createPlayerZones(state: State, playerId: PlayerId) {
   }
   return [
     new ZoneModel({
-      color: 'pink',
+      color: 'red',
       cards: player.zones.engaged.cards.map((id) =>
         creteCardModel(state.cards[id])
       ),
-      location: { x: 0, y: 1000 },
-      size: { width: 1000, height: 1000 },
+      location: { x: 0, y: 4860 - 3000 },
+      size: { width: 4824, height: 1000 },
     }),
     new ZoneModel({
-      color: 'white',
+      color: 'yellow',
       cards: player.zones.playerArea.cards.map((id) =>
         creteCardModel(state.cards[id])
       ),
-      location: { x: 1000, y: 1000 },
-      size: { width: 1000, height: 1000 },
+      location: { x: 0, y: 4860 - 2000 },
+      size: { width: 4824, height: 1000 },
     }),
     new ZoneModel({
-      color: 'orange',
+      color: 'green',
       cards: player.zones.hand.cards.map((id) =>
         creteCardModel(state.cards[id])
       ),
-      location: { x: 2000, y: 1000 },
-      size: { width: 1000, height: 1000 },
+      location: { x: 0, y: 4860 - 1000 },
+      size: { width: 4824 - 1000, height: 1000 },
     }),
   ];
 }
@@ -168,12 +168,22 @@ function createPlayerDecks(state: State, playerId: PlayerId) {
   }
   return [
     new DeckModel({
+      cards: player.zones.discardPile.cards.length,
+      image: image.playerBack,
+      orientation: 'portrait',
+      position: {
+        x: 4824 - 430 - 46,
+        y: 4860 - 800,
+      },
+    }),
+
+    new DeckModel({
       cards: player.zones.library.cards.length,
       image: image.playerBack,
       orientation: 'portrait',
       position: {
-        x: 2000,
-        y: 1000,
+        x: 4824 - 430 - 46 - 430 - 46,
+        y: 4860 - 800,
       },
     }),
   ];
