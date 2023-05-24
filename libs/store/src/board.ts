@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed } from 'mobx';
 import {
   model,
   Model,
@@ -6,13 +6,13 @@ import {
   prop,
   getParent,
   modelAction,
-} from "mobx-keystone";
-import { Dimensions, Images, Point, Point3D } from "./types";
-import { Orientation } from "@card-engine-nx/basic";
-import { calculateItemMaxItemSize, cardSize } from "./utils";
-import { orderBy } from "lodash";
+} from 'mobx-keystone';
+import { Dimensions, Images, Point, Point3D } from './types';
+import { Orientation } from '@card-engine-nx/basic';
+import { calculateItemMaxItemSize, cardSize } from './utils';
+import { orderBy } from 'lodash';
 
-@model("Board")
+@model('Board')
 export class BoardModel extends Model({
   height: prop<number>(),
   width: prop<number>(),
@@ -32,12 +32,12 @@ export class BoardModel extends Model({
   }
 }
 
-@model("Zone")
+@model('Zone')
 export class ZoneModel extends Model({
   id: idProp,
+  color: prop<string>(),
   location: prop<Point>(),
   size: prop<Dimensions>(),
-  orientation: prop<Orientation>(),
   cards: prop<CardModel[]>(),
 }) {
   // @computed
@@ -78,7 +78,7 @@ export class ZoneModel extends Model({
   }
 }
 
-@model("Deck")
+@model('Deck')
 export class DeckModel extends Model({
   id: idProp,
   image: prop<string>(),
@@ -87,7 +87,7 @@ export class DeckModel extends Model({
   cards: prop<number>(),
 }) {}
 
-@model("FloatingCard")
+@model('FloatingCard')
 export class FloatingCardModel extends Model({
   id: idProp,
   images: prop<Images>(),
@@ -97,7 +97,7 @@ export class FloatingCardModel extends Model({
   scale: prop<number>(),
 }) {}
 
-@model("Card")
+@model('Card')
 export class CardModel extends Model({
   id: idProp,
   images: prop<Images>(),
@@ -111,7 +111,7 @@ export class CardModel extends Model({
     if (zone) {
       return zone;
     } else {
-      throw new Error("card without zone");
+      throw new Error('card without zone');
     }
   }
 

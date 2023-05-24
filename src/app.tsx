@@ -1,23 +1,41 @@
-import { Board, CardDisplay, NextStepButton } from "@card-engine-nx/ui";
-import { CssBaseline } from "@mui/material";
-import { HandLayout } from "libs/ui/src/lib/HandLayout";
+import { createState, hero } from '@card-engine-nx/state';
+import { Board, CardDisplay, NextStepButton } from '@card-engine-nx/ui';
+import { CssBaseline } from '@mui/material';
+import { createBoardModel } from 'libs/store/src/utils';
+import { HandLayout } from 'libs/ui/src/lib/HandLayout';
+import { useMemo } from 'react';
+import { core } from '@card-engine-nx/cards/core';
+import { GameEngine } from './tests/GameEngine';
 
 const drawerWidth = 430;
 
 export const App = () => {
+  const board = useMemo(() => {
+    const engine = new GameEngine();
+    engine.addPlayer();
+    engine.addHero(core.hero.gimli);
+    return createBoardModel(engine.state);
+  }, []);
+
   return (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
+        width: '100vw',
+        height: '100vh',
         padding: 0,
         margin: 0,
-        overflow: "hidden",
+        overflow: 'hidden',
       }}
     >
       <CssBaseline />
 
-      <Board perspective={1000} rotate={0} width={1608 * 3} height={1620 * 3} />
+      <Board
+        perspective={1000}
+        rotate={0}
+        width={1608 * 3}
+        height={1620 * 3}
+        model={board}
+      />
 
       {/* <div style={{ position: 'absolute', top: 0 }}>
         <CardDisplay
