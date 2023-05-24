@@ -1,11 +1,11 @@
-import { CardId, Side } from '@card-engine-nx/basic';
-import { ZoneId } from './player/action';
+import { CardId, Side, ZoneId } from '@card-engine-nx/basic';
 
 export type Events = {
-  cardMoved?(
+  onCardMoved?(
     cardId: CardId,
     source: ZoneId,
     destination: ZoneId,
     side: Side
   ): void;
+  onError?(message: string): void;
 };

@@ -1,22 +1,9 @@
-import { useMemo, useState } from 'react';
-import { Point3D } from '../../../../store/src/types';
-import { Deck3D, Deck3DProps } from './Deck3D';
-import { Card3D, Card3DProps } from './Card3D';
-import { cardImages } from './../storybook/cardImages';
+import { Deck3D } from './Deck3D';
+import { Card3D } from './Card3D';
 import boardImage from './../../images/board.jpg';
-import {
-  BoardModel,
-  CardModel,
-  DeckModel,
-  FloatingCardModel,
-  ZoneModel,
-} from '@card-engine-nx/store';
+import { BoardModel, Point3D } from '@card-engine-nx/store';
 import { transform, translate } from './utils';
 import { Observer } from 'mobx-react';
-import { playerBack } from './../../images';
-import { cardSize, createBoardModel } from 'libs/store/src/utils';
-import { last } from 'lodash';
-import { createState } from '@card-engine-nx/state';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 export const Board = (props: {

@@ -12,20 +12,18 @@ import {
   executeCardAction,
 } from '@card-engine-nx/engine';
 import { addPlayer, addCard } from './addPlayer';
+import { Events } from '@card-engine-nx/engine';
 
-export function nextStep(state: State) {
+export function nextStep(state: State, events: Events) {
   const action = state.next.shift();
   if (!action) {
     return;
   } else {
-    executeAction(action);
+    executeAction(action, state, events);
   }
 }
 
-export function advanceToChoiceState(
-  state: State,
-  onError?: (error: string) => void
-) {
+export function advanceToChoiceState(state: State, events: Events) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     if (state.choice) {
@@ -42,10 +40,11 @@ export function advanceToChoiceState(
     }
 
     try {
-      nextStep(state);
+      nextStep(state, events);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      if (onError) {
-        onError(error.message);
+      if (events.onError) {
+        events.onError(error.message);
       } else {
         throw error;
       }
@@ -55,14 +54,14 @@ export function advanceToChoiceState(
 
 export class GameEngine {
   constructor(public state = createState()) {
-    advanceToChoiceState(state);
+    advanceToChoiceState(state, {});
     state.choice = undefined;
     state.next = [];
   }
 
   do(action: Action) {
     this.state.next.unshift(action);
-    advanceToChoiceState(this.state);
+    advanceToChoiceState(this.state, {});
   }
 
   // doAction(title: string) {
@@ -140,7 +139,7 @@ export class CardProxy {
 
   update(cardAction: CardAction) {
     executeCardAction(cardAction, this.state.cards[this.id]);
-    advanceToChoiceState(this.state);
+    advanceToChoiceState(this.state, {});
   }
 
   get props() {

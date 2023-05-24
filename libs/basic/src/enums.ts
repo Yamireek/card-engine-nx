@@ -1,5 +1,9 @@
 export type PlayerId = 'A' | 'B' | 'C' | 'D';
 
+export type ZoneId =
+  | { owner: 'game'; type: GameZoneType }
+  | { owner: PlayerId; type: PlayerZoneType };
+
 export type Phase =
   | 'setup'
   | 'resource'

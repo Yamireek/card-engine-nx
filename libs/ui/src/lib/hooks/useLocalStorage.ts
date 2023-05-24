@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-const useLocalStorage = <T extends any>(key: string, defaultValue: T) => {
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
+const useLocalStorage = <T extends object>(key: string, defaultValue: T) => {
   // Create state variable to store
   // localStorage value in state
   const [localStorageValue, setLocalStorageValue] = useState(() => {
@@ -37,7 +38,7 @@ const useLocalStorage = <T extends any>(key: string, defaultValue: T) => {
     localStorage.setItem(key, JSON.stringify(newValue));
     setLocalStorageValue(newValue);
   };
-  return [localStorageValue, setLocalStorageStateValue] as [
+  return [localStorageValue, setLocalStorageStateValue] as unknown as [
     T,
     (f: (p: T) => T) => void
   ];
