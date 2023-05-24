@@ -6,6 +6,8 @@ import { HandLayout } from 'libs/ui/src/lib/HandLayout';
 import { useMemo } from 'react';
 import { core } from '@card-engine-nx/cards/core';
 import { GameEngine } from './tests/GameEngine';
+import { coreTactics } from './decks/coreTactics';
+import { addCard } from './tests/addPlayer';
 
 const drawerWidth = 430;
 
@@ -13,7 +15,17 @@ export const App = () => {
   const board = useMemo(() => {
     const engine = new GameEngine();
     engine.addPlayer();
-    engine.addHero(core.hero.gimli);
+
+    for (const hero of coreTactics.heroes) {
+      engine.addHero(hero);
+    }
+
+    for (const card of coreTactics.library) {
+      addCard(card, 'back', { type: 'library', owner: 'A' }).execute(
+        engine.state
+      );
+    }
+
     return createBoardModel(engine.state);
   }, []);
 
