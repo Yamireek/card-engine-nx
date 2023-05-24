@@ -1,8 +1,16 @@
-import { CardId, Token } from '@card-engine-nx/basic';
+import { CardId, PlayerId, Token } from '@card-engine-nx/basic';
+import { ZoneId } from 'libs/engine/src/player/action';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
-export type Action = 'empty';
+export type Action =
+  | 'empty'
+  | {
+      player?: { action: PlayerAction; target: PlayerTarget };
+      shuffle?: { zone: ZoneId };
+    };
+
+export type PlayerAction = 'empty' | { draw?: number };
 
 export type CardAction = 'empty' | { dealDamage?: number; heal?: number };
 
@@ -33,5 +41,7 @@ export type CardNumberExpr = {
 };
 
 export type CardTarget = 'self' | 'each';
+
+export type PlayerTarget = PlayerId | 'each';
 
 export type Context = { selfCard?: CardId };

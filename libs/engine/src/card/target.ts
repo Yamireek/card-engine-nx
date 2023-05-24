@@ -1,7 +1,7 @@
 import { CardId } from '@card-engine-nx/basic';
 import { State, CardTarget, Context } from '@card-engine-nx/state';
 
-export function getTargetedCard(
+export function getTargetCard(
   target: CardTarget,
   state: State,
   ctx: Context
