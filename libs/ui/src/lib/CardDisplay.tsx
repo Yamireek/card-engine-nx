@@ -1,9 +1,9 @@
-import { Marks, Orientation, Tokens } from "@card-engine-nx/basic";
-import damageImage from "./../images/damage.png";
-import resourceImage from "./../images/resource.png";
-import progressImage from "./../images/progress.png";
-import { Card, CardActionArea, CardContent } from "@mui/material";
-import { scale } from "./3d/utils";
+import { Marks, Orientation, Tokens } from '@card-engine-nx/basic';
+import damageImage from './../images/damage.png';
+import resourceImage from './../images/resource.png';
+import progressImage from './../images/progress.png';
+import { Card, CardActionArea, CardContent } from '@mui/material';
+import { scale } from './3d/utils';
 
 export const cardRatio = 430 / 600;
 
@@ -23,11 +23,13 @@ export const CardDisplay = (props: {
   return (
     <div
       style={{
-        position: "relative",
+        position: 'relative',
         transform: scale(props.scale),
-        transition: "transform 0.25s ease 0s",
-        boxShadow: props.onClick ? "0px 0px 20px yellow" : "0px 0px 5px black",
-        backgroundColor: "black",
+        transition: 'transform 0.25s ease 0s',
+        boxShadow: props.onClick ? '0px 0px 20px yellow' : '0px 0px 5px black',
+        backgroundColor: 'black',
+        width: '100%',
+        height: '100%',
       }}
       onMouseEnter={() => {
         if (props.onMouseEnter) {
@@ -45,16 +47,20 @@ export const CardDisplay = (props: {
         }
       }}
     >
-      <img src={props.image} alt="" />
+      <img
+        src={props.image}
+        alt=""
+        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+      />
       {props.mark?.questing && (
         <div
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 107 * zoom,
             left: 82 * zoom,
             width: 28 * zoom,
             height: 32 * zoom,
-            backgroundColor: "yellow",
+            backgroundColor: 'yellow',
             opacity: 0.5,
           }}
         />
@@ -63,12 +69,12 @@ export const CardDisplay = (props: {
       {(props.mark?.attacked || props.mark?.attacking) && (
         <div
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 152 * zoom,
             left: 82 * zoom,
             width: 28 * zoom,
             height: 32 * zoom,
-            backgroundColor: "yellow",
+            backgroundColor: 'yellow',
             opacity: 0.5,
           }}
         />
@@ -77,12 +83,12 @@ export const CardDisplay = (props: {
       {props.mark?.defending && (
         <div
           style={{
-            position: "absolute",
+            position: 'absolute',
             top: 202 * zoom,
             left: 82 * zoom,
             width: 28 * zoom,
             height: 32 * zoom,
-            backgroundColor: "yellow",
+            backgroundColor: 'yellow',
             opacity: 0.5,
           }}
         />
@@ -91,21 +97,21 @@ export const CardDisplay = (props: {
       {props.token && (
         <div
           style={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            marginLeft: "30%",
-            marginTop: "20%",
-            minWidth: "70%",
-            justifyContent: "space-evenly",
-            position: "absolute",
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            marginLeft: '30%',
+            marginTop: '20%',
+            minWidth: '70%',
+            justifyContent: 'space-evenly',
+            position: 'absolute',
             top: 0,
           }}
         >
           {props.token.progress ? (
             <div
               style={{
-                position: "relative",
+                position: 'relative',
                 width: 45,
                 height: 45,
                 margin: 1,
@@ -114,12 +120,12 @@ export const CardDisplay = (props: {
               <img src={progressImage} width={42} height={42} alt="" />
               <div
                 style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  color: "white",
-                  fontSize: "x-large",
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: 'white',
+                  fontSize: 'x-large',
                 }}
               >
                 {props.token.progress}
@@ -129,7 +135,7 @@ export const CardDisplay = (props: {
           {props.token.resources ? (
             <div
               style={{
-                position: "relative",
+                position: 'relative',
                 width: 40,
                 height: 40,
                 margin: 2,
@@ -138,12 +144,12 @@ export const CardDisplay = (props: {
               <img src={resourceImage} width={42} height={42} alt="" />
               <div
                 style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  color: "white",
-                  fontSize: "x-large",
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: 'white',
+                  fontSize: 'x-large',
                 }}
               >
                 {props.token.resources}
@@ -154,7 +160,7 @@ export const CardDisplay = (props: {
           {props.token.damage ? (
             <div
               style={{
-                position: "relative",
+                position: 'relative',
                 width: 40,
                 height: 40,
                 margin: 2,
@@ -163,12 +169,12 @@ export const CardDisplay = (props: {
               <img src={damageImage} width={42} height={42} alt="" />
               <div
                 style={{
-                  position: "absolute",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  color: "white",
-                  fontSize: "x-large",
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  color: 'white',
+                  fontSize: 'x-large',
                 }}
               >
                 {props.token.damage}

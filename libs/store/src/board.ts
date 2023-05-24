@@ -11,6 +11,7 @@ import { Dimensions, Images, Point, Point3D } from './types';
 import { Orientation } from '@card-engine-nx/basic';
 import { calculateItemMaxItemSize, cardSize } from './utils';
 import { orderBy } from 'lodash';
+import { ZoneId } from 'libs/engine/src/player/action';
 
 @model('Board')
 export class BoardModel extends Model({
@@ -29,6 +30,24 @@ export class BoardModel extends Model({
   @modelAction
   update(action: () => void) {
     action();
+  }
+
+  getZone(zoneId: ZoneId) {
+    if (zoneId.owner === 'game') {
+      throw new Error('not implemented');
+    }
+
+    const id = `${zoneId.owner}/${zoneId.type}`;
+    const zone = this.zones.find((z) => z.id === id);
+    if (zone) {
+      return zone;
+    }
+    const deck = this.decks.find((d) => d.id === id);
+    if (deck) {
+      return deck;
+    }
+
+    throw new Error('zone not found in model');
   }
 }
 

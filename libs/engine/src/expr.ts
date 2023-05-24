@@ -1,5 +1,5 @@
 import { State, NumberExpr, Context } from '@card-engine-nx/state';
-import { getTargetedCard } from './card/target';
+import { getTargetCard } from './card/target';
 import { calculateCardExpr } from './card/expr';
 
 export function calculateExpr(
@@ -12,7 +12,7 @@ export function calculateExpr(
   }
 
   if (expr.fromCard) {
-    const ids = getTargetedCard(expr.fromCard.card, state, ctx);
+    const ids = getTargetCard(expr.fromCard.card, state, ctx);
     if (ids.length === 1) {
       return calculateCardExpr(expr.fromCard.value, state, ids[0]);
     } else {

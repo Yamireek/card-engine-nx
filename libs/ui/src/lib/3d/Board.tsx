@@ -37,14 +37,6 @@ export const Board = (props: {
     z: 100,
   });
 
-  // const [offset, setTranslate] = useState<Point3D>({
-  //   x: -920,
-  //   y: -1050,
-  //   z: 1210,
-  // });
-
-  console.log(offset);
-
   const moveOffset = (perspective - offset.z) / perspective;
 
   return (
@@ -104,74 +96,6 @@ export const Board = (props: {
         }
       }}
     >
-      <button
-        onClick={() => {
-          board.update(() => {
-            const card = board.zones[0].cards.shift();
-            if (card) {
-              board.zones[1].cards.push(card);
-            }
-          });
-        }}
-      >
-        Move card
-      </button>
-
-      <button
-        onClick={() => {
-          board.update(() => {
-            board.cards.push(
-              new FloatingCardModel({
-                images: { front: cardImages[0], back: playerBack },
-                orientation: 'portrait',
-                position: { x: 2000, y: 0, z: 60 * 4 },
-                rotation: { x: 0, y: 180, z: 0 },
-                scale: 1,
-              })
-            );
-          });
-
-          setTimeout(() => {
-            board.update(() => {
-              const card = last(board.cards);
-              if (card) {
-                card.position = {
-                  ...card.position,
-                  z: card.position.z + cardSize.width / 2,
-                };
-              }
-            });
-          }, 0);
-
-          setTimeout(() => {
-            board.update(() => {
-              const card = last(board.cards);
-              if (card) {
-                card.rotation = { x: 0, y: 0, z: 0 };
-              }
-            });
-          }, 500);
-
-          setTimeout(() => {
-            board.update(() => {
-              const card = board.cards.pop();
-              if (card) {
-                board.zones[0].cards.push(
-                  new CardModel({
-                    id: card.id,
-                    attachments: [],
-                    images: { ...card.images },
-                    orientation: card.orientation,
-                    rotation: { x: 0, y: 0, z: 0 },
-                  })
-                );
-              }
-            });
-          }, 1000);
-        }}
-      >
-        Draw card
-      </button>
       <div
         id="scene"
         style={{

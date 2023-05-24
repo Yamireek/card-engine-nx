@@ -1,8 +1,13 @@
 import { maxBy } from 'lodash';
 import { Dimensions } from './types';
-import { CardState, PlayerState, State } from '@card-engine-nx/state';
+import {
+  CardDefinition,
+  CardState,
+  PlayerState,
+  State,
+} from '@card-engine-nx/state';
 import { BoardModel, CardModel, DeckModel, ZoneModel } from './board';
-import { CardType, PlayerId, keys } from '@card-engine-nx/basic';
+import { CardType, PlayerId, PrintedProps, keys } from '@card-engine-nx/basic';
 import { image } from '@card-engine-nx/ui';
 
 export function calculateItemSize(
@@ -52,7 +57,8 @@ export const cardSize: Dimensions = {
   width: 430,
 };
 
-export function getCardImageUrl(name: string): string {
+export function getCardImageUrl(props: PrintedProps): string {
+  const name = props.name || props.type;
   return `https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/${name
     .split(' ')
     .join('-')}.jpg`;
@@ -62,7 +68,7 @@ export function creteCardModel(state: CardState): CardModel {
   const def = state.definition[state.sideUp];
   return new CardModel({
     attachments: [],
-    images: { front: getCardImageUrl(def.name || def.type), back: '' },
+    images: { front: getCardImageUrl(def), back: '' },
     orientation: 'portrait',
     rotation: {
       x: 0,
@@ -135,6 +141,7 @@ function createPlayerZones(state: State, playerId: PlayerId) {
   }
   return [
     new ZoneModel({
+      id: `${playerId}/engaged`,
       color: 'red',
       cards: player.zones.engaged.cards.map((id) =>
         creteCardModel(state.cards[id])
@@ -143,6 +150,7 @@ function createPlayerZones(state: State, playerId: PlayerId) {
       size: { width: 4824, height: 1000 },
     }),
     new ZoneModel({
+      id: `${playerId}/playerArea`,
       color: 'yellow',
       cards: player.zones.playerArea.cards.map((id) =>
         creteCardModel(state.cards[id])
@@ -151,6 +159,7 @@ function createPlayerZones(state: State, playerId: PlayerId) {
       size: { width: 4824, height: 1000 },
     }),
     new ZoneModel({
+      id: `${playerId}/hand`,
       color: 'green',
       cards: player.zones.hand.cards.map((id) =>
         creteCardModel(state.cards[id])
@@ -167,7 +176,7 @@ function createPlayerDecks(state: State, playerId: PlayerId) {
     return [];
   }
   return [
-    new DeckModel({
+    new DeckModel({id: `${playerId}/discardPile`,
       cards: player.zones.discardPile.cards.length,
       image: image.playerBack,
       orientation: 'portrait',
@@ -177,7 +186,7 @@ function createPlayerDecks(state: State, playerId: PlayerId) {
       },
     }),
 
-    new DeckModel({
+    new DeckModel({id: `${playerId}/library`,
       cards: player.zones.library.cards.length,
       image: image.playerBack,
       orientation: 'portrait',
