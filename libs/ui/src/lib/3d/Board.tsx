@@ -1,21 +1,22 @@
-import { useMemo, useState } from "react";
-import { Point3D } from "../../../../store/src/types";
-import { Deck3D, Deck3DProps } from "./Deck3D";
-import { Card3D, Card3DProps } from "./Card3D";
-import { cardImages } from "./../storybook/cardImages";
-import boardImage from "./../../images/board.jpg";
+import { useMemo, useState } from 'react';
+import { Point3D } from '../../../../store/src/types';
+import { Deck3D, Deck3DProps } from './Deck3D';
+import { Card3D, Card3DProps } from './Card3D';
+import { cardImages } from './../storybook/cardImages';
+import boardImage from './../../images/board.jpg';
 import {
   BoardModel,
   CardModel,
   DeckModel,
   FloatingCardModel,
   ZoneModel,
-} from "@card-engine-nx/store";
-import { transform, translate } from "./utils";
-import { Observer } from "mobx-react";
-import { playerBack } from "./../../images";
-import { cardSize } from "libs/store/src/utils";
-import { last } from "lodash";
+} from '@card-engine-nx/store';
+import { transform, translate } from './utils';
+import { Observer } from 'mobx-react';
+import { playerBack } from './../../images';
+import { cardSize, createBoardModel } from 'libs/store/src/utils';
+import { last } from 'lodash';
+import { createState } from '@card-engine-nx/state';
 
 export const Board = (props: {
   perspective: number;
@@ -23,9 +24,11 @@ export const Board = (props: {
   width: number;
   height: number;
   imageUrl?: string;
+  model: BoardModel;
 }) => {
   const perspective = props.perspective;
   const rotate = props.rotate;
+  const board = props.model;
 
   const [offset, setTranslate] = useState<Point3D>({
     x: -560,
@@ -35,56 +38,56 @@ export const Board = (props: {
 
   console.log(offset);
 
-  const board = useMemo(
-    () =>
-      new BoardModel({
-        height: props.height,
-        width: props.width,
-        zones: [
-          new ZoneModel({
-            cards: Array.from(Array(5).keys()).map(
-              (i) =>
-                new CardModel({
-                  id: i.toString(),
-                  images: {
-                    front: cardImages[0],
-                    back: cardImages[1],
-                  },
-                  orientation: "portrait",
-                  rotation: {
-                    x: 0,
-                    y: 0,
-                    z: 0,
-                  },
-                  attachments: [],
-                })
-            ),
-            location: { x: 0, y: 0 },
-            size: { width: 1000, height: 1000 },
-            orientation: "portrait",
-          }),
-          new ZoneModel({
-            cards: [],
-            location: { x: 1100, y: 0 },
-            size: { width: 1000, height: 1000 },
-            orientation: "portrait",
-          }),
-        ],
-        decks: [
-          new DeckModel({
-            cards: 60,
-            image: playerBack,
-            orientation: "portrait",
-            position: {
-              x: 2000,
-              y: 0,
-            },
-          }),
-        ],
-        cards: [],
-      }),
-    [props.height, props.width]
-  );
+  // const board = useMemo(
+  //   () =>
+  //     new BoardModel({
+  //       height: props.height,
+  //       width: props.width,
+  //       zones: [
+  //         new ZoneModel({
+  //           cards: Array.from(Array(5).keys()).map(
+  //             (i) =>
+  //               new CardModel({
+  //                 id: i.toString(),
+  //                 images: {
+  //                   front: cardImages[0],
+  //                   back: cardImages[1],
+  //                 },
+  //                 orientation: "portrait",
+  //                 rotation: {
+  //                   x: 0,
+  //                   y: 0,
+  //                   z: 0,
+  //                 },
+  //                 attachments: [],
+  //               })
+  //           ),
+  //           location: { x: 0, y: 0 },
+  //           size: { width: 1000, height: 1000 },
+  //           orientation: "portrait",
+  //         }),
+  //         new ZoneModel({
+  //           cards: [],
+  //           location: { x: 1100, y: 0 },
+  //           size: { width: 1000, height: 1000 },
+  //           orientation: "portrait",
+  //         }),
+  //       ],
+  //       decks: [
+  //         new DeckModel({
+  //           cards: 60,
+  //           image: playerBack,
+  //           orientation: "portrait",
+  //           position: {
+  //             x: 2000,
+  //             y: 0,
+  //           },
+  //         }),
+  //       ],
+  //       cards: [],
+  //     }),
+  //   [props.height, props.width]
+  // );
 
   const moveOffset = (perspective - offset.z) / perspective;
 
@@ -92,14 +95,14 @@ export const Board = (props: {
     <div
       id="viewport"
       style={{
-        transformStyle: "preserve-3d",
-        boxSizing: "border-box",
-        width: "100%",
-        height: "100%",
+        transformStyle: 'preserve-3d',
+        boxSizing: 'border-box',
+        width: '100%',
+        height: '100%',
         perspective,
-        overflow: "hidden",
-        userSelect: "none",
-        outline: "none",
+        overflow: 'hidden',
+        userSelect: 'none',
+        outline: 'none',
       }}
       tabIndex={0}
       draggable={false}
@@ -130,16 +133,16 @@ export const Board = (props: {
       }}
       onKeyDown={(event) => {
         switch (event.key) {
-          case "w":
+          case 'w':
             setTranslate((p) => ({ ...p, x: p.x, y: p.y - moveOffset * 10 }));
             break;
-          case "s":
+          case 's':
             setTranslate((p) => ({ ...p, x: p.x, y: p.y + moveOffset * 10 }));
             break;
-          case "a":
+          case 'a':
             setTranslate((p) => ({ ...p, x: p.x - moveOffset * 10, y: p.y }));
             break;
-          case "d":
+          case 'd':
             setTranslate((p) => ({ ...p, x: p.x + moveOffset * 10, y: p.y }));
             break;
         }
@@ -164,7 +167,7 @@ export const Board = (props: {
             board.cards.push(
               new FloatingCardModel({
                 images: { front: cardImages[0], back: playerBack },
-                orientation: "portrait",
+                orientation: 'portrait',
                 position: { x: 2000, y: 0, z: 60 * 4 },
                 rotation: { x: 0, y: 180, z: 0 },
                 scale: 1,
@@ -218,20 +221,20 @@ export const Board = (props: {
         style={{
           width: props.width,
           height: props.height,
-          transformOrigin: "top left",
+          transformOrigin: 'top left',
           transform: `
             rotateX(${rotate}deg)
             translate3d(${offset.x}px, ${offset.y}px, ${-(
             offset.z - perspective
           )}px)`,
-          transformStyle: "preserve-3d",
+          transformStyle: 'preserve-3d',
         }}
       >
         <img
           style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
           }}
           src={props.imageUrl ?? boardImage}
           alt=""
@@ -244,8 +247,8 @@ export const Board = (props: {
                 <div
                   key={z.id}
                   style={{
-                    position: "absolute",
-                    backgroundColor: "yellow",
+                    position: 'absolute',
+                    backgroundColor: z.color,
                     opacity: 0.1,
                     width: z.size.width,
                     height: z.size.height,
