@@ -28,8 +28,8 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
             translate(props.position.x, props.position.y, props.position.z),
             rotate(props.rotation.x, props.rotation.y, props.rotation.z)
           ),
-        transitionProperty: "transform",
-        transitionDuration: props.animationDuration,
+        transitionProperty: "all",
+        transitionDuration: props.animationDuration || "1s",
         transformStyle: "preserve-3d",
       }}
     >
@@ -37,6 +37,8 @@ export const Card3D = (props: Card3DProps & { transform?: string }) => {
         style={{
           position: "absolute",
           backfaceVisibility: "hidden",
+          width: "100%",
+          height: "100%",
         }}
       >
         <CardDisplay
