@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Point3D } from '../../../../store/src/types';
-import { Deck3D, Deck3DProps } from './Deck3D';
-import { Card3D, Card3DProps } from './Card3D';
-import { cardImages } from './../storybook/cardImages';
-import boardImage from './../../images/board.jpg';
-import { rotateX, rotateZ, transform, translate } from './utils';
+import { useMemo, useState } from "react";
+import { Point3D } from "../../../../store/src/types";
+import { Deck3D, Deck3DProps } from "./Deck3D";
+import { Card3D, Card3DProps } from "./Card3D";
+import { cardImages } from "./../storybook/cardImages";
+import boardImage from "./../../images/board.jpg";
+import { BoardModel, CardModel, ZoneModel } from "@card-engine-nx/store";
 
 export const Board = (props: {
   perspective: number;
@@ -17,38 +17,48 @@ export const Board = (props: {
   const rotate = props.rotate;
 
   const [offset, setTranslate] = useState<Point3D>({
-    x: -0,
-    y: -0,
-    z: 500,
+    x: -250,
+    y: -1160,
+    z: 1356.642799357037,
   });
 
   console.log(offset);
 
-  const moveOffset = (perspective - offset.z) / perspective;
+  const board = useMemo(
+    () =>
+      new BoardModel({
+        height: props.height,
+        width: props.width,
+        zones: [
+          new ZoneModel({
+            cards: Array.from(Array(50).keys()).map(
+              (i) =>
+                new CardModel({
+                  id: i.toString(),
+                  images: {
+                    front: cardImages[0],
+                    back: cardImages[1],
+                  },
+                  orientation: "portrait",
+                  rotation: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                  },
+                  attachments: [],
+                })
+            ),
+            location: { x: 0, y: 0 },
+            size: { width: 1000, height: 1000 },
+            orientation: "portrait",
+          }),
+        ],
+        decks: [],
+      }),
+    [props.height, props.width]
+  );
 
-  const cardData: Card3DProps[] = Array.from(Array(5).keys()).map((i) => ({
-    id: i,
-    image: {
-      front: cardImages[0],
-      back: cardImages[1],
-    },
-    orientation: 'portrait',
-    position: {
-      x: (i % 10) * 430,
-      y: (i / 10) * 600,
-      z: 0,
-    },
-    rotation: {
-      x: 0,
-      y: 0,
-      z: 0,
-    },
-    size: {
-      height: 600,
-      width: 430,
-    },
-    animationDuration: '0.5s',
-  }));
+  const moveOffset = (perspective - offset.z) / perspective;
 
   const deckData: Deck3DProps[] = [];
 
@@ -56,14 +66,14 @@ export const Board = (props: {
     <div
       id="viewport"
       style={{
-        transformStyle: 'preserve-3d',
-        boxSizing: 'border-box',
-        width: '100%',
-        height: '100%',
+        transformStyle: "preserve-3d",
+        boxSizing: "border-box",
+        width: "100%",
+        height: "100%",
         perspective,
-        overflow: 'hidden',
-        userSelect: 'none',
-        outline: 'none',
+        overflow: "hidden",
+        userSelect: "none",
+        outline: "none",
       }}
       tabIndex={0}
       draggable={false}
@@ -94,16 +104,16 @@ export const Board = (props: {
       }}
       onKeyDown={(event) => {
         switch (event.key) {
-          case 'w':
+          case "w":
             setTranslate((p) => ({ ...p, x: p.x, y: p.y - moveOffset * 10 }));
             break;
-          case 's':
+          case "s":
             setTranslate((p) => ({ ...p, x: p.x, y: p.y + moveOffset * 10 }));
             break;
-          case 'a':
+          case "a":
             setTranslate((p) => ({ ...p, x: p.x - moveOffset * 10, y: p.y }));
             break;
-          case 'd':
+          case "d":
             setTranslate((p) => ({ ...p, x: p.x + moveOffset * 10, y: p.y }));
             break;
         }
@@ -114,29 +124,45 @@ export const Board = (props: {
         style={{
           width: props.width,
           height: props.height,
-          transformOrigin: 'top left',
+          transformOrigin: "top left",
           transform: `
             rotateX(${rotate}deg)
             translate3d(${offset.x}px, ${offset.y}px, ${-(
             offset.z - perspective
           )}px)`,
-          transformStyle: 'preserve-3d',
+          transformStyle: "preserve-3d",
         }}
       >
         <img
           style={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
+            position: "absolute",
+            width: "100%",
+            height: "100%",
           }}
           src={props.imageUrl ?? boardImage}
           alt=""
         />
 
-        {cardData.map((d) => (
+        {board.zones.map((z) => (
+          <div
+            style={{
+              position: "absolute",
+              backgroundColor: "green",
+              width: z.size.width,
+              height: z.size.height,
+            }}
+          />
+        ))}
+
+        {board.cards.map((d) => (
           <Card3D
             key={d.id}
-            {...d}
+            id={d.id}
+            image={d.images}
+            orientation={d.orientation}
+            position={d.position}
+            rotation={d.rotation}
+            size={d.size}
             // transform={transform(
             //   translate(-215, -300, 0),
             //   translate(-offset.x, -offset.y, offset.z - perspective),
