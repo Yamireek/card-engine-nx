@@ -18,7 +18,10 @@ export function calculateItemSize(
 
   const scale = Math.min(scaleWidth, scaleHeight);
 
-  const itemSize = { height: item.height * scale, width: item.width * scale };
+  const itemSize = {
+    height: Math.floor(item.height * scale),
+    width: Math.floor(item.width * scale),
+  };
 
   return itemSize;
 }
@@ -39,3 +42,8 @@ export function calculateItemMaxItemSize(
     width: Math.round(maxSize.width),
   };
 }
+
+export const cardSize: Dimensions = {
+  height: 600,
+  width: 430,
+};

@@ -5,6 +5,8 @@ import { Card3D, Card3DProps } from "./Card3D";
 import { cardImages } from "./../storybook/cardImages";
 import boardImage from "./../../images/board.jpg";
 import { BoardModel, CardModel, ZoneModel } from "@card-engine-nx/store";
+import { transform, translate } from "./utils";
+import { Observer } from "mobx-react";
 
 export const Board = (props: {
   perspective: number;
@@ -17,9 +19,9 @@ export const Board = (props: {
   const rotate = props.rotate;
 
   const [offset, setTranslate] = useState<Point3D>({
-    x: -250,
-    y: -1160,
-    z: 1356.642799357037,
+    x: -560,
+    y: -290,
+    z: perspective,
   });
 
   console.log(offset);
@@ -49,6 +51,12 @@ export const Board = (props: {
                 })
             ),
             location: { x: 0, y: 0 },
+            size: { width: 1000, height: 1000 },
+            orientation: "portrait",
+          }),
+          new ZoneModel({
+            cards: [],
+            location: { x: 1100, y: 0 },
             size: { width: 1000, height: 1000 },
             orientation: "portrait",
           }),
@@ -119,6 +127,18 @@ export const Board = (props: {
         }
       }}
     >
+      <button
+        onClick={() => {
+          board.update(() => {
+            const card = board.zones[0].cards.shift();
+            if (card) {
+              board.zones[1].cards.push(card);
+            }
+          });
+        }}
+      >
+        Test
+      </button>
       <div
         id="scene"
         style={{
@@ -143,34 +163,43 @@ export const Board = (props: {
           alt=""
         />
 
-        {board.zones.map((z) => (
-          <div
-            style={{
-              position: "absolute",
-              backgroundColor: "green",
-              width: z.size.width,
-              height: z.size.height,
-            }}
-          />
-        ))}
+        <Observer>
+          {() => (
+            <>
+              {board.zones.map((z) => (
+                <div
+                  style={{
+                    position: "absolute",
+                    backgroundColor: "green",
+                    width: z.size.width,
+                    height: z.size.height,
+                    transform: transform(
+                      translate(z.location.x, z.location.y, 0)
+                    ),
+                  }}
+                />
+              ))}
 
-        {board.cards.map((d) => (
-          <Card3D
-            key={d.id}
-            id={d.id}
-            image={d.images}
-            orientation={d.orientation}
-            position={d.position}
-            rotation={d.rotation}
-            size={d.size}
-            // transform={transform(
-            //   translate(-215, -300, 0),
-            //   translate(-offset.x, -offset.y, offset.z - perspective),
-            //   rotateX(-rotate),
-            //   translate(215, 300, 0)
-            // )}
-          />
-        ))}
+              {board.cards.map((d) => (
+                <Card3D
+                  key={d.id}
+                  id={d.id}
+                  image={d.images}
+                  orientation={d.orientation}
+                  position={d.position}
+                  rotation={d.rotation}
+                  size={d.size}
+                  // transform={transform(
+                  //   translate(-215, -300, 0),
+                  //   translate(-offset.x, -offset.y, offset.z - perspective),
+                  //   rotateX(-rotate),
+                  //   translate(215, 300, 0)
+                  // )}
+                />
+              ))}
+            </>
+          )}
+        </Observer>
 
         {deckData.map((d) => (
           <Deck3D key={d.id} {...d} />

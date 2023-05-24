@@ -1,13 +1,16 @@
 import { computed } from "mobx";
-import { model, Model, idProp, prop, getParent } from "mobx-keystone";
+import {
+  model,
+  Model,
+  idProp,
+  prop,
+  getParent,
+  modelAction,
+} from "mobx-keystone";
 import { Dimensions, Images, Point, Point3D } from "./types";
 import { Orientation } from "@card-engine-nx/basic";
-import { calculateItemMaxItemSize } from "./utils";
-
-const cardSize: Dimensions = {
-  height: 600,
-  width: 430,
-};
+import { calculateItemMaxItemSize, cardSize } from "./utils";
+import { orderBy } from "lodash";
 
 @model("Board")
 export class BoardModel extends Model({
@@ -18,7 +21,13 @@ export class BoardModel extends Model({
 }) {
   @computed
   get cards(): CardModel[] {
-    return this.zones.flatMap((z) => z.cards);
+    const cards = this.zones.flatMap((z) => z.cards);
+    return orderBy(cards, (c) => c.id);
+  }
+
+  @modelAction
+  update(action: () => void) {
+    action();
   }
 }
 
@@ -32,7 +41,16 @@ export class ZoneModel extends Model({
 }) {
   @computed
   get slotSize(): Dimensions {
-    return calculateItemMaxItemSize(this.size, cardSize, this.cards.length);
+    const calculated = calculateItemMaxItemSize(
+      this.size,
+      cardSize,
+      this.cards.length
+    );
+    if (calculated.height >= 600) {
+      return cardSize;
+    } else {
+      return calculated;
+    }
   }
 }
 
@@ -73,8 +91,10 @@ export class CardModel extends Model({
     const x = this.zone.size.width / this.zone.slotSize.width;
     const width = Math.floor(x);
     return {
-      x: this.zone.slotSize.width * (this.index % width),
-      y: this.zone.slotSize.height * Math.floor(this.index / width),
+      x: this.zone.location.x + this.zone.slotSize.width * (this.index % width),
+      y:
+        this.zone.location.y +
+        this.zone.slotSize.height * Math.floor(this.index / width),
       z: 0,
     };
   }
