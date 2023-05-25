@@ -17,6 +17,7 @@ export const Test = () => {
   const [offset, setOffset] = useState<Point>({ x: 0, y: 0 });
   const [scale, setScale] = useState<number>(1);
   const offsetZ = (1 - scale) * perspective;
+  const [mouseDown, setMouseDown] = useState(false);
 
   console.log(offset, offsetZ);
 
@@ -46,6 +47,8 @@ export const Test = () => {
           }));
         }
       }}
+      onMouseDown={() => setMouseDown(true)}
+      onMouseUp={() => setMouseDown(false)}
       onWheel={(event) => {
         if (!containerRef.current) {
           return;
@@ -103,10 +106,13 @@ export const Test = () => {
         id="scene"
         style={{
           transformOrigin: "top left",
+          transition: !mouseDown ? "transform 0.25s" : undefined,
           transform: transform(
             rotateX(5),
             translate(-offset.x, -offset.y, offsetZ),
-            rotateZ(45)
+            translate(512, 512, 0),
+            rotateZ(45),
+            translate(-512, -512, 0)
           ),
           transformStyle: "preserve-3d",
         }}
@@ -122,7 +128,9 @@ export const Test = () => {
             left: 0,
             transform: transform(
               translate(-32, -32, 0),
+              translate(512, 512, 0),
               rotateZ(-45),
+              translate(-512, -512, 0),
               translate(offset.x, offset.y, -offsetZ),
               rotateX(-5),
               translate(32, 32, 0)
