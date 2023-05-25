@@ -8,17 +8,19 @@ const zoomWheelRatio = 1.5;
 
 export const BoardCamera = (
   props: PropsWithChildren<{
-    angle: number;
-    rotation: number;
-    perspective: number;
+    angle?: number;
+    rotation?: number;
+    perspective?: number;
   }>
 ) => {
   const [offset, setOffset] = useState<Point>({ x: 0, y: 0 });
   const [scale, setScale] = useState<number>(1);
   const [mouseDown, setMouseDown] = useState(false);
-  const perspective = props.perspective;
+  const perspective = props.perspective ?? 2000;
   const offsetZ = (1 - scale) * perspective;
   const [ref, client] = useMeasure();
+  const angle = props.angle ?? 0;
+  const rotation = props.rotation ?? 0;
 
   return (
     <div
@@ -101,9 +103,9 @@ export const BoardCamera = (
           transition: !mouseDown ? 'transform 0.25s' : undefined,
           transform: transform(
             translate(0, 0, offsetZ),
-            rotateX(props.angle),
+            rotateX(angle),
             translate(-offset.x, -offset.y, 0),
-            rotateZ(props.rotation)
+            rotateZ(rotation)
           ),
           transformStyle: 'preserve-3d',
         }}
@@ -117,9 +119,9 @@ export const BoardCamera = (
             left: 0,
             transform: transform(
               translate(-32, -32, 0),
-              rotateZ(-props.rotation),
+              rotateZ(-rotation),
               translate(offset.x, offset.y, 0),
-              rotateX(-props.angle),
+              rotateX(-angle),
               translate(0, 0, -offsetZ),
               translate(32, 32, 0)
             ),
