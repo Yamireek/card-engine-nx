@@ -1,17 +1,18 @@
-import { Board, createBoardModel, getCardImageUrl } from '@card-engine-nx/ui';
-import { CssBaseline } from '@mui/material';
-import { useMemo } from 'react';
-import { GameEngine, advanceToChoiceState } from './tests/GameEngine';
-import { coreTactics } from './decks/coreTactics';
-import { addCard } from './tests/addPlayer';
-import { executeAction } from '@card-engine-nx/engine';
+import { Board, createBoardModel, getCardImageUrl } from "@card-engine-nx/ui";
+import { CssBaseline } from "@mui/material";
+import { useMemo } from "react";
+import { GameEngine, advanceToChoiceState } from "./tests/GameEngine";
+import { coreTactics } from "./decks/coreTactics";
+import { addCard } from "./tests/addPlayer";
+import { executeAction } from "@card-engine-nx/engine";
 import {
   CardModel,
   DeckModel,
   FloatingCardModel,
   ZoneModel,
   cardSize,
-} from '@card-engine-nx/store';
+} from "@card-engine-nx/store";
+import { Test } from "./Test";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const drawerWidth = 430;
@@ -26,12 +27,12 @@ export const App = () => {
     }
 
     for (const card of coreTactics.library) {
-      addCard(card, 'back', { type: 'library', owner: 'A' }).execute(
+      addCard(card, "back", { type: "library", owner: "A" }).execute(
         engine.state
       );
     }
 
-    window['state'] = engine.state;
+    window["state"] = engine.state;
 
     return { board: createBoardModel(engine.state), engine };
   }, []);
@@ -41,134 +42,24 @@ export const App = () => {
   return (
     <div
       style={{
-        width: '100vw',
-        height: '100vh',
+        width: "100vw",
+        height: "100vh",
         padding: 0,
         margin: 0,
-        overflow: 'hidden',
+        overflow: "hidden",
       }}
     >
       <CssBaseline />
 
-      <button
-        onClick={() => {
-          executeAction(
-            {
-              sequence: [
-                { shuffle: { zone: { owner: 'A', type: 'library' } } },
-                {
-                  player: {
-                    target: 'A',
-                    action: {
-                      incrementThreat: {
-                        fromCard: {
-                          sum: true,
-                          value: 'threadCost',
-                          card: { and: [{ owner: 'A', type: ['hero'] }] },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-            result.engine.state,
-            {}
-          );
+      <Test />
 
-          advanceToChoiceState(result.engine.state, {});
-
-          executeAction(
-            { player: { action: { draw: 7 }, target: 'each' } },
-            result.engine.state,
-            {
-              onCardMoved(cardId, source, destination, side) {
-                const cardState = result.engine.state.cards[cardId];
-
-                board.update(() => {
-                  const sourceZone = board.getZone(source);
-                  if (sourceZone instanceof DeckModel) {
-                    board.cards.push(
-                      new FloatingCardModel({
-                        id: cardId.toString(),
-                        images: {
-                          front: getCardImageUrl(cardState.definition.front),
-                          back: sourceZone.image,
-                        },
-                        orientation: sourceZone.orientation,
-                        position: {
-                          ...sourceZone.position,
-                          z: sourceZone.cards * 4,
-                        },
-                        rotation: { x: 0, y: 180, z: 0 },
-                        scale: 1,
-                      })
-                    );
-                    sourceZone.cards -= 1;
-                  } else {
-                    throw new Error('not implemented');
-                  }
-                });
-
-                setTimeout(() => {
-                  board.update(() => {
-                    const card = board.cards.find(
-                      (c) => c.id === cardId.toString()
-                    );
-                    if (card) {
-                      card.position = {
-                        ...card.position,
-                        z: card.position.z + cardSize.width / 2,
-                      };
-                    }
-                  });
-                }, 0);
-
-                setTimeout(() => {
-                  board.update(() => {
-                    const card = board.cards.find(
-                      (c) => c.id === cardId.toString()
-                    );
-                    if (card) {
-                      card.rotation = { x: 0, y: 0, z: 0 };
-                    }
-                  });
-                }, 500);
-
-                setTimeout(() => {
-                  board.update(() => {
-                    const card = board.cards.pop();
-                    const zone = board.getZone(destination);
-                    if (card) {
-                      if (zone instanceof ZoneModel) {
-                        zone.cards.push(
-                          new CardModel({
-                            id: card.id,
-                            attachments: [],
-                            images: { ...card.images },
-                            orientation: card.orientation,
-                            rotation: { x: 0, y: 0, z: 0 },
-                          })
-                        );
-                      }
-                    }
-                  });
-                }, 1000);
-              },
-            }
-          );
-        }}
-      >
-        draw
-      </button>
-
-      <Board
+      {/* <Board
         perspective={1000}
         rotate={0}
         width={1608 * 3}
         height={1620 * 3}
         model={result.board}
-      />
+      /> */}
 
       {/* <div style={{ position: 'absolute', top: 0 }}>
         <CardDisplay
