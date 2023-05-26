@@ -31,11 +31,13 @@ export function advanceToChoiceState(state: State, events: Events) {
         state.next.unshift(state.choice.options[0].action);
         state.choice = undefined;
       } else {
+        events.updateUi(state);
         return state;
       }
     }
 
     if (state.next.length === 0) {
+      events.updateUi(state);
       return;
     }
 
@@ -43,25 +45,34 @@ export function advanceToChoiceState(state: State, events: Events) {
       nextStep(state, events);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      if (events.onError) {
-        events.onError(error.message);
-      } else {
-        throw error;
-      }
+      events.onError(error.message);
+      events.updateUi(state);
     }
   }
 }
 
+export const emptyEvents: Events = {
+  onCardMoved: () => {
+    return;
+  },
+  onError: () => {
+    return;
+  },
+  updateUi: () => {
+    return;
+  },
+};
+
 export class GameEngine {
   constructor(public state = createState()) {
-    advanceToChoiceState(state, {});
+    advanceToChoiceState(state, emptyEvents);
     state.choice = undefined;
     state.next = [];
   }
 
   do(action: Action) {
     this.state.next.unshift(action);
-    advanceToChoiceState(this.state, {});
+    advanceToChoiceState(this.state, emptyEvents);
   }
 
   // doAction(title: string) {
@@ -139,7 +150,7 @@ export class CardProxy {
 
   update(cardAction: CardAction) {
     executeCardAction(cardAction, this.state.cards[this.id]);
-    advanceToChoiceState(this.state, {});
+    advanceToChoiceState(this.state, emptyEvents);
   }
 
   get props() {
