@@ -27,6 +27,9 @@ import {
 import { BoardCamera } from '../libs/ui/src/lib/3d/BoardCamera';
 import { Deck3D } from 'libs/ui/src/lib/3d/Deck3D';
 import { playerBack } from 'libs/ui/src/images';
+import { GameDisplay } from './GameDisplay';
+import { createState } from '@card-engine-nx/state';
+import { StateProvider } from './StateContext';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const drawerWidth = 430;
@@ -67,6 +70,19 @@ export const Playmat = (props: { size: Dimensions; image: string }) => {
   );
 };
 
+const engine = new GameEngine();
+engine.addPlayer();
+
+for (const hero of coreTactics.heroes) {
+  engine.addHero(hero);
+}
+
+for (const card of coreTactics.library) {
+  addCard(card, 'back', { type: 'library', owner: 'A' }).execute(engine.state);
+}
+
+window['state'] = engine.state;
+
 export const App = () => {
   const result = useMemo(() => {
     const engine = new GameEngine();
@@ -101,34 +117,9 @@ export const App = () => {
     >
       <CssBaseline />
 
-      <BoardCamera angle={45} rotation={0}>
-        <Playmat
-          image={image.board}
-          size={{ width: 1608 * 3, height: 1620 * 3 }}
-        />
-        <Location3D
-          position={{ x: 200, y: 200, z: 200 }}
-          rotation={{ x: 0, y: 0, z: 45 }}
-        >
-          <CardDisplay
-            scale={1}
-            image="https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/Gloin.jpg"
-            orientation="portrait"
-          />
-        </Location3D>
-        <Location3D
-          position={{ x: 0, y: 0, z: 0 }}
-          rotation={{ x: 0, y: 0, z: -10 }}
-        >
-          <Deck3D
-            id="1"
-            cards={60}
-            image={playerBack}
-            orientation="portrait"
-            position={{ x: 0, y: 0 }}
-          />
-        </Location3D>
-      </BoardCamera>
+      <StateProvider init={engine.state}>
+        <GameDisplay />
+      </StateProvider>
 
       {/* <Board
         perspective={1000}
