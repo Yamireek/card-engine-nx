@@ -123,6 +123,7 @@ export const GameDisplay = () => {
   return (
     <>
       <button
+        style={{ position: 'fixed', zIndex: 10 }}
         onClick={() => {
           executeAction(
             {
@@ -164,7 +165,7 @@ export const GameDisplay = () => {
 
       <div style={{ width: '100%', height: '100%' }}>
         <div style={{ width: '100%', height: '100%' }}>
-          <BoardCamera angle={15} rotation={0}>
+          <BoardCamera angle={20} rotation={0}>
             <Playmat image={image.board} size={boardSize} />
             <Observer>
               {() => (
