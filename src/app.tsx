@@ -1,34 +1,11 @@
-import {
-  Board,
-  CardDisplay,
-  createBoardModel,
-  getCardImageUrl,
-  image,
-  rotate,
-  scale,
-  transform,
-  translate,
-} from '@card-engine-nx/ui';
+import { rotate, transform, translate } from '@card-engine-nx/ui';
 import { CssBaseline } from '@mui/material';
-import { PropsWithChildren, useMemo } from 'react';
-import { GameEngine, advanceToChoiceState } from './tests/GameEngine';
+import { PropsWithChildren } from 'react';
+import { GameEngine } from './tests/GameEngine';
 import { coreTactics } from './decks/coreTactics';
 import { addCard } from './tests/addPlayer';
-import { executeAction } from '@card-engine-nx/engine';
-import {
-  CardModel,
-  DeckModel,
-  Dimensions,
-  FloatingCardModel,
-  Point3D,
-  ZoneModel,
-  cardSize,
-} from '@card-engine-nx/store';
-import { BoardCamera } from '../libs/ui/src/lib/3d/BoardCamera';
-import { Deck3D } from 'libs/ui/src/lib/3d/Deck3D';
-import { playerBack } from 'libs/ui/src/images';
+import { Dimensions, Point3D } from '@card-engine-nx/store';
 import { GameDisplay } from './GameDisplay';
-import { createState } from '@card-engine-nx/state';
 import { StateProvider } from './StateContext';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -81,30 +58,10 @@ for (const card of coreTactics.library) {
   addCard(card, 'back', { type: 'library', owner: 'A' }).execute(engine.state);
 }
 
-window['state'] = engine.state;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(window as any)['state'] = engine.state;
 
 export const App = () => {
-  const result = useMemo(() => {
-    const engine = new GameEngine();
-    engine.addPlayer();
-
-    for (const hero of coreTactics.heroes) {
-      engine.addHero(hero);
-    }
-
-    for (const card of coreTactics.library) {
-      addCard(card, 'back', { type: 'library', owner: 'A' }).execute(
-        engine.state
-      );
-    }
-
-    window['state'] = engine.state;
-
-    return { board: createBoardModel(engine.state), engine };
-  }, []);
-
-  const board = result.board;
-
   return (
     <div
       style={{

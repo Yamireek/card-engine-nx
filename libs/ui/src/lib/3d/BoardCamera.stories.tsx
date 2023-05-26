@@ -1,6 +1,4 @@
 import type { Meta } from '@storybook/react';
-import { Board } from './Board';
-import boardImage from './../../images/board.jpg';
 import { BoardCamera } from './BoardCamera';
 
 const Story: Meta<typeof BoardCamera> = {
