@@ -113,7 +113,7 @@ export const BoardCamera = (
           transformStyle: 'preserve-3d',
         }}
       >
-        <img
+        {/* <img
           style={{
             width: 64,
             height: 64,
@@ -128,9 +128,9 @@ export const BoardCamera = (
           }}
           src="https://i.redd.it/6vmw0nvgbig51.png"
           alt=""
-        />
+        /> */}
         {props.children}
-        <div
+        {/* <div
           style={{
             position: 'absolute',
             left: 0,
@@ -144,9 +144,9 @@ export const BoardCamera = (
             width: client.width,
             height: client.height,
           }}
-        />
+        /> */}
       </div>
-      <div
+      {/* <div
         style={{
           position: 'absolute',
           left: 0,
@@ -199,7 +199,7 @@ export const BoardCamera = (
           width: client.width,
           height: client.height,
         }}
-      />
+      /> */}
     </div>
   );
 };
