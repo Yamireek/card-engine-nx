@@ -101,7 +101,7 @@ export const App = () => {
     >
       <CssBaseline />
 
-      <BoardCamera>
+      <BoardCamera angle={45} rotation={0}>
         <Playmat
           image={image.board}
           size={{ width: 1608 * 3, height: 1620 * 3 }}

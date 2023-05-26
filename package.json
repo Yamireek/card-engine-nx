@@ -19,6 +19,7 @@
     "@fontsource/roboto": "^5.0.0",
     "@mui/material": "^5.13.1",
     "@swc/helpers": "~0.5.0",
+    "@thednp/dommatrix": "^2.0.4",
     "@types/lodash": "^4.14.194",
     "lodash": "^4.17.21",
     "mathjs": "^11.8.0",

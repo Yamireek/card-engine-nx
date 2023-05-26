@@ -1,6 +1,5 @@
 import { Dimensions, Point } from '@card-engine-nx/store';
-import { rotateX, rotateZ, transform, translate } from './utils';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useMemo, useState } from 'react';
 import { useMeasure } from 'react-use';
 
 const moveKeyOffset = 16;
@@ -21,6 +20,15 @@ export const BoardCamera = (
   const [ref, client] = useMeasure();
   const angle = props.angle ?? 0;
   const rotation = props.rotation ?? 0;
+
+  const sceneMatrix = useMemo(() => {
+    const base = new DOMMatrix();
+    const zoomed = base.translate(0, 0, offsetZ);
+    const angled = zoomed.rotate(angle, 0, 0);
+    const offseted = angled.translate(-offset.x, -offset.y);
+    const final = offseted.rotate(rotation);
+    return { base, zoomed, angled, offseted, final };
+  }, [angle, offset.x, offset.y, offsetZ, rotation]);
 
   return (
     <div
@@ -82,16 +90,16 @@ export const BoardCamera = (
       onKeyDown={(event) => {
         switch (event.key) {
           case 'w':
-            setOffset((p) => ({ ...p, x: p.x, y: p.y + moveKeyOffset }));
-            break;
-          case 's':
             setOffset((p) => ({ ...p, x: p.x, y: p.y - moveKeyOffset }));
             break;
+          case 's':
+            setOffset((p) => ({ ...p, x: p.x, y: p.y + moveKeyOffset }));
+            break;
           case 'a':
-            setOffset((p) => ({ ...p, x: p.x + moveKeyOffset, y: p.y }));
+            setOffset((p) => ({ ...p, x: p.x - moveKeyOffset, y: p.y }));
             break;
           case 'd':
-            setOffset((p) => ({ ...p, x: p.x - moveKeyOffset, y: p.y }));
+            setOffset((p) => ({ ...p, x: p.x + moveKeyOffset, y: p.y }));
             break;
         }
       }}
@@ -101,12 +109,7 @@ export const BoardCamera = (
         style={{
           transformOrigin: 'top left',
           transition: !mouseDown ? 'transform 0.25s' : undefined,
-          transform: transform(
-            translate(0, 0, offsetZ),
-            rotateX(angle),
-            translate(-offset.x, -offset.y, 0),
-            rotateZ(rotation)
-          ),
+          transform: sceneMatrix.final.toString(),
           transformStyle: 'preserve-3d',
         }}
       >
@@ -117,20 +120,86 @@ export const BoardCamera = (
             position: 'absolute',
             top: 0,
             left: 0,
-            transform: transform(
-              translate(-32, -32, 0),
-              rotateZ(-rotation),
-              translate(offset.x, offset.y, 0),
-              rotateX(-angle),
-              translate(0, 0, -offsetZ),
-              translate(32, 32, 0)
-            ),
+            transform: new DOMMatrix()
+              .translate(-32, -32)
+              .multiply(sceneMatrix.final.inverse())
+              .translate(32, 32)
+              .toString(),
           }}
           src="https://i.redd.it/6vmw0nvgbig51.png"
           alt=""
         />
         {props.children}
+        <div
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            border: '20px solid green',
+            transform: new DOMMatrix()
+              .translate(-client.width / 2, -client.height / 2)
+              .multiply(sceneMatrix.final.inverse())
+              .translate(client.width / 2, client.height / 2)
+              .toString(),
+            width: client.width,
+            height: client.height,
+          }}
+        />
       </div>
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          border: '20px solid green',
+          width: client.width,
+          height: client.height,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          border: '20px solid yellow',
+          transform: sceneMatrix.zoomed.toString(),
+          width: client.width,
+          height: client.height,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          border: '20px solid red',
+          transform: sceneMatrix.angled.toString(),
+          width: client.width,
+          height: client.height,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          border: '20px solid orange',
+          transform: sceneMatrix.offseted.toString(),
+          width: client.width,
+          height: client.height,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          border: '20px solid blue',
+          transform: sceneMatrix.final.toString(),
+          width: client.width,
+          height: client.height,
+        }}
+      />
     </div>
   );
 };
