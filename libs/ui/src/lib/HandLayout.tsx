@@ -4,14 +4,17 @@ import { useState } from 'react';
 
 export const HandLayout = (props: {
   cardWidth: number;
-  cardImages: string[];
+  cardImages?: string[];
   rotate: number;
 }) => {
   const [ref, { width }] = useMeasure();
+
+  const images = props.cardImages ?? [];
+
   const rotate = props.rotate;
   const cardHeight = props.cardWidth / cardRatio;
   const spread = Math.min(
-    ((width - props.cardWidth) * 0.9) / props.cardImages.length,
+    ((width - props.cardWidth) * 0.9) / images.length,
     props.cardWidth
   );
   const [detail, setDetail] = useState<number | undefined>(undefined);
@@ -36,20 +39,20 @@ export const HandLayout = (props: {
           bottom: 0,
         }}
       >
-        {props.cardImages.map((image, i) => (
+        {images.map((image, i) => (
           <div
             key={i}
             style={{
               position: 'absolute',
               transform: `translateX(${
-                spread * i - ((props.cardImages.length - 1) * spread) / 2
+                spread * i - ((images.length - 1) * spread) / 2
               }px) rotate(${
-                rotate * i - ((props.cardImages.length - 1) * rotate) / 2
+                rotate * i - ((images.length - 1) * rotate) / 2
               }deg) ${
                 i === detail
                   ? `translateY(-25px) translateX(-25px) rotate(${-(
                       rotate * i -
-                      ((props.cardImages.length - 1) * rotate) / 2
+                      ((images.length - 1) * rotate) / 2
                     )}deg)`
                   : ''
               }`,
