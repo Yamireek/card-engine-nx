@@ -7,6 +7,7 @@ export const StateContext = React.createContext<{
     state: State;
     view: View;
     setState: (newState: State) => void;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 }>({} as any);
 
 export const StateProvider = (

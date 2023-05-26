@@ -1,22 +1,17 @@
-import { State } from '@card-engine-nx/state';
 import {
   image,
-  CardDisplay,
   NextStepButton,
   createBoardModel,
-  transform,
-  translate,
   getCardImageUrl,
   HandLayout,
+  BoardCamera,
+  Card3D,
+  Deck3D,
 } from '@card-engine-nx/ui';
-import { playerBack } from 'libs/ui/src/images';
-import { BoardCamera } from 'libs/ui/src/lib/3d/BoardCamera';
-import { Deck3D } from 'libs/ui/src/lib/3d/Deck3D';
 import { Playmat, Location3D } from './app';
-import React, { useContext, useMemo } from 'react';
-import { StateContext, StateProvider, useGameState } from './StateContext';
+import { useContext, useMemo } from 'react';
+import { StateContext, useGameState } from './StateContext';
 import { Observer } from 'mobx-react';
-import { Card3D } from 'libs/ui/src/lib/3d/Card3D';
 import {
   DeckModel,
   FloatingCardModel,
@@ -24,10 +19,9 @@ import {
   ZoneModel,
   CardModel,
 } from '@card-engine-nx/store';
-import { result } from 'lodash';
 import { advanceToChoiceState } from './tests/GameEngine';
 import { Events, executeAction } from '@card-engine-nx/engine';
-import { PlayerId, keys, values } from '@card-engine-nx/basic';
+import { PlayerId } from '@card-engine-nx/basic';
 
 const boardSize = { width: 1608 * 4, height: 1620 * 4 };
 const offset = { x: -boardSize.width / 2, y: -boardSize.height / 2 };
@@ -168,79 +162,83 @@ export const GameDisplay = () => {
         draw
       </button>
 
-      <BoardCamera angle={15} rotation={0}>
-        <Playmat image={image.board} size={boardSize} />
-        <Observer>
-          {() => (
-            <>
-              {board.zones.map((z) => (
-                <Location3D
-                  key={z.id}
-                  position={{
-                    x: z.location.x + offset.x,
-                    y: z.location.y + offset.y,
-                    z: 0,
-                  }}
-                  rotation={{ x: 0, y: 0, z: 0 }}
-                >
-                  <div
-                    key={z.id}
-                    style={{
-                      backgroundColor: z.color,
-                      opacity: 0.1,
-                      width: z.size.width,
-                      height: z.size.height,
-                    }}
-                  />
-                </Location3D>
-              ))}
+      <div style={{ width: '100%', height: '100%' }}>
+        <div style={{ width: '100%', height: '100%' }}>
+          <BoardCamera angle={15} rotation={0}>
+            <Playmat image={image.board} size={boardSize} />
+            <Observer>
+              {() => (
+                <>
+                  {board.zones.map((z) => (
+                    <Location3D
+                      key={z.id}
+                      position={{
+                        x: z.location.x + offset.x,
+                        y: z.location.y + offset.y,
+                        z: 0,
+                      }}
+                      rotation={{ x: 0, y: 0, z: 0 }}
+                    >
+                      <div
+                        key={z.id}
+                        style={{
+                          backgroundColor: z.color,
+                          opacity: 0.1,
+                          width: z.size.width,
+                          height: z.size.height,
+                        }}
+                      />
+                    </Location3D>
+                  ))}
 
-              {board.allCards.map((d) => (
-                <Card3D
-                  key={d.id}
-                  id={d.id}
-                  image={d.images}
-                  orientation={d.orientation}
-                  position={{
-                    x: d.position.x + offset.x,
-                    y: d.position.y + offset.y,
-                    z: d.position.z,
-                  }}
-                  rotation={d.rotation}
-                  scale={d.scale}
-                  // transform={transform(
-                  //   translate(-215, -300, 0),
-                  //   translate(-offset.x, -offset.y, offset.z - perspective),
-                  //   rotateX(-rotate),
-                  //   translate(215, 300, 0)
-                  // )}
-                />
-              ))}
+                  {board.allCards.map((d) => (
+                    <Card3D
+                      key={d.id}
+                      id={d.id}
+                      image={d.images}
+                      orientation={d.orientation}
+                      position={{
+                        x: d.position.x + offset.x,
+                        y: d.position.y + offset.y,
+                        z: d.position.z,
+                      }}
+                      rotation={d.rotation}
+                      scale={d.scale}
+                      // transform={transform(
+                      //   translate(-215, -300, 0),
+                      //   translate(-offset.x, -offset.y, offset.z - perspective),
+                      //   rotateX(-rotate),
+                      //   translate(215, 300, 0)
+                      // )}
+                    />
+                  ))}
 
-              {board.decks.map((d) => (
-                <Deck3D
-                  key={d.id}
-                  id={d.id}
-                  image={d.image}
-                  orientation={d.orientation}
-                  position={{
-                    x: d.position.x + offset.x,
-                    y: d.position.y + offset.y,
-                  }}
-                  cards={d.cards}
-                />
-              ))}
-            </>
-          )}
-        </Observer>
-      </BoardCamera>
-      <PlayerHand player="A" />
-      <NextStepButton
-        title="Next step"
-        onClick={() => {
-          console.log('next');
-        }}
-      />
+                  {board.decks.map((d) => (
+                    <Deck3D
+                      key={d.id}
+                      id={d.id}
+                      image={d.image}
+                      orientation={d.orientation}
+                      position={{
+                        x: d.position.x + offset.x,
+                        y: d.position.y + offset.y,
+                      }}
+                      cards={d.cards}
+                    />
+                  ))}
+                </>
+              )}
+            </Observer>
+          </BoardCamera>
+          <PlayerHand player="A" />
+          <NextStepButton
+            title="Next step"
+            onClick={() => {
+              console.log('next');
+            }}
+          />
+        </div>
+      </div>
     </>
   );
 };

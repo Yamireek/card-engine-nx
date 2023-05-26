@@ -5,3 +5,6 @@ export * as image from './images';
 export * from './lib/utils';
 export * from './lib/3d/utils';
 export * from './lib/HandLayout';
+export * from './lib/3d/Card3D';
+export * from './lib/3d/Deck3D';
+export * from './lib/3d/BoardCamera';
