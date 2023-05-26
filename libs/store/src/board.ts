@@ -48,6 +48,14 @@ export class BoardModel extends Model({
 
     throw new Error('zone not found in model');
   }
+
+  animate(frames: Array<{ action: () => void; stamp: number }>) {
+    for (const frame of frames) {
+      setTimeout(() => {
+        this.update(frame.action);
+      }, frame.stamp);
+    }
+  }
 }
 
 @model('Zone')
