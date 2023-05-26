@@ -6,6 +6,8 @@ import {
   createBoardModel,
   transform,
   translate,
+  getCardImageUrl,
+  HandLayout,
 } from '@card-engine-nx/ui';
 import { playerBack } from 'libs/ui/src/images';
 import { BoardCamera } from 'libs/ui/src/lib/3d/BoardCamera';
@@ -15,6 +17,17 @@ import React, { useContext, useMemo } from 'react';
 import { StateContext, StateProvider } from './StateContext';
 import { Observer } from 'mobx-react';
 import { Card3D } from 'libs/ui/src/lib/3d/Card3D';
+import {
+  DeckModel,
+  FloatingCardModel,
+  cardSize,
+  ZoneModel,
+  CardModel,
+} from '@card-engine-nx/store';
+import { result } from 'lodash';
+import { advanceToChoiceState } from './tests/GameEngine';
+import { executeAction } from '@card-engine-nx/engine';
+import { keys, values } from '@card-engine-nx/basic';
 
 const boardSize = { width: 1608 * 4, height: 1620 * 4 };
 const offset = { x: -boardSize.width / 2, y: -boardSize.height / 2 };
@@ -29,7 +42,120 @@ export const GameDisplay = () => {
 
   return (
     <>
-      <BoardCamera angle={45} rotation={0}>
+      <button
+        onClick={() => {
+          executeAction(
+            {
+              sequence: [
+                { shuffle: { zone: { owner: 'A', type: 'library' } } },
+                {
+                  player: {
+                    target: 'A',
+                    action: {
+                      incrementThreat: {
+                        fromCard: {
+                          sum: true,
+                          value: 'threadCost',
+                          card: { and: [{ owner: 'A', type: ['hero'] }] },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+            state,
+            {}
+          );
+
+          advanceToChoiceState(state, {});
+
+          executeAction(
+            { player: { action: { draw: 7 }, target: 'each' } },
+            state,
+            {
+              onCardMoved(cardId, source, destination, side) {
+                const cardState = state.cards[cardId];
+
+                board.update(() => {
+                  const sourceZone = board.getZone(source);
+                  if (sourceZone instanceof DeckModel) {
+                    board.cards.push(
+                      new FloatingCardModel({
+                        id: cardId.toString(),
+                        images: {
+                          front: getCardImageUrl(cardState.definition.front),
+                          back: sourceZone.image,
+                        },
+                        orientation: sourceZone.orientation,
+                        position: {
+                          ...sourceZone.position,
+                          z: sourceZone.cards * 4,
+                        },
+                        rotation: { x: 0, y: 180, z: 0 },
+                        scale: 1,
+                      })
+                    );
+                    sourceZone.cards -= 1;
+                  } else {
+                    throw new Error('not implemented');
+                  }
+                });
+
+                setTimeout(() => {
+                  board.update(() => {
+                    const card = board.cards.find(
+                      (c) => c.id === cardId.toString()
+                    );
+                    if (card) {
+                      card.position = {
+                        ...card.position,
+                        z: card.position.z + cardSize.width / 2,
+                      };
+                    }
+                  });
+                }, 0);
+
+                setTimeout(() => {
+                  board.update(() => {
+                    const card = board.cards.find(
+                      (c) => c.id === cardId.toString()
+                    );
+                    if (card) {
+                      card.rotation = { x: 0, y: 0, z: 0 };
+                    }
+                  });
+                }, 500);
+
+                setTimeout(() => {
+                  board.update(() => {
+                    const card = board.cards.pop();
+                    const zone = board.getZone(destination);
+                    if (card) {
+                      if (zone instanceof ZoneModel) {
+                        zone.cards.push(
+                          new CardModel({
+                            id: card.id,
+                            attachments: [],
+                            images: { ...card.images },
+                            orientation: card.orientation,
+                            rotation: { x: 0, y: 0, z: 0 },
+                          })
+                        );
+                      }
+                    }
+                  });
+                  setState({ ...state });
+                }, 1000);
+              },
+            }
+          );
+        }}
+      >
+        draw
+      </button>
+
+      <BoardCamera angle={15} rotation={0}>
         <Playmat image={image.board} size={boardSize} />
         <Observer>
           {() => (
@@ -65,7 +191,7 @@ export const GameDisplay = () => {
                   position={{
                     x: d.position.x + offset.x,
                     y: d.position.y + offset.y,
-                    z: 0,
+                    z: d.position.z,
                   }}
                   rotation={d.rotation}
                   scale={d.scale}
@@ -95,10 +221,24 @@ export const GameDisplay = () => {
           )}
         </Observer>
       </BoardCamera>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: -100,
+          width: '100%',
+        }}
+      >
+        <HandLayout
+          cardImages={state.players.A?.zones.hand.cards.map((id) =>
+            getCardImageUrl(state.cards[id].definition.front)
+          )}
+          cardWidth={200}
+          rotate={2}
+        />
+      </div>
       <NextStepButton
         title="Next step"
         onClick={() => {
-            
           console.log('next');
         }}
       />
