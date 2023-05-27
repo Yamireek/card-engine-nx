@@ -29,7 +29,7 @@ const Cylinder3d = (props: any) => {
   // });
 
   const texture = useTexture({
-    map: image.aragorn,
+    map: image.test,
   });
 
   return (
