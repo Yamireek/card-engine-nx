@@ -4,6 +4,7 @@ import { Stats, MapControls } from '@react-three/drei';
 import { useMeasure } from 'react-use';
 import { Dimensions } from '@card-engine-nx/store';
 import { NoToneMapping } from 'three';
+import * as THREE from 'three';
 
 const near = Number.EPSILON;
 const far = Number.MAX_SAFE_INTEGER;
@@ -45,6 +46,8 @@ export function ThreeJsTest(props: { size: Dimensions }) {
     >
       <MapControls panSpeed={0.25} />
       <Cylinder3d />
+      <directionalLight position={[200, 200, 1]} intensity={100} />
+      <pointLight position={[-1000, -100, 200]} intensity={2} />
       <axesHelper args={[1024]} />
       <gridHelper
         args={[10000, 100, 'red', 'black']}

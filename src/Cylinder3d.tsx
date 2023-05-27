@@ -12,44 +12,25 @@ setInterval(() => {
 }, 1000 / 1);
 
 const Cylinder3d = (props: any) => {
-  const camera = useThree((state) => state.camera);
-  console.log(camera);
-
-  // This reference gives us direct access to the THREE.Mesh object
-  const ref = useRef<any>();
-  // Hold state for hovered and clicked events
-  const [hovered, hover] = useState(false);
-  const [clicked, click] = useState(false);
-
-  // useFrame((state, delta) => {
-  //   if (ref.current) {
-  //     ref.current.rotation.x = store.x;
-  //     console.log(ref.current.rotation.x);
-  //   }
-  // });
-
-  const texture = useTexture({
+  const textureCard = useTexture({
     map: image.aragorn,
   });
 
+  const textureBoard = useTexture({
+    map: image.board,
+  });
+
   return (
-    <mesh
-      {...props}
-      ref={ref}
-      onClick={(event) => click(!clicked)}
-      onPointerOver={(event) => {
-        hover(true);
-      }}
-      onPointerMove={(event) => {
-        console.log(event);
-      }}
-      onPointerOut={(event) => hover(false)}
-      position={[0, 0, 0]}
-      rotation={[0, 0, 0]}
-    >
-      <planeGeometry args={[430, 600, 1]} />
-      <meshBasicMaterial {...texture} />
-    </mesh>
+    <group>
+      <mesh position={[0, 0, 100]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[430, 600, 1]} />
+        <meshPhysicalMaterial {...textureCard} />
+      </mesh>
+      <mesh position={[0, 0, 0]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[4000, 4000, 1]} />
+        <meshPhysicalMaterial {...textureBoard} />
+      </mesh>
+    </group>
   );
 };
 
