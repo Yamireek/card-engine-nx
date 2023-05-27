@@ -22,13 +22,23 @@ const Cylinder3d = (props: any) => {
 
   return (
     <group>
-      <mesh position={[0, 0, 100]} rotation={[0, 0, 0]}>
-        <planeGeometry args={[430, 600, 1]} />
-        <meshPhysicalMaterial {...textureCard} />
-      </mesh>
-      <mesh position={[0, 0, 0]} rotation={[0, 0, 0]}>
+      <mesh
+        position={[0, 0, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        castShadow
+        receiveShadow
+      >
         <planeGeometry args={[4000, 4000, 1]} />
         <meshPhysicalMaterial {...textureBoard} />
+      </mesh>
+      <mesh
+        position={[0, 10, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        castShadow
+        receiveShadow
+      >
+        <boxGeometry args={[430, 600, 1]} />
+        <meshBasicMaterial {...textureCard} />
       </mesh>
     </group>
   );
