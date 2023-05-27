@@ -24,7 +24,7 @@ const Cylinder3d = (props: any) => {
     <group>
       <mesh
         position={[0, 0, 0]}
-        rotation={[-Math.PI / 2, 0, 0]}
+        rotation={[0, 0, 0]}
         castShadow
         receiveShadow
       >
@@ -32,12 +32,12 @@ const Cylinder3d = (props: any) => {
         <meshPhysicalMaterial {...textureBoard} />
       </mesh>
       <mesh
-        position={[0, 10, 0]}
-        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0, 1]}
+        rotation={[0, 0, 0]}
         castShadow
         receiveShadow
       >
-        <boxGeometry args={[430, 600, 1]} />
+        <boxGeometry args={[430, 600, 2]} />
         <meshBasicMaterial {...textureCard} />
       </mesh>
     </group>
