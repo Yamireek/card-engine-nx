@@ -29,7 +29,7 @@ const Cylinder3d = (props: any) => {
   // });
 
   const texture = useTexture({
-    map: image.test,
+    map: image.aragorn,
   });
 
   return (
@@ -47,12 +47,8 @@ const Cylinder3d = (props: any) => {
       position={[0, 0, 0]}
       rotation={[0, 0, 0]}
     >
-      <planeGeometry args={[1024, 1024, 1]} />
-      <meshStandardMaterial
-        {...texture}
-        // wireframe={props.wireframe}
-        // color={hovered ? 'hotpink' : 'orange'}
-      />
+      <planeGeometry args={[430, 600, 1]} />
+      <meshBasicMaterial {...texture} />
     </mesh>
   );
 };
