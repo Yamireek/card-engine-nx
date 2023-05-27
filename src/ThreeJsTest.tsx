@@ -3,6 +3,7 @@ import Cylinder3d from './Cylinder3d';
 import { Stats, MapControls } from '@react-three/drei';
 import { useMeasure } from 'react-use';
 import { Dimensions } from '@card-engine-nx/store';
+import { NoToneMapping } from 'three';
 
 const near = Number.EPSILON;
 const far = Number.MAX_SAFE_INTEGER;
@@ -40,15 +41,15 @@ export function ThreeJsTest(props: { size: Dimensions }) {
         zoom,
       }}
       frameloop="demand"
+      gl={{ antialias: false, toneMapping: NoToneMapping }}
     >
-      <MapControls />
-      <ambientLight />
+      <MapControls panSpeed={0.25} />
       <Cylinder3d />
       <axesHelper args={[1024]} />
-      {/* <gridHelper
-        args={[1024, 64, 'red', 'black']}
+      <gridHelper
+        args={[10000, 100, 'red', 'black']}
         rotation={[-Math.PI / 2, 0, 0]}
-      /> */}
+      />
       <Stats />
     </Canvas>
   );
