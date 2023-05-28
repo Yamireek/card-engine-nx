@@ -4,6 +4,7 @@ import { Mesh, Texture } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 import { Dimensions } from '@card-engine-nx/store';
+import { useSpring, animated } from '@react-spring/three';
 //import { useSpring } from 'react-spring';
 
 export type Vector2 = [number, number];
@@ -29,15 +30,24 @@ export const Card3d = (props: Card3dProps) => {
     normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
   });
 
+  const spring = useSpring({
+    scale: props.size?.width ? props.size.width / cardSize.width : 1,
+    x: props.position[0],
+    y: props.position[1],
+    z: props.position[2],
+  });
+
   return (
-    <mesh position={props.position} rotation={[0, 0, 0]} castShadow>
-      <boxGeometry
-        args={
-          props.size
-            ? [props.size.width, props.size.height, 0.000305]
-            : [cardSize.width, cardSize.height, 0.000305]
-        }
-      />
+    <animated.mesh
+      position-x={spring.x}
+      position-y={spring.y}
+      position-z={spring.z}
+      scale-x={spring.scale}
+      scale-y={spring.scale}
+      rotation={[0, 0, 0]}
+      castShadow
+    >
+      <boxGeometry args={[cardSize.width, cardSize.height, 0.000305]} />
       <meshBasicMaterial attach="material-0" color="gray" />
       <meshBasicMaterial attach="material-1" color="gray" />
       <meshBasicMaterial attach="material-2" color="gray" />
@@ -54,6 +64,6 @@ export const Card3d = (props: Card3dProps) => {
         roughnessMap={texture.roughness}
         normalMap={texture.normal}
       />
-    </mesh>
+    </animated.mesh>
   );
 };
