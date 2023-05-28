@@ -14,6 +14,7 @@ function calculateFov(height: number, perspective: number) {
 }
 
 export type GameSceneProps = React.PropsWithChildren<{
+  debug?: boolean;
   angle: number;
   rotation: number;
   perspective: number;
@@ -93,7 +94,7 @@ export const GameScene = (
       <Lights />
       {props.children}
       <MapControls />
-      <Debug />
+      {props.debug && <Debug />}
     </Canvas>
   );
 };
