@@ -7,6 +7,7 @@ import { NoToneMapping } from 'three';
 import * as THREE from 'three';
 import { useRef } from 'react';
 import { useControls } from 'leva';
+import { Perf } from 'r3f-perf';
 
 const near = 10;
 const far = 50000;
@@ -49,6 +50,7 @@ export function ThreeJsTest(props: { size: Dimensions }) {
         antialias: true,
         toneMapping: NoToneMapping,
       }}
+      linear={false}
     >
       <MapControls />
       <pointLight
@@ -63,6 +65,7 @@ export function ThreeJsTest(props: { size: Dimensions }) {
         args={[10000, 100, 'red', 'black']}
         rotation={[-Math.PI / 2, 0, 0]}
       /> */}
+      <Perf matrixUpdate deepAnalyze overClock />
       <Stats />
     </Canvas>
   );

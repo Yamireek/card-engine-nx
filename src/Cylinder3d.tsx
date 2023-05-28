@@ -1,24 +1,32 @@
 import { useTexture } from '@react-three/drei';
 import { image } from '@card-engine-nx/ui';
-import { useState } from 'react';
-import { animated } from '@react-spring/three';
-import { useSpring } from 'react-spring';
+import { useState, useEffect } from 'react';
+import { animated, useSpring } from '@react-spring/three';
+//import { useSpring } from 'react-spring';
+import { observable } from 'mobx';
 
 const Cylinder3d = (props: any) => {
   const [hover, setHover] = useState(false);
 
+  const [z, setZ] = useState(1);
+
   const spring = useSpring({
-    position: hover ? 100 : 20,
-    config: { tension: 180, friction: 12 },
+    position: z,
   });
 
   const textureCard = useTexture({
     map: image.test,
-  });
+  }); 
 
   const textureBoard = useTexture({
     map: image.board,
   });
+
+  useEffect(() => {
+    setInterval(() => {
+      setZ((p) => p + 100);
+    }, 1000);
+  }, []);
 
   return (
     <group>
@@ -28,7 +36,7 @@ const Cylinder3d = (props: any) => {
       </mesh>
       <animated.mesh
         onPointerEnter={() => {
-          setHover(true);
+          setZ(0);
         }}
         onPointerLeave={() => {
           setHover(false);
