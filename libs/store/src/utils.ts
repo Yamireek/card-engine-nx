@@ -19,8 +19,8 @@ export function calculateItemSize(
   const scale = Math.min(scaleWidth, scaleHeight);
 
   const itemSize = {
-    height: Math.floor(item.height * scale),
-    width: Math.floor(item.width * scale),
+    height: item.height * scale,
+    width: item.width * scale,
   };
 
   return itemSize;
@@ -38,8 +38,8 @@ export function calculateItemMaxItemSize(
   const maxSize = maxBy(sizes, (s) => s.height) || item;
 
   return {
-    height: Math.round(maxSize.height),
-    width: Math.round(maxSize.width),
+    height: maxSize.height,
+    width: maxSize.width,
   };
 }
 

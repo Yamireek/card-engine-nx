@@ -25,7 +25,7 @@ import { PlayerId, values } from '@card-engine-nx/basic';
 import { GameSceneLoader } from './ThreeJsTest';
 import { Board3d } from './Board3d';
 import { Card3d } from './Card3d';
-import { CardArea } from './CardArea';
+import { CardAreaLayout } from './CardAreaLayout';
 import { Texture } from 'three';
 import { State } from '@card-engine-nx/state';
 import { uniq } from 'lodash';
@@ -188,27 +188,32 @@ export const GameDisplay = () => {
                     </Location3D>
                   ))} */}
 
-                <CardArea
+                <CardAreaLayout
                   color="red"
                   position={[0, 0]}
                   size={{ width: 1, height: 0.5 }}
-                >
-                  {board.allCards.map((d, i) => {
-                    if (!d.images.front || !d.images.back) {
-                      return null;
-                    }
-                    return (
-                      <Card3d
-                        key={d.id}
-                        position={[i * 0.07, 0, 0]}
-                        textures={{
-                          front: textures[d.images.front],
-                          back: textures[d.images.back],
-                        }}
-                      />
-                    );
-                  })}
-                </CardArea>
+                  itemSize={{
+                    width: cardSize.width * 1.2,
+                    height: cardSize.height * 1.2,
+                  }}
+                  items={board.allCards.filter(
+                    (c) => c.images.front && c.images.back
+                  )}
+                  renderer={(p) => (
+                    <Card3d
+                      key={p.item.id}
+                      size={{
+                        width: p.size.width / 1.2,
+                        height: p.size.height / 1.2,
+                      }}
+                      position={[p.position[0], p.position[1], 0.001]}
+                      textures={{
+                        front: textures[p.item.images.front],
+                        back: textures[p.item.images.back],
+                      }}
+                    />
+                  )}
+                />
 
                 {/* {board.decks.map((d) => (
                     <Deck3D
