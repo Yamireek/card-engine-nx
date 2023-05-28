@@ -8,6 +8,7 @@ import * as THREE from 'three';
 import { useRef } from 'react';
 import { useControls } from 'leva';
 import { Perf } from 'r3f-perf';
+import { Debug, Physics, useBox } from '@react-three/cannon';
 
 const near = 10;
 const far = 50000;
@@ -59,7 +60,11 @@ export function ThreeJsTest(props: { size: Dimensions }) {
         intensity={5}
         distance={18000}
       />
-      <Cylinder3d />
+      <Physics gravity={[0, 0, -981]}>
+        <Debug color="black" scale={1.1}>
+          <Cylinder3d />
+        </Debug>
+      </Physics>
       {/* <axesHelper args={[1024]} />
       <gridHelper
         args={[10000, 100, 'red', 'black']}
