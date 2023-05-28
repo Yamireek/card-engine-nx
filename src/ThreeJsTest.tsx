@@ -8,8 +8,8 @@ import * as THREE from 'three';
 import { useRef } from 'react';
 import { useControls } from 'leva';
 
-const near = Number.EPSILON;
-const far = Number.MAX_SAFE_INTEGER;
+const near = 10;
+const far = 50000;
 
 function calculateFov(height: number, perspective: number) {
   return 2 * Math.atan(height / 2 / perspective) * (180 / Math.PI);

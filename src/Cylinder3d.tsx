@@ -5,10 +5,10 @@ import { animated } from '@react-spring/three';
 import { useSpring } from 'react-spring';
 
 const Cylinder3d = (props: any) => {
-  const [active, setActive] = useState(false);
+  const [hover, setHover] = useState(false);
 
   const spring = useSpring({
-    position: active ? 100 : 1,
+    position: hover ? 100 : 20,
     config: { tension: 180, friction: 12 },
   });
 
@@ -27,8 +27,11 @@ const Cylinder3d = (props: any) => {
         <meshPhysicalMaterial {...textureBoard} />
       </mesh>
       <animated.mesh
-        onPointerMissed={() => {
-          setActive(true);
+        onPointerEnter={() => {
+          setHover(true);
+        }}
+        onPointerLeave={() => {
+          setHover(false);
         }}
         position-z={spring.position}
         rotation={[0, 0, 0]}
