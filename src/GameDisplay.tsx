@@ -9,7 +9,7 @@ import {
   Deck3D,
 } from '@card-engine-nx/ui';
 import { Playmat, Location3D } from './app';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { StateContext, useGameState } from './StateContext';
 import { Observer } from 'mobx-react';
 import {
@@ -21,17 +21,47 @@ import {
 } from '@card-engine-nx/store';
 import { advanceToChoiceState } from './tests/GameEngine';
 import { Events, executeAction } from '@card-engine-nx/engine';
-import { PlayerId } from '@card-engine-nx/basic';
+import { PlayerId, values } from '@card-engine-nx/basic';
 import { GameSceneLoader } from './ThreeJsTest';
 import { Board3d } from './Board3d';
 import { Card3d } from './Card3d';
 import { CardArea } from './CardArea';
+import { Texture } from 'three';
+import { State } from '@card-engine-nx/state';
+import { uniq } from 'lodash';
+import * as THREE from 'three';
 
 const boardSize = { width: 1608 * 4, height: 1620 * 4 };
 const offset = { x: -boardSize.width / 2, y: -boardSize.height / 2 };
 
+export type Textures = Record<string, Texture>;
+
+export async function preLoadTextures(state: State): Promise<Textures> {
+  const urls = uniq(
+    values(state.cards).flatMap((c) => [
+      getCardImageUrl(c.definition.front),
+      getCardImageUrl(c.definition.back),
+    ])
+  );
+
+  const loader = new THREE.TextureLoader();
+  const textures: Record<string, Texture> = {};
+  for (const url of urls) {
+    console.log('loading texture', url);
+    textures[url] = await loader.loadAsync(url);
+  }
+  return textures;
+}
+
 export const GameDisplay = () => {
   const { state, setState } = useContext(StateContext);
+
+  const [textures, setTextures] = useState<Textures | undefined>();
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    preLoadTextures(state).then(setTextures);
+  }, []);
 
   const board = useMemo(() => {
     return createBoardModel(state);
@@ -124,6 +154,10 @@ export const GameDisplay = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (!textures) {
+    return <div>loading textures...</div>;
+  }
+
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <div style={{ width: '100%', height: '100%' }}>
@@ -167,7 +201,10 @@ export const GameDisplay = () => {
                       <Card3d
                         key={d.id}
                         position={[i * 0.07, 0, 0]}
-                        images={d.images}
+                        textures={{
+                          front: textures[d.images.front],
+                          back: textures[d.images.back],
+                        }}
                       />
                     );
                   })}
