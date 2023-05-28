@@ -13,7 +13,7 @@ export const Card3d = (props: Card3dProps) => {
   });
 
   return (
-    <mesh position={[0, 0, 0]}>
+    <mesh position={[0, 0, 0.02]} castShadow>
       <boxGeometry args={[0.0635, 0.0889, 0.000305]} />
       <meshBasicMaterial attach="material-0" color="gray" />
       <meshBasicMaterial attach="material-1" color="gray" />

@@ -57,9 +57,9 @@ export function ThreeJsTest(props: { size: Dimensions }) {
     >
       <MapControls />
       <pointLight
-        position={[0, 0, 1]}
+        position={[-2, 2, 4]}
         castShadow
-        intensity={1}
+        intensity={5}
         distance={10}
       />
       <Board3d />
