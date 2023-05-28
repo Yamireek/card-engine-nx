@@ -22,6 +22,10 @@ import {
 import { advanceToChoiceState } from './tests/GameEngine';
 import { Events, executeAction } from '@card-engine-nx/engine';
 import { PlayerId } from '@card-engine-nx/basic';
+import { GameSceneLoader } from './ThreeJsTest';
+import { Board3d } from './Board3d';
+import { Card3d } from './Card3d';
+import { CardArea } from './CardArea';
 
 const boardSize = { width: 1608 * 4, height: 1620 * 4 };
 const offset = { x: -boardSize.width / 2, y: -boardSize.height / 2 };
@@ -165,12 +169,12 @@ export const GameDisplay = () => {
 
       <div style={{ width: '100%', height: '100%' }}>
         <div style={{ width: '100%', height: '100%' }}>
-          <BoardCamera angle={20} rotation={0}>
-            <Playmat image={image.board} size={boardSize} />
+          <GameSceneLoader angle={20} rotation={0} perspective={3000}>
+            <Board3d />
             <Observer>
               {() => (
                 <>
-                  {board.zones.map((z) => (
+                  {/* {board.zones.map((z) => (
                     <Location3D
                       key={z.id}
                       position={{
@@ -190,31 +194,27 @@ export const GameDisplay = () => {
                         }}
                       />
                     </Location3D>
-                  ))}
+                  ))} */}
 
-                  {board.allCards.map((d) => (
-                    <Card3D
-                      key={d.id}
-                      id={d.id}
-                      image={d.images}
-                      orientation={d.orientation}
-                      position={{
-                        x: d.position.x + offset.x,
-                        y: d.position.y + offset.y,
-                        z: d.position.z,
-                      }}
-                      rotation={d.rotation}
-                      scale={d.scale}
-                      // transform={transform(
-                      //   translate(-215, -300, 0),
-                      //   translate(-offset.x, -offset.y, offset.z - perspective),
-                      //   rotateX(-rotate),
-                      //   translate(215, 300, 0)
-                      // )}
-                    />
-                  ))}
+                  <CardArea
+                    color="red"
+                    position={[0, 0]}
+                    size={{ width: 1, height: 0.5 }}
+                  >
+                    {board.allCards.map((d, i) => (
+                      <Card3d
+                        key={d.id}
+                        position={[i * 0.07, 0, 0]}
+                        // id={d.id}
+                        // image={d.images}
+                        // orientation={d.orientation}
+                        // rotation={d.rotation}
+                        // scale={d.scale}
+                      />
+                    ))}
+                  </CardArea>
 
-                  {board.decks.map((d) => (
+                  {/* {board.decks.map((d) => (
                     <Deck3D
                       key={d.id}
                       id={d.id}
@@ -226,11 +226,11 @@ export const GameDisplay = () => {
                       }}
                       cards={d.cards}
                     />
-                  ))}
+                  ))} */}
                 </>
               )}
             </Observer>
-          </BoardCamera>
+          </GameSceneLoader>
           <PlayerHand player="A" />
           <NextStepButton
             title="Next step"
