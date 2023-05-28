@@ -26,7 +26,7 @@ export const ThreeJsAutosized = () => {
 };
 
 export function ThreeJsTest(props: { size: Dimensions }) {
-  const perspective = 2500;
+  const perspective = 3000;
   const width = props.size.width;
   const height = props.size.height;
   const zoom = width / height;
