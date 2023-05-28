@@ -2,7 +2,11 @@ import { useTexture } from '@react-three/drei';
 import { image } from '@card-engine-nx/ui';
 //import { useSpring } from 'react-spring';
 
-export type Card3dProps = {};
+export type Vector2 = [number, number];
+
+export type Vector3 = [number, number, number];
+
+export type Card3dProps = { position: Vector3 };
 
 export const Card3d = (props: Card3dProps) => {
   const texture = useTexture({
@@ -13,7 +17,7 @@ export const Card3d = (props: Card3dProps) => {
   });
 
   return (
-    <mesh position={[0, 0, 0.02]} rotation={[0, 0, 0]} castShadow>
+    <mesh position={props.position} rotation={[0, 0, 0]} castShadow>
       <boxGeometry args={[0.0635, 0.0889, 0.000305]} />
       <meshPhysicalMaterial
         map={texture.front}

@@ -4,9 +4,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
-import './test';
-import { ThreeJsAutosized, ThreeJsTest } from './ThreeJsTest';
-import { CssTest } from './CssTest';
+import { App } from './app';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,8 +12,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <div style={{ width: '100vw', height: '100vh' }}>
-      <ThreeJsAutosized />
-    </div>
+    <App />
   </StrictMode>
 );
