@@ -11,8 +11,8 @@ import { useControls } from 'leva';
 const near = Number.EPSILON;
 const far = Number.MAX_SAFE_INTEGER;
 
-function calculateFov(width: number, distance: number) {
-  return 2 * Math.atan((width / distance) * 2) * (180 / Math.PI);
+function calculateFov(height: number, perspective: number) {
+  return 2 * Math.atan(height / 2 / perspective) * (180 / Math.PI);
 }
 
 export const ThreeJsAutosized = () => {
@@ -29,8 +29,8 @@ export function ThreeJsTest(props: { size: Dimensions }) {
   const perspective = 3000;
   const width = props.size.width;
   const height = props.size.height;
-  const zoom = width / height;
-  const fov = calculateFov(width, perspective);
+  const aspect = width / height;
+  const fov = calculateFov(height, perspective);
 
   return (
     <Canvas
@@ -41,7 +41,7 @@ export function ThreeJsTest(props: { size: Dimensions }) {
         fov,
         near,
         far,
-        zoom,
+        aspect,
       }}
       frameloop="demand"
       gl={{ antialias: false, toneMapping: NoToneMapping }}
