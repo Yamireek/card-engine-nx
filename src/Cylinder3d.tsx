@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import { animated, useSpring } from '@react-spring/three';
 //import { useSpring } from 'react-spring';
 import { observable } from 'mobx';
+import { Texture } from 'three';
+import { isArray } from 'lodash';
 
 const Cylinder3d = (props: any) => {
   const [hover, setHover] = useState(false);
 
-  const [z, setZ] = useState(1);
+  const [z, setZ] = useState(15);
 
   const spring = useSpring({
     position: z,
@@ -18,46 +20,35 @@ const Cylinder3d = (props: any) => {
     map: image.aragorn,
   });
 
-  const textureBoard = useTexture({
-    map: image.board,
-  });
-
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     setZ((p) => p + 100);
-  //   }, 1000);
-  // }, []);
+  const [colorMap, roughnessMap] = useTexture(
+    [
+      './textures/wood-2k/Wood026_2K_Color.png',
+      './textures/wood-2k/Wood026_2K_Roughness.png',
+    ],
+    (t) => {
+      if (isArray(t)) {
+        for (const texture of t) {
+          texture.wrapS = 1000;
+          texture.wrapT = 1000;
+          texture.repeat.set(1, 1);
+        }
+      }
+    }
+  );
 
   return (
     <group>
       <mesh position={[0, 0, 0]} rotation={[0, 0, 0]} receiveShadow>
-        <planeGeometry args={[4000, 4000]} />
-        <meshPhysicalMaterial {...textureBoard} />
+        <planeGeometry args={[4000, 4000, 1, 1]} />
+        <meshPhysicalMaterial map={colorMap} roughnessMap={roughnessMap} />
       </mesh>
-      <Text
-        color="black"
-        fontSize={14}
-        maxWidth={320}
-        lineHeight={1.15}
-        letterSpacing={0.01}
-        textAlign={'left'}
-        font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-        anchorX="left"
-        anchorY="top"
-        position={[-169, -146.5, 3]}
-        outlineWidth={6}
-        outlineColor="rgb(226,214,222)"
-      >
-        Response: After Aragorn commits to a quest, spend 1 resource from his
-        resource pool to ready him.
-      </Text>
       <animated.mesh
-        onPointerEnter={() => {
-          setZ(0);
-        }}
-        onPointerLeave={() => {
-          setHover(false);
-        }}
+        // onPointerEnter={() => {
+        //   setZ(0);
+        // }}
+        // onPointerLeave={() => {
+        //   setHover(false);
+        // }}
         position-z={spring.position}
         rotation={[0, 0, 0]}
         castShadow
