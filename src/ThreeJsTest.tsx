@@ -1,11 +1,16 @@
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import Cylinder3d from './Cylinder3d';
-import { Stats, MapControls, OrbitControls } from '@react-three/drei';
+import {
+  Stats,
+  MapControls,
+  OrbitControls,
+  useHelper,
+} from '@react-three/drei';
 import { useMeasure } from 'react-use';
 import { Dimensions } from '@card-engine-nx/store';
 import { NoToneMapping } from 'three';
 import * as THREE from 'three';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useControls } from 'leva';
 import { Perf } from 'r3f-perf';
 import { Debug, Physics, useBox } from '@react-three/cannon';
@@ -26,6 +31,20 @@ export const ThreeJsAutosized = () => {
     <div ref={ref} style={{ width: '100%', height: '100%' }}>
       {width > 300 ? <ThreeJsTest size={{ width, height }} /> : null}
     </div>
+  );
+};
+
+export const Lights = () => {
+  return (
+    <>
+      <pointLight
+        position={[-2, 1, 4]}
+        castShadow
+        intensity={4}
+        distance={10}
+      />
+      <directionalLight position={[-1, -1, 5]} intensity={0.2} />
+    </>
   );
 };
 
@@ -52,16 +71,13 @@ export function ThreeJsTest(props: { size: Dimensions }) {
       gl={{
         antialias: true,
         toneMapping: NoToneMapping,
+        shadowMapType: THREE.PCFSoftShadowMap,
       }}
       linear={false}
     >
+      <Lights />
       <MapControls />
-      <pointLight
-        position={[-2, 2, 4]}
-        castShadow
-        intensity={5}
-        distance={10}
-      />
+
       <Board3d />
       <Card3d />
       <axesHelper args={[1024]} />

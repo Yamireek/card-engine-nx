@@ -13,9 +13,14 @@ export const Card3d = (props: Card3dProps) => {
   });
 
   return (
-    <mesh position={[0, 0, 0.02]} castShadow>
+    <mesh position={[0, 0, 0.02]} rotation={[0, 0, 0]} castShadow>
       <boxGeometry args={[0.0635, 0.0889, 0.000305]} />
-      <meshBasicMaterial attach="material-0" color="gray" />
+      <meshPhysicalMaterial
+        map={texture.front}
+        roughnessMap={texture.roughness}
+        normalMap={texture.normal}
+      />
+      {/* <meshBasicMaterial attach="material-0" color="gray" />
       <meshBasicMaterial attach="material-1" color="gray" />
       <meshBasicMaterial attach="material-2" color="gray" />
       <meshBasicMaterial attach="material-3" color="gray" />
@@ -30,7 +35,7 @@ export const Card3d = (props: Card3dProps) => {
         map={texture.back}
         roughnessMap={texture.roughness}
         normalMap={texture.normal}
-      />
+      /> */}
     </mesh>
   );
 };
