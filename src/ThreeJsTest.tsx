@@ -9,8 +9,10 @@ import { useRef } from 'react';
 import { useControls } from 'leva';
 import { Perf } from 'r3f-perf';
 import { Debug, Physics, useBox } from '@react-three/cannon';
+import { Card3d } from './Card3d';
+import { Board3d } from './Board3d';
 
-const near = 10;
+const near = 0.01;
 const far = 50000;
 
 function calculateFov(height: number, perspective: number) {
@@ -38,7 +40,7 @@ export function ThreeJsTest(props: { size: Dimensions }) {
     <Canvas
       style={{ width, height }}
       camera={{
-        position: [0, 0, perspective],
+        position: [0, 0, 0.5],
         up: [0, 0, 1],
         fov,
         near,
@@ -55,21 +57,18 @@ export function ThreeJsTest(props: { size: Dimensions }) {
     >
       <MapControls />
       <pointLight
-        position={[4000, 4000, 5000]}
+        position={[0, 0, 1]}
         castShadow
-        intensity={5}
-        distance={18000}
+        intensity={1}
+        distance={10}
       />
-      <Physics gravity={[0, 0, -981]}>
-        <Debug color="black" scale={1.1}>
-          <Cylinder3d />
-        </Debug>
-      </Physics>
-      {/* <axesHelper args={[1024]} />
+      <Board3d />
+      <Card3d />
+      <axesHelper args={[1024]} />
       <gridHelper
-        args={[10000, 100, 'red', 'black']}
+        args={[2, 20, 'red', 'black']}
         rotation={[-Math.PI / 2, 0, 0]}
-      /> */}
+      />
       <Perf matrixUpdate deepAnalyze overClock />
       <Stats />
     </Canvas>
