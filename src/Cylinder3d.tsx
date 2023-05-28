@@ -1,19 +1,19 @@
-import React, { useRef, useState } from 'react';
-import { MeshProps, useFrame, useThree } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import { image } from '@card-engine-nx/ui';
-import { observable } from 'mobx';
-import { Observer, observer } from 'mobx-react';
-
-const store = observable({ x: 0 });
-
-setInterval(() => {
-  store.x += 0.1;
-}, 1000 / 1);
+import { useState } from 'react';
+import { animated } from '@react-spring/three';
+import { useSpring } from 'react-spring';
 
 const Cylinder3d = (props: any) => {
+  const [active, setActive] = useState(false);
+
+  const spring = useSpring({
+    position: active ? 100 : 1,
+    config: { tension: 180, friction: 12 },
+  });
+
   const textureCard = useTexture({
-    map: image.aragorn,
+    map: image.test,
   });
 
   const textureBoard = useTexture({
@@ -22,24 +22,21 @@ const Cylinder3d = (props: any) => {
 
   return (
     <group>
-      <mesh
-        position={[0, 0, 0]}
-        rotation={[0, 0, 0]}
-        castShadow
-        receiveShadow
-      >
-        <planeGeometry args={[4000, 4000, 1]} />
+      <mesh position={[0, 0, 0]} rotation={[0, 0, 0]} receiveShadow>
+        <planeGeometry args={[4000, 4000]} />
         <meshPhysicalMaterial {...textureBoard} />
       </mesh>
-      <mesh
-        position={[0, 0, 1]}
+      <animated.mesh
+        onPointerMissed={() => {
+          setActive(true);
+        }}
+        position-z={spring.position}
         rotation={[0, 0, 0]}
         castShadow
-        receiveShadow
       >
-        <boxGeometry args={[430, 600, 2]} />
-        <meshBasicMaterial {...textureCard} />
-      </mesh>
+        <boxGeometry args={[256, 256, 2]} />
+        <meshPhysicalMaterial {...textureCard} />
+      </animated.mesh>
     </group>
   );
 };

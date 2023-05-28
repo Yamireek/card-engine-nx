@@ -43,9 +43,12 @@ export function ThreeJsTest(props: { size: Dimensions }) {
         far,
         aspect,
       }}
-      frameloop="demand"
-      gl={{ antialias: false, toneMapping: NoToneMapping }}
+      frameloop="always"
       shadows
+      gl={{
+        antialias: true,
+        toneMapping: NoToneMapping,
+      }}
     >
       <MapControls />
       <pointLight
