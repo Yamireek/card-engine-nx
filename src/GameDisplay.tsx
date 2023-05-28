@@ -125,56 +125,14 @@ export const GameDisplay = () => {
   }, []);
 
   return (
-    <>
-      <button
-        style={{ position: 'fixed', zIndex: 10 }}
-        onClick={() => {
-          executeAction(
-            {
-              sequence: [
-                { shuffle: { zone: { owner: 'A', type: 'library' } } },
-                {
-                  player: {
-                    target: 'A',
-                    action: {
-                      incrementThreat: {
-                        fromCard: {
-                          sum: true,
-                          value: 'threadCost',
-                          card: { and: [{ owner: 'A', type: ['hero'] }] },
-                        },
-                      },
-                    },
-                  },
-                },
-              ],
-            },
-            state,
-            events
-          );
-
-          advanceToChoiceState(state, events);
-
-          executeAction(
-            { player: { action: { draw: 7 }, target: 'each' } },
-            state,
-            events
-          );
-
-          advanceToChoiceState(state, events);
-        }}
-      >
-        draw
-      </button>
-
+    <div style={{ width: '100%', height: '100%' }}>
       <div style={{ width: '100%', height: '100%' }}>
-        <div style={{ width: '100%', height: '100%' }}>
-          <GameSceneLoader angle={20} rotation={0} perspective={3000}>
-            <Board3d />
-            <Observer>
-              {() => (
-                <>
-                  {/* {board.zones.map((z) => (
+        <GameSceneLoader angle={20} rotation={0} perspective={3000} debug>
+          <Board3d />
+          <Observer>
+            {() => (
+              <>
+                {/* {board.zones.map((z) => (
                     <Location3D
                       key={z.id}
                       position={{
@@ -196,25 +154,26 @@ export const GameDisplay = () => {
                     </Location3D>
                   ))} */}
 
-                  <CardArea
-                    color="red"
-                    position={[0, 0]}
-                    size={{ width: 1, height: 0.5 }}
-                  >
-                    {board.allCards.map((d, i) => (
+                <CardArea
+                  color="red"
+                  position={[0, 0]}
+                  size={{ width: 1, height: 0.5 }}
+                >
+                  {board.allCards.map((d, i) => {
+                    if (!d.images.front || !d.images.back) {
+                      return null;
+                    }
+                    return (
                       <Card3d
                         key={d.id}
                         position={[i * 0.07, 0, 0]}
-                        // id={d.id}
-                        // image={d.images}
-                        // orientation={d.orientation}
-                        // rotation={d.rotation}
-                        // scale={d.scale}
+                        images={d.images}
                       />
-                    ))}
-                  </CardArea>
+                    );
+                  })}
+                </CardArea>
 
-                  {/* {board.decks.map((d) => (
+                {/* {board.decks.map((d) => (
                     <Deck3D
                       key={d.id}
                       id={d.id}
@@ -227,20 +186,51 @@ export const GameDisplay = () => {
                       cards={d.cards}
                     />
                   ))} */}
-                </>
-              )}
-            </Observer>
-          </GameSceneLoader>
-          <PlayerHand player="A" />
-          <NextStepButton
-            title="Next step"
-            onClick={() => {
-              console.log('next');
-            }}
-          />
-        </div>
+              </>
+            )}
+          </Observer>
+        </GameSceneLoader>
+        <PlayerHand player="A" />
+        <NextStepButton
+          title="Next step"
+          onClick={() => {
+            executeAction(
+              {
+                sequence: [
+                  { shuffle: { zone: { owner: 'A', type: 'library' } } },
+                  {
+                    player: {
+                      target: 'A',
+                      action: {
+                        incrementThreat: {
+                          fromCard: {
+                            sum: true,
+                            value: 'threadCost',
+                            card: { and: [{ owner: 'A', type: ['hero'] }] },
+                          },
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+              state,
+              events
+            );
+
+            advanceToChoiceState(state, events);
+
+            executeAction(
+              { player: { action: { draw: 7 }, target: 'each' } },
+              state,
+              events
+            );
+
+            advanceToChoiceState(state, events);
+          }}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

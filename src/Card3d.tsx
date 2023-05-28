@@ -6,12 +6,17 @@ export type Vector2 = [number, number];
 
 export type Vector3 = [number, number, number];
 
-export type Card3dProps = { position: Vector3 };
+export type CardImages = { front: string; back: string };
+
+export type Card3dProps = {
+  position: Vector3;
+  images: CardImages;
+};
 
 export const Card3d = (props: Card3dProps) => {
   const texture = useTexture({
-    front: image.aragorn,
-    back: image.playerBack,
+    front: props.images.front,
+    back: props.images.back,
     roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
     normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
   });

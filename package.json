@@ -5,6 +5,7 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
+    "preview": "npm run build && npx serve ./dist/card-engine-nx/",
     "test": "vitest --ui",
     "lint": "nx run-many --all --target=lint --verbose",
     "storybook": "nx storybook ui",

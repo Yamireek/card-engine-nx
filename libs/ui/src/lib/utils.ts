@@ -9,17 +9,25 @@ import {
 import { image } from '..';
 
 export function getCardImageUrl(props: PrintedProps): string {
+  if (props.type === 'player_back') {
+    return image.playerBack;
+  }
+
+  if (props.type === 'encounter_back') {
+    return image.encounterBack;
+  }
+
   const name = props.name || props.type;
-  return `https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/${name
-    .split(' ')
-    .join('-')}.jpg`;
+  return `./images/cards/01-core/${name.replace("'", '_')}.jpg`;
 }
 
 export function creteCardModel(state: CardState): CardModel {
-  const def = state.definition[state.sideUp];
   return new CardModel({
     attachments: [],
-    images: { front: getCardImageUrl(def), back: '' },
+    images: {
+      front: getCardImageUrl(state.definition.front) ?? '',
+      back: getCardImageUrl(state.definition.back) ?? '',
+    },
     orientation: 'portrait',
     rotation: {
       x: 0,
