@@ -10,11 +10,12 @@ import {
   createView,
   executeAction,
   executeCardAction,
+  uiEvent,
 } from '@card-engine-nx/engine';
 import { addPlayer, addCard } from './addPlayer';
-import { Events } from '@card-engine-nx/engine';
+import { UIEvents } from '@card-engine-nx/engine';
 
-export function nextStep(state: State, events: Events) {
+export function nextStep(state: State, events: UIEvents) {
   const action = state.next.shift();
   if (!action) {
     return;
@@ -23,7 +24,7 @@ export function nextStep(state: State, events: Events) {
   }
 }
 
-export function advanceToChoiceState(state: State, events: Events) {
+export function advanceToChoiceState(state: State, events: UIEvents) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     if (state.choice) {
@@ -31,13 +32,13 @@ export function advanceToChoiceState(state: State, events: Events) {
         state.next.unshift(state.choice.options[0].action);
         state.choice = undefined;
       } else {
-        events.updateUi(state);
+        events.send(uiEvent.newState(state));
         return state;
       }
     }
 
     if (state.next.length === 0) {
-      events.updateUi(state);
+      events.send(uiEvent.newState(state));
       return;
     }
 
@@ -45,34 +46,34 @@ export function advanceToChoiceState(state: State, events: Events) {
       nextStep(state, events);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      events.onError(error.message);
-      events.updateUi(state);
+      events.send(uiEvent.error(error.message));
+      events.send(uiEvent.newState(state));
     }
   }
 }
 
-export const emptyEvents: Events = {
-  onCardMoved: () => {
-    return;
+export const consoleEvents: UIEvents = {
+  send(event) {
+    const { type, ...rest } = event;
+    console.log(type, rest);
   },
-  onError: () => {
-    return;
-  },
-  updateUi: () => {
-    return;
+  subscribe(sub) {
+    return () => {
+      return;
+    };
   },
 };
 
 export class GameEngine {
   constructor(public state = createState()) {
-    advanceToChoiceState(state, emptyEvents);
+    advanceToChoiceState(state, consoleEvents);
     state.choice = undefined;
     state.next = [];
   }
 
   do(action: Action) {
     this.state.next.unshift(action);
-    advanceToChoiceState(this.state, emptyEvents);
+    advanceToChoiceState(this.state, consoleEvents);
   }
 
   // doAction(title: string) {
@@ -150,7 +151,7 @@ export class CardProxy {
 
   update(cardAction: CardAction) {
     executeCardAction(cardAction, this.state.cards[this.id]);
-    advanceToChoiceState(this.state, emptyEvents);
+    advanceToChoiceState(this.state, consoleEvents);
   }
 
   get props() {

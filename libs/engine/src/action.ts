@@ -1,11 +1,11 @@
 import { Action, State } from '@card-engine-nx/state';
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
-import { Events } from './events';
+import { UIEvents } from './uiEvents';
 import { getZoneState } from './zone/target';
 import { shuffle } from 'lodash';
 
-export function executeAction(action: Action, state: State, events: Events) {
+export function executeAction(action: Action, state: State, events: UIEvents) {
   if (action === 'empty') {
     return;
   }
