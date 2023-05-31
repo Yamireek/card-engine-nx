@@ -1,8 +1,5 @@
 import { useTexture } from '@react-three/drei';
-import { image } from '@card-engine-nx/ui';
-import { Mesh, Texture } from 'three';
-import { useFrame } from '@react-three/fiber';
-import { useRef } from 'react';
+import { Texture } from 'three';
 import { Dimensions } from '@card-engine-nx/store';
 import { useSpring, animated } from '@react-spring/three';
 //import { useSpring } from 'react-spring';
@@ -14,6 +11,7 @@ export type Vector3 = [number, number, number];
 export type CardTextures = { front: Texture; back: Texture };
 
 export type Card3dProps = {
+  id: number;
   position: Vector3;
   textures: CardTextures;
   size?: Dimensions;
@@ -25,6 +23,8 @@ export const cardSize: Dimensions = {
 };
 
 export const Card3d = (props: Card3dProps) => {
+  console.log('card rendering', props);
+
   const texture = useTexture({
     roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
     normal: './textures/wood-2k/Wood026_2K_NormalGL.png',

@@ -73,11 +73,25 @@ export function createRxUiEvents(): UiEvents {
 
 export const FloatingCards = (props: { events: UiEvents }) => {
   const [cards, setCards] = useState<Card3dProps[]>([]);
+  const { state } = useGameState();
 
   useEffect(() => {
-    const unsub = props.events.subscribe((s) => {
-      if (s.type === 'card_moved') {
-        debugger;
+    const unsub = props.events.subscribe((e) => {
+      if (e.type === 'card_moved') {
+        const card = state.cards[e.cardId];
+
+        setCards((p) => [
+          ...p,
+          {
+            id: e.cardId,
+            position: [0, 0, 0.01],
+            textures: {
+              front: getCardImageUrl(card.definition.front),
+              back: getCardImageUrl(card.definition.back),
+            },
+          },
+        ]);
+
         return;
       }
     });
@@ -104,15 +118,11 @@ export const GameDisplay = () => {
     preLoadTextures(state).then(setTextures);
   }, []);
 
-  const board = useMemo(() => {
-    return createBoardModel(state);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const events = useMemo<UiEvents>(() => {
     const tmp = createRxUiEvents();
     tmp.subscribe((e) => {
       if (e.type === 'new_state') {
+        console.log(e.state.players.A?.zones.hand.cards.length);
         setState({ ...e.state });
       }
     });
@@ -129,10 +139,8 @@ export const GameDisplay = () => {
         <GameSceneLoader angle={20} rotation={0} perspective={3000} debug>
           <Board3d />
           <FloatingCards events={events} />
-          <Observer>
-            {() => (
-              <>
-                {/* {board.zones.map((z) => (
+
+          {/* {board.zones.map((z) => (
                     <Location3D
                       key={z.id}
                       position={{
@@ -154,34 +162,37 @@ export const GameDisplay = () => {
                     </Location3D>
                   ))} */}
 
-                <CardAreaLayout
-                  color="red"
-                  position={[0, 0]}
-                  size={{ width: 1, height: 0.5 }}
-                  itemSize={{
-                    width: cardSize.width * 1.2,
-                    height: cardSize.height * 1.2,
+          {state.players.A && (
+            <CardAreaLayout
+              color="red"
+              position={[0, 0]}
+              size={{ width: 1, height: 0.5 }}
+              itemSize={{
+                width: cardSize.width * 1.2,
+                height: cardSize.height * 1.2,
+              }}
+              items={state.players.A?.zones.playerArea.cards.map(
+                (id) => state.cards[id]
+              )}
+              renderer={(p) => (
+                <Card3d
+                  key={p.item.id}
+                  id={p.item.id}
+                  size={{
+                    width: p.size.width / 1.2,
+                    height: p.size.height / 1.2,
                   }}
-                  items={board.allCards.filter(
-                    (c) => c.images.front && c.images.back
-                  )}
-                  renderer={(p) => (
-                    <Card3d
-                      key={p.item.id}
-                      size={{
-                        width: p.size.width / 1.2,
-                        height: p.size.height / 1.2,
-                      }}
-                      position={[p.position[0], p.position[1], 0.001]}
-                      textures={{
-                        front: textures[p.item.images.front],
-                        back: textures[p.item.images.back],
-                      }}
-                    />
-                  )}
+                  position={[p.position[0], p.position[1], 0.001]}
+                  textures={{
+                    front: textures[getCardImageUrl(p.item.definition.front)],
+                    back: textures[getCardImageUrl(p.item.definition.back)],
+                  }}
                 />
+              )}
+            />
+          )}
 
-                {/* {board.decks.map((d) => (
+          {/* {board.decks.map((d) => (
                     <Deck3D
                       key={d.id}
                       id={d.id}
@@ -194,9 +205,6 @@ export const GameDisplay = () => {
                       cards={d.cards}
                     />
                   ))} */}
-              </>
-            )}
-          </Observer>
         </GameSceneLoader>
         <PlayerHand player="A" />
         <NextStepButton
