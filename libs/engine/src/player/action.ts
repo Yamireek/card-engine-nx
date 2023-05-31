@@ -1,13 +1,14 @@
 import { PlayerState, PlayerAction, State } from '@card-engine-nx/state';
 import { last } from 'lodash';
-import { Events } from '../events';
 import { calculateExpr } from '../expr';
+import { UIEvents } from '../uiEvents';
+import { uiEvent } from '../eventFactories';
 
 export function executePlayerAction(
   action: PlayerAction,
   player: PlayerState,
   state: State,
-  events: Events
+  events: UIEvents
 ) {
   if (action === 'empty') {
     return;
@@ -20,12 +21,14 @@ export function executePlayerAction(
         state.cards[top].sideUp = 'front';
         player.zones.library.cards.pop();
         player.zones.hand.cards.push(top);
-        if (events.onCardMoved) {
-          events.onCardMoved(
-            top,
-            { type: 'library', owner: player.id },
-            { type: 'hand', owner: player.id },
-            'front'
+        if (events.send) {
+          events.send(
+            uiEvent.card_moved({
+              cardId: top,
+              source: { type: 'library', owner: player.id },
+              destination: { type: 'hand', owner: player.id },
+              side: 'front',
+            })
           );
         }
       }
