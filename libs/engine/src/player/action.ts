@@ -1,4 +1,4 @@
-import { PlayerState, PlayerAction, State } from '@card-engine-nx/state';
+import { PlayerState, PlayerAction, State, View } from '@card-engine-nx/state';
 import { last } from 'lodash';
 import { calculateExpr } from '../expr';
 import { UIEvents } from '../uiEvents';
@@ -8,6 +8,7 @@ export function executePlayerAction(
   action: PlayerAction,
   player: PlayerState,
   state: State,
+  view: View,
   events: UIEvents
 ) {
   if (action === 'empty') {
@@ -35,7 +36,7 @@ export function executePlayerAction(
   }
 
   if (action.incrementThreat) {
-    const amount = calculateExpr(action.incrementThreat, state, {});
+    const amount = calculateExpr(action.incrementThreat, state, view, {});
     player.thread += amount;
     return;
   }

@@ -1,10 +1,10 @@
 import { CardId } from '@card-engine-nx/basic';
-import { State, CardNumberExpr } from '@card-engine-nx/state';
-import { createView } from '../view';
+import { State, CardNumberExpr, View } from '@card-engine-nx/state';
 
 export function calculateCardExpr(
   expr: CardNumberExpr,
   state: State,
+  view: View,
   cardId: CardId
 ): number {
   if (typeof expr === 'number') {
@@ -12,7 +12,6 @@ export function calculateCardExpr(
   }
 
   if (expr === 'threadCost') {
-    const view = createView(state);
     return view.cards[cardId].props.threatCost || 0;
   }
 
