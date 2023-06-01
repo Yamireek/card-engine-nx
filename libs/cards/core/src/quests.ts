@@ -35,7 +35,7 @@ export const achosenPath1 = quest({
     name: 'A Chosen Path',
   },
   b: {
-    name: "Don't Leave the Path",
+    name: "Don't Leave the Path!",
     questPoints: 0,
   },
 });

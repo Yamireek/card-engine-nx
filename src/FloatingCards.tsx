@@ -36,8 +36,13 @@ export const FloatingCards = (props: {
               ],
               rotation: [0, Math.PI, 0],
               textures: {
-                front: props.textures[getCardImageUrl(card.definition.front)],
-                back: props.textures[getCardImageUrl(card.definition.back)],
+                front:
+                  props.textures[
+                    getCardImageUrl(card.definition.front, 'front')
+                  ],
+                back: props.textures[
+                  getCardImageUrl(card.definition.back, 'back')
+                ],
               },
             },
           ]);
@@ -99,7 +104,7 @@ export const FloatingCards = (props: {
   return (
     <>
       {floatingCards.map((p) => (
-        <Card3d {...p} key={p.id} id={undefined} />
+        <Card3d {...p} key={p.id} id={p.id} />
       ))}
     </>
   );
