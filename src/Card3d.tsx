@@ -8,7 +8,7 @@ import {
 } from '@card-engine-nx/ui';
 
 export type Card3dProps = {
-  id?: number;
+  id: number;
   position: Vector3;
   rotation?: Vector3;
   textures: CardTextures;
