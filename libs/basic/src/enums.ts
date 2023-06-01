@@ -1,9 +1,5 @@
 export type PlayerId = 'A' | 'B' | 'C' | 'D';
 
-export type ZoneId =
-  | { owner: 'game'; type: GameZoneType }
-  | { owner: PlayerId; type: PlayerZoneType };
-
 export type Phase =
   | 'setup'
   | 'resource'
@@ -79,8 +75,3 @@ export type Trait =
 export type Sphere = 'tactics' | 'spirit' | 'lore' | 'leadership' | 'neutral';
 
 export type Orientation = 'landscape' | 'portrait';
-
-export type Keywords = {
-  ranged: boolean;
-  sentinel: boolean;
-};

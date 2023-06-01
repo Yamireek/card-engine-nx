@@ -1,48 +1,26 @@
-import {
-  image,
-  NextStepButton,
-  createBoardModel,
-  getCardImageUrl,
-  HandLayout,
-  BoardCamera,
-  Card3D,
-  Deck3D,
-} from '@card-engine-nx/ui';
-import { Playmat, Location3D } from './app';
+import { image, NextStepButton, getCardImageUrl } from '@card-engine-nx/ui';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { StateContext, useGameState } from './StateContext';
-import { Observer } from 'mobx-react';
-import {
-  DeckModel,
-  FloatingCardModel,
-  cardSize,
-  ZoneModel,
-  CardModel,
-} from '@card-engine-nx/store';
+import { StateContext } from './StateContext';
 import { advanceToChoiceState } from './tests/GameEngine';
 import {
   UiEvent,
   UIEvents as UiEvents,
   executeAction,
 } from '@card-engine-nx/engine';
-import { PlayerId, values } from '@card-engine-nx/basic';
-import { GameSceneLoader } from './ThreeJsTest';
+import { values } from '@card-engine-nx/basic';
 import { Board3d } from './Board3d';
-import { Card3d, Card3dProps } from './Card3d';
+import { Card3d, Card3dProps, cardSize } from './Card3d';
 import { CardAreaLayout } from './CardAreaLayout';
 import { Texture } from 'three';
-import { State, event } from '@card-engine-nx/state';
+import { State } from '@card-engine-nx/state';
 import { uniq } from 'lodash';
 import * as THREE from 'three';
 import { Subject } from 'rxjs';
-import { core } from '@card-engine-nx/cards/core';
-import { useThree } from '@react-three/fiber';
 import { Deck3d } from './Deck3d';
-
-const boardSize = { width: 1608 * 4, height: 1620 * 4 };
-const offset = { x: -boardSize.width / 2, y: -boardSize.height / 2 };
-
-export type Textures = Record<string, Texture>;
+import { Textures } from './types';
+import { FloatingCards } from './FloatingCards';
+import { PlayerHand } from './PlayerHand';
+import { GameSceneLoader } from './GameScene';
 
 export async function preLoadTextures(state: State): Promise<Textures> {
   const urls = uniq(
@@ -74,110 +52,14 @@ export function createRxUiEvents(): UiEvents {
   };
 }
 
-export const FloatingCards = (props: {
-  events: UiEvents;
-  textures: Textures;
-  cards: [Card3dProps[], (v: (p: Card3dProps[]) => Card3dProps[]) => void];
-}) => {
-  const [floatingCards, setFloatingCards] = props.cards;
-  const { state } = useGameState();
-  const get = useThree((s) => s.get);
-
-  useEffect(() => {
-    const unsub = props.events.subscribe((e) => {
-      if (e.type === 'card_moved') {
-        const card = state.cards[e.cardId];
-
-        const deckMesh = get().scene.getObjectByName(
-          `deck-${e.source.owner}-${e.source.type}`
-        );
-
-        setFloatingCards((p) => [
-          ...p,
-          {
-            id: e.cardId,
-            position: [
-              deckMesh.position.x,
-              deckMesh.position.y,
-              deckMesh.position.z,
-            ],
-            rotation: [0, Math.PI, 0],
-            textures: {
-              front: props.textures[getCardImageUrl(card.definition.front)],
-              back: props.textures[getCardImageUrl(card.definition.back)],
-            },
-          },
-        ]);
-
-        setTimeout(() => {
-          setFloatingCards((p) =>
-            p.map((c) =>
-              c.id === e.cardId
-                ? {
-                    ...c,
-                    position: [deckMesh.position.x, deckMesh.position.y, 0.1],
-                  }
-                : { ...c }
-            )
-          );
-        }, 500);
-
-        setTimeout(() => {
-          setFloatingCards((p) =>
-            p.map((c) =>
-              c.id === e.cardId ? { ...c, rotation: [0, 0, 0] } : { ...c }
-            )
-          );
-        }, 1000);
-
-        setTimeout(() => {
-          const cardMesh = get().scene.getObjectByName('card-' + e.cardId);
-
-          setFloatingCards((p) =>
-            p.map((c) =>
-              c.id === e.cardId
-                ? {
-                    ...c,
-                    position: [
-                      cardMesh.position.x,
-                      cardMesh.position.y,
-                      cardMesh.position.z,
-                    ],
-                    scale: cardMesh.scale.x,
-                  }
-                : { ...c }
-            )
-          );
-        }, 2000);
-
-        setTimeout(() => {
-          setFloatingCards((p) => p.filter((c) => c.id !== e.cardId));
-        }, 2500);
-
-        return;
-      }
-    });
-    return () => unsub();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <>
-      {floatingCards.map((p) => (
-        <Card3d {...p} key={p.id} id={undefined} />
-      ))}
-    </>
-  );
-};
-
 export const GameDisplay = () => {
   const { state, setState } = useContext(StateContext);
   const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
   const [textures, setTextures] = useState<Textures | undefined>();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     preLoadTextures(state).then(setTextures);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const events = useMemo<UiEvents>(() => {
@@ -189,6 +71,7 @@ export const GameDisplay = () => {
       }
     });
     return tmp;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!textures) {
@@ -205,28 +88,6 @@ export const GameDisplay = () => {
             textures={textures}
             cards={[floatingCards, setFloatingCards] as any}
           />
-
-          {/* {board.zones.map((z) => (
-                    <Location3D
-                      key={z.id}
-                      position={{
-                        x: z.location.x + offset.x,
-                        y: z.location.y + offset.y,
-                        z: 0,
-                      }}
-                      rotation={{ x: 0, y: 0, z: 0 }}
-                    >
-                      <div
-                        key={z.id}
-                        style={{
-                          backgroundColor: z.color,
-                          opacity: 0.1,
-                          width: z.size.width,
-                          height: z.size.height,
-                        }}
-                      />
-                    </Location3D>
-                  ))} */}
 
           {state.players.A && (
             <Deck3d
@@ -268,20 +129,6 @@ export const GameDisplay = () => {
               )}
             />
           )}
-
-          {/* {board.decks.map((d) => (
-                    <Deck3D
-                      key={d.id}
-                      id={d.id}
-                      image={d.image}
-                      orientation={d.orientation}
-                      position={{
-                        x: d.position.x + offset.x,
-                        y: d.position.y + offset.y,
-                      }}
-                      cards={d.cards}
-                    />
-                  ))} */}
         </GameSceneLoader>
         <PlayerHand player="A" />
         <NextStepButton
@@ -323,27 +170,6 @@ export const GameDisplay = () => {
           }}
         />
       </div>
-    </div>
-  );
-};
-
-export const PlayerHand = (props: { player: PlayerId }) => {
-  const { state } = useGameState();
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        bottom: -100,
-        width: '100%',
-      }}
-    >
-      <HandLayout
-        cardImages={state.players[props.player]?.zones.hand.cards.map((id) =>
-          getCardImageUrl(state.cards[id].definition.front)
-        )}
-        cardWidth={200}
-        rotate={2}
-      />
     </div>
   );
 };

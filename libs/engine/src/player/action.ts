@@ -21,16 +21,14 @@ export function executePlayerAction(
         state.cards[top].sideUp = 'front';
         player.zones.library.cards.pop();
         player.zones.hand.cards.push(top);
-        if (events.send) {
-          events.send(
-            uiEvent.card_moved({
-              cardId: top,
-              source: { type: 'library', owner: player.id },
-              destination: { type: 'hand', owner: player.id },
-              side: 'front',
-            })
-          );
-        }
+        events.send(
+          uiEvent.card_moved({
+            cardId: top,
+            source: { type: 'library', owner: player.id },
+            destination: { type: 'hand', owner: player.id },
+            side: 'front',
+          })
+        );
       }
     }
     return;

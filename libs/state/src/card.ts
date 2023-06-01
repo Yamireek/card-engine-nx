@@ -16,6 +16,12 @@ export type PlayerDeck = {
   library: CardDefinition[];
 };
 
+export type Scenario = {
+  name: string;
+  questCards: CardDefinition[];
+  encounterCards: CardDefinition[];
+};
+
 export type CardDefinition = {
   front: PrintedProps & { abilities: Ability[] };
   back: PrintedProps & { abilities: Ability[] };

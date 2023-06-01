@@ -1,9 +1,4 @@
 import { CardType, Mark, Sphere, Token, Trait } from './enums';
-import { Flavor } from './flavors';
-
-export type CardId = Flavor<number, 'CardId'>;
-
-export type CardNumProp = 'attack' | 'defense' | 'willpower';
 
 export type PrintedProps = {
   type: CardType;

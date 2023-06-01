@@ -1,8 +1,8 @@
 import { useTexture } from '@react-three/drei';
 import { Texture } from 'three';
-import { Vector3 } from '@react-three/fiber';
 import { GameZoneType, PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
 import { cardSize } from './Card3d';
+import { Vector3 } from '@card-engine-nx/ui';
 
 export type Deck3dProps = {
   owner: 'game' | PlayerId;
@@ -18,10 +18,11 @@ export const Deck3d = (props: Deck3dProps) => {
     normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
   });
 
-  const depth = props.cardCount * 0.000305 * 1;
+  const depth = props.cardCount * cardSize.depth;
 
   return (
     <mesh
+      key={props.cardCount > 0 ? 'cards' : 'empty'}
       name={`deck-${props.owner}-${props.type}`}
       position={[
         props.position[0],

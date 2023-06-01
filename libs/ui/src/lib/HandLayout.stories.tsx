@@ -10,11 +10,7 @@ const Story: Meta<typeof HandLayout> = {
   args: {
     cardWidth: 200,
     rotate: 5,
-    cardImages: [
-      'https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/Aragorn.jpg',
-      'https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/Aragorn.jpg',
-      'https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/Aragorn.jpg',
-    ],
+    cardImages: cardImages.slice(0, 3),
   },
   argTypes: {
     cardImages: {

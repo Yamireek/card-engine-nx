@@ -2,7 +2,6 @@ import { Marks, Orientation, Tokens } from '@card-engine-nx/basic';
 import damageImage from './../images/damage.png';
 import resourceImage from './../images/resource.png';
 import progressImage from './../images/progress.png';
-import { scale } from './3d/utils';
 
 export const cardRatio = 430 / 600;
 
@@ -23,7 +22,6 @@ export const CardDisplay = (props: {
     <div
       style={{
         position: 'relative',
-        transform: scale(props.scale),
         transition: 'transform 0.25s ease 0s',
         boxShadow: props.onClick ? '0px 0px 20px yellow' : '0px 0px 5px black',
         backgroundColor: 'black',

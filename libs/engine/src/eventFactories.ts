@@ -8,12 +8,14 @@ const newState: (state: State) => UiEvent = (state) => {
     state,
   };
 };
+
 const error: (message: string) => UiEvent = (message) => {
   return {
     type: 'error',
     message,
   };
 };
+
 const card_moved: (params: {
   cardId: CardId;
   source: ZoneId;
