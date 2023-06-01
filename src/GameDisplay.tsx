@@ -53,7 +53,7 @@ export function createRxUiEvents(): UiEvents {
 }
 
 export const GameDisplay = () => {
-  const { state, setState } = useContext(StateContext);
+  const { state, view, setState } = useContext(StateContext);
   const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
   const [textures, setTextures] = useState<Textures | undefined>();
 
@@ -155,6 +155,7 @@ export const GameDisplay = () => {
                 ],
               },
               state,
+              view,
               events
             );
 
@@ -163,6 +164,7 @@ export const GameDisplay = () => {
             executeAction(
               { player: { action: { draw: 7 }, target: 'each' } },
               state,
+              view,
               events
             );
 

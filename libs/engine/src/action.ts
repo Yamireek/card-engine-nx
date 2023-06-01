@@ -1,11 +1,16 @@
-import { Action, State } from '@card-engine-nx/state';
+import { Action, State, View } from '@card-engine-nx/state';
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { UIEvents } from './uiEvents';
 import { getZoneState } from './zone/target';
 import { shuffle } from 'lodash';
 
-export function executeAction(action: Action, state: State, events: UIEvents) {
+export function executeAction(
+  action: Action,
+  state: State,
+  view: View,
+  events: UIEvents
+) {
   if (action === 'empty') {
     return;
   }
@@ -21,7 +26,7 @@ export function executeAction(action: Action, state: State, events: UIEvents) {
     for (const id of ids) {
       const player = state.players[id];
       if (player) {
-        executePlayerAction(action.player.action, player, state, events);
+        executePlayerAction(action.player.action, player, state, view, events);
       } else {
         throw new Error('player not found');
       }

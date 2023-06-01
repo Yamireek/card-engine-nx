@@ -22,7 +22,9 @@ export function createView(state: State): View {
 
       for (const modifier of card.modifiers.filter((m) => !m.applied)) {
         allApplied = false;
-        applyModifier(modifier.modifier, state, card, { selfCard: card.id });
+        applyModifier(modifier.modifier, state, view, card, {
+          selfCard: card.id,
+        });
         modifier.applied = true;
       }
     }

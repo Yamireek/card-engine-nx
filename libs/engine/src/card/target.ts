@@ -1,11 +1,11 @@
 import { CardId, values } from '@card-engine-nx/basic';
-import { State, CardTarget, Context } from '@card-engine-nx/state';
+import { State, CardTarget, Context, View } from '@card-engine-nx/state';
 import { intersection } from 'lodash';
-import { createView } from '../view';
 
 export function getTargetCard(
   target: CardTarget,
   state: State,
+  view: View,
   ctx: Context
 ): CardId[] {
   if (target === 'self') {
@@ -18,7 +18,7 @@ export function getTargetCard(
 
   if (target.and) {
     return intersection(
-      target.and.map((t) => getTargetCard(t, state, ctx))
+      target.and.map((t) => getTargetCard(t, state, view, ctx))
     ).flatMap((c) => c);
   }
 
@@ -32,7 +32,6 @@ export function getTargetCard(
   }
 
   if (target.type) {
-    const view = createView(state);
     return values(view.cards)
       .filter((c) => target.type?.includes(c.props.type))
       .map((s) => s.id);
