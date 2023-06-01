@@ -134,41 +134,7 @@ export const GameDisplay = () => {
         <NextStepButton
           title="Next step"
           onClick={() => {
-            executeAction(
-              {
-                sequence: [
-                  { shuffle: { zone: { owner: 'A', type: 'library' } } },
-                  {
-                    player: {
-                      target: 'A',
-                      action: {
-                        incrementThreat: {
-                          fromCard: {
-                            sum: true,
-                            value: 'threadCost',
-                            card: { and: [{ owner: 'A', type: ['hero'] }] },
-                          },
-                        },
-                      },
-                    },
-                  },
-                ],
-              },
-              state,
-              view,
-              events
-            );
-
-            advanceToChoiceState(state, events);
-
-            executeAction(
-              { player: { action: { draw: 7 }, target: 'each' } },
-              state,
-              view,
-              events
-            );
-
-            advanceToChoiceState(state, events);
+            return;
           }}
         />
       </div>

@@ -1,5 +1,5 @@
 import { PlayerState, PlayerAction, State, View } from '@card-engine-nx/state';
-import { last } from 'lodash';
+import { last, shuffle } from 'lodash';
 import { calculateExpr } from '../expr';
 import { UIEvents } from '../uiEvents';
 import { uiEvent } from '../eventFactories';
@@ -12,6 +12,12 @@ export function executePlayerAction(
   events: UIEvents
 ) {
   if (action === 'empty') {
+    return;
+  }
+
+  if (action === 'shuffleLibrary') {
+    const zone = player.zones['library'];
+    zone.cards = shuffle(zone.cards);
     return;
   }
 

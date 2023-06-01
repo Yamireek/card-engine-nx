@@ -1,23 +1,21 @@
-import {
-  CardId,
-  CardType,
-  PlayerId,
-  Token,
-  ZoneId,
-} from '@card-engine-nx/basic';
+import { CardId, CardType, PlayerId, Token } from '@card-engine-nx/basic';
+import { PlayerDeck, Scenario } from './card';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
 export type Action =
   | 'empty'
+  | 'shuffleEncounterDeck'
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
-      shuffle?: { zone: ZoneId };
       sequence?: Action[];
+      addPlayer?: PlayerDeck;
+      setupScenario?: Scenario;
     };
 
 export type PlayerAction =
   | 'empty'
+  | 'shuffleLibrary'
   | { draw?: number; sequence?: Action[]; incrementThreat?: NumberExpr };
 
 export type CardAction =
