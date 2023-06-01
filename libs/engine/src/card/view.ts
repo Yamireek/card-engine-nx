@@ -1,6 +1,5 @@
 import { CardState, CardView } from '@card-engine-nx/state';
 
-
 export function createCardView(state: CardState): CardView {
   const printed = state.definition[state.sideUp];
   return {

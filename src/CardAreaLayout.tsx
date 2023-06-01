@@ -1,6 +1,6 @@
+import { Dimensions, Vector2 } from '@card-engine-nx/ui';
+import { maxBy } from 'lodash';
 import { useMemo } from 'react';
-import { Vector2 } from './Card3d';
-import { Dimensions, calculateItemMaxItemSize } from '@card-engine-nx/store';
 
 export type CardAreaLayoutProps<T> = {
   position: Vector2;
@@ -74,4 +74,51 @@ export const CardAreaLayout = <T extends any>(
       })}
     </group>
   );
+};
+
+function calculateItemSize(
+  space: Dimensions,
+  item: Dimensions,
+  items: number,
+  rows: number
+): Dimensions {
+  const itemsPerRow = Math.ceil(items / rows);
+  const itemsPerColumn = Math.ceil(items / itemsPerRow);
+
+  const newItemWidth = space.width / itemsPerRow;
+  const newItemHeight = space.height / itemsPerColumn;
+
+  const scaleHeight = newItemHeight / item.height;
+  const scaleWidth = newItemWidth / item.width;
+
+  const scale = Math.min(scaleWidth, scaleHeight);
+
+  const itemSize = {
+    height: item.height * scale,
+    width: item.width * scale,
+  };
+
+  return itemSize;
+}
+
+function calculateItemMaxItemSize(
+  space: Dimensions,
+  item: Dimensions,
+  items: number
+): Dimensions {
+  const sizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) =>
+    calculateItemSize(space, item, items, i)
+  );
+
+  const maxSize = maxBy(sizes, (s) => s.height) || item;
+
+  return {
+    height: maxSize.height,
+    width: maxSize.width,
+  };
+}
+
+export const cardSize: Dimensions = {
+  height: 600,
+  width: 430,
 };

@@ -1,7 +1,8 @@
 import board from './board.jpg';
 import playerBack from './player-back.jpg';
 import encounterBack from './encounter-back.jpg';
-import test from './test.png';
-import aragorn from './001 - Aragorn.jpg';
+import damage from './damage.png';
+import progress from './progress.png';
+import resource from './resource.png';
 
-export { board, playerBack, encounterBack, test, aragorn };
+export { board, playerBack, encounterBack, damage, progress, resource };

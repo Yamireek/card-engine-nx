@@ -1,14 +1,11 @@
 import { useTexture } from '@react-three/drei';
-import { Texture } from 'three';
-import { Dimensions } from '@card-engine-nx/store';
 import { useSpring, animated } from '@react-spring/three';
-//import { useSpring } from 'react-spring';
-
-export type Vector2 = [number, number];
-
-export type Vector3 = [number, number, number];
-
-export type CardTextures = { front: Texture; back: Texture };
+import {
+  CardTextures,
+  Dimensions,
+  Dimensions3,
+  Vector3,
+} from '@card-engine-nx/ui';
 
 export type Card3dProps = {
   id?: number;
@@ -20,9 +17,10 @@ export type Card3dProps = {
   hidden?: boolean;
 };
 
-export const cardSize: Dimensions = {
+export const cardSize: Dimensions3 = {
   width: 0.0635,
   height: 0.0889,
+  depth: 0.000305,
 };
 
 export const Card3d = (props: Card3dProps) => {
@@ -58,7 +56,9 @@ export const Card3d = (props: Card3dProps) => {
     >
       {!props.hidden && (
         <>
-          <boxGeometry args={[cardSize.width, cardSize.height, 0.000305]} />
+          <boxGeometry
+            args={[cardSize.width, cardSize.height, cardSize.depth]}
+          />
           <meshBasicMaterial attach="material-0" color="gray" />
           <meshBasicMaterial attach="material-1" color="gray" />
           <meshBasicMaterial attach="material-2" color="gray" />

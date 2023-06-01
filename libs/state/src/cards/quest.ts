@@ -1,12 +1,6 @@
 import { CardDefinition } from '../card';
 import { Ability } from '../types';
 
-export type Scenario = {
-  name: string;
-  questCards: CardDefinition[];
-  encounterCards: CardDefinition[];
-};
-
 export type QuestDefinition =
   | {
       sequence: number;
