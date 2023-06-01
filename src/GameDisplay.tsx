@@ -1,29 +1,20 @@
-import {
-  image,
-  NextStepButton,
-  getCardImageUrl,
-  getCardImageUrls,
-} from '@card-engine-nx/ui';
+import { NextStepButton, getCardImageUrls } from '@card-engine-nx/ui';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { StateContext } from './StateContext';
-import {
-  UiEvent,
-  UIEvents as UiEvents,
-} from '@card-engine-nx/engine';
-import { CardId, PlayerId, values } from '@card-engine-nx/basic';
+import { UiEvent, UIEvents as UiEvents } from '@card-engine-nx/engine';
+import { values } from '@card-engine-nx/basic';
 import { Board3d } from './Board3d';
-import { Card3d, Card3dProps, cardSize } from './Card3d';
-import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
+import { Card3dProps } from './Card3d';
 import { Texture } from 'three';
-import { CardState, State } from '@card-engine-nx/state';
+import { State } from '@card-engine-nx/state';
 import { uniq } from 'lodash';
 import * as THREE from 'three';
 import { Subject } from 'rxjs';
-import { Deck3d } from './Deck3d';
 import { Textures } from './types';
 import { FloatingCards } from './FloatingCards';
 import { PlayerHand } from './PlayerHand';
 import { GameSceneLoader } from './GameScene';
+import { PlayerAreas } from './PlayerAreas';
 
 export async function preLoadTextures(state: State): Promise<Textures> {
   const urls = uniq(
@@ -54,91 +45,6 @@ export function createRxUiEvents(): UiEvents {
     },
   };
 }
-
-export const PlayerAreas = (props: {
-  player: PlayerId;
-  textures: Textures;
-  hiddenCards: CardId[];
-}) => {
-  const { state } = useContext(StateContext);
-  const playerState = state.players[props.player];
-
-  const cardRenderer: CardAreaLayoutProps<CardState>['renderer'] = (p) => {
-    return (
-      <Card3d
-        key={p.item.id}
-        id={p.item.id}
-        size={{
-          width: p.size.width / 1.2,
-          height: p.size.height / 1.2,
-        }}
-        position={[p.position[0], p.position[1], 0.001]}
-        textures={{
-          front:
-            props.textures[getCardImageUrl(p.item.definition.front, 'front')],
-          back: props.textures[getCardImageUrl(p.item.definition.back, 'back')],
-        }}
-        hidden={props.hiddenCards.includes(p.item.id)}
-      />
-    );
-  };
-
-  if (!playerState) {
-    return null;
-  }
-
-  return (
-    <group>
-      <Deck3d
-        owner={props.player}
-        type="library"
-        position={[0.35, -0.4, 0]}
-        cardCount={playerState.zones.library.cards.length}
-        texture={props.textures[image.playerBack]}
-      />
-      <Deck3d
-        owner={props.player}
-        type="discardPile"
-        position={[0.45, -0.4, 0]}
-        cardCount={playerState.zones.discardPile.cards.length}
-        texture={props.textures[image.playerBack]}
-      />
-      <CardAreaLayout
-        color="blue"
-        position={[-0.1, -0.4]}
-        size={{ width: 0.8, height: 0.2 }}
-        itemSize={{
-          width: cardSize.width * 1.2,
-          height: cardSize.height * 1.2,
-        }}
-        items={playerState.zones.hand.cards.map((id) => state.cards[id])}
-        renderer={cardRenderer}
-      />
-      <CardAreaLayout
-        color="green"
-        position={[0, -0.15]}
-        size={{ width: 1, height: 0.3 }}
-        itemSize={{
-          width: cardSize.width * 1.2,
-          height: cardSize.height * 1.2,
-        }}
-        items={playerState.zones.playerArea.cards.map((id) => state.cards[id])}
-        renderer={cardRenderer}
-      />
-      <CardAreaLayout
-        color="red"
-        position={[0, 0.1]}
-        size={{ width: 1, height: 0.2 }}
-        itemSize={{
-          width: cardSize.width * 1.2,
-          height: cardSize.height * 1.2,
-        }}
-        items={playerState.zones.engaged.cards.map((id) => state.cards[id])}
-        renderer={cardRenderer}
-      />
-    </group>
-  );
-};
 
 const playerIds = ['A', 'B', 'C', 'D'] as const;
 
