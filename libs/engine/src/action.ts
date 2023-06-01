@@ -10,7 +10,6 @@ import {
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { UIEvents } from './uiEvents';
-import { getZoneState } from './zone/target';
 import { shuffle } from 'lodash';
 import {
   CardId,
@@ -60,8 +59,8 @@ export function executeAction(
       : !state.players.B
       ? 'B'
       : state.players.C
-      ? 'C'
-      : 'D';
+      ? 'D'
+      : 'C';
 
     state.players[playerId] = {
       id: playerId,
