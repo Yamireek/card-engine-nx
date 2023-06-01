@@ -1,23 +1,22 @@
 import { CssBaseline } from '@mui/material';
-import { GameEngine } from './tests/GameEngine';
+import { advanceToChoiceState, consoleEvents } from './tests/GameEngine';
 import { coreTactics } from './decks/coreTactics';
-import { addCard } from './tests/addPlayer';
 import { GameDisplay } from './GameDisplay';
 import { StateProvider } from './StateContext';
+import { createState } from '@card-engine-nx/state';
+import { beginScenario } from '@card-engine-nx/engine';
+import { core } from '@card-engine-nx/cards/core';
 
-const engine = new GameEngine();
-engine.addPlayer();
+const state = createState(
+  beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
+);
 
-for (const hero of coreTactics.heroes) {
-  engine.addHero(hero);
-}
+advanceToChoiceState(state, consoleEvents);
 
-for (const card of coreTactics.library) {
-  addCard(card, 'back', { type: 'library', owner: 'A' }).execute(engine.state);
-}
+console.log(state);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-(window as any)['state'] = engine.state;
+(window as any)['state'] = state;
 
 export const App = () => {
   return (
@@ -32,7 +31,7 @@ export const App = () => {
     >
       <CssBaseline />
 
-      <StateProvider init={engine.state}>
+      <StateProvider init={state}>
         <GameDisplay />
       </StateProvider>
     </div>
