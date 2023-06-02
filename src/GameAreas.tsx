@@ -1,4 +1,9 @@
-import { image, getCardImageUrl, Vector3 } from '@card-engine-nx/ui';
+import {
+  image,
+  getCardImageUrl,
+  Vector3,
+  getCardImageUrls,
+} from '@card-engine-nx/ui';
 import { useContext } from 'react';
 import { StateContext } from './StateContext';
 import { CardId } from '@card-engine-nx/basic';
@@ -7,12 +12,34 @@ import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
 import { Textures } from './types';
+import { last } from 'lodash';
 
 export const positions: Record<number, Vector3> = {
   '1': [0, 0, 0],
   '2': [0, 0, 0],
   '3': [0, 0, 0],
   '4': [0, 0, 0],
+};
+
+const QuestDeck = (props: { textures: Textures }) => {
+  const { state } = useContext(StateContext);
+  const topCardId = last(state.zones.questDeck.cards);
+  const topCard = topCardId ? state.cards[topCardId] : undefined;
+  const cardImages = topCard ? getCardImageUrls(topCard.definition) : undefined;
+  return (
+    <Deck3d
+      owner="game"
+      type="questDeck"
+      position={[0.2, 0.45, 0]}
+      orientation="landscape"
+      cardCount={state.zones.questDeck.cards.length}
+      texture={
+        cardImages && topCard
+          ? props.textures[cardImages[topCard.sideUp]]
+          : props.textures[image.encounterBack]
+      }
+    />
+  );
 };
 
 export const GameAreas = (props: {
@@ -60,14 +87,7 @@ export const GameAreas = (props: {
         cardCount={state.zones.discardPile.cards.length}
         texture={props.textures[image.encounterBack]}
       />
-      <Deck3d
-        owner="game"
-        type="questDeck"
-        position={[0.2, 0.45, 0]}
-        rotation={[0, 0, Math.PI / 2]}
-        cardCount={state.zones.discardPile.cards.length}
-        texture={props.textures[image.encounterBack]}
-      />
+      <QuestDeck textures={props.textures} />
       <CardAreaLayout
         color="purple"
         position={[-0.2, 0.4]}
