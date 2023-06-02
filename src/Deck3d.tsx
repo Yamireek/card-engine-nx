@@ -8,6 +8,7 @@ export type Deck3dProps = {
   owner: 'game' | PlayerId;
   type: GameZoneType | PlayerZoneType;
   position: Vector3;
+  rotation?: Vector3;
   texture: Texture;
   cardCount: number;
 };
@@ -29,6 +30,7 @@ export const Deck3d = (props: Deck3dProps) => {
         props.position[1],
         props.cardCount > 0 ? depth / 2 : 0.0001,
       ]}
+      rotation={props.rotation}
       castShadow={props.cardCount > 0}
     >
       {props.cardCount > 0 ? (
