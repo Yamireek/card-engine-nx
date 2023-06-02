@@ -3,6 +3,7 @@ import { cloneDeep, mapValues, values } from 'lodash';
 import { applyModifier } from './card/modifier';
 import { applyAbility } from './card/ability';
 import { createCardView } from './card/view';
+import { emptyEvents } from './uiEvents';
 
 export function createView(state: State): View {
   const view: View = cloneDeep({
@@ -16,14 +17,17 @@ export function createView(state: State): View {
     for (const card of values(view.cards)) {
       for (const ability of card.abilities.filter((a) => !a.applied)) {
         allApplied = false;
-        applyAbility(ability.ability, state, card);
+        applyAbility(ability.ability, card);
         ability.applied = true;
       }
 
       for (const modifier of card.modifiers.filter((m) => !m.applied)) {
         allApplied = false;
-        applyModifier(modifier.modifier, state, view, card, {
-          selfCard: card.id,
+        applyModifier(modifier.modifier, card, {
+          state,
+          view,
+          card: { self: card.id },
+          events: emptyEvents,
         });
         modifier.applied = true;
       }

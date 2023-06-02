@@ -1,6 +1,6 @@
-import { CardView, State, Ability } from '@card-engine-nx/state';
+import { CardView, Ability } from '@card-engine-nx/state';
 
-export function applyAbility(ability: Ability, state: State, card: CardView) {
+export function applyAbility(ability: Ability, card: CardView) {
   if (ability.selfModifier) {
     card.modifiers.push({
       applied: false,

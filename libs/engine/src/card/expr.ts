@@ -1,22 +1,22 @@
 import { CardId } from '@card-engine-nx/basic';
 import { State, CardNumberExpr, View } from '@card-engine-nx/state';
+import { ExecutionContext } from '../action';
 
 export function calculateCardExpr(
   expr: CardNumberExpr,
-  state: State,
-  view: View,
-  cardId: CardId
+  cardId: CardId,
+  ctx: ExecutionContext
 ): number {
   if (typeof expr === 'number') {
     return expr;
   }
 
   if (expr === 'threadCost') {
-    return view.cards[cardId].props.threatCost || 0;
+    return ctx.view.cards[cardId].props.threatCost || 0;
   }
 
   if (expr.tokens) {
-    return state.cards[cardId].token[expr.tokens];
+    return ctx.state.cards[cardId].token[expr.tokens];
   }
 
   throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);
