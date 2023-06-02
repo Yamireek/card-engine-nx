@@ -15,6 +15,7 @@ import { FloatingCards } from './FloatingCards';
 import { PlayerHand } from './PlayerHand';
 import { GameSceneLoader } from './GameScene';
 import { PlayerAreas } from './PlayerAreas';
+import { GameAreas } from './GameAreas';
 
 export async function preLoadTextures(state: State): Promise<Textures> {
   const urls = uniq(
@@ -98,47 +99,11 @@ export const GameDisplay = () => {
             />
           ))}
 
-          {/* 
-          {state.players.A && (
-            <Deck3d
-              owner="A"
-              type="library"
-              position={[0, 0.3, 0]}
-              cardCount={state.players.A.zones.library.cards.length}
-              texture={textures[image.playerBack]}
-            />
-          )}
-
-          {state.players.A && (
-            <CardAreaLayout
-              color="red"
-              position={[0, 0]}
-              size={{ width: 1, height: 0.5 }}
-              itemSize={{
-                width: cardSize.width * 1.2,
-                height: cardSize.height * 1.2,
-              }}
-              items={state.players.A?.zones.hand.cards.map(
-                (id) => state.cards[id]
-              )}
-              renderer={(p) => (
-                <Card3d
-                  key={p.item.id}
-                  id={p.item.id}
-                  size={{
-                    width: p.size.width / 1.2,
-                    height: p.size.height / 1.2,
-                  }}
-                  position={[p.position[0], p.position[1], 0.001]}
-                  textures={{
-                    front: textures[getCardImageUrl(p.item.definition.front)],
-                    back: textures[getCardImageUrl(p.item.definition.back)],
-                  }}
-                  hidden={floatingCards.some((c) => c.id === p.item.id)}
-                />
-              )}
-            />
-          )} */}
+          <GameAreas
+            playerCount={Object.keys(state.players).length}
+            textures={textures}
+            hiddenCards={floatingCards.map((c) => c.id)}
+          />
         </GameSceneLoader>
         <PlayerHand player="A" />
         <NextStepButton

@@ -8,7 +8,7 @@ import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
 import { Textures } from './types';
 
-const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
+export const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
   '1': { A: [0, 0, 0] },
   '2': { A: [0.5, 0, 0], B: [-0.5, 0, 0] },
   '3': { A: [0.5, -0.4, 0], B: [-0.5, -0.4, 0], C: [0, 0.4, 0] },
@@ -20,7 +20,7 @@ const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
   },
 };
 
-const rotations: Record<number, Partial<Record<PlayerId, number>>> = {
+export const rotations: Record<number, Partial<Record<PlayerId, number>>> = {
   '1': { A: 0 },
   '2': { A: 0, B: 0 },
   '3': { A: 0, B: 0, C: Math.PI },
@@ -104,8 +104,8 @@ export const PlayerAreas = (props: {
       />
       <CardAreaLayout
         color="red"
-        position={[0, 0.1]}
-        size={{ width: 1, height: 0.2 }}
+        position={[0, 0.15]}
+        size={{ width: 1, height: 0.3 }}
         itemSize={{
           width: cardSize.width * 1.2,
           height: cardSize.height * 1.2,
