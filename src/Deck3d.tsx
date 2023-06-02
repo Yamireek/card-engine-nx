@@ -1,6 +1,11 @@
 import { useTexture } from '@react-three/drei';
 import { Texture } from 'three';
-import { GameZoneType, PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
+import {
+  GameZoneType,
+  Orientation,
+  PlayerId,
+  PlayerZoneType,
+} from '@card-engine-nx/basic';
 import { cardSize } from './Card3d';
 import { Vector3 } from '@card-engine-nx/ui';
 
@@ -8,9 +13,9 @@ export type Deck3dProps = {
   owner: 'game' | PlayerId;
   type: GameZoneType | PlayerZoneType;
   position: Vector3;
-  rotation?: Vector3;
   texture: Texture;
   cardCount: number;
+  orientation?: Orientation;
 };
 
 export const Deck3d = (props: Deck3dProps) => {
@@ -30,12 +35,17 @@ export const Deck3d = (props: Deck3dProps) => {
         props.position[1],
         props.cardCount > 0 ? depth / 2 : 0.0001,
       ]}
-      rotation={props.rotation}
       castShadow={props.cardCount > 0}
     >
       {props.cardCount > 0 ? (
         <>
-          <boxGeometry args={[cardSize.width, cardSize.height, depth]} />
+          <boxGeometry
+            args={
+              props.orientation === 'landscape'
+                ? [cardSize.height, cardSize.width, depth]
+                : [cardSize.width, cardSize.height, depth]
+            }
+          />
           <meshBasicMaterial attach="material-0" color="gray" />
           <meshBasicMaterial attach="material-1" color="gray" />
           <meshBasicMaterial attach="material-2" color="gray" />

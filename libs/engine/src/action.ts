@@ -10,7 +10,7 @@ import {
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { UIEvents } from './uiEvents';
-import { shuffle } from 'lodash';
+import { reverse, shuffle } from 'lodash/fp';
 import {
   CardId,
   GameZoneType,
@@ -92,8 +92,8 @@ export function executeAction(
       addGameCard(state, encounterCard, 'back', 'encounterDeck');
     }
 
-    for (const questCard of action.setupScenario.questCards) {
-      addGameCard(state, questCard, 'back', 'questDeck');
+    for (const questCard of reverse(action.setupScenario.questCards)) {
+      addGameCard(state, questCard, 'front', 'questDeck');
     }
   }
 
