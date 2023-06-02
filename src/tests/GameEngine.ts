@@ -3,11 +3,12 @@ import {
   CardAction,
   CardDefinition,
   State,
-  View,
   createState,
 } from '@card-engine-nx/state';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
 import {
+  ExecutionContext,
+  consoleEvents,
   createView,
   executeAction,
   executeCardAction,
@@ -16,12 +17,12 @@ import {
 import { addPlayer, addCard } from './addPlayer';
 import { UIEvents } from '@card-engine-nx/engine';
 
-export function nextStep(state: State, view: View, events: UIEvents) {
-  const action = state.next.shift();
+export function nextStep(ctx: ExecutionContext) {
+  const action = ctx.state.next.shift();
   if (!action) {
     return;
   } else {
-    executeAction(action, state, view, events);
+    executeAction(action, ctx);
   }
 }
 
@@ -44,7 +45,7 @@ export function advanceToChoiceState(state: State, events: UIEvents) {
     }
 
     try {
-      nextStep(state, createView(state), events);
+      nextStep({ state, view: createView(state), events, card: {} });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       events.send(uiEvent.error(error.message));
@@ -52,18 +53,6 @@ export function advanceToChoiceState(state: State, events: UIEvents) {
     }
   }
 }
-
-export const consoleEvents: UIEvents = {
-  send(event) {
-    const { type, ...rest } = event;
-    console.log(type, rest);
-  },
-  subscribe(sub) {
-    return () => {
-      return;
-    };
-  },
-};
 
 export class GameEngine {
   constructor(public state = createState()) {

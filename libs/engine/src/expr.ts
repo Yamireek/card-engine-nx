@@ -1,28 +1,22 @@
-import { State, NumberExpr, Context, View } from '@card-engine-nx/state';
+import { NumberExpr } from '@card-engine-nx/state';
 import { getTargetCard } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
+import { ExecutionContext } from './action';
 
-export function calculateExpr(
-  expr: NumberExpr,
-  state: State,
-  view: View,
-  ctx: Context
-): number {
+export function calculateExpr(expr: NumberExpr, ctx: ExecutionContext): number {
   if (typeof expr === 'number') {
     return expr;
   }
 
   if (expr.fromCard) {
-    const ids = getTargetCard(expr.fromCard.card, state, view, ctx);
+    const ids = getTargetCard(expr.fromCard.card, ctx);
     if (ids.length === 1) {
-      return calculateCardExpr(expr.fromCard.value, state, view, ids[0]);
+      return calculateCardExpr(expr.fromCard.value, ids[0], ctx);
     } else {
       if (expr.fromCard.sum) {
         return sum(
-          ids.map((id) =>
-            calculateCardExpr(expr.fromCard?.value || 0, state, view, id)
-          )
+          ids.map((id) => calculateCardExpr(expr.fromCard?.value || 0, id, ctx))
         );
       } else {
         throw new Error('multiple card');

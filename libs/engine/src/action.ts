@@ -19,28 +19,30 @@ import {
   Side,
 } from '@card-engine-nx/basic';
 
-export function executeAction(
-  action: Action,
-  state: State,
-  view: View,
-  events: UIEvents
-) {
+export type ExecutionContext = {
+  state: State;
+  view: View;
+  events: UIEvents;
+  card: Record<string, CardId>;
+};
+
+export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'empty') {
     return;
   }
 
   if (action === 'shuffleEncounterDeck') {
-    const zone = state.zones.encounterDeck;
+    const zone = ctx.state.zones.encounterDeck;
     zone.cards = shuffle(zone.cards);
     return;
   }
 
   if (action.player) {
-    const ids = getTargetPlayer(action.player.target, state);
+    const ids = getTargetPlayer(action.player.target, ctx.state);
     for (const id of ids) {
-      const player = state.players[id];
+      const player = ctx.state.players[id];
       if (player) {
-        executePlayerAction(action.player.action, player, state, view, events);
+        executePlayerAction(action.player.action, player, ctx);
       } else {
         throw new Error('player not found');
       }
@@ -49,20 +51,20 @@ export function executeAction(
   }
 
   if (action.sequence) {
-    state.next = [...action.sequence, ...state.next];
+    ctx.state.next = [...action.sequence, ...ctx.state.next];
     return;
   }
 
   if (action.addPlayer) {
-    const playerId = !state.players.A
+    const playerId = !ctx.state.players.A
       ? 'A'
-      : !state.players.B
+      : !ctx.state.players.B
       ? 'B'
-      : state.players.C
+      : ctx.state.players.C
       ? 'D'
       : 'C';
 
-    state.players[playerId] = {
+    ctx.state.players[playerId] = {
       id: playerId,
       thread: 0,
       zones: {
@@ -77,11 +79,11 @@ export function executeAction(
     };
 
     for (const hero of action.addPlayer.heroes) {
-      addPlayerCard(state, hero, playerId, 'front', 'playerArea');
+      addPlayerCard(ctx.state, hero, playerId, 'front', 'playerArea');
     }
 
     for (const card of action.addPlayer.library) {
-      addPlayerCard(state, card, playerId, 'back', 'library');
+      addPlayerCard(ctx.state, card, playerId, 'back', 'library');
     }
 
     return;
@@ -89,11 +91,11 @@ export function executeAction(
 
   if (action.setupScenario) {
     for (const encounterCard of action.setupScenario.encounterCards) {
-      addGameCard(state, encounterCard, 'back', 'encounterDeck');
+      addGameCard(ctx.state, encounterCard, 'back', 'encounterDeck');
     }
 
     for (const questCard of reverse(action.setupScenario.questCards)) {
-      addGameCard(state, questCard, 'front', 'questDeck');
+      addGameCard(ctx.state, questCard, 'front', 'questDeck');
     }
   }
 

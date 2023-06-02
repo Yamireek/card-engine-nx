@@ -1,15 +1,13 @@
-import { PlayerState, PlayerAction, State, View } from '@card-engine-nx/state';
+import { PlayerState, PlayerAction } from '@card-engine-nx/state';
 import { last, shuffle } from 'lodash';
 import { calculateExpr } from '../expr';
-import { UIEvents } from '../uiEvents';
 import { uiEvent } from '../eventFactories';
+import { ExecutionContext } from '../action';
 
 export function executePlayerAction(
   action: PlayerAction,
   player: PlayerState,
-  state: State,
-  view: View,
-  events: UIEvents
+  ctx: ExecutionContext
 ) {
   if (action === 'empty') {
     return;
@@ -25,10 +23,10 @@ export function executePlayerAction(
     for (let index = 0; index < action.draw; index++) {
       const top = last(player.zones.library.cards);
       if (top) {
-        state.cards[top].sideUp = 'front';
+        ctx.state.cards[top].sideUp = 'front';
         player.zones.library.cards.pop();
         player.zones.hand.cards.push(top);
-        events.send(
+        ctx.events.send(
           uiEvent.card_moved({
             cardId: top,
             source: { type: 'library', owner: player.id },
@@ -42,7 +40,7 @@ export function executePlayerAction(
   }
 
   if (action.incrementThreat) {
-    const amount = calculateExpr(action.incrementThreat, state, view, {});
+    const amount = calculateExpr(action.incrementThreat, ctx);
     player.thread += amount;
     return;
   }
