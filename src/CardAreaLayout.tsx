@@ -15,7 +15,7 @@ export type CardAreaLayoutProps<T> = {
   }) => JSX.Element;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-explicit-any
 export const CardAreaLayout = <T extends any>(
   props: CardAreaLayoutProps<T>
 ) => {

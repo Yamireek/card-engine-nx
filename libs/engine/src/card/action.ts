@@ -15,5 +15,10 @@ export function executeCardAction(action: CardAction, card: CardState) {
     return;
   }
 
+  if (action.flip) {
+    card.sideUp = action.flip;
+    return;
+  }
+
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
 }

@@ -1,7 +1,6 @@
 import {
   Action,
   PlayerDeck,
-  PlayerState,
   Scenario,
   State,
   View,
@@ -10,9 +9,10 @@ import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { UIEvents } from './uiEvents';
 import { reverse, shuffle } from 'lodash/fp';
-import { CardId, PlayerId, values } from '@card-engine-nx/basic';
+import { CardId, values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard, createPlayerState } from './utils';
 import { uiEvent } from './eventFactories';
+import { executeCardAction, getTargetCard } from './card';
 
 export type ExecutionContext = {
   state: State;
@@ -48,6 +48,19 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         executePlayerAction(action.player.action, player, ctx);
       } else {
         throw new Error('player not found');
+      }
+    }
+    return;
+  }
+
+  if (action.card) {
+    const ids = getTargetCard(action.card.taget, ctx);
+    for (const id of ids) {
+      const card = ctx.state.cards[id];
+      if (card) {
+        executeCardAction(action.card.action, card);
+      } else {
+        throw new Error('card not found');
       }
     }
     return;
@@ -149,6 +162,18 @@ export function beginScenario(
         },
       },
       'executeSetupActions',
+      {
+        card: {
+          action: {
+            flip: 'back',
+          },
+          taget: {
+            top: {
+              game: 'questDeck',
+            },
+          },
+        },
+      },
       //   flip('back', topCard(gameZone('questDeck'))),
       //   startGame()
     ],

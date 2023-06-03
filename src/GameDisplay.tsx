@@ -87,6 +87,7 @@ export const GameDisplay = () => {
           <FloatingCards
             events={events}
             textures={textures}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             cards={[floatingCards, setFloatingCards] as any}
           />
 
