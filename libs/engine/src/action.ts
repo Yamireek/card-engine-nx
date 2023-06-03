@@ -10,8 +10,9 @@ import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { UIEvents } from './uiEvents';
 import { reverse, shuffle } from 'lodash/fp';
-import { CardId, PlayerId } from '@card-engine-nx/basic';
+import { CardId, PlayerId, values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard, createPlayerState } from './utils';
+import { uiEvent } from './eventFactories';
 
 export type ExecutionContext = {
   state: State;
@@ -28,6 +29,14 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'shuffleEncounterDeck') {
     const zone = ctx.state.zones.encounterDeck;
     zone.cards = shuffle(zone.cards);
+    return;
+  }
+
+  if (action === 'executeSetupActions') {
+    const actions = values(ctx.view.cards).flatMap((c) => c.setup);
+    if (actions.length > 0) {
+      ctx.state.next = [...actions, ...ctx.state.next];
+    }
     return;
   }
 
@@ -67,7 +76,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     for (const card of action.addPlayer.library) {
       addPlayerCard(ctx.state, card, playerId, 'back', 'library');
     }
-
     return;
   }
 
@@ -79,6 +87,37 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     for (const questCard of reverse(action.setupScenario.questCards)) {
       addGameCard(ctx.state, questCard, 'front', 'questDeck');
     }
+    return;
+  }
+
+  if (action.addToStagingArea) {
+    const card = values(ctx.state.cards).find(
+      (c) => c.definition.front.name === action.addToStagingArea
+    );
+
+    if (card) {
+      ctx.state.zones.encounterDeck.cards =
+        ctx.state.zones.encounterDeck.cards.filter((id) => id !== card.id);
+      ctx.state.zones.stagingArea.cards.push(card.id);
+
+      ctx.events.send(
+        uiEvent.card_moved({
+          cardId: card.id,
+          source: {
+            owner: 'game',
+            type: 'encounterDeck',
+          },
+          destination: {
+            owner: 'game',
+            type: 'stagingArea',
+          },
+          side: 'front',
+        })
+      );
+    } else {
+      throw new Error(`card ${action.addToStagingArea} not found`);
+    }
+    return;
   }
 
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);
@@ -109,8 +148,7 @@ export function beginScenario(
           },
         },
       },
-      //   flip('face', topCard(gameZone('questDeck'))),
-      //   'SetupActions',
+      'executeSetupActions',
       //   flip('back', topCard(gameZone('questDeck'))),
       //   startGame()
     ],
