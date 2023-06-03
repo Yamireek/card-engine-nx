@@ -23,7 +23,7 @@ export const Token3d = (props: {
       ]}
     >
       <mesh>
-        <cylinderBufferGeometry
+        <cylinderGeometry
           attach="geometry"
           args={[0.007, 0.007, tokenHeight * props.amount]}
         />
