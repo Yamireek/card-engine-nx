@@ -1,4 +1,12 @@
-import { CardId, CardType, PlayerId, Token } from '@card-engine-nx/basic';
+import {
+  CardId,
+  CardType,
+  GameZoneType,
+  PlayerId,
+  PlayerZoneType,
+  Side,
+  Token,
+} from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
 
 export type ActionResult = 'none' | 'partial' | 'full';
@@ -9,6 +17,7 @@ export type Action =
   | 'executeSetupActions'
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
+      card?: { action: CardAction; taget: CardTarget };
       sequence?: Action[];
       addPlayer?: PlayerDeck;
       setupScenario?: Scenario;
@@ -22,7 +31,7 @@ export type PlayerAction =
 
 export type CardAction =
   | 'empty'
-  | { dealDamage?: number; heal?: number; sequence?: Action[] };
+  | { dealDamage?: number; heal?: number; sequence?: Action[]; flip?: Side };
 
 export type Ability = {
   description: string;
@@ -57,7 +66,20 @@ export type CardNumberExpr =
 
 export type CardTarget =
   | 'self'
-  | { owner?: PlayerId; and?: CardTarget[]; type?: CardType[] };
+  | {
+      owner?: PlayerId;
+      and?: CardTarget[];
+      type?: CardType[];
+      top?: ZoneTarget;
+    };
+
+export type ZoneTarget = {
+  game?: GameZoneType;
+  player?: {
+    id: PlayerTarget;
+    zone: PlayerZoneType;
+  };
+};
 
 export type PlayerTarget = PlayerId | 'each';
 

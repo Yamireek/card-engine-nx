@@ -1,7 +1,8 @@
 import { CardId, values } from '@card-engine-nx/basic';
 import { CardTarget } from '@card-engine-nx/state';
-import { intersection } from 'lodash';
+import { intersection, last } from 'lodash';
 import { ExecutionContext } from '../action';
+import { getTargetZone } from '../zone/target';
 
 export function getTargetCard(
   target: CardTarget,
@@ -34,6 +35,11 @@ export function getTargetCard(
     return values(ctx.view.cards)
       .filter((c) => target.type?.includes(c.props.type))
       .map((s) => s.id);
+  }
+
+  if (target.top) {
+    const zones = getTargetZone(target.top, ctx.state);
+    return zones.flatMap((z) => last(z.cards) ?? []);
   }
 
   throw new Error(`unknown card target: ${JSON.stringify(target)}`);

@@ -1,5 +1,5 @@
 import { CardId } from '@card-engine-nx/basic';
-import { State, CardNumberExpr, View } from '@card-engine-nx/state';
+import { CardNumberExpr } from '@card-engine-nx/state';
 import { ExecutionContext } from '../action';
 
 export function calculateCardExpr(
