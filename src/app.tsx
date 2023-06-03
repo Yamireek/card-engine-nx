@@ -1,10 +1,9 @@
 import { CssBaseline } from '@mui/material';
-import { advanceToChoiceState, consoleEvents } from './tests/TestEngine';
 import { coreTactics } from './decks/coreTactics';
 import { GameDisplay } from './GameDisplay';
 import { StateProvider } from './StateContext';
 import { createState } from '@card-engine-nx/state';
-import { beginScenario } from '@card-engine-nx/engine';
+import { advanceToChoiceState, beginScenario, consoleEvents } from '@card-engine-nx/engine';
 import { core } from '@card-engine-nx/cards/core';
 
 const state = createState(
