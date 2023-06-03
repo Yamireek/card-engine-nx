@@ -41,6 +41,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'endRound') {
+    ctx.state.next = [gameRound()];
     return;
   }
 

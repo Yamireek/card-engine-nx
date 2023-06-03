@@ -109,7 +109,7 @@ export const GameDisplay = () => {
             hiddenCards={floatingCards.map((c) => c.id)}
           />
         </GameSceneLoader>
-        <PlayerHand player="A" />
+        {/* <PlayerHand player="A" /> */}
         {!state.choice?.dialog && (
           <NextStepButton
             title={state.choice?.title ?? 'Next'}

@@ -9,6 +9,7 @@ import {
 
 export type Card3dProps = {
   id: number;
+  name: string;
   position: Vector3;
   rotation?: Vector3;
   textures: CardTextures;
@@ -43,7 +44,7 @@ export const Card3d = (props: Card3dProps) => {
 
   return (
     <animated.mesh
-      name={props.id ? 'card-' + props.id : undefined}
+      name={props.name}
       position-x={spring.x}
       position-y={spring.y}
       position-z={spring.z}
