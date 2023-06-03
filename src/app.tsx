@@ -1,5 +1,5 @@
 import { CssBaseline } from '@mui/material';
-import { advanceToChoiceState, consoleEvents } from './tests/GameEngine';
+import { advanceToChoiceState, consoleEvents } from './tests/TestEngine';
 import { coreTactics } from './decks/coreTactics';
 import { GameDisplay } from './GameDisplay';
 import { StateProvider } from './StateContext';

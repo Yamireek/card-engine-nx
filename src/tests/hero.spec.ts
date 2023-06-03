@@ -1,8 +1,8 @@
 import { core } from '@card-engine-nx/cards/core';
-import { GameEngine } from './GameEngine';
+import { TestEngine } from './TestEngine';
 
 it("Gimli's attack bonus", () => {
-  const game = new GameEngine();
+  const game = new TestEngine();
   const gimli = game.addHero(core.hero.gimli);
   expect(gimli.props.attack).toEqual(2);
   gimli.update({ dealDamage: 1 });
