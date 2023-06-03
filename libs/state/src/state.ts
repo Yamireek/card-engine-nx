@@ -25,4 +25,7 @@ export type State = {
   next: Action[];
   result?: 'win' | 'lost';
   nextId: CardId;
+  vars: {
+    card: Record<string, CardId | undefined>;
+  };
 };

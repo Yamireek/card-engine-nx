@@ -15,6 +15,7 @@ import {
   addGameCard,
   createPlayerState,
   sequence,
+  single,
 } from './utils';
 import { uiEvent } from './eventFactories';
 import { executeCardAction, getTargetCard } from './card';
@@ -159,6 +160,40 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       multi: false,
       options: [],
     };
+    return;
+  }
+
+  if (action.playAlly) {
+    const cardId = single(getTargetCard(action.playAlly, ctx));
+    const owner = ctx.state.cards[cardId].owner;
+    if (owner !== 'game') {
+      const player = ctx.state.players[owner];
+      if (player) {
+        player.zones.hand.cards = player.zones.hand.cards.filter(
+          (c) => c !== cardId
+        );
+        player.zones.playerArea.cards.push(cardId);
+        ctx.events.send(
+          uiEvent.card_moved({
+            cardId,
+            side: 'front',
+            source: {
+              owner,
+              type: 'hand',
+            },
+            destination: {
+              owner,
+              type: 'playerArea',
+            },
+          })
+        );
+      }
+    }
+    return;
+  }
+
+  if (action.setCardVar) {
+    ctx.state.vars.card[action.setCardVar.name] = action.setCardVar.value;
     return;
   }
 

@@ -54,6 +54,7 @@ export const GameAreas = (props: {
       <Card3d
         key={p.item.id}
         id={p.item.id}
+        name={`card-${p.item.id}`}
         size={{
           width: p.size.width / 1.2,
           height: p.size.height / 1.2,

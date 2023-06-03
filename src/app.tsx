@@ -7,6 +7,7 @@ import {
   advanceToChoiceState,
   beginScenario,
   consoleEvents,
+  createView,
 } from '@card-engine-nx/engine';
 import { core } from '@card-engine-nx/cards/core';
 
@@ -14,9 +15,12 @@ const state = createState(
   beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
 );
 
-advanceToChoiceState(state, consoleEvents);
+advanceToChoiceState(state, consoleEvents, true);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const view = createView(state);
+
+console.log(view.actions);
+
 (window as any)['state'] = state;
 
 export const App = () => {

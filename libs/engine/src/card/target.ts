@@ -17,6 +17,8 @@ export function getTargetCard(
   if (target === 'self') {
     if (ctx.card['self']) {
       return [ctx.card['self']];
+    } else if (ctx.state.vars.card['self']) {
+      return [ctx.state.vars.card['self']];
     } else {
       throw new Error('no self card in context');
     }
@@ -42,11 +44,8 @@ export function getTargetCard(
   }
 
   if (target.and) {
-    return uniq(
-      intersection(target.and.map((t) => getTargetCard(t, ctx))).flatMap(
-        (c) => c
-      )
-    );
+    const lists = target.and.map((t) => getTargetCard(t, ctx));
+    return uniq(intersection(...lists));
   }
 
   if (target.owner) {

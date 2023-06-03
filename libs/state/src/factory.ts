@@ -20,5 +20,8 @@ export function createState(program?: Action): State {
     nextId: 1,
     cards: {},
     effects: [],
+    vars: {
+      card: {},
+    },
   };
 }

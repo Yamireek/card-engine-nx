@@ -10,5 +10,6 @@ export function createCardView(state: CardState): CardView {
       : [],
     modifiers: state.modifiers.map((m) => ({ applied: false, ...m })),
     setup: [],
+    actions: [],
   };
 }

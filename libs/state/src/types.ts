@@ -9,6 +9,7 @@ import {
   Token,
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
+import { PlayableCardAction } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
@@ -27,6 +28,8 @@ export type Action =
       addToStagingArea?: string;
       beginPhase?: Phase;
       playerActions?: string;
+      playAlly?: CardTarget;
+      setCardVar?: { name: string; value: CardId | undefined };
     };
 
 export type PlayerAction =
@@ -94,6 +97,6 @@ export type ZoneTarget = {
   };
 };
 
-export type PlayerTarget = PlayerId | 'each';
+export type PlayerTarget = PlayerId | 'each' | 'owner';
 
 export type Context = { selfCard?: CardId };

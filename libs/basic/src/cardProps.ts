@@ -12,6 +12,7 @@ export type PrintedProps = {
   sphere?: Sphere;
   sequence?: number;
   questPoints?: number;
+  cost?: number;
 };
 
 export type HeroProps = {

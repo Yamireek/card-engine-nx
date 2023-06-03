@@ -8,6 +8,7 @@ import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
 import { Textures } from './types';
 import { Token3d } from './Token3d';
+import { UIEvents, advanceToChoiceState } from '@card-engine-nx/engine';
 
 export const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
   '1': { A: [0, 0, 0] },
@@ -32,11 +33,14 @@ export const PlayerAreas = (props: {
   player: PlayerId;
   textures: Textures;
   hiddenCards: CardId[];
+  events: UIEvents;
 }) => {
-  const { state } = useContext(StateContext);
+  const { state, view } = useContext(StateContext);
   const playerState = state.players[props.player];
 
   const cardRenderer: CardAreaLayoutProps<CardState>['renderer'] = (p) => {
+    const actions = view.actions.filter((a) => a.card === p.item.id);
+
     return (
       <Card3d
         key={p.item.id}
@@ -53,6 +57,24 @@ export const PlayerAreas = (props: {
           back: props.textures[getCardImageUrl(p.item.definition.back, 'back')],
         }}
         hidden={props.hiddenCards.includes(p.item.id)}
+        onClick={() => {
+          if (actions.length === 0 || !state.choice || state.choice.dialog) {
+            return;
+          } else {
+            if (actions.length === 1) {
+              const action = actions[0];
+              const title = state.choice.title;
+              state.choice = undefined;
+              state.next.unshift({ playerActions: title });
+              state.next.unshift(action.action);
+              advanceToChoiceState(state, props.events, true);
+            } else {
+              // TODO multiple actions
+              // tslint:disable-next-line:no-console
+              console.log('todo multiple actions');
+            }
+          }
+        }}
       >
         <Token3d
           position={[0.022, 0.01]}
@@ -69,6 +91,15 @@ export const PlayerAreas = (props: {
           texture={props.textures[image.progress]}
           amount={p.item.token.progress}
         />
+        {actions.length > 0 && (
+          <mesh>
+            <planeGeometry
+              attach="geometry"
+              args={[cardSize.width * 1.03, cardSize.height * 1.03]}
+            />
+            <meshStandardMaterial attach="material" color="yellow" />
+          </mesh>
+        )}
       </Card3d>
     );
   };
