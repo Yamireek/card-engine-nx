@@ -7,6 +7,7 @@ import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
 import { Textures } from './types';
+import { Token3d } from './Token3d';
 
 export const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
   '1': { A: [0, 0, 0] },
@@ -52,7 +53,23 @@ export const PlayerAreas = (props: {
           back: props.textures[getCardImageUrl(p.item.definition.back, 'back')],
         }}
         hidden={props.hiddenCards.includes(p.item.id)}
-      />
+      >
+        <Token3d
+          position={[0.022, 0.01]}
+          texture={props.textures[image.resource]}
+          amount={p.item.token.resources}
+        />
+        <Token3d
+          position={[0, 0.01]}
+          texture={props.textures[image.damage]}
+          amount={p.item.token.damage}
+        />
+        <Token3d
+          position={[0.01, 0.03]}
+          texture={props.textures[image.progress]}
+          amount={p.item.token.progress}
+        />
+      </Card3d>
     );
   };
 

@@ -7,7 +7,7 @@ import {
   Vector3,
 } from '@card-engine-nx/ui';
 
-export type Card3dProps = {
+export type Card3dProps = React.PropsWithChildren<{
   id: number;
   name: string;
   position: Vector3;
@@ -16,7 +16,7 @@ export type Card3dProps = {
   scale?: number;
   size?: Dimensions;
   hidden?: boolean;
-};
+}>;
 
 export const cardSize: Dimensions3 = {
   width: 0.0635,
@@ -43,7 +43,7 @@ export const Card3d = (props: Card3dProps) => {
   });
 
   return (
-    <animated.mesh
+    <animated.group
       name={props.name}
       position-x={spring.x}
       position-y={spring.y}
@@ -53,31 +53,33 @@ export const Card3d = (props: Card3dProps) => {
       rotation-x={spring.rotX}
       rotation-y={spring.rotY}
       rotation-z={spring.rotZ}
-      castShadow
     >
-      {!props.hidden && (
-        <>
-          <boxGeometry
-            args={[cardSize.width, cardSize.height, cardSize.depth]}
-          />
-          <meshBasicMaterial attach="material-0" color="gray" />
-          <meshBasicMaterial attach="material-1" color="gray" />
-          <meshBasicMaterial attach="material-2" color="gray" />
-          <meshBasicMaterial attach="material-3" color="gray" />
-          <meshPhysicalMaterial
-            attach="material-4"
-            map={props.textures.front}
-            roughnessMap={texture.roughness}
-            normalMap={texture.normal}
-          />
-          <meshPhysicalMaterial
-            attach="material-5"
-            map={props.textures.back}
-            roughnessMap={texture.roughness}
-            normalMap={texture.normal}
-          />
-        </>
-      )}
-    </animated.mesh>
+      <mesh castShadow>
+        {!props.hidden && (
+          <>
+            <boxGeometry
+              args={[cardSize.width, cardSize.height, cardSize.depth]}
+            />
+            <meshBasicMaterial attach="material-0" color="gray" />
+            <meshBasicMaterial attach="material-1" color="gray" />
+            <meshBasicMaterial attach="material-2" color="gray" />
+            <meshBasicMaterial attach="material-3" color="gray" />
+            <meshPhysicalMaterial
+              attach="material-4"
+              map={props.textures.front}
+              roughnessMap={texture.roughness}
+              normalMap={texture.normal}
+            />
+            <meshPhysicalMaterial
+              attach="material-5"
+              map={props.textures.back}
+              roughnessMap={texture.roughness}
+              normalMap={texture.normal}
+            />
+          </>
+        )}
+      </mesh>
+      {!props.hidden && props.children}
+    </animated.group>
   );
 };
