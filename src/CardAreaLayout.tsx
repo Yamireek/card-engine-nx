@@ -45,7 +45,7 @@ export const CardAreaLayout = <T extends any>(
         const column = index % columns;
         const row = Math.floor(index / columns);
 
-        const rows = Math.floor(props.size.height / itemSize.height);
+        const rows = Math.floor((props.items.length - 1) / columns) + 1;
 
         const cardsInRow =
           rows === row + 1
