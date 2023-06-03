@@ -102,6 +102,7 @@ export const GameDisplay = () => {
               player={id}
               textures={textures}
               hiddenCards={floatingCards.map((c) => c.id)}
+              events={events}
             />
           ))}
 
@@ -117,7 +118,7 @@ export const GameDisplay = () => {
             title={state.choice?.title ?? 'Next'}
             onClick={() => {
               state.choice = undefined;
-              advanceToChoiceState(state, events);
+              advanceToChoiceState(state, events, false);
             }}
           />
         )}

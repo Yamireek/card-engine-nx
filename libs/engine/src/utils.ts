@@ -101,7 +101,11 @@ export function nextStep(ctx: ExecutionContext) {
   }
 }
 
-export function advanceToChoiceState(state: State, events: UIEvents) {
+export function advanceToChoiceState(
+  state: State,
+  events: UIEvents,
+  stopOnError: boolean
+) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     if (state.choice) {
@@ -125,6 +129,9 @@ export function advanceToChoiceState(state: State, events: UIEvents) {
     } catch (error: any) {
       events.send(uiEvent.error(error.message));
       events.send(uiEvent.newState(state));
+      if (stopOnError) {
+        throw error;
+      }
     }
   }
 }
@@ -133,4 +140,12 @@ export function sequence(...actions: Action[]): Action {
   return {
     sequence: actions,
   };
+}
+
+export function single<T>(items: T[]): T {
+  if (items.length === 1) {
+    return items[0];
+  } else {
+    throw new Error('expecting 1 item');
+  }
 }

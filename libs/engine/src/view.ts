@@ -4,10 +4,13 @@ import { applyModifier } from './card/modifier';
 import { applyAbility } from './card/ability';
 import { createCardView } from './card/view';
 import { emptyEvents } from './uiEvents';
+import { canExecute } from './resolution';
+import { sequence } from './utils';
 
 export function createView(state: State): View {
   const view: View = cloneDeep({
     cards: mapValues(state.cards, (c) => createCardView(c)),
+    actions: [],
   });
 
   // eslint-disable-next-line no-constant-condition
@@ -35,6 +38,28 @@ export function createView(state: State): View {
 
     if (allApplied) {
       break;
+    }
+  }
+
+  for (const card of values(view.cards)) {
+    for (const action of card.actions) {
+      const allowed = canExecute(action.action, true, {
+        state,
+        view,
+        card: { self: card.id },
+        events: emptyEvents,
+      });
+      if (allowed) {
+        view.actions.push({
+          card: card.id,
+          description: action.description,
+          action: sequence(
+            { setCardVar: { name: 'self', value: card.id } },
+            action.action,
+            { setCardVar: { name: 'self', value: undefined } }
+          ),
+        });
+      }
     }
   }
 

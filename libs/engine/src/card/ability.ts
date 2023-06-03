@@ -15,5 +15,13 @@ export function applyAbility(ability: Ability, card: CardView) {
     return;
   }
 
+  if (ability.action) {
+    card.actions.push({
+      description: ability.description,
+      action: ability.action,
+    });
+    return;
+  }
+
   throw new Error(`unknown ability: ${JSON.stringify(ability)}`);
 }

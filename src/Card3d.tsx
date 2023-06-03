@@ -16,6 +16,7 @@ export type Card3dProps = React.PropsWithChildren<{
   scale?: number;
   size?: Dimensions;
   hidden?: boolean;
+  onClick?: () => void;
 }>;
 
 export const cardSize: Dimensions3 = {
@@ -54,7 +55,7 @@ export const Card3d = (props: Card3dProps) => {
       rotation-y={spring.rotY}
       rotation-z={spring.rotZ}
     >
-      <mesh castShadow>
+      <mesh castShadow onClick={props.onClick}>
         {!props.hidden && (
           <>
             <boxGeometry

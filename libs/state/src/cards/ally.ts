@@ -9,7 +9,15 @@ export function ally(
   return {
     front: {
       ...props,
-      abilities,
+      abilities: [
+        {
+          description: 'Play ally',
+          action: {
+            playAlly: 'self',
+          },
+        },
+        ...abilities,
+      ],
       type: 'ally',
     },
     back: {
