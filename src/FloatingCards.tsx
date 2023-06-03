@@ -29,6 +29,7 @@ export const FloatingCards = (props: {
             ...p,
             {
               id: e.cardId,
+              name: `floating-card-${e.cardId}`,
               position: [
                 deckMesh.position.x,
                 deckMesh.position.y,
@@ -71,16 +72,16 @@ export const FloatingCards = (props: {
 
         setTimeout(() => {
           const cardMesh = get().scene.getObjectByName('card-' + e.cardId);
-          if (cardMesh) {
+          if (cardMesh && cardMesh.parent) {
             setFloatingCards((p) =>
               p.map((c) =>
-                c.id === e.cardId
+                c.id === e.cardId && cardMesh.parent
                   ? {
                       ...c,
                       position: [
-                        cardMesh.position.x,
-                        cardMesh.position.y,
-                        cardMesh.position.z,
+                        cardMesh.position.x + cardMesh.parent.position.x,
+                        cardMesh.position.y + cardMesh.parent.position.y,
+                        cardMesh.position.z + cardMesh.parent.position.z,
                       ],
                       scale: cardMesh.scale.x,
                     }
@@ -104,7 +105,7 @@ export const FloatingCards = (props: {
   return (
     <>
       {floatingCards.map((p) => (
-        <Card3d {...p} key={p.id} id={p.id} />
+        <Card3d {...p} key={p.id} />
       ))}
     </>
   );
