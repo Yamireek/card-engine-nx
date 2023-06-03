@@ -2,6 +2,7 @@ import {
   CardId,
   CardType,
   GameZoneType,
+  Phase,
   PlayerId,
   PlayerZoneType,
   Side,
@@ -15,6 +16,8 @@ export type Action =
   | 'empty'
   | 'shuffleEncounterDeck'
   | 'executeSetupActions'
+  | 'endRound'
+  | 'endPhase'
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
       card?: { action: CardAction; taget: CardTarget };
@@ -22,6 +25,8 @@ export type Action =
       addPlayer?: PlayerDeck;
       setupScenario?: Scenario;
       addToStagingArea?: string;
+      beginPhase?: Phase;
+      playerActions?: string;
     };
 
 export type PlayerAction =
@@ -31,7 +36,13 @@ export type PlayerAction =
 
 export type CardAction =
   | 'empty'
-  | { dealDamage?: number; heal?: number; sequence?: Action[]; flip?: Side };
+  | {
+      dealDamage?: number;
+      heal?: number;
+      generateResources?: number;
+      sequence?: Action[];
+      flip?: Side;
+    };
 
 export type Ability = {
   description: string;
@@ -66,6 +77,8 @@ export type CardNumberExpr =
 
 export type CardTarget =
   | 'self'
+  | 'each'
+  | 'inAPlay'
   | {
       owner?: PlayerId;
       and?: CardTarget[];

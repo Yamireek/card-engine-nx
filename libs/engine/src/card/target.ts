@@ -1,6 +1,12 @@
-import { CardId, values } from '@card-engine-nx/basic';
+import {
+  CardId,
+  GameZoneType,
+  PlayerZoneType,
+  keys,
+  values,
+} from '@card-engine-nx/basic';
 import { CardTarget } from '@card-engine-nx/state';
-import { intersection, last } from 'lodash';
+import { intersection, last, uniq } from 'lodash';
 import { ExecutionContext } from '../action';
 import { getTargetZone } from '../zone/target';
 
@@ -16,9 +22,30 @@ export function getTargetCard(
     }
   }
 
+  if (target === 'each') {
+    return keys(ctx.state.cards);
+  }
+
+  if (target === 'inAPlay') {
+    const gameZones: GameZoneType[] = ['activeLocation', 'stagingArea'];
+    const playerzones: PlayerZoneType[] = ['playerArea', 'engaged'];
+
+    const gameIds = gameZones
+      .map((z) => ctx.state.zones[z])
+      .flatMap((z) => z.cards);
+
+    const playerIds = playerzones.flatMap((z) =>
+      values(ctx.state.players).flatMap((p) => p.zones[z].cards)
+    );
+
+    return [...gameIds, ...playerIds];
+  }
+
   if (target.and) {
-    return intersection(target.and.map((t) => getTargetCard(t, ctx))).flatMap(
-      (c) => c
+    return uniq(
+      intersection(target.and.map((t) => getTargetCard(t, ctx))).flatMap(
+        (c) => c
+      )
     );
   }
 
