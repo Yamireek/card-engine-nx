@@ -8,16 +8,22 @@ export const fliesAndSpiders = quest(
     b: {
       questPoints: 8,
     },
+  },
+  {
+    description:
+      'Setup: Search the encounter deck for 1 copy of the Forest Spider and 1 copy of the Old Forest Road, and add them to the staging area. Then, shuffle the encounter deck.',
+    setup: {
+      sequence: [
+        {
+          addToStagingArea: 'Forest Spider',
+        },
+        {
+          addToStagingArea: 'Old Forest Road',
+        },
+        'shuffleEncounterDeck',
+      ],
+    },
   }
-  // setup({
-  //   description:
-  //     'Setup: Search the encounter deck for 1 copy of the Forest Spider and 1 copy of the Old Forest Road, and add them to the staging area. Then, shuffle the encounter deck.',
-  //   action: sequence(
-  //     addToStagingArea('Forest Spider'),
-  //     addToStagingArea('Old Forest Road'),
-  //     shuffleZone('encounterDeck')
-  //   ),
-  // })
 );
 
 export const aForkInTheRoad = quest({

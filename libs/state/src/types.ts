@@ -6,11 +6,13 @@ export type ActionResult = 'none' | 'partial' | 'full';
 export type Action =
   | 'empty'
   | 'shuffleEncounterDeck'
+  | 'executeSetupActions'
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
       sequence?: Action[];
       addPlayer?: PlayerDeck;
       setupScenario?: Scenario;
+      addToStagingArea?: string;
     };
 
 export type PlayerAction =
@@ -26,6 +28,7 @@ export type Ability = {
   description: string;
   selfModifier?: Modifier;
   action?: Action;
+  setup?: Action;
 };
 
 export type Modifier = {

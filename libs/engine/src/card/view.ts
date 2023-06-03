@@ -9,5 +9,6 @@ export function createCardView(state: CardState): CardView {
       ? printed.abilities.map((a) => ({ applied: false, ability: a }))
       : [],
     modifiers: state.modifiers.map((m) => ({ applied: false, ...m })),
+    setup: [],
   };
 }
