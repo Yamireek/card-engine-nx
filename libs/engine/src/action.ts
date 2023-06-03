@@ -10,7 +10,12 @@ import { executePlayerAction } from './player/action';
 import { UIEvents } from './uiEvents';
 import { reverse, shuffle } from 'lodash/fp';
 import { CardId, values } from '@card-engine-nx/basic';
-import { addPlayerCard, addGameCard, createPlayerState } from './utils';
+import {
+  addPlayerCard,
+  addGameCard,
+  createPlayerState,
+  sequence,
+} from './utils';
 import { uiEvent } from './eventFactories';
 import { executeCardAction, getTargetCard } from './card';
 
@@ -164,72 +169,61 @@ export function beginScenario(
   scenario: Scenario,
   ...decks: PlayerDeck[]
 ): Action {
-  return {
-    sequence: [
-      {
-        setupScenario: scenario,
-      },
-      ...decks.map((d) => ({ addPlayer: d })),
-      'shuffleEncounterDeck',
-      {
-        player: {
-          target: 'each',
-          action: 'shuffleLibrary',
-        },
-      },
-      {
-        player: {
-          target: 'each',
-          action: {
-            draw: 6,
-          },
-        },
-      },
-      'executeSetupActions',
-      {
-        card: {
-          action: {
-            flip: 'back',
-          },
-          taget: {
-            top: {
-              game: 'questDeck',
-            },
-          },
-        },
-      },
-      startGame(),
-    ],
-  };
-}
-
-export function sequence(...actions: Action[]): Action {
-  return {
-    sequence: actions,
-  };
-}
-
-export function startGame(): Action {
-  // TODO while loop
-  return gameRound();
-}
-
-export const phaseResource: Action = {
-  sequence: [
-    { beginPhase: 'resource' },
-    { player: { target: 'each', action: { draw: 1 } } },
+  return sequence(
     {
-      card: {
-        taget: { and: ['inAPlay', { type: ['hero'] }] },
-        action: { generateResources: 1 },
+      setupScenario: scenario,
+    },
+    ...decks.map((d) => ({ addPlayer: d })),
+    'shuffleEncounterDeck',
+    {
+      player: {
+        target: 'each',
+        action: 'shuffleLibrary',
       },
     },
-    { playerActions: 'End resource phase' },
-    'endPhase',
-  ],
-};
+    {
+      player: {
+        target: 'each',
+        action: {
+          draw: 6,
+        },
+      },
+    },
+    'executeSetupActions',
+    {
+      card: {
+        action: {
+          flip: 'back',
+        },
+        taget: {
+          top: {
+            game: 'questDeck',
+          },
+        },
+      },
+    },
+    gameRound()
+  );
+}
 
-export const phasePlanning: Action = 'empty';
+export const phaseResource: Action = sequence(
+  { beginPhase: 'resource' },
+  { player: { target: 'each', action: { draw: 1 } } },
+  {
+    card: {
+      taget: { and: ['inAPlay', { type: ['hero'] }] },
+      action: { generateResources: 1 },
+    },
+  },
+  { playerActions: 'End resource phase' },
+  'endPhase'
+);
+
+export const phasePlanning: Action = sequence(
+  { beginPhase: 'planning' },
+  { playerActions: 'End planning phase' },
+  'endPhase'
+);
 
 export const phaseQuest: Action = 'empty';
 

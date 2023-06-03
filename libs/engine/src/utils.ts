@@ -1,4 +1,5 @@
 import {
+  Action,
   CardDefinition,
   CardState,
   PlayerState,
@@ -126,4 +127,10 @@ export function advanceToChoiceState(state: State, events: UIEvents) {
       events.send(uiEvent.newState(state));
     }
   }
+}
+
+export function sequence(...actions: Action[]): Action {
+  return {
+    sequence: actions,
+  };
 }
