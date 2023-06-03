@@ -1,4 +1,4 @@
-import { NextStepButton, getCardImageUrls } from '@card-engine-nx/ui';
+import { NextStepButton, getCardImageUrls, image } from '@card-engine-nx/ui';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { StateContext } from './StateContext';
 import {
@@ -21,8 +21,10 @@ import { GameSceneLoader } from './GameScene';
 import { PlayerAreas } from './PlayerAreas';
 import { GameAreas } from './GameAreas';
 
+const staticUrls = [image.progress, image.resource, image.damage];
+
 export async function preLoadTextures(state: State): Promise<Textures> {
-  const urls = uniq(
+  const cardUrls = uniq(
     values(state.cards).flatMap((c) => {
       const images = getCardImageUrls(c.definition);
       return [images.front, images.back];
@@ -31,7 +33,7 @@ export async function preLoadTextures(state: State): Promise<Textures> {
 
   const loader = new THREE.TextureLoader();
   const textures: Record<string, Texture> = {};
-  for (const url of urls) {
+  for (const url of [...staticUrls, ...cardUrls]) {
     console.log('loading texture', url);
     textures[url] = await loader.loadAsync(url);
   }
