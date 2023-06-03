@@ -40,6 +40,14 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if (action === 'endRound') {
+    return;
+  }
+
+  if (action === 'endPhase') {
+    return;
+  }
+
   if (action.player) {
     const ids = getTargetPlayer(action.player.target, ctx.state);
     for (const id of ids) {
@@ -133,6 +141,21 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if (action.beginPhase) {
+    ctx.state.phase = action.beginPhase;
+    return;
+  }
+
+  if (action.playerActions) {
+    ctx.state.choice = {
+      title: action.playerActions,
+      dialog: false,
+      multi: false,
+      options: [],
+    };
+    return;
+  }
+
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);
 }
 
@@ -174,8 +197,58 @@ export function beginScenario(
           },
         },
       },
-      //   flip('back', topCard(gameZone('questDeck'))),
-      //   startGame()
+      startGame(),
     ],
   };
+}
+
+export function sequence(...actions: Action[]): Action {
+  return {
+    sequence: actions,
+  };
+}
+
+export function startGame(): Action {
+  // TODO while loop
+  return gameRound();
+}
+
+export const phaseResource: Action = {
+  sequence: [
+    { beginPhase: 'resource' },
+    { player: { target: 'each', action: { draw: 1 } } },
+    {
+      card: {
+        taget: { and: ['inAPlay', { type: ['hero'] }] },
+        action: { generateResources: 1 },
+      },
+    },
+    { playerActions: 'End resource phase' },
+    'endPhase',
+  ],
+};
+
+export const phasePlanning: Action = 'empty';
+
+export const phaseQuest: Action = 'empty';
+
+export const phaseTravel: Action = 'empty';
+
+export const phaseEncounter: Action = 'empty';
+
+export const phaseCombat: Action = 'empty';
+
+export const phaseRefresh: Action = 'empty';
+
+export function gameRound(): Action {
+  return sequence(
+    phaseResource,
+    phasePlanning,
+    phaseQuest,
+    phaseTravel,
+    phaseEncounter,
+    phaseCombat,
+    phaseRefresh,
+    'endRound'
+  );
 }

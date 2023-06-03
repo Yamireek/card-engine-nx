@@ -1,7 +1,11 @@
 import { NextStepButton, getCardImageUrls } from '@card-engine-nx/ui';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { StateContext } from './StateContext';
-import { UiEvent, UIEvents as UiEvents } from '@card-engine-nx/engine';
+import {
+  UiEvent,
+  UIEvents as UiEvents,
+  advanceToChoiceState,
+} from '@card-engine-nx/engine';
 import { values } from '@card-engine-nx/basic';
 import { Board3d } from './Board3d';
 import { Card3dProps } from './Card3d';
@@ -67,7 +71,6 @@ export const GameDisplay = () => {
     const tmp = createRxUiEvents();
     tmp.subscribe((e) => {
       if (e.type === 'new_state') {
-        console.log(e.state.players.A?.zones.hand.cards.length);
         setState({ ...e.state });
       }
     });
@@ -82,7 +85,7 @@ export const GameDisplay = () => {
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <div style={{ width: '100%', height: '100%' }}>
-        <GameSceneLoader angle={20} rotation={0} perspective={3000} debug>
+        <GameSceneLoader angle={20} rotation={0} perspective={3000}>
           <Board3d />
           <FloatingCards
             events={events}
@@ -107,12 +110,15 @@ export const GameDisplay = () => {
           />
         </GameSceneLoader>
         <PlayerHand player="A" />
-        <NextStepButton
-          title="Next step"
-          onClick={() => {
-            return;
-          }}
-        />
+        {!state.choice?.dialog && (
+          <NextStepButton
+            title={state.choice?.title ?? 'Next'}
+            onClick={() => {
+              state.choice = undefined;
+              advanceToChoiceState(state, events);
+            }}
+          />
+        )}
       </div>
     </div>
   );

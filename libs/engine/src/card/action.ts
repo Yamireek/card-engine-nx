@@ -20,5 +20,10 @@ export function executeCardAction(action: CardAction, card: CardState) {
     return;
   }
 
+  if (action.generateResources) {
+    card.token.resources += action.generateResources;
+    return;
+  }
+
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
 }
