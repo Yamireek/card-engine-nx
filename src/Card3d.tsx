@@ -1,4 +1,4 @@
-import { useTexture } from '@react-three/drei';
+import { useTexture, Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import {
   CardTextures,
@@ -26,6 +26,8 @@ export const cardSize: Dimensions3 = {
 };
 
 export const Card3d = (props: Card3dProps) => {
+  console.log('render', props.name, props);
+
   const texture = useTexture({
     roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
     normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
@@ -81,6 +83,15 @@ export const Card3d = (props: Card3dProps) => {
         )}
       </mesh>
       {!props.hidden && props.children}
+      <Text
+        position={[0, 0, 0.001]}
+        color="black"
+        outlineColor="white"
+        outlineWidth={0.0005}
+        fontSize={0.025}
+      >
+        {props.id}
+      </Text>
     </animated.group>
   );
 };
