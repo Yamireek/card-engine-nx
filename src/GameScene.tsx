@@ -43,7 +43,7 @@ export const GameScene = (
     <Canvas
       style={{ width, height }}
       camera={{
-        position: [0, 0, 2],
+        position: [0, 0, 4],
         up: [0, 0, 1],
         fov,
         near,

@@ -87,7 +87,7 @@ export const GameDisplay = () => {
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <div style={{ width: '100%', height: '100%' }}>
-        <GameSceneLoader angle={20} rotation={0} perspective={3000}>
+        <GameSceneLoader angle={20} rotation={0} perspective={1500}>
           <Board3d />
           <FloatingCards
             events={events}
