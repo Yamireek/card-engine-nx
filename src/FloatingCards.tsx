@@ -13,18 +13,20 @@ export const FloatingCards = (props: {
 }) => {
   const [floatingCards, setFloatingCards] = props.cards;
   const { state } = useGameState();
-  const get = useThree((s) => s.get);
+  const scene = useThree((s) => s.scene);
 
   useEffect(() => {
     const unsub = props.events.subscribe((e) => {
       if (e.type === 'card_moved') {
         const card = state.cards[e.cardId];
 
-        const deckMesh = get().scene.getObjectByName(
+        const deckMesh = scene.getObjectByName(
           `deck-${e.source.owner}-${e.source.type}`
         );
 
-        if (deckMesh) {
+        const cardMesh = scene.getObjectByName(`card-${e.cardId}`);
+
+        if (deckMesh && !cardMesh) {
           setFloatingCards((p) => [
             ...p,
             {
@@ -60,40 +62,92 @@ export const FloatingCards = (props: {
               )
             );
           }, 500);
-        }
 
-        setTimeout(() => {
-          setFloatingCards((p) =>
-            p.map((c) =>
-              c.id === e.cardId ? { ...c, rotation: [0, 0, 0] } : { ...c }
-            )
-          );
-        }, 1000);
-
-        setTimeout(() => {
-          const cardMesh = get().scene.getObjectByName('card-' + e.cardId);
-          if (cardMesh && cardMesh.parent) {
+          setTimeout(() => {
             setFloatingCards((p) =>
               p.map((c) =>
-                c.id === e.cardId && cardMesh.parent
-                  ? {
-                      ...c,
-                      position: [
-                        cardMesh.position.x + cardMesh.parent.position.x,
-                        cardMesh.position.y + cardMesh.parent.position.y,
-                        cardMesh.position.z + cardMesh.parent.position.z,
-                      ],
-                      scale: cardMesh.scale.x,
-                    }
-                  : { ...c }
+                c.id === e.cardId ? { ...c, rotation: [0, 0, 0] } : { ...c }
               )
             );
-          }
-        }, 2000);
+          }, 1000);
 
-        setTimeout(() => {
-          setFloatingCards((p) => p.filter((c) => c.id !== e.cardId));
-        }, 2500);
+          setTimeout(() => {
+            const cardMesh = scene.getObjectByName('card-' + e.cardId);
+
+            if (cardMesh) {
+              const position = cardMesh.getWorldPosition(
+                cardMesh.position.clone()
+              );
+
+              setFloatingCards((p) =>
+                p.map((c) =>
+                  c.id === e.cardId && cardMesh.parent
+                    ? {
+                        ...c,
+                        position: [position.x, position.y, position.z],
+                        scale: cardMesh.scale.x,
+                      }
+                    : { ...c }
+                )
+              );
+            }
+          }, 2000);
+
+          setTimeout(() => {
+            setFloatingCards((p) => p.filter((c) => c.id !== e.cardId));
+          }, 2500);
+        }
+
+        if (cardMesh && !deckMesh) {
+          const matrix = cardMesh.matrixWorld;
+          const scale = matrix.elements[0];
+          const x = matrix.elements[12];
+          const y = matrix.elements[13];
+          const z = matrix.elements[14];
+          setFloatingCards((p) => [
+            ...p,
+            {
+              id: e.cardId,
+              name: `floating-card-${e.cardId}`,
+              position: [x, y, z],
+              scale,
+              textures: {
+                front:
+                  props.textures[
+                    getCardImageUrl(card.definition.front, 'front')
+                  ],
+                back: props.textures[
+                  getCardImageUrl(card.definition.back, 'back')
+                ],
+              },
+            },
+          ]);
+
+          setTimeout(() => {
+            const newCardMesh = scene.getObjectByName('card-' + e.cardId);
+            if (newCardMesh) {
+              const position = newCardMesh.getWorldPosition(
+                newCardMesh.position.clone()
+              );
+
+              setFloatingCards((p) =>
+                p.map((c) =>
+                  c.id === e.cardId && newCardMesh.parent
+                    ? {
+                        ...c,
+                        position: [position.x, position.y, position.z],
+                        scale: newCardMesh.scale.x,
+                      }
+                    : { ...c }
+                )
+              );
+            }
+          }, 1);
+
+          setTimeout(() => {
+            setFloatingCards((p) => p.filter((c) => c.id !== e.cardId));
+          }, 500);
+        }
 
         return;
       }
