@@ -26,8 +26,6 @@ export const cardSize: Dimensions3 = {
 };
 
 export const Card3d = (props: Card3dProps) => {
-  console.log(props.id, props.position);
-
   const texture = useTexture({
     roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
     normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
