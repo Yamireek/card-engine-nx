@@ -63,7 +63,5 @@ export function createView(state: State): View {
     }
   }
 
-  console.log(view.cards[43]);
-
   return view;
 }

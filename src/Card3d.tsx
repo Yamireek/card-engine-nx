@@ -59,9 +59,8 @@ export const Card3d = (props: Card3dProps) => {
       <mesh
         castShadow
         onClick={props.onClick}
-        onPointerEnter={() => {
-          detail.setDetail(props.id);
-        }}
+        onPointerEnter={() => detail.setDetail(props.id)}
+        //onPointerLeave={() => detail.setDetail(undefined)}
       >
         {!props.hidden && (
           <>

@@ -54,7 +54,7 @@ export const CardText = (props: {
           </td>
         </tr>
         {props.properties.map((p) => (
-          <PropertyView {...p} />
+          <PropertyView key={p.name } {...p} />
         ))}
         {props.tokens.damage > 0 && (
           <tr>
