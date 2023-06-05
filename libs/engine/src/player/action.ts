@@ -19,6 +19,26 @@ export function executePlayerAction(
     return;
   }
 
+  if (action === 'commitCharactersToQuest') {
+    throw new Error('not implemented');
+  }
+
+  if (action === 'engagementCheck') {
+    throw new Error('not implemented');
+  }
+
+  if (action === 'optionalEngagement') {
+    throw new Error('not implemented');
+  }
+
+  if (action === 'resolveEnemyAttacks') {
+    throw new Error('not implemented');
+  }
+
+  if (action === 'resolvePlayerAttacks') {
+    throw new Error('not implemented');
+  }
+
   if (action.draw) {
     for (let index = 0; index < action.draw; index++) {
       const top = last(player.zones.library.cards);

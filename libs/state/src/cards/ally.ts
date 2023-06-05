@@ -12,6 +12,7 @@ export function ally(
       abilities: [
         {
           description: 'Play ally',
+          implicit: true,
           action: {
             playAlly: 'self',
           },

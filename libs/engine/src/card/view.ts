@@ -1,9 +1,11 @@
 import { CardState, CardView } from '@card-engine-nx/state';
+import { cloneDeep } from 'lodash/fp';
 
 export function createCardView(state: CardState): CardView {
   const printed = state.definition[state.sideUp];
   return {
     id: state.id,
+    printed: cloneDeep(printed),
     props: printed,
     abilities: printed.abilities
       ? printed.abilities.map((a) => ({ applied: false, ability: a }))

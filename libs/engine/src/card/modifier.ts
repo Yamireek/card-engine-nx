@@ -1,7 +1,4 @@
-import {
-  CardView,
-  Modifier,
-} from '@card-engine-nx/state';
+import { CardView, Modifier } from '@card-engine-nx/state';
 import { calculateExpr } from '../expr';
 import { ExecutionContext } from '../action';
 
@@ -13,7 +10,7 @@ export function applyModifier(
   if (modifier.increment) {
     const amount = calculateExpr(modifier.increment.amount, ctx);
     const value = card.props[modifier.increment.prop];
-    if (value !== undefined) {
+    if (value !== undefined && amount) {
       card.props[modifier.increment.prop] = value + amount;
     }
 

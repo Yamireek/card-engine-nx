@@ -2,22 +2,28 @@ import {
   CardId,
   CardType,
   GameZoneType,
+  Mark,
   Phase,
   PlayerId,
   PlayerZoneType,
   Side,
   Token,
-} from "@card-engine-nx/basic";
-import { PlayerDeck, Scenario } from "./card";
+} from '@card-engine-nx/basic';
+import { PlayerDeck, Scenario } from './card';
 
-export type ActionResult = "none" | "partial" | "full";
+export type ActionResult = 'none' | 'partial' | 'full';
 
 export type Action =
-  | "empty"
-  | "shuffleEncounterDeck"
-  | "executeSetupActions"
-  | "endRound"
-  | "endPhase"
+  | 'empty'
+  | 'shuffleEncounterDeck'
+  | 'executeSetupActions'
+  | 'endRound'
+  | 'endPhase'
+  | 'passFirstPlayerToken'
+  | 'resolveQuesting'
+  | 'chooseTravelDestination'
+  | 'dealShadowCards'
+  | 'revealEncounterCard'
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
       card?: { action: CardAction; taget: CardTarget };
@@ -29,15 +35,24 @@ export type Action =
       playerActions?: string;
       playAlly?: CardTarget;
       setCardVar?: { name: string; value: CardId | undefined };
+      clearMarks?: Mark;
+      while?: { condition: BoolExpr; action: Action };
+      repeat?: { amount: NumberExpr; action: Action };
     };
 
 export type PlayerAction =
-  | "empty"
-  | "shuffleLibrary"
+  | 'empty'
+  | 'shuffleLibrary'
+  | 'resolveEnemyAttacks'
+  | 'resolvePlayerAttacks'
+  | 'commitCharactersToQuest'
+  | 'engagementCheck'
+  | 'optionalEngagement'
   | { draw?: number; sequence?: Action[]; incrementThreat?: NumberExpr };
 
 export type CardAction =
-  | "empty"
+  | 'empty'
+  | 'ready'
   | {
       dealDamage?: number;
       heal?: number;
@@ -48,6 +63,7 @@ export type CardAction =
 
 export type Ability = {
   description: string;
+  implicit?: boolean;
   selfModifier?: Modifier;
   action?: Action;
   setup?: Action;
@@ -55,13 +71,14 @@ export type Ability = {
 
 export type Modifier = {
   increment?: {
-    prop: "attack" | "defense";
+    prop: 'attack' | 'defense';
     amount: NumberExpr;
   };
 };
 
 export type NumberExpr =
   | number
+  | 'countOfPlayers'
   | {
       fromCard?: {
         sum?: true;
@@ -70,17 +87,19 @@ export type NumberExpr =
       };
     };
 
+export type BoolExpr = boolean | 'enemiesToEngage';
+
 export type CardNumberExpr =
   | number
-  | "threadCost"
+  | 'threadCost'
   | {
       tokens: Token;
     };
 
 export type CardTarget =
-  | "self"
-  | "each"
-  | "inAPlay"
+  | 'self'
+  | 'each'
+  | 'inAPlay'
   | {
       owner?: PlayerId;
       and?: CardTarget[];
@@ -96,6 +115,6 @@ export type ZoneTarget = {
   };
 };
 
-export type PlayerTarget = PlayerId | "each" | "owner";
+export type PlayerTarget = PlayerId | 'each' | 'owner';
 
 export type Context = { selfCard?: CardId };

@@ -19,6 +19,7 @@ export type PlayableCardActionView = {
 
 export type CardView = {
   id: CardId;
+  printed: PrintedProps;
   props: PrintedProps;
   abilities: Array<{ applied: boolean; ability: Ability }>;
   modifiers: Array<{ applied: boolean } & ModifierState>;
