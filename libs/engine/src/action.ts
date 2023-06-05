@@ -258,7 +258,6 @@ export function beginScenario(
         },
       },
     },
-    { card: { taget: 'each', action: { dealDamage: 1 } } },
     gameRound()
   );
 }

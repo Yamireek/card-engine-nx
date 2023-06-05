@@ -73,24 +73,18 @@ export const GameDisplay = () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%', display: 'flex' }}>
+    <div style={{ width: '100%', height: '100%' }}>
       <div
         style={{
+          position: 'absolute',
           width: 300,
-          height: '100%',
-          background: 'white',
-          flexShrink: 0,
+          border: '1px solid black',
+          background: 'rgba(255,255,255,0.75)',
+          padding: 8,
+          zIndex: 10,
         }}
       >
-        <div
-          style={{
-            width: '100%',
-            border: '1px solid black',
-            padding: 8,
-          }}
-        >
-          <CardDetail />
-        </div>
+        <CardDetail />
       </div>
       <div style={{ width: '100%', height: '100%' }}>
         <TexturesProvider
