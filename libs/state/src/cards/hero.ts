@@ -3,7 +3,7 @@ import { CardDefinition } from '../card';
 import { Ability } from '../types';
 
 export function hero(
-  props: Omit<HeroProps, 'type'>,
+  props: Omit<HeroProps, 'type' | 'unique'>,
   ...abilities: Ability[]
 ): CardDefinition {
   return {
@@ -11,6 +11,7 @@ export function hero(
       ...props,
       abilities,
       type: 'hero',
+      unique: true,
     },
     back: {
       type: 'player_back',

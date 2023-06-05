@@ -55,6 +55,26 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if (action === 'chooseTravelDestination') {
+    throw new Error('not implemented');
+  }
+
+  if (action === 'dealShadowCards') {
+    throw new Error('not implemented');
+  }
+
+  if (action === 'passFirstPlayerToken') {
+    throw new Error('not implemented');
+  }
+
+  if (action === 'resolveQuesting') {
+    throw new Error('not implemented');
+  }
+
+  if (action === 'revealEncounterCard') {
+    throw new Error('not implemented');
+  }
+
   if (action.player) {
     const ids = getTargetPlayer(action.player.target, ctx.state);
     for (const id of ids) {
@@ -127,6 +147,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       ctx.state.zones.encounterDeck.cards =
         ctx.state.zones.encounterDeck.cards.filter((id) => id !== card.id);
       ctx.state.zones.stagingArea.cards.push(card.id);
+      card.sideUp = 'front';
 
       ctx.events.send(
         uiEvent.card_moved({
@@ -237,11 +258,12 @@ export function beginScenario(
         },
       },
     },
+    { card: { taget: 'each', action: { dealDamage: 1 } } },
     gameRound()
   );
 }
 
-export const phaseResource: Action = sequence(
+export const phaseResource = sequence(
   { beginPhase: 'resource' },
   { player: { target: 'each', action: { draw: 1 } } },
   {
@@ -254,21 +276,81 @@ export const phaseResource: Action = sequence(
   'endPhase'
 );
 
-export const phasePlanning: Action = sequence(
+export const phasePlanning = sequence(
   { beginPhase: 'planning' },
   { playerActions: 'End planning phase' },
   'endPhase'
 );
 
-export const phaseQuest: Action = 'empty';
+export const phaseQuest = sequence(
+  { beginPhase: 'quest' },
+  {
+    player: {
+      target: 'each',
+      action: 'commitCharactersToQuest',
+    },
+  },
+  { playerActions: 'Staging' },
+  { repeat: { amount: 'countOfPlayers', action: 'revealEncounterCard' } },
+  { playerActions: 'Quest resolution' },
+  'resolveQuesting',
+  { playerActions: 'End phase' },
+  { clearMarks: 'questing' },
+  'endPhase'
+);
 
-export const phaseTravel: Action = 'empty';
+export const phaseTravel = sequence(
+  { beginPhase: 'travel' },
+  'chooseTravelDestination',
+  { playerActions: 'End travel phase' },
+  'endPhase'
+);
 
-export const phaseEncounter: Action = 'empty';
+export const phaseEncounter = sequence(
+  { beginPhase: 'encounter' },
+  { player: { target: 'each', action: 'optionalEngagement' } },
+  { playerActions: 'Engagement Checks' },
+  {
+    while: {
+      condition: 'enemiesToEngage',
+      action: { player: { target: 'each', action: 'engagementCheck' } },
+    },
+  },
+  { playerActions: 'Next encounter phase' },
+  'endPhase'
+);
 
-export const phaseCombat: Action = 'empty';
+export const phaseCombat = sequence(
+  { beginPhase: 'combat' },
+  'dealShadowCards',
+  { playerActions: 'Resolve enemy attacks' },
+  {
+    player: {
+      target: 'each',
+      action: 'resolveEnemyAttacks',
+    },
+  },
+  { clearMarks: 'attacked' },
+  { playerActions: 'Resolve player attacks' },
+  {
+    player: {
+      target: 'each',
+      action: 'resolvePlayerAttacks',
+    },
+  },
+  { clearMarks: 'attacked' },
+  { playerActions: 'End combat phase' },
+  'endPhase'
+);
 
-export const phaseRefresh: Action = 'empty';
+export const phaseRefresh: Action = sequence(
+  { beginPhase: 'refresh' },
+  { card: { taget: 'each', action: 'ready' } },
+  { player: { target: 'each', action: { incrementThreat: 1 } } },
+  'passFirstPlayerToken',
+  { playerActions: 'End refresh phase and round' },
+  'endPhase'
+);
 
 export function gameRound(): Action {
   return sequence(

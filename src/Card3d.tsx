@@ -1,12 +1,14 @@
-import { Text } from "@react-three/drei";
-import { useSpring, animated } from "@react-spring/three";
+import { Text } from '@react-three/drei';
+import { useSpring, animated } from '@react-spring/three';
 import {
   CardTextures,
   Dimensions,
   Dimensions3,
   Vector3,
   useTextures,
-} from "@card-engine-nx/ui";
+} from '@card-engine-nx/ui';
+import { useContext } from 'react';
+import { DetailContext } from './DetailContext';
 
 export type Card3dProps = React.PropsWithChildren<{
   id: number;
@@ -28,6 +30,7 @@ export const cardSize: Dimensions3 = {
 
 export const Card3d = (props: Card3dProps) => {
   const { material } = useTextures();
+  const detail = useContext(DetailContext);
 
   const spring = useSpring({
     scale:
@@ -53,7 +56,13 @@ export const Card3d = (props: Card3dProps) => {
       rotation-y={spring.rotY}
       rotation-z={spring.rotZ}
     >
-      <mesh castShadow onClick={props.onClick}>
+      <mesh
+        castShadow
+        onClick={props.onClick}
+        onPointerEnter={() => {
+          detail.setDetail(props.id);
+        }}
+      >
         {!props.hidden && (
           <>
             <boxGeometry

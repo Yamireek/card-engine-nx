@@ -1,26 +1,28 @@
 import {
   NextStepButton,
+  PhasesDisplay,
   TexturesProvider,
   getCardImageUrls,
   image,
-} from "@card-engine-nx/ui";
-import { useContext, useMemo, useState } from "react";
-import { StateContext } from "./StateContext";
+} from '@card-engine-nx/ui';
+import { useContext, useMemo, useState } from 'react';
+import { StateContext } from './StateContext';
 import {
   UiEvent,
   UIEvents as UiEvents,
   advanceToChoiceState,
-} from "@card-engine-nx/engine";
-import { values } from "@card-engine-nx/basic";
-import { Board3d } from "./Board3d";
-import { Card3dProps } from "./Card3d";
-import { State } from "@card-engine-nx/state";
-import { uniq } from "lodash";
-import { Subject } from "rxjs";
-import { FloatingCards } from "./FloatingCards";
-import { GameSceneLoader } from "./GameScene";
-import { PlayerAreas } from "./PlayerAreas";
-import { GameAreas } from "./GameAreas";
+} from '@card-engine-nx/engine';
+import { PrintedProps, values } from '@card-engine-nx/basic';
+import { Board3d } from './Board3d';
+import { Card3dProps } from './Card3d';
+import { State } from '@card-engine-nx/state';
+import { uniq } from 'lodash';
+import { Subject } from 'rxjs';
+import { FloatingCards } from './FloatingCards';
+import { GameSceneLoader } from './GameScene';
+import { PlayerAreas } from './PlayerAreas';
+import { GameAreas } from './GameAreas';
+import { CardDetail } from './CardDetail';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -48,7 +50,7 @@ export function createRxUiEvents(): UiEvents {
   };
 }
 
-const playerIds = ["A", "B", "C", "D"] as const;
+const playerIds = ['A', 'B', 'C', 'D'] as const;
 
 export const GameDisplay = () => {
   const { state, setState } = useContext(StateContext);
@@ -62,7 +64,7 @@ export const GameDisplay = () => {
   const events = useMemo<UiEvents>(() => {
     const tmp = createRxUiEvents();
     tmp.subscribe((e) => {
-      if (e.type === "new_state") {
+      if (e.type === 'new_state') {
         setState({ ...e.state });
       }
     });
@@ -71,15 +73,33 @@ export const GameDisplay = () => {
   }, []);
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-      <div style={{ width: "100%", height: "100%" }}>
+    <div style={{ width: '100%', height: '100%', display: 'flex' }}>
+      <div
+        style={{
+          width: 300,
+          height: '100%',
+          background: 'white',
+          flexShrink: 0,
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            border: '1px solid black',
+            padding: 8,
+          }}
+        >
+          <CardDetail />
+        </div>
+      </div>
+      <div style={{ width: '100%', height: '100%' }}>
         <TexturesProvider
           textures={textureUrls}
           materials={{
             wood: {
-              color: "./textures/wood-2k/Wood026_2K_Color.png",
-              roughness: "./textures/wood-2k/Wood026_2K_Roughness.png",
-              normal: "./textures/wood-2k/Wood026_2K_NormalGL.png",
+              color: './textures/wood-2k/Wood026_2K_Color.png',
+              roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
+              normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
             },
           }}
         >
@@ -106,17 +126,17 @@ export const GameDisplay = () => {
             />
           </GameSceneLoader>
         </TexturesProvider>
-        {/* <PlayerHand player="A" /> */}
-        {!state.choice?.dialog && (
-          <NextStepButton
-            title={state.choice?.title ?? "Next"}
-            onClick={() => {
-              state.choice = undefined;
-              advanceToChoiceState(state, events, false);
-            }}
-          />
-        )}
       </div>
+      {/* <PlayerHand player="A" /> */}
+      {!state.choice?.dialog && (
+        <NextStepButton
+          title={state.choice?.title ?? 'Next'}
+          onClick={() => {
+            state.choice = undefined;
+            advanceToChoiceState(state, events, false);
+          }}
+        />
+      )}
     </div>
   );
 };

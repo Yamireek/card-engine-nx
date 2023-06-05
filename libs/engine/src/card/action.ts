@@ -5,6 +5,11 @@ export function executeCardAction(action: CardAction, card: CardState) {
     return;
   }
 
+  if (action === 'ready') {
+    card.tapped = false;
+    return;
+  }
+
   if (action.heal) {
     card.token.damage = Math.max(0, card.token.damage - action.heal);
     return;

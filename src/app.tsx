@@ -10,6 +10,7 @@ import {
   createView,
 } from '@card-engine-nx/engine';
 import { core } from '@card-engine-nx/cards/core';
+import { DetailProvider } from './DetailContext';
 
 const state = createState(
   beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
@@ -38,7 +39,9 @@ export const App = () => {
       <CssBaseline />
 
       <StateProvider init={state}>
-        <GameDisplay />
+        <DetailProvider>
+          <GameDisplay />
+        </DetailProvider>
       </StateProvider>
     </div>
   );

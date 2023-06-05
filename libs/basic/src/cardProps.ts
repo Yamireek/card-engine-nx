@@ -13,6 +13,8 @@ export type PrintedProps = {
   sequence?: number;
   questPoints?: number;
   cost?: number;
+  unique?: boolean;
+  engagement?: number;
 };
 
 export type HeroProps = {
@@ -25,6 +27,7 @@ export type HeroProps = {
   hitPoints: number;
   traits: Trait[];
   sphere: Sphere;
+  unique: true;
 };
 
 export type AllyProps = {
