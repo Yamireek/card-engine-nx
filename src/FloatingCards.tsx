@@ -4,7 +4,6 @@ import { useGameState } from './StateContext';
 import { UIEvents as UiEvents } from '@card-engine-nx/engine';
 import { Card3d, Card3dProps } from './Card3d';
 import { useThree } from '@react-three/fiber';
-import { Textures } from './types';
 
 export const FloatingCards = (props: {
   events: UiEvents;

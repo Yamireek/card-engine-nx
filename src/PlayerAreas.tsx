@@ -6,7 +6,6 @@ import { Card3d, cardSize } from './Card3d';
 import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
-import { Textures } from './types';
 import { Token3d } from './Token3d';
 import { UIEvents, advanceToChoiceState } from '@card-engine-nx/engine';
 

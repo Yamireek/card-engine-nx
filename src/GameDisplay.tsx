@@ -3,27 +3,24 @@ import {
   TexturesProvider,
   getCardImageUrls,
   image,
-} from '@card-engine-nx/ui';
-import { useContext, useEffect, useMemo, useState } from 'react';
-import { StateContext } from './StateContext';
+} from "@card-engine-nx/ui";
+import { useContext, useMemo, useState } from "react";
+import { StateContext } from "./StateContext";
 import {
   UiEvent,
   UIEvents as UiEvents,
   advanceToChoiceState,
-} from '@card-engine-nx/engine';
-import { values } from '@card-engine-nx/basic';
-import { Board3d } from './Board3d';
-import { Card3dProps } from './Card3d';
-import { Texture } from 'three';
-import { State } from '@card-engine-nx/state';
-import { uniq } from 'lodash';
-import * as THREE from 'three';
-import { Subject } from 'rxjs';
-import { Textures } from './types';
-import { FloatingCards } from './FloatingCards';
-import { GameSceneLoader } from './GameScene';
-import { PlayerAreas } from './PlayerAreas';
-import { GameAreas } from './GameAreas';
+} from "@card-engine-nx/engine";
+import { values } from "@card-engine-nx/basic";
+import { Board3d } from "./Board3d";
+import { Card3dProps } from "./Card3d";
+import { State } from "@card-engine-nx/state";
+import { uniq } from "lodash";
+import { Subject } from "rxjs";
+import { FloatingCards } from "./FloatingCards";
+import { GameSceneLoader } from "./GameScene";
+import { PlayerAreas } from "./PlayerAreas";
+import { GameAreas } from "./GameAreas";
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -51,7 +48,7 @@ export function createRxUiEvents(): UiEvents {
   };
 }
 
-const playerIds = ['A', 'B', 'C', 'D'] as const;
+const playerIds = ["A", "B", "C", "D"] as const;
 
 export const GameDisplay = () => {
   const { state, setState } = useContext(StateContext);
@@ -65,7 +62,7 @@ export const GameDisplay = () => {
   const events = useMemo<UiEvents>(() => {
     const tmp = createRxUiEvents();
     tmp.subscribe((e) => {
-      if (e.type === 'new_state') {
+      if (e.type === "new_state") {
         setState({ ...e.state });
       }
     });
@@ -74,9 +71,18 @@ export const GameDisplay = () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <div style={{ width: '100%', height: '100%' }}>
-        <TexturesProvider urls={textureUrls}>
+    <div style={{ width: "100%", height: "100%" }}>
+      <div style={{ width: "100%", height: "100%" }}>
+        <TexturesProvider
+          textures={textureUrls}
+          materials={{
+            wood: {
+              color: "./textures/wood-2k/Wood026_2K_Color.png",
+              roughness: "./textures/wood-2k/Wood026_2K_Roughness.png",
+              normal: "./textures/wood-2k/Wood026_2K_NormalGL.png",
+            },
+          }}
+        >
           <GameSceneLoader angle={20} rotation={0} perspective={1500}>
             <Board3d />
             <FloatingCards
@@ -103,7 +109,7 @@ export const GameDisplay = () => {
         {/* <PlayerHand player="A" /> */}
         {!state.choice?.dialog && (
           <NextStepButton
-            title={state.choice?.title ?? 'Next'}
+            title={state.choice?.title ?? "Next"}
             onClick={() => {
               state.choice = undefined;
               advanceToChoiceState(state, events, false);
