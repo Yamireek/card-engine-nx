@@ -1,4 +1,4 @@
-import { image, getCardImageUrl, Vector3 } from '@card-engine-nx/ui';
+import { image, getCardImageUrl, Vector3, useTextures } from '@card-engine-nx/ui';
 import { useContext } from 'react';
 import { StateContext } from './StateContext';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
@@ -10,7 +10,7 @@ import { Textures } from './types';
 import { Token3d } from './Token3d';
 import { UIEvents, advanceToChoiceState } from '@card-engine-nx/engine';
 
-export const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
+const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
   '1': { A: [0, 0, 0] },
   '2': { A: [0.5, 0, 0], B: [-0.5, 0, 0] },
   '3': { A: [0.5, -0.4, 0], B: [-0.5, -0.4, 0], C: [0, 0.4, 0] },
@@ -22,7 +22,7 @@ export const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
   },
 };
 
-export const rotations: Record<number, Partial<Record<PlayerId, number>>> = {
+const rotations: Record<number, Partial<Record<PlayerId, number>>> = {
   '1': { A: 0 },
   '2': { A: 0, B: 0 },
   '3': { A: 0, B: 0, C: Math.PI },
@@ -31,11 +31,11 @@ export const rotations: Record<number, Partial<Record<PlayerId, number>>> = {
 
 export const PlayerAreas = (props: {
   player: PlayerId;
-  textures: Textures;
   hiddenCards: CardId[];
   events: UIEvents;
 }) => {
   const { state, view } = useContext(StateContext);
+  const { texture } = useTextures();
   const playerState = state.players[props.player];
 
   const cardRenderer: CardAreaLayoutProps<CardState>['renderer'] = (p) => {
@@ -52,9 +52,8 @@ export const PlayerAreas = (props: {
         }}
         position={[p.position[0], p.position[1], 0.001]}
         textures={{
-          front:
-            props.textures[getCardImageUrl(p.item.definition.front, 'front')],
-          back: props.textures[getCardImageUrl(p.item.definition.back, 'back')],
+          front: texture[getCardImageUrl(p.item.definition.front, 'front')],
+          back: texture[getCardImageUrl(p.item.definition.back, 'back')],
         }}
         hidden={props.hiddenCards.includes(p.item.id)}
         onClick={() => {
@@ -78,17 +77,17 @@ export const PlayerAreas = (props: {
       >
         <Token3d
           position={[0.022, 0.01]}
-          texture={props.textures[image.resource]}
+          texture={texture[image.resource]}
           amount={p.item.token.resources}
         />
         <Token3d
           position={[0, 0.01]}
-          texture={props.textures[image.damage]}
+          texture={texture[image.damage]}
           amount={p.item.token.damage}
         />
         <Token3d
           position={[0.01, 0.03]}
-          texture={props.textures[image.progress]}
+          texture={texture[image.progress]}
           amount={p.item.token.progress}
         />
         {actions.length > 0 && (
@@ -120,14 +119,14 @@ export const PlayerAreas = (props: {
         type="library"
         position={[0.35, -0.4, 0]}
         cardCount={playerState.zones.library.cards.length}
-        texture={props.textures[image.playerBack]}
+        texture={texture[image.playerBack]}
       />
       <Deck3d
         owner={props.player}
         type="discardPile"
         position={[0.45, -0.4, 0]}
         cardCount={playerState.zones.discardPile.cards.length}
-        texture={props.textures[image.playerBack]}
+        texture={texture[image.playerBack]}
       />
       <CardAreaLayout
         color="blue"

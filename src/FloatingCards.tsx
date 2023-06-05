@@ -1,4 +1,4 @@
-import { getCardImageUrl } from '@card-engine-nx/ui';
+import { getCardImageUrl, useTextures } from '@card-engine-nx/ui';
 import { useEffect } from 'react';
 import { useGameState } from './StateContext';
 import { UIEvents as UiEvents } from '@card-engine-nx/engine';
@@ -8,12 +8,12 @@ import { Textures } from './types';
 
 export const FloatingCards = (props: {
   events: UiEvents;
-  textures: Textures;
   cards: [Card3dProps[], (v: (p: Card3dProps[]) => Card3dProps[]) => void];
 }) => {
   const [floatingCards, setFloatingCards] = props.cards;
   const { state } = useGameState();
   const scene = useThree((s) => s.scene);
+  const { texture } = useTextures();
 
   useEffect(() => {
     const unsub = props.events.subscribe((e) => {
@@ -39,13 +39,8 @@ export const FloatingCards = (props: {
               ],
               rotation: [0, Math.PI, 0],
               textures: {
-                front:
-                  props.textures[
-                    getCardImageUrl(card.definition.front, 'front')
-                  ],
-                back: props.textures[
-                  getCardImageUrl(card.definition.back, 'back')
-                ],
+                front: texture[getCardImageUrl(card.definition.front, 'front')],
+                back: texture[getCardImageUrl(card.definition.back, 'back')],
               },
             },
           ]);
@@ -112,13 +107,8 @@ export const FloatingCards = (props: {
               position: [x, y, z],
               scale,
               textures: {
-                front:
-                  props.textures[
-                    getCardImageUrl(card.definition.front, 'front')
-                  ],
-                back: props.textures[
-                  getCardImageUrl(card.definition.back, 'back')
-                ],
+                front: texture[getCardImageUrl(card.definition.front, 'front')],
+                back: texture[getCardImageUrl(card.definition.back, 'back')],
               },
             },
           ]);

@@ -3,6 +3,7 @@ import {
   getCardImageUrl,
   Vector3,
   getCardImageUrls,
+  useTextures,
 } from '@card-engine-nx/ui';
 import { useContext } from 'react';
 import { StateContext } from './StateContext';
@@ -11,7 +12,6 @@ import { Card3d, cardSize } from './Card3d';
 import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
-import { Textures } from './types';
 import { last } from 'lodash';
 
 export const positions: Record<number, Vector3> = {
@@ -21,8 +21,9 @@ export const positions: Record<number, Vector3> = {
   '4': [0, 0, 0],
 };
 
-const QuestDeck = (props: { textures: Textures }) => {
+const QuestDeck = () => {
   const { state } = useContext(StateContext);
+  const { texture } = useTextures();
   const topCardId = last(state.zones.questDeck.cards);
   const topCard = topCardId ? state.cards[topCardId] : undefined;
   const cardImages = topCard ? getCardImageUrls(topCard.definition) : undefined;
@@ -35,8 +36,8 @@ const QuestDeck = (props: { textures: Textures }) => {
       cardCount={state.zones.questDeck.cards.length}
       texture={
         cardImages && topCard
-          ? props.textures[cardImages[topCard.sideUp]]
-          : props.textures[image.encounterBack]
+          ? texture[cardImages[topCard.sideUp]]
+          : texture[image.encounterBack]
       }
     />
   );
@@ -44,10 +45,10 @@ const QuestDeck = (props: { textures: Textures }) => {
 
 export const GameAreas = (props: {
   playerCount: number;
-  textures: Textures;
   hiddenCards: CardId[];
 }) => {
   const { state } = useContext(StateContext);
+  const { texture } = useTextures();
 
   const cardRenderer: CardAreaLayoutProps<CardState>['renderer'] = (p) => {
     return (
@@ -61,9 +62,8 @@ export const GameAreas = (props: {
         }}
         position={[p.position[0], p.position[1], 0.001]}
         textures={{
-          front:
-            props.textures[getCardImageUrl(p.item.definition.front, 'front')],
-          back: props.textures[getCardImageUrl(p.item.definition.back, 'back')],
+          front: texture[getCardImageUrl(p.item.definition.front, 'front')],
+          back: texture[getCardImageUrl(p.item.definition.back, 'back')],
         }}
         hidden={props.hiddenCards.includes(p.item.id)}
       />
@@ -79,16 +79,16 @@ export const GameAreas = (props: {
         type="encounterDeck"
         position={[0.35, 0.4, 0]}
         cardCount={state.zones.encounterDeck.cards.length}
-        texture={props.textures[image.encounterBack]}
+        texture={texture[image.encounterBack]}
       />
       <Deck3d
         owner="game"
         type="discardPile"
         position={[0.45, 0.4, 0]}
         cardCount={state.zones.discardPile.cards.length}
-        texture={props.textures[image.encounterBack]}
+        texture={texture[image.encounterBack]}
       />
-      <QuestDeck textures={props.textures} />
+      <QuestDeck />
       <CardAreaLayout
         color="purple"
         position={[-0.2, 0.4]}
