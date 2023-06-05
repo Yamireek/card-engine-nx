@@ -1,17 +1,16 @@
-import { useTexture } from '@react-three/drei';
-import { Texture } from 'three';
+import { Texture } from "three";
 import {
   GameZoneType,
   Orientation,
   PlayerId,
   PlayerZoneType,
-} from '@card-engine-nx/basic';
-import { cardSize } from './Card3d';
-import { Vector3 } from '@card-engine-nx/ui';
-import { Text } from '@react-three/drei';
+} from "@card-engine-nx/basic";
+import { cardSize } from "./Card3d";
+import { Vector3, useTextures } from "@card-engine-nx/ui";
+import { Text } from "@react-three/drei";
 
 export type Deck3dProps = {
-  owner: 'game' | PlayerId;
+  owner: "game" | PlayerId;
   type: GameZoneType | PlayerZoneType;
   position: Vector3;
   texture: Texture;
@@ -20,16 +19,13 @@ export type Deck3dProps = {
 };
 
 export const Deck3d = (props: Deck3dProps) => {
-  const texture = useTexture({
-    roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
-    normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
-  });
+  const { material } = useTextures();
 
   const depth = props.cardCount * cardSize.depth;
 
   return (
     <group
-      key={props.cardCount > 0 ? 'cards' : 'empty'}
+      key={props.cardCount > 0 ? "cards" : "empty"}
       name={`deck-${props.owner}-${props.type}`}
       position={[
         props.position[0],
@@ -43,7 +39,7 @@ export const Deck3d = (props: Deck3dProps) => {
           <>
             <boxGeometry
               args={
-                props.orientation === 'landscape'
+                props.orientation === "landscape"
                   ? [cardSize.height, cardSize.width, depth]
                   : [cardSize.width, cardSize.height, depth]
               }
@@ -55,14 +51,14 @@ export const Deck3d = (props: Deck3dProps) => {
             <meshPhysicalMaterial
               attach="material-4"
               map={props.texture}
-              roughnessMap={texture.roughness}
-              normalMap={texture.normal}
+              roughnessMap={material.wood.roughness}
+              normalMap={material.wood.normal}
             />
             <meshPhysicalMaterial
               attach="material-5"
               map={props.texture}
-              roughnessMap={texture.roughness}
-              normalMap={texture.normal}
+              roughnessMap={material.wood.roughness}
+              normalMap={material.wood.normal}
             />
           </>
         ) : (
@@ -73,7 +69,7 @@ export const Deck3d = (props: Deck3dProps) => {
         )}
       </mesh>
       <Text
-        position={[0, 0, depth/2+0.0001]}
+        position={[0, 0, depth / 2 + 0.0001]}
         color="black"
         outlineColor="white"
         outlineWidth={0.0005}

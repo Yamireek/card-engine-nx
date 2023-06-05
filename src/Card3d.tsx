@@ -1,11 +1,12 @@
-import { useTexture, Text } from '@react-three/drei';
-import { useSpring, animated } from '@react-spring/three';
+import { Text } from "@react-three/drei";
+import { useSpring, animated } from "@react-spring/three";
 import {
   CardTextures,
   Dimensions,
   Dimensions3,
   Vector3,
-} from '@card-engine-nx/ui';
+  useTextures,
+} from "@card-engine-nx/ui";
 
 export type Card3dProps = React.PropsWithChildren<{
   id: number;
@@ -26,10 +27,7 @@ export const cardSize: Dimensions3 = {
 };
 
 export const Card3d = (props: Card3dProps) => {
-  const texture = useTexture({
-    roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
-    normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
-  });
+  const { material } = useTextures();
 
   const spring = useSpring({
     scale:
@@ -68,14 +66,14 @@ export const Card3d = (props: Card3dProps) => {
             <meshPhysicalMaterial
               attach="material-4"
               map={props.textures.front}
-              roughnessMap={texture.roughness}
-              normalMap={texture.normal}
+              roughnessMap={material.wood.roughness}
+              normalMap={material.wood.normal}
             />
             <meshPhysicalMaterial
               attach="material-5"
               map={props.textures.back}
-              roughnessMap={texture.roughness}
-              normalMap={texture.normal}
+              roughnessMap={material.wood.roughness}
+              normalMap={material.wood.normal}
             />
           </>
         )}

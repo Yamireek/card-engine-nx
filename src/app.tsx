@@ -21,6 +21,7 @@ const view = createView(state);
 
 console.log(view.actions);
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any)['state'] = state;
 
 export const App = () => {

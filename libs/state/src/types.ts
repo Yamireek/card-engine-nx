@@ -7,18 +7,17 @@ import {
   PlayerZoneType,
   Side,
   Token,
-} from '@card-engine-nx/basic';
-import { PlayerDeck, Scenario } from './card';
-import { PlayableCardAction } from './view';
+} from "@card-engine-nx/basic";
+import { PlayerDeck, Scenario } from "./card";
 
-export type ActionResult = 'none' | 'partial' | 'full';
+export type ActionResult = "none" | "partial" | "full";
 
 export type Action =
-  | 'empty'
-  | 'shuffleEncounterDeck'
-  | 'executeSetupActions'
-  | 'endRound'
-  | 'endPhase'
+  | "empty"
+  | "shuffleEncounterDeck"
+  | "executeSetupActions"
+  | "endRound"
+  | "endPhase"
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
       card?: { action: CardAction; taget: CardTarget };
@@ -33,12 +32,12 @@ export type Action =
     };
 
 export type PlayerAction =
-  | 'empty'
-  | 'shuffleLibrary'
+  | "empty"
+  | "shuffleLibrary"
   | { draw?: number; sequence?: Action[]; incrementThreat?: NumberExpr };
 
 export type CardAction =
-  | 'empty'
+  | "empty"
   | {
       dealDamage?: number;
       heal?: number;
@@ -56,7 +55,7 @@ export type Ability = {
 
 export type Modifier = {
   increment?: {
-    prop: 'attack' | 'defense';
+    prop: "attack" | "defense";
     amount: NumberExpr;
   };
 };
@@ -73,15 +72,15 @@ export type NumberExpr =
 
 export type CardNumberExpr =
   | number
-  | 'threadCost'
+  | "threadCost"
   | {
       tokens: Token;
     };
 
 export type CardTarget =
-  | 'self'
-  | 'each'
-  | 'inAPlay'
+  | "self"
+  | "each"
+  | "inAPlay"
   | {
       owner?: PlayerId;
       and?: CardTarget[];
@@ -97,6 +96,6 @@ export type ZoneTarget = {
   };
 };
 
-export type PlayerTarget = PlayerId | 'each' | 'owner';
+export type PlayerTarget = PlayerId | "each" | "owner";
 
 export type Context = { selfCard?: CardId };
