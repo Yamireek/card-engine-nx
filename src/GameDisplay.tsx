@@ -53,7 +53,7 @@ export function createRxUiEvents(): UiEvents {
 const playerIds = ['A', 'B', 'C', 'D'] as const;
 
 export const GameDisplay = () => {
-  const { state, setState } = useContext(StateContext);
+  const { state, moves } = useContext(StateContext);
   const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
   const textureUrls = useMemo(
     () => [...staticUrls, ...getAllImageUrls(state)],
@@ -63,17 +63,12 @@ export const GameDisplay = () => {
 
   const events = useMemo<UiEvents>(() => {
     const tmp = createRxUiEvents();
-    tmp.subscribe((e) => {
-      if (e.type === 'new_state') {
-        setState({ ...e.state });
-      }
-    });
     return tmp;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '100vh' }}>
       <div
         style={{
           position: 'absolute',
@@ -126,8 +121,7 @@ export const GameDisplay = () => {
         <NextStepButton
           title={state.choice?.title ?? 'Next'}
           onClick={() => {
-            state.choice = undefined;
-            advanceToChoiceState(state, events, false);
+            moves.next();
           }}
         />
       )}

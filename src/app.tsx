@@ -1,7 +1,7 @@
 import { CssBaseline } from '@mui/material';
 import { coreTactics } from './decks/coreTactics';
 import { GameDisplay } from './GameDisplay';
-import { StateProvider } from './StateContext';
+import { BoardGameIOContext, StateProvider } from './StateContext';
 import { createState } from '@card-engine-nx/state';
 import {
   advanceToChoiceState,
@@ -37,12 +37,9 @@ export const App = () => {
       }}
     >
       <CssBaseline />
-
-      <StateProvider init={state}>
-        <DetailProvider>
-          <GameDisplay />
-        </DetailProvider>
-      </StateProvider>
+      <DetailProvider>
+        <BoardGameIOContext init={state} />
+      </DetailProvider>
     </div>
   );
 };

@@ -25,6 +25,7 @@
     "@swc/helpers": "~0.5.0",
     "@thednp/dommatrix": "^2.0.4",
     "@types/lodash": "^4.14.194",
+    "boardgame.io": "^0.50.2",
     "leva": "^0.9.34",
     "lodash": "^4.17.21",
     "mathjs": "^11.8.0",
