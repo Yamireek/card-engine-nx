@@ -7,6 +7,7 @@ import {
   PlayerId,
   PlayerZoneType,
   Side,
+  Sphere,
   Token,
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
@@ -48,7 +49,19 @@ export type PlayerAction =
   | 'commitCharactersToQuest'
   | 'engagementCheck'
   | 'optionalEngagement'
-  | { draw?: number; sequence?: Action[]; incrementThreat?: NumberExpr };
+  | {
+      draw?: number;
+      sequence?: Action[];
+      incrementThreat?: NumberExpr;
+      payResources?: { amount: number; sphere: Sphere };
+      chooseCardActions?: {
+        title: string;
+        target: CardTarget;
+        action: CardAction;
+        multi: boolean;
+        optional: boolean;
+      };
+    };
 
 export type CardAction =
   | 'empty'
@@ -57,6 +70,7 @@ export type CardAction =
       dealDamage?: number;
       heal?: number;
       generateResources?: number;
+      payResources?: number;
       sequence?: Action[];
       flip?: Side;
     };
@@ -100,11 +114,13 @@ export type CardTarget =
   | 'self'
   | 'each'
   | 'inAPlay'
+  | CardId
   | {
       owner?: PlayerId;
       and?: CardTarget[];
       type?: CardType[];
       top?: ZoneTarget;
+      sphere?: Sphere | 'any';
     };
 
 export type ZoneTarget = {

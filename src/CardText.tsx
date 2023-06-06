@@ -1,4 +1,5 @@
 import { Sphere, Tokens, Trait } from '@card-engine-nx/basic';
+import React from 'react';
 
 type PropertyProps = { name: string; printed?: number; current?: number };
 
@@ -54,7 +55,7 @@ export const CardText = (props: {
           </td>
         </tr>
         {props.properties.map((p) => (
-          <PropertyView key={p.name } {...p} />
+          <PropertyView key={p.name} {...p} />
         ))}
         {props.tokens.damage > 0 && (
           <tr>
@@ -83,12 +84,12 @@ export const CardText = (props: {
         <tr>
           <td>
             {props.traits.map((t) => (
-              <>{t} </>
+              <React.Fragment key={t}>{t} </React.Fragment>
             ))}
           </td>
         </tr>
         {props.abilities.map((a, i) => (
-          <tr>
+          <tr key={i}>
             <td colSpan={2}>
               <b>{a}</b>
             </td>

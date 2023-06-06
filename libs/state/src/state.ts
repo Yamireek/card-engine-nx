@@ -20,7 +20,7 @@ export type State = {
     title: string;
     dialog: boolean;
     multi: boolean;
-    options: Array<{ title: string; action: Action; image?: string }>;
+    options: Array<{ title: string; action: Action; cardId?: CardId }>;
   };
   next: Action[];
   result?: 'win' | 'lost';

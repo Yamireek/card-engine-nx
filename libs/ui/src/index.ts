@@ -6,3 +6,5 @@ export * from './lib/HandLayout';
 export * from './lib/types';
 export * from './contexts/textures';
 export * from './lib/PhasesDisplay';
+export * from './lib/dialogs/ChooseSingleDialog';
+export * from './lib/dialogs/ChooseMultiDialog';

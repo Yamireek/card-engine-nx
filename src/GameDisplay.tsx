@@ -1,7 +1,8 @@
 import {
+  ChooseSingleDialog,
   NextStepButton,
-  PhasesDisplay,
   TexturesProvider,
+  getCardImageUrl,
   getCardImageUrls,
   image,
 } from '@card-engine-nx/ui';
@@ -12,7 +13,7 @@ import {
   UIEvents as UiEvents,
   advanceToChoiceState,
 } from '@card-engine-nx/engine';
-import { PrintedProps, values } from '@card-engine-nx/basic';
+import { values } from '@card-engine-nx/basic';
 import { Board3d } from './Board3d';
 import { Card3dProps } from './Card3d';
 import { State } from '@card-engine-nx/state';
@@ -53,7 +54,7 @@ export function createRxUiEvents(): UiEvents {
 const playerIds = ['A', 'B', 'C', 'D'] as const;
 
 export const GameDisplay = () => {
-  const { state, setState } = useContext(StateContext);
+  const { state, setState, view } = useContext(StateContext);
   const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
   const textureUrls = useMemo(
     () => [...staticUrls, ...getAllImageUrls(state)],
@@ -122,6 +123,28 @@ export const GameDisplay = () => {
         </TexturesProvider>
       </div>
       {/* <PlayerHand player="A" /> */}
+      {state.choice?.dialog && !state.choice.multi && (
+        <ChooseSingleDialog
+          title={state.choice.title}
+          choices={state.choice.options.map((o) => ({
+            title: o.title,
+            action: () => {
+              state.choice = undefined;
+              state.next.unshift(o.action);
+              advanceToChoiceState(state, events, true);
+              setState({ ...state });
+            },
+            image: o.cardId && {
+              src: getCardImageUrl(
+                view.cards[o.cardId].props,
+                state.cards[o.cardId].sideUp
+              ),
+              width: 430/2,
+              height: 600/2,
+            },
+          }))}
+        />
+      )}
       {!state.choice?.dialog && (
         <NextStepButton
           title={state.choice?.title ?? 'Next'}

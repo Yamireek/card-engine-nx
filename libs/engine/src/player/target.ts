@@ -9,6 +9,10 @@ export function getTargetPlayer(
     return keys(state.players);
   }
 
+  if (target === 'owner') {
+    throw new Error('not implemented');
+  }
+
   if (['A', 'B', 'C', 'D'].includes(target)) {
     return [target];
   }

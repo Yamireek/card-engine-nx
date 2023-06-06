@@ -19,6 +19,7 @@ import {
 } from './utils';
 import { uiEvent } from './eventFactories';
 import { executeCardAction, getTargetCard } from './card';
+import { calculateExpr } from './expr';
 
 export type ExecutionContext = {
   state: State;
@@ -186,35 +187,73 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action.playAlly) {
     const cardId = single(getTargetCard(action.playAlly, ctx));
+    const card = ctx.view.cards[cardId];
     const owner = ctx.state.cards[cardId].owner;
-    if (owner !== 'game') {
-      const player = ctx.state.players[owner];
-      if (player) {
-        player.zones.hand.cards = player.zones.hand.cards.filter(
-          (c) => c !== cardId
-        );
-        player.zones.playerArea.cards.push(cardId);
-        ctx.events.send(
-          uiEvent.card_moved({
-            cardId,
-            side: 'front',
-            source: {
-              owner,
-              type: 'hand',
+
+    if (card.props.cost && card.props.sphere && owner !== 'game') {
+      ctx.state.next = [
+        {
+          player: {
+            target: owner,
+            action: {
+              payResources: {
+                amount: card.props.cost,
+                sphere: card.props.sphere,
+              },
             },
-            destination: {
-              owner,
-              type: 'playerArea',
-            },
-          })
-        );
-      }
+          },
+        },
+        ...ctx.state.next,
+      ];
     }
+
+    // if (owner !== 'game') {
+    //   const player = ctx.state.players[owner];
+    //   if (player) {
+    //     player.zones.hand.cards = player.zones.hand.cards.filter(
+    //       (c) => c !== cardId
+    //     );
+    //     player.zones.playerArea.cards.push(cardId);
+    //     ctx.events.send(
+    //       uiEvent.card_moved({
+    //         cardId,
+    //         side: 'front',
+    //         source: {
+    //           owner,
+    //           type: 'hand',
+    //         },
+    //         destination: {
+    //           owner,
+    //           type: 'playerArea',
+    //         },
+    //       })
+    //     );
+    //   }
+    // }
     return;
   }
 
   if (action.setCardVar) {
     ctx.state.vars.card[action.setCardVar.name] = action.setCardVar.value;
+    return;
+  }
+
+  if (action.repeat) {
+    const amount = calculateExpr(action.repeat.amount, ctx);
+    if (amount === 0) {
+      return;
+    } else {
+      ctx.state.next = [
+        action.repeat.action,
+        {
+          repeat: {
+            amount: amount - 1,
+            action: action.repeat.action,
+          },
+        },
+        ...ctx.state.next,
+      ];
+    }
     return;
   }
 

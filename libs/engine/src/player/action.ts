@@ -1,8 +1,9 @@
-import { PlayerState, PlayerAction } from '@card-engine-nx/state';
+import { PlayerState, PlayerAction, CardTarget } from '@card-engine-nx/state';
 import { last, shuffle } from 'lodash';
 import { calculateExpr } from '../expr';
 import { uiEvent } from '../eventFactories';
 import { ExecutionContext } from '../action';
+import { getTargetCard } from '../card';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -62,6 +63,68 @@ export function executePlayerAction(
   if (action.incrementThreat) {
     const amount = calculateExpr(action.incrementThreat, ctx);
     player.thread += amount;
+    return;
+  }
+
+  if (action.payResources) {
+    const sphere =
+      action.payResources.sphere === 'neutral'
+        ? 'any'
+        : action.payResources.sphere;
+
+    const target: CardTarget = {
+      and: [
+        { type: ['hero'] },
+        { owner: player.id },
+        {
+          sphere,
+        },
+      ],
+    };
+
+    ctx.state.next = [
+      {
+        repeat: {
+          amount: action.payResources.amount,
+          action: {
+            player: {
+              target: player.id,
+              action: {
+                chooseCardActions: {
+                  title: 'Choose hero to pay 1 resource',
+                  target,
+                  action: { payResources: 1 },
+                  multi: false,
+                  optional: false,
+                },
+              },
+            },
+          },
+        },
+      },
+      ...ctx.state.next,
+    ];
+    return;
+  }
+
+  if (action.chooseCardActions) {
+    const cardIds = getTargetCard(action.chooseCardActions.target, ctx);
+
+    ctx.state.choice = {
+      dialog: true,
+      title: action.chooseCardActions.title,
+      multi: action.chooseCardActions.multi,
+      options: cardIds.map((c) => ({
+        title: c.toString(),
+        cardId: c,
+        action: {
+          card: {
+            taget: c,
+            action: action.chooseCardActions?.action ?? 'empty',
+          },
+        },
+      })),
+    };
     return;
   }
 

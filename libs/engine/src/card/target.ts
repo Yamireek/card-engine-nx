@@ -14,6 +14,10 @@ export function getTargetCard(
   target: CardTarget,
   ctx: ExecutionContext
 ): CardId[] {
+  if (typeof target === 'number') {
+    return [target];
+  }
+
   if (target === 'self') {
     if (ctx.card['self']) {
       return [ctx.card['self']];
@@ -66,6 +70,16 @@ export function getTargetCard(
   if (target.top) {
     const zones = getTargetZone(target.top, ctx.state);
     return zones.flatMap((z) => last(z.cards) ?? []);
+  }
+
+  if (target.sphere) {
+    if (target.sphere === 'any') {
+      return values(ctx.view.cards).map((c) => c.id);
+    }
+
+    return values(ctx.view.cards)
+      .filter((c) => c.props.sphere === target.sphere)
+      .map((s) => s.id);
   }
 
   throw new Error(`unknown card target: ${JSON.stringify(target)}`);
