@@ -2,8 +2,9 @@ import { PlayerState, PlayerAction, CardTarget } from '@card-engine-nx/state';
 import { last, shuffle } from 'lodash';
 import { calculateExpr } from '../expr';
 import { uiEvent } from '../eventFactories';
-import { ExecutionContext } from '../action';
+import { ExecutionContext } from "../context";
 import { getTargetCard } from '../card';
+import { canExecute } from '../resolution';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -108,7 +109,17 @@ export function executePlayerAction(
   }
 
   if (action.chooseCardActions) {
-    const cardIds = getTargetCard(action.chooseCardActions.target, ctx);
+    const cardIds = getTargetCard(
+      {
+        and: [
+          action.chooseCardActions.target,
+          {
+            canExecute: action.chooseCardActions.action,
+          },
+        ],
+      },
+      ctx
+    );
 
     ctx.state.choice = {
       dialog: true,

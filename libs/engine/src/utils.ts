@@ -12,7 +12,8 @@ import {
   PlayerZoneType,
   Side,
 } from '@card-engine-nx/basic';
-import { ExecutionContext, executeAction } from './action';
+import { executeAction } from './action';
+import { ExecutionContext } from "./context";
 import { uiEvent } from './eventFactories';
 import { UIEvents } from './uiEvents';
 import { createView } from './view';

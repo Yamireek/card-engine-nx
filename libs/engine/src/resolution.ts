@@ -1,8 +1,9 @@
-import { Action } from '@card-engine-nx/state';
-import { ExecutionContext } from './action';
+import { Action, CardAction } from '@card-engine-nx/state';
+import { ExecutionContext } from "./context";
 import { getTargetCard } from './card';
 import { single } from './utils';
 import { sumBy } from 'lodash';
+import { CardId } from '@card-engine-nx/basic';
 
 export function canExecute(
   action: Action,
@@ -47,6 +48,23 @@ export function canExecute(
       );
 
       return available >= cost;
+    }
+  }
+
+  throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
+}
+
+export function canCardExecute(
+  action: CardAction,
+  cardId: CardId,
+  ctx: ExecutionContext
+): boolean {
+  if (typeof action === 'string') {
+    throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
+  } else {
+    if (action.payResources) {
+      const card = ctx.state.cards[cardId];
+      return card.token.resources >= action.payResources;
     }
   }
 

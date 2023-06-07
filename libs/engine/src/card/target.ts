@@ -2,13 +2,13 @@ import {
   CardId,
   GameZoneType,
   PlayerZoneType,
-  keys,
   values,
 } from '@card-engine-nx/basic';
 import { CardTarget } from '@card-engine-nx/state';
 import { intersection, last, uniq } from 'lodash';
-import { ExecutionContext } from '../action';
+import { ExecutionContext, cardIds } from '../context';
 import { getTargetZone } from '../zone/target';
+import { canCardExecute } from '../resolution';
 
 export function getTargetCard(
   target: CardTarget,
@@ -29,7 +29,7 @@ export function getTargetCard(
   }
 
   if (target === 'each') {
-    return keys(ctx.state.cards);
+    return cardIds(ctx);
   }
 
   if (target === 'inAPlay') {
@@ -80,6 +80,11 @@ export function getTargetCard(
     return values(ctx.view.cards)
       .filter((c) => c.props.sphere === target.sphere)
       .map((s) => s.id);
+  }
+
+  if (target.canExecute) {
+    const action = target.canExecute;
+    return cardIds(ctx).filter((id) => canCardExecute(action, id, ctx));
   }
 
   throw new Error(`unknown card target: ${JSON.stringify(target)}`);

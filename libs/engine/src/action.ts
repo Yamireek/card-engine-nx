@@ -2,14 +2,11 @@ import {
   Action,
   PlayerDeck,
   Scenario,
-  State,
-  View,
 } from '@card-engine-nx/state';
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
-import { UIEvents } from './uiEvents';
 import { reverse, shuffle } from 'lodash/fp';
-import { CardId, values } from '@card-engine-nx/basic';
+import { values } from '@card-engine-nx/basic';
 import {
   addPlayerCard,
   addGameCard,
@@ -20,13 +17,7 @@ import {
 import { uiEvent } from './eventFactories';
 import { executeCardAction, getTargetCard } from './card';
 import { calculateExpr } from './expr';
-
-export type ExecutionContext = {
-  state: State;
-  view: View;
-  events: UIEvents;
-  card: Record<string, CardId>;
-};
+import { ExecutionContext } from './context';
 
 export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'empty') {

@@ -120,7 +120,8 @@ export type CardTarget =
       and?: CardTarget[];
       type?: CardType[];
       top?: ZoneTarget;
-      sphere?: Sphere | 'any';
+      sphere?: Sphere | 'any';      
+      canExecute?: CardAction;
     };
 
 export type ZoneTarget = {

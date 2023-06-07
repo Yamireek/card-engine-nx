@@ -1,6 +1,6 @@
 import { CardView, Modifier } from '@card-engine-nx/state';
 import { calculateExpr } from '../expr';
-import { ExecutionContext } from '../action';
+import { ExecutionContext } from "../context";
 
 export function applyModifier(
   modifier: Modifier,
