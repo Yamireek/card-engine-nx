@@ -39,6 +39,7 @@ export const ChooseMultiDialog = <T extends unknown>(props: {
           {props.choices.map((o, i) => (
             <ListItemButton
               key={i}
+              style={{ flex: '0 0 auto' }}
               onClick={(e) => {
                 e.stopPropagation();
                 const filtered = selected.includes(o.id)
@@ -47,7 +48,6 @@ export const ChooseMultiDialog = <T extends unknown>(props: {
 
                 setSelected(filtered);
               }}
-              style={{ width: 'auto' }}
             >
               <img
                 alt=""

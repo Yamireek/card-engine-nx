@@ -23,7 +23,7 @@ export const ChooseSingleDialog = (props: {
     <Dialog open={true} maxWidth="md">
       <DialogTitle>{props.title}</DialogTitle>
       <DialogContent>
-        <Grid container spacing={1}>
+        <Grid container spacing={1} justifyContent="space-evenly">
           {props.choices.map((a, i) => (
             <Grid key={i} item xs={!a.image ? 12 : 'auto'}>
               <ListItemButton
@@ -31,7 +31,7 @@ export const ChooseSingleDialog = (props: {
                 onClick={() => {
                   a.action();
                 }}
-                style={{ width: 'auto' }}
+                style={{ flex: '0 0 auto' }}
               >
                 {a.image ? (
                   <img
