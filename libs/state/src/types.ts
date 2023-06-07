@@ -78,8 +78,8 @@ export type CardAction =
       placeProgress?: number;
       flip?: Side;
       move?: {
-        source: ZoneId;
-        destination: ZoneId;
+        from: ZoneId;
+        to: ZoneId;
         side: Side;
       };
     };

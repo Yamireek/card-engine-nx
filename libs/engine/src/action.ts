@@ -230,8 +230,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
             taget: cardId,
             action: {
               move: {
-                source: { owner, type: 'hand' },
-                destination: { owner, type: 'playerArea' },
+                from: { owner, type: 'hand' },
+                to: { owner, type: 'playerArea' },
                 side: 'front',
               },
             },
@@ -278,7 +278,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     ctx.state.next = [
       {
         card: {
-          taget: { top: { game: 'questDeck' } },
+          taget: { top: { game: 'questArea' } },
           action: { placeProgress: action.placeProgress },
         },
       },
@@ -314,6 +314,18 @@ export function beginScenario(
         },
       },
     },
+    {
+      card: {
+        taget: { top: { game: 'questDeck' } },
+        action: {
+          move: {
+            from: { owner: 'game', type: 'questDeck' },
+            to: { owner: 'game', type: 'questArea' },
+            side: 'front',
+          },
+        },
+      },
+    },
     'executeSetupActions',
     {
       card: {
@@ -321,8 +333,9 @@ export function beginScenario(
           flip: 'back',
         },
         taget: {
-          top: {
-            game: 'questDeck',
+          zone: {
+            owner: 'game',
+            type: 'questArea',
           },
         },
       },

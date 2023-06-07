@@ -1,6 +1,6 @@
-import { CardId } from "@card-engine-nx/basic";
+import { CardId } from '@card-engine-nx/basic';
 
 export type ZoneState = {
-  stack: boolean;
+  stack: boolean; // TODO remove
   cards: CardId[];
 };

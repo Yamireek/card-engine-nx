@@ -69,8 +69,8 @@ export function executePlayerAction(
               },
               action: {
                 move: {
-                  source: { owner: player.id, type: 'library' },
-                  destination: { owner: player.id, type: 'hand' },
+                  from: { owner: player.id, type: 'library' },
+                  to: { owner: player.id, type: 'hand' },
                   side: 'front',
                 },
               },

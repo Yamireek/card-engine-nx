@@ -13,24 +13,25 @@ import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
 import { last } from 'lodash';
+import { Token3d } from './Token3d';
 
-export const positions: Record<number, Vector3> = {
+const positions: Record<number, Vector3> = {
   '1': [0, 0, 0],
   '2': [0, 0, 0],
   '3': [0, 0, 0],
   '4': [0, 0, 0],
 };
 
-const QuestDeck = () => {
+const QuestArea = () => {
   const { state } = useContext(StateContext);
   const { texture } = useTextures();
-  const topCardId = last(state.zones.questDeck.cards);
+  const topCardId = last(state.zones.questArea.cards);
   const topCard = topCardId ? state.cards[topCardId] : undefined;
   const cardImages = topCard ? getCardImageUrls(topCard.definition) : undefined;
   return (
     <Deck3d
       owner="game"
-      type="questDeck"
+      type="questArea"
       position={[0.2, 0.45, 0]}
       orientation="landscape"
       cardCount={state.zones.questDeck.cards.length}
@@ -51,6 +52,10 @@ export const GameAreas = (props: {
   const { texture } = useTextures();
 
   const cardRenderer: CardAreaLayoutProps<CardState>['renderer'] = (p) => {
+    // if (p.item.id === 40) {
+    //   debugger;
+    // }
+
     return (
       <Card3d
         key={p.item.id}
@@ -60,13 +65,36 @@ export const GameAreas = (props: {
           width: p.size.width / 1.2,
           height: p.size.height / 1.2,
         }}
+        orientation={p.item.definition.orientation}
+        rotation={[0, 0, 0]}
         position={[p.position[0], p.position[1], 0.001]}
         textures={{
-          front: texture[getCardImageUrl(p.item.definition.front, 'front')],
-          back: texture[getCardImageUrl(p.item.definition.back, 'back')],
+          front:
+            texture[
+              getCardImageUrl(p.item.definition[p.item.sideUp], p.item.sideUp)
+            ],
+          back: texture[
+            getCardImageUrl(p.item.definition[p.item.sideUp], p.item.sideUp)
+          ],
         }}
         hidden={props.hiddenCards.includes(p.item.id)}
-      />
+      >
+        <Token3d
+          position={[0.022, 0.01]}
+          texture={texture[image.resource]}
+          amount={p.item.token.resources}
+        />
+        <Token3d
+          position={[0, 0.01]}
+          texture={texture[image.damage]}
+          amount={p.item.token.damage}
+        />
+        <Token3d
+          position={[0.01, 0.022]}
+          texture={texture[image.progress]}
+          amount={p.item.token.progress}
+        />
+      </Card3d>
     );
   };
 
@@ -88,7 +116,17 @@ export const GameAreas = (props: {
         cardCount={state.zones.discardPile.cards.length}
         texture={texture[image.encounterBack]}
       />
-      <QuestDeck />
+      <CardAreaLayout
+        color="gold"
+        position={[0.2, 0.45]}
+        size={{ width: 0.2, height: 0.1 }}
+        itemSize={{
+          width: cardSize.width * 1.2,
+          height: cardSize.height * 1.2,
+        }}
+        items={state.zones.questArea.cards.map((id) => state.cards[id])}
+        renderer={cardRenderer}
+      />
       <CardAreaLayout
         color="purple"
         position={[-0.2, 0.4]}

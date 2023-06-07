@@ -49,8 +49,8 @@ export function executeCardAction(
   }
 
   if (action.move) {
-    const sourceZone = getZoneState(action.move.source, ctx.state);
-    const destinationZone = getZoneState(action.move.destination, ctx.state);
+    const sourceZone = getZoneState(action.move.from, ctx.state);
+    const destinationZone = getZoneState(action.move.to, ctx.state);
 
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);
     destinationZone.cards.push(card.id);
@@ -59,8 +59,8 @@ export function executeCardAction(
     ctx.events.send(
       uiEvent.card_moved({
         cardId: card.id,
-        source: action.move.source,
-        destination: action.move.destination,
+        source: action.move.from,
+        destination: action.move.to,
         side: action.move.side,
       })
     );

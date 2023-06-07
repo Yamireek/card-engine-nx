@@ -33,6 +33,7 @@ export type GameZoneType =
   | 'activeLocation'
   | 'encounterDeck'
   | 'questDeck'
+  | 'questArea'
   | 'victoryDisplay';
 
 export type PlayerZoneType =

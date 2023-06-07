@@ -9,6 +9,7 @@ import {
 } from '@card-engine-nx/ui';
 import { useContext } from 'react';
 import { DetailContext } from './DetailContext';
+import { Orientation, Side } from '@card-engine-nx/basic';
 
 export type Card3dProps = React.PropsWithChildren<{
   id: number;
@@ -16,9 +17,10 @@ export type Card3dProps = React.PropsWithChildren<{
   position: Vector3;
   rotation?: Vector3;
   textures: CardTextures;
-  scale?: number;
+  scale?: number; // TODO remove
   size?: Dimensions;
   hidden?: boolean;
+  orientation?: Orientation;
   onClick?: () => void;
 }>;
 
@@ -65,7 +67,11 @@ export const Card3d = (props: Card3dProps) => {
         {!props.hidden && (
           <>
             <boxGeometry
-              args={[cardSize.width, cardSize.height, cardSize.depth]}
+              args={
+                props.orientation === 'landscape'
+                  ? [cardSize.height, cardSize.width, cardSize.depth]
+                  : [cardSize.width, cardSize.height, cardSize.depth]
+              }
             />
             <meshBasicMaterial attach="material-0" color="gray" />
             <meshBasicMaterial attach="material-1" color="gray" />

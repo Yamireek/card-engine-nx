@@ -12,6 +12,7 @@ export function createState(program?: Action): State {
       discardPile: { cards: [], stack: true },
       encounterDeck: { cards: [], stack: true },
       questDeck: { cards: [], stack: true },
+      questArea: { cards: [], stack: false },
       stagingArea: { cards: [], stack: false },
       victoryDisplay: { cards: [], stack: true },
     },

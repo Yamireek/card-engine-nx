@@ -1,10 +1,10 @@
-import { Texture } from "three";
+import { Texture } from 'three';
 
 export type Vector2 = [number, number];
 
 export type Vector3 = [number, number, number];
 
-export type CardTextures = { front: Texture; back: Texture };
+export type CardTextures = { front: Texture; back: Texture }; // TODO possible single texture
 
 export type Material = {
   color: Texture;
