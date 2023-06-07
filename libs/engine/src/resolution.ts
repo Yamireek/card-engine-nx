@@ -14,6 +14,10 @@ export function canExecute(
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
     if (action.playAlly) {
+      if (ctx.state.phase !== 'planning') {
+        return false;
+      }
+
       const cardId = single(getTargetCard(action.playAlly, ctx));
       const owner = ctx.state.cards[cardId].owner;
       if (owner === 'game') {

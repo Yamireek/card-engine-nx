@@ -9,7 +9,7 @@ import {
 } from '@card-engine-nx/ui';
 import { useContext } from 'react';
 import { DetailContext } from './DetailContext';
-import { Orientation, Side } from '@card-engine-nx/basic';
+import { Orientation } from '@card-engine-nx/basic';
 
 export type Card3dProps = React.PropsWithChildren<{
   id: number;

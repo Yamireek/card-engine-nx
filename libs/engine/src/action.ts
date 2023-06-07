@@ -11,8 +11,8 @@ import {
   single,
 } from './utils';
 import { uiEvent } from './eventFactories';
-import { calculateCardExpr, executeCardAction, getTargetCard } from './card';
-import { calculateExpr } from './expr';
+import { executeCardAction, getTargetCard } from './card';
+import { calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
 import { v4 as uuid } from 'uuid';
 
@@ -58,7 +58,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'resolveQuesting') {
-    const totalWillpower = calculateExpr(
+    const totalWillpower = calculateNumberExpr(
       {
         fromCard: {
           card: { mark: 'questing' },
@@ -69,7 +69,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       ctx
     );
 
-    const totalThreat = calculateExpr(
+    const totalThreat = calculateNumberExpr(
       {
         fromCard: {
           card: { zone: { owner: 'game', type: 'stagingArea' } },
@@ -249,7 +249,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.repeat) {
-    const amount = calculateExpr(action.repeat.amount, ctx);
+    const amount = calculateNumberExpr(action.repeat.amount, ctx);
     if (amount === 0) {
       return;
     } else {

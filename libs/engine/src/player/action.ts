@@ -1,6 +1,6 @@
 import { PlayerState, PlayerAction, CardTarget } from '@card-engine-nx/state';
 import { shuffle } from 'lodash';
-import { calculateExpr } from '../expr';
+import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
 import { v4 as uuid } from 'uuid';
@@ -84,7 +84,7 @@ export function executePlayerAction(
   }
 
   if (action.incrementThreat) {
-    const amount = calculateExpr(action.incrementThreat, ctx);
+    const amount = calculateNumberExpr(action.incrementThreat, ctx);
     player.thread += amount;
     return;
   }

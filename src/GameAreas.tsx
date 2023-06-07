@@ -12,7 +12,6 @@ import { Card3d, cardSize } from './Card3d';
 import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
-import { last } from 'lodash';
 import { Token3d } from './Token3d';
 
 const positions: Record<number, Vector3> = {
@@ -20,28 +19,6 @@ const positions: Record<number, Vector3> = {
   '2': [0, 0, 0],
   '3': [0, 0, 0],
   '4': [0, 0, 0],
-};
-
-const QuestArea = () => {
-  const { state } = useContext(StateContext);
-  const { texture } = useTextures();
-  const topCardId = last(state.zones.questArea.cards);
-  const topCard = topCardId ? state.cards[topCardId] : undefined;
-  const cardImages = topCard ? getCardImageUrls(topCard.definition) : undefined;
-  return (
-    <Deck3d
-      owner="game"
-      type="questArea"
-      position={[0.2, 0.45, 0]}
-      orientation="landscape"
-      cardCount={state.zones.questDeck.cards.length}
-      texture={
-        cardImages && topCard
-          ? texture[cardImages[topCard.sideUp]]
-          : texture[image.encounterBack]
-      }
-    />
-  );
 };
 
 export const GameAreas = (props: {

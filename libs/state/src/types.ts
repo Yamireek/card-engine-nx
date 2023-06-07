@@ -110,7 +110,7 @@ export type NumberExpr =
       };
     };
 
-export type BoolExpr = boolean | 'enemiesToEngage';
+export type BoolExpr = boolean | 'enemiesToEngage' | { phase?: Phase };
 
 export type CardNumberExpr =
   | number
