@@ -54,24 +54,13 @@ export function createRxUiEvents(): UiEvents {
 const playerIds = ['A', 'B', 'C', 'D'] as const;
 
 export const GameDisplay = () => {
-  const { state, setState, view } = useContext(StateContext);
+  const { state, view, moves, events } = useContext(StateContext);
   const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
   const textureUrls = useMemo(
     () => [...staticUrls, ...getAllImageUrls(state)],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-
-  const events = useMemo<UiEvents>(() => {
-    const tmp = createRxUiEvents();
-    tmp.subscribe((e) => {
-      if (e.type === 'new_state') {
-        setState({ ...e.state });
-      }
-    });
-    return tmp;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
@@ -126,21 +115,18 @@ export const GameDisplay = () => {
       {state.choice?.dialog && !state.choice.multi && (
         <ChooseSingleDialog
           title={state.choice.title}
-          choices={state.choice.options.map((o) => ({
+          choices={state.choice.options.map((o, i) => ({
             title: o.title,
             action: () => {
-              state.choice = undefined;
-              state.next.unshift(o.action);
-              advanceToChoiceState(state, events, true);
-              setState({ ...state });
+              moves.choose([i]);
             },
             image: o.cardId && {
               src: getCardImageUrl(
                 view.cards[o.cardId].props,
                 state.cards[o.cardId].sideUp
               ),
-              width: 430/2,
-              height: 600/2,
+              width: 430 / 2,
+              height: 600 / 2,
             },
           }))}
         />
@@ -149,8 +135,7 @@ export const GameDisplay = () => {
         <NextStepButton
           title={state.choice?.title ?? 'Next'}
           onClick={() => {
-            state.choice = undefined;
-            advanceToChoiceState(state, events, false);
+            moves.skip();
           }}
         />
       )}

@@ -1,4 +1,4 @@
-import { PlayerId, keys } from '@card-engine-nx/basic';
+import { PlayerId } from '@card-engine-nx/basic';
 import { State, PlayerTarget } from '@card-engine-nx/state';
 
 export function getTargetPlayer(
@@ -6,7 +6,7 @@ export function getTargetPlayer(
   state: State
 ): PlayerId[] {
   if (target === 'each') {
-    return keys(state.players);
+    return Object.keys(state.players) as PlayerId[]; // TODO
   }
 
   if (target === 'owner') {

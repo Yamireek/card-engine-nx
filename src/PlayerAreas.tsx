@@ -1,4 +1,9 @@
-import { image, getCardImageUrl, Vector3, useTextures } from '@card-engine-nx/ui';
+import {
+  image,
+  getCardImageUrl,
+  Vector3,
+  useTextures,
+} from '@card-engine-nx/ui';
 import { useContext } from 'react';
 import { StateContext } from './StateContext';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
@@ -8,6 +13,7 @@ import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
 import { Token3d } from './Token3d';
 import { UIEvents, advanceToChoiceState } from '@card-engine-nx/engine';
+import { indexOf } from 'lodash';
 
 const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
   '1': { A: [0, 0, 0] },
@@ -33,7 +39,7 @@ export const PlayerAreas = (props: {
   hiddenCards: CardId[];
   events: UIEvents;
 }) => {
-  const { state, view } = useContext(StateContext);
+  const { state, view, moves } = useContext(StateContext);
   const { texture } = useTextures();
   const playerState = state.players[props.player];
 
@@ -60,12 +66,7 @@ export const PlayerAreas = (props: {
             return;
           } else {
             if (actions.length === 1) {
-              const action = actions[0];
-              const title = state.choice.title;
-              state.choice = undefined;
-              state.next.unshift({ playerActions: title });
-              state.next.unshift(action.action);
-              advanceToChoiceState(state, props.events, true);
+              moves.action(indexOf(view.actions, actions[0]));
             } else {
               // TODO multiple actions
               // tslint:disable-next-line:no-console

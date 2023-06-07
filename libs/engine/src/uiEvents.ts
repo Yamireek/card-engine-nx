@@ -1,8 +1,6 @@
 import { CardId, Side, ZoneId } from '@card-engine-nx/basic';
-import { State } from '@card-engine-nx/state';
 
 export type UiEvent =
-  | { type: 'new_state'; state: State }
   | { type: 'error'; message: string }
   | {
       type: 'card_moved';
