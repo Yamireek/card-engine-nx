@@ -1,4 +1,5 @@
 import {
+  ChooseMultiDialog,
   ChooseSingleDialog,
   NextStepButton,
   TexturesProvider,
@@ -122,10 +123,32 @@ export const GameDisplay = () => {
                 view.cards[o.cardId].props,
                 state.cards[o.cardId].sideUp
               ),
-              width: 430 / 2,
-              height: 600 / 2,
+              width: 430 / 3,
+              height: 600 / 3,
             },
           }))}
+        />
+      )}
+      {state.choice?.dialog && state.choice.multi && (
+        <ChooseMultiDialog
+          key={state.choice.id}
+          title={state.choice.title}
+          choices={state.choice.options.map((o, i) => ({
+            id: i,
+            title: o.title,
+            action: () => {
+              moves.choose([i]);
+            },
+            image: o.cardId && {
+              src: getCardImageUrl(
+                view.cards[o.cardId].props,
+                state.cards[o.cardId].sideUp
+              ),
+              width: 430 / 3,
+              height: 600 / 3,
+            },
+          }))}
+          onSubmit={(ids) => moves.choose(ids)}
         />
       )}
       {!state.choice?.dialog && (

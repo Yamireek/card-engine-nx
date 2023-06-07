@@ -234,6 +234,12 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if (action.clearMarks) {
+    for (const card of values(ctx.state.cards)) {
+      card.mark[action.clearMarks] = false;
+    }
+  }
+
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);
 }
 

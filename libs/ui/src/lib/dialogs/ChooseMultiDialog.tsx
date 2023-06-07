@@ -14,7 +14,7 @@ export const ChooseMultiDialog = <T extends unknown>(props: {
   title: string;
   choices: {
     title: string;
-    image: {
+    image?: {
       src: string;
       width: number;
       height: number;

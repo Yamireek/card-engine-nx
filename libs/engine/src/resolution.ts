@@ -1,5 +1,5 @@
 import { Action, CardAction } from '@card-engine-nx/state';
-import { ExecutionContext } from "./context";
+import { ExecutionContext } from './context';
 import { getTargetCard } from './card';
 import { single } from './utils';
 import { sumBy } from 'lodash';
@@ -59,7 +59,13 @@ export function canCardExecute(
   cardId: CardId,
   ctx: ExecutionContext
 ): boolean {
+  const card = ctx.state.cards[cardId];
+
   if (typeof action === 'string') {
+    if (action === 'commitToQuest') {
+      return !card.mark.questing && !card.tapped;
+    }
+
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
     if (action.payResources) {

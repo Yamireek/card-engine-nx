@@ -17,6 +17,12 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'commitToQuest') {
+    card.tapped = true;
+    card.mark.questing = true;
+    return;
+  }
+
   if (action.heal) {
     card.token.damage = Math.max(0, card.token.damage - action.heal);
     return;

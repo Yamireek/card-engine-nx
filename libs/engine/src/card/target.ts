@@ -47,6 +47,12 @@ export function getTargetCard(
     return [...gameIds, ...playerIds];
   }
 
+  if (target === 'character') {
+    return values(ctx.view.cards)
+      .filter((c) => c.props.type === 'ally' || c.props.type === 'hero')
+      .map((c) => c.id);
+  }
+
   if (target.and) {
     const lists = target.and.map((t) => getTargetCard(t, ctx));
     return uniq(intersection(...lists));
@@ -85,6 +91,11 @@ export function getTargetCard(
   if (target.canExecute) {
     const action = target.canExecute;
     return cardIds(ctx).filter((id) => canCardExecute(action, id, ctx));
+  }
+
+  if (target.controller) {
+    const player = ctx.state.players[target.controller];
+    return player?.zones.playerArea.cards ?? [];
   }
 
   throw new Error(`unknown card target: ${JSON.stringify(target)}`);

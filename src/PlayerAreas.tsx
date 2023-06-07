@@ -56,6 +56,7 @@ export const PlayerAreas = (props: {
           height: p.size.height / 1.2,
         }}
         position={[p.position[0], p.position[1], 0.001]}
+        rotation={[0, 0, p.item.tapped ? -Math.PI / 4 : 0]}
         textures={{
           front: texture[getCardImageUrl(p.item.definition.front, 'front')],
           back: texture[getCardImageUrl(p.item.definition.back, 'back')],

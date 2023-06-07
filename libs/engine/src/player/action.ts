@@ -21,7 +21,24 @@ export function executePlayerAction(
   }
 
   if (action === 'commitCharactersToQuest') {
-    throw new Error('not implemented');
+    ctx.state.next = [
+      {
+        player: {
+          target: player.id,
+          action: {
+            chooseCardActions: {
+              title: 'Choose characters commiting to quest',
+              multi: true,
+              optional: true,
+              target: { and: ['character', { controller: player.id }] },
+              action: 'commitToQuest',
+            },
+          },
+        },
+      },
+      ...ctx.state.next,
+    ];
+    return;
   }
 
   if (action === 'engagementCheck') {

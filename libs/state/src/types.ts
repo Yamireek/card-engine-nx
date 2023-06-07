@@ -67,6 +67,7 @@ export type PlayerAction =
 export type CardAction =
   | 'empty'
   | 'ready'
+  | 'commitToQuest'
   | {
       dealDamage?: number;
       heal?: number;
@@ -120,6 +121,7 @@ export type CardTarget =
   | 'self'
   | 'each'
   | 'inAPlay'
+  | 'character'
   | CardId
   | {
       owner?: PlayerId;
@@ -128,6 +130,7 @@ export type CardTarget =
       top?: ZoneTarget;
       sphere?: Sphere | 'any';
       canExecute?: CardAction;
+      controller?: PlayerId;
     };
 
 export type ZoneTarget = {
