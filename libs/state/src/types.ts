@@ -40,6 +40,7 @@ export type Action =
       clearMarks?: Mark;
       while?: { condition: BoolExpr; action: Action };
       repeat?: { amount: NumberExpr; action: Action };
+      placeProgress?: number;
     };
 
 export type PlayerAction =
@@ -74,6 +75,7 @@ export type CardAction =
       generateResources?: number;
       payResources?: number;
       sequence?: Action[];
+      placeProgress?: number;
       flip?: Side;
       move?: {
         source: ZoneId;
@@ -113,6 +115,8 @@ export type BoolExpr = boolean | 'enemiesToEngage';
 export type CardNumberExpr =
   | number
   | 'threadCost'
+  | 'willpower'
+  | 'threat'
   | {
       tokens: Token;
     };
@@ -131,6 +135,8 @@ export type CardTarget =
       sphere?: Sphere | 'any';
       canExecute?: CardAction;
       controller?: PlayerId;
+      mark?: Mark;
+      zone?: ZoneId;
     };
 
 export type ZoneTarget = {

@@ -7,7 +7,7 @@ import {
 import { CardTarget } from '@card-engine-nx/state';
 import { intersection, last, uniq } from 'lodash';
 import { ExecutionContext, cardIds } from '../context';
-import { getTargetZone } from '../zone/target';
+import { getTargetZone, getZoneState } from '../zone/target';
 import { canCardExecute } from '../resolution';
 
 export function getTargetCard(
@@ -96,6 +96,18 @@ export function getTargetCard(
   if (target.controller) {
     const player = ctx.state.players[target.controller];
     return player?.zones.playerArea.cards ?? [];
+  }
+
+  if (target.mark) {
+    const type = target.mark;
+    return values(ctx.state.cards)
+      .filter((c) => c.mark[type])
+      .map((c) => c.id);
+  }
+
+  if (target.zone) {
+    const zone = getZoneState(target.zone, ctx.state);
+    return zone.cards;
   }
 
   throw new Error(`unknown card target: ${JSON.stringify(target)}`);

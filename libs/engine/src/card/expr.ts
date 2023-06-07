@@ -1,6 +1,6 @@
 import { CardId } from '@card-engine-nx/basic';
 import { CardNumberExpr } from '@card-engine-nx/state';
-import { ExecutionContext } from "../context";
+import { ExecutionContext } from '../context';
 
 export function calculateCardExpr(
   expr: CardNumberExpr,
@@ -13,6 +13,14 @@ export function calculateCardExpr(
 
   if (expr === 'threadCost') {
     return ctx.view.cards[cardId].props.threatCost || 0;
+  }
+
+  if (expr === 'willpower') {
+    return ctx.view.cards[cardId].props.willpower || 0;
+  }
+
+  if (expr === 'threat') {
+    return ctx.view.cards[cardId].props.threat || 0;
   }
 
   if (expr.tokens) {

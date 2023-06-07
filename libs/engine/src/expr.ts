@@ -2,11 +2,15 @@ import { NumberExpr } from '@card-engine-nx/state';
 import { getTargetCard } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
-import { ExecutionContext } from "./context";
+import { ExecutionContext } from './context';
 
 export function calculateExpr(expr: NumberExpr, ctx: ExecutionContext): number {
   if (typeof expr === 'number') {
     return expr;
+  }
+
+  if (expr === 'countOfPlayers') {
+    return Object.keys(ctx.state.players).length;
   }
 
   if (expr.fromCard) {

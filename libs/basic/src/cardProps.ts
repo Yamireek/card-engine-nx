@@ -15,6 +15,7 @@ export type PrintedProps = {
   cost?: number;
   unique?: boolean;
   engagement?: number;
+  threat?: number;
 };
 
 export type HeroProps = {

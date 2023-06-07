@@ -11,7 +11,7 @@ import {
   single,
 } from './utils';
 import { uiEvent } from './eventFactories';
-import { executeCardAction, getTargetCard } from './card';
+import { calculateCardExpr, executeCardAction, getTargetCard } from './card';
 import { calculateExpr } from './expr';
 import { ExecutionContext } from './context';
 import { v4 as uuid } from 'uuid';
@@ -49,7 +49,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'dealShadowCards') {
-    throw new Error('not implemented');
+    // TODO dealShadowCards
+    return;
   }
 
   if (action === 'passFirstPlayerToken') {
@@ -57,7 +58,39 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'resolveQuesting') {
-    throw new Error('not implemented');
+    const totalWillpower = calculateExpr(
+      {
+        fromCard: {
+          card: { mark: 'questing' },
+          value: 'willpower',
+          sum: true,
+        },
+      },
+      ctx
+    );
+
+    const totalThreat = calculateExpr(
+      {
+        fromCard: {
+          card: { zone: { owner: 'game', type: 'stagingArea' } },
+          value: 'threat',
+          sum: true,
+        },
+      },
+      ctx
+    );
+
+    const diff = totalWillpower - totalThreat;
+    if (diff > 0) {
+      ctx.state.next = [{ placeProgress: diff }, ...ctx.state.next];
+    }
+    if (diff < 0) {
+      ctx.state.next = [
+        { player: { target: 'each', action: { incrementThreat: diff } } },
+        ...ctx.state.next,
+      ];
+    }
+    return;
   }
 
   if (action === 'revealEncounterCard') {
@@ -238,6 +271,20 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     for (const card of values(ctx.state.cards)) {
       card.mark[action.clearMarks] = false;
     }
+    return;
+  }
+
+  if (action.placeProgress) {
+    ctx.state.next = [
+      {
+        card: {
+          taget: { top: { game: 'questDeck' } },
+          action: { placeProgress: action.placeProgress },
+        },
+      },
+      ...ctx.state.next,
+    ];
+    return;
   }
 
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);

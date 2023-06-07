@@ -5,6 +5,7 @@ import { DetailContext } from './DetailContext';
 
 const cardProperties = [
   'cost',
+  'threat',
   'threatCost',
   'engagement',
   'willpower',

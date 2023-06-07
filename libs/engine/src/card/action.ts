@@ -67,5 +67,10 @@ export function executeCardAction(
     return;
   }
 
+  if (action.placeProgress) {
+    card.token.progress += action.placeProgress;
+    return;
+  }
+
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
 }
