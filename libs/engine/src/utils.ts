@@ -13,7 +13,7 @@ import {
   Side,
 } from '@card-engine-nx/basic';
 import { executeAction } from './action';
-import { ExecutionContext } from "./context";
+import { ExecutionContext } from './context';
 import { uiEvent } from './eventFactories';
 import { UIEvents } from './uiEvents';
 import { createView } from './view';
@@ -105,6 +105,7 @@ export function nextStep(ctx: ExecutionContext) {
 export function advanceToChoiceState(
   state: State,
   events: UIEvents,
+  autoSkip: boolean,
   stopOnError: boolean
 ) {
   // eslint-disable-next-line no-constant-condition
@@ -113,14 +114,18 @@ export function advanceToChoiceState(
       if (state.choice.multi === false && state.choice.options.length === 1) {
         state.next.unshift(state.choice.options[0].action);
         state.choice = undefined;
+      } else if (
+        autoSkip &&
+        !state.choice.dialog &&
+        createView(state).actions.length === 0
+      ) {
+        state.choice = undefined;
       } else {
-        events.send(uiEvent.newState(state));
         return state;
       }
     }
 
     if (state.next.length === 0) {
-      events.send(uiEvent.newState(state));
       return;
     }
 
@@ -129,7 +134,6 @@ export function advanceToChoiceState(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       events.send(uiEvent.error(error.message));
-      events.send(uiEvent.newState(state));
       if (stopOnError) {
         throw error;
       }

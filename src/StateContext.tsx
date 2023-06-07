@@ -31,7 +31,7 @@ export const StateProvider = (
   const moves: Moves = {
     skip: () => {
       state.choice = undefined;
-      advanceToChoiceState(state, events, false);
+      advanceToChoiceState(state, events, true, false);
       setState({ ...state });
     },
     choose: (choosen) => {
@@ -43,7 +43,7 @@ export const StateProvider = (
       const choices = choosen.map((index) => options[index]);
       state.choice = undefined;
       state.next.unshift(...choices.map((c) => c.action));
-      advanceToChoiceState(state, events, true);
+      advanceToChoiceState(state, events, false, false);
       setState({ ...state });
     },
     action: (index) => {
@@ -56,7 +56,7 @@ export const StateProvider = (
       state.choice = undefined;
       state.next.unshift({ playerActions: title });
       state.next.unshift(action.action);
-      advanceToChoiceState(state, events, true);
+      advanceToChoiceState(state, events, false, false);
       setState({ ...state });
     },
   };
