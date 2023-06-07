@@ -8,11 +8,7 @@ import {
 } from '@card-engine-nx/ui';
 import { useContext, useMemo, useState } from 'react';
 import { StateContext } from './StateContext';
-import {
-  UiEvent,
-  UIEvents as UiEvents,
-  advanceToChoiceState,
-} from '@card-engine-nx/engine';
+import { UiEvent, UIEvents } from '@card-engine-nx/engine';
 import { values } from '@card-engine-nx/basic';
 import { Board3d } from './Board3d';
 import { Card3dProps } from './Card3d';
@@ -38,7 +34,7 @@ export function getAllImageUrls(state: State): string[] {
   return cardUrls;
 }
 
-export function createRxUiEvents(): UiEvents {
+export function createRxUiEvents(): UIEvents {
   const s = new Subject<UiEvent>();
   return {
     send(event) {

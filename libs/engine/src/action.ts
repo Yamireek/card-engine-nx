@@ -1,8 +1,4 @@
-import {
-  Action,
-  PlayerDeck,
-  Scenario,
-} from '@card-engine-nx/state';
+import { Action, PlayerDeck, Scenario } from '@card-engine-nx/state';
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { reverse, shuffle } from 'lodash/fp';
@@ -85,7 +81,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     for (const id of ids) {
       const card = ctx.state.cards[id];
       if (card) {
-        executeCardAction(action.card.action, card);
+        executeCardAction(action.card.action, card, ctx);
       } else {
         throw new Error('card not found');
       }
@@ -194,33 +190,21 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
             },
           },
         },
+        {
+          card: {
+            taget: cardId,
+            action: {
+              move: {
+                source: { owner, type: 'hand' },
+                destination: { owner, type: 'playerArea' },
+                side: 'front',
+              },
+            },
+          },
+        },
         ...ctx.state.next,
       ];
     }
-
-    // if (owner !== 'game') {
-    //   const player = ctx.state.players[owner];
-    //   if (player) {
-    //     player.zones.hand.cards = player.zones.hand.cards.filter(
-    //       (c) => c !== cardId
-    //     );
-    //     player.zones.playerArea.cards.push(cardId);
-    //     ctx.events.send(
-    //       uiEvent.card_moved({
-    //         cardId,
-    //         side: 'front',
-    //         source: {
-    //           owner,
-    //           type: 'hand',
-    //         },
-    //         destination: {
-    //           owner,
-    //           type: 'playerArea',
-    //         },
-    //       })
-    //     );
-    //   }
-    // }
     return;
   }
 

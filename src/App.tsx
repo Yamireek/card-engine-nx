@@ -16,7 +16,7 @@ const state = createState(
   beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
 );
 
-advanceToChoiceState(state, consoleEvents, true, true);
+advanceToChoiceState(state, consoleEvents, false, true);
 
 const view = createView(state);
 

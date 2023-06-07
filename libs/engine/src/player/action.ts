@@ -2,9 +2,8 @@ import { PlayerState, PlayerAction, CardTarget } from '@card-engine-nx/state';
 import { last, shuffle } from 'lodash';
 import { calculateExpr } from '../expr';
 import { uiEvent } from '../eventFactories';
-import { ExecutionContext } from "../context";
+import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
-import { canExecute } from '../resolution';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -42,22 +41,28 @@ export function executePlayerAction(
   }
 
   if (action.draw) {
-    for (let index = 0; index < action.draw; index++) {
-      const top = last(player.zones.library.cards);
-      if (top) {
-        ctx.state.cards[top].sideUp = 'front';
-        player.zones.library.cards.pop();
-        player.zones.hand.cards.push(top);
-        ctx.events.send(
-          uiEvent.card_moved({
-            cardId: top,
-            source: { type: 'library', owner: player.id },
-            destination: { type: 'hand', owner: player.id },
-            side: 'front',
-          })
-        );
-      }
-    }
+    ctx.state.next = [
+      {
+        repeat: {
+          amount: action.draw,
+          action: {
+            card: {
+              taget: {
+                top: { player: { id: player.id, zone: 'library' } },
+              },
+              action: {
+                move: {
+                  source: { owner: player.id, type: 'library' },
+                  destination: { owner: player.id, type: 'hand' },
+                  side: 'front',
+                },
+              },
+            },
+          },
+        },
+      },
+      ...ctx.state.next,
+    ];
     return;
   }
 

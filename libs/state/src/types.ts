@@ -9,6 +9,7 @@ import {
   Side,
   Sphere,
   Token,
+  ZoneId,
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
 
@@ -73,6 +74,11 @@ export type CardAction =
       payResources?: number;
       sequence?: Action[];
       flip?: Side;
+      move?: {
+        source: ZoneId;
+        destination: ZoneId;
+        side: Side;
+      };
     };
 
 export type Ability = {
@@ -120,7 +126,7 @@ export type CardTarget =
       and?: CardTarget[];
       type?: CardType[];
       top?: ZoneTarget;
-      sphere?: Sphere | 'any';      
+      sphere?: Sphere | 'any';
       canExecute?: CardAction;
     };
 

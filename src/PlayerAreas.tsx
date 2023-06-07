@@ -12,7 +12,7 @@ import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
 import { Token3d } from './Token3d';
-import { UIEvents, advanceToChoiceState } from '@card-engine-nx/engine';
+import { UIEvents } from '@card-engine-nx/engine';
 import { indexOf } from 'lodash';
 
 const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
