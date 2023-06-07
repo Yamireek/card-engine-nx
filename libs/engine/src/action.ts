@@ -14,6 +14,7 @@ import { uiEvent } from './eventFactories';
 import { executeCardAction, getTargetCard } from './card';
 import { calculateExpr } from './expr';
 import { ExecutionContext } from './context';
+import { v4 as uuid } from 'uuid';
 
 export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'empty') {
@@ -164,6 +165,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action.playerActions) {
     ctx.state.choice = {
+      id: uuid(),
       title: action.playerActions,
       dialog: false,
       multi: false,

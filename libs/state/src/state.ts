@@ -17,6 +17,7 @@ export type State = {
     end_of_round: Action[];
   };
   choice?: {
+    id: string;
     title: string;
     dialog: boolean;
     multi: boolean;

@@ -110,6 +110,7 @@ export const GameDisplay = () => {
       {/* <PlayerHand player="A" /> */}
       {state.choice?.dialog && !state.choice.multi && (
         <ChooseSingleDialog
+          key={state.choice.id}
           title={state.choice.title}
           choices={state.choice.options.map((o, i) => ({
             title: o.title,

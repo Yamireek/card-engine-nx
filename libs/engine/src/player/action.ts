@@ -1,9 +1,9 @@
 import { PlayerState, PlayerAction, CardTarget } from '@card-engine-nx/state';
-import { last, shuffle } from 'lodash';
+import { shuffle } from 'lodash';
 import { calculateExpr } from '../expr';
-import { uiEvent } from '../eventFactories';
 import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
+import { v4 as uuid } from 'uuid';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -127,6 +127,7 @@ export function executePlayerAction(
     );
 
     ctx.state.choice = {
+      id: uuid(),
       dialog: true,
       title: action.chooseCardActions.title,
       multi: action.chooseCardActions.multi,
