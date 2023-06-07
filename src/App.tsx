@@ -11,6 +11,7 @@ import {
 } from '@card-engine-nx/engine';
 import { core } from '@card-engine-nx/cards/core';
 import { DetailProvider } from './DetailContext';
+import { LotrLCGClient } from './bgio/Game';
 
 const state = createState(
   beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
@@ -37,12 +38,12 @@ export const App = () => {
       }}
     >
       <CssBaseline />
-
-      <StateProvider init={state}>
-        <DetailProvider>
+      <DetailProvider>
+        {/* <StateProvider init={state}>
           <GameDisplay />
-        </DetailProvider>
-      </StateProvider>
+        </StateProvider> */}
+        <LotrLCGClient />
+      </DetailProvider>
     </div>
   );
 };
