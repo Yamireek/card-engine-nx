@@ -29,10 +29,7 @@ export const GameAreas = (props: {
   const { texture } = useTextures();
 
   const cardRenderer: CardAreaLayoutProps<CardState>['renderer'] = (p) => {
-    // if (p.item.id === 40) {
-    //   debugger;
-    // }
-
+    // TODO component
     return (
       <Card3d
         key={p.item.id}
