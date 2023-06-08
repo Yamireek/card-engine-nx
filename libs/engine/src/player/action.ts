@@ -149,6 +149,7 @@ export function executePlayerAction(
       dialog: true,
       title: action.chooseCardActions.title,
       multi: action.chooseCardActions.multi,
+      optional: action.chooseCardActions.optional,
       options: cardIds.map((c) => ({
         title: c.toString(),
         cardId: c,

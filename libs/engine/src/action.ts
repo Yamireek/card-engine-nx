@@ -1,4 +1,9 @@
-import { Action, PlayerDeck, Scenario } from '@card-engine-nx/state';
+import {
+  Action,
+  CardTarget,
+  PlayerDeck,
+  Scenario,
+} from '@card-engine-nx/state';
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { reverse, shuffle } from 'lodash/fp';
@@ -39,7 +44,31 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'chooseTravelDestination') {
-    throw new Error('not implemented');
+    const target: CardTarget = {
+      and: [
+        { zone: { owner: 'game', type: 'stagingArea' } },
+        { type: ['location'] },
+      ],
+    };
+
+    const locations = getTargetCard(target, ctx);
+    if (locations.length > 0) {
+      ctx.state.next.unshift({
+        player: {
+          target: 'first',
+          action: {
+            chooseCardActions: {
+              title: 'Choose location for travel',
+              multi: false,
+              optional: true,
+              target,
+              action: 'travel',
+            },
+          },
+        },
+      });
+    }
+    return;
   }
 
   if (action === 'dealShadowCards') {
@@ -233,6 +262,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       dialog: false,
       multi: false,
       options: [],
+      optional: true,
     };
     return;
   }

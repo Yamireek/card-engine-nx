@@ -170,6 +170,8 @@ export const GameDisplay = () => {
           <ChooseSingleDialog
             key={state.choice.id.toString()}
             title={state.choice.title}
+            skippable={state.choice.optional}
+            onSkip={() => moves.skip()}
             choices={state.choice.options.map((o, i) => ({
               title: o.title,
               action: () => {

@@ -22,6 +22,7 @@ export type State = {
     title: string;
     dialog: boolean;
     multi: boolean;
+    optional: boolean;
     options: Array<{ title: string; action: Action; cardId?: CardId }>;
   };
   next: Action[];

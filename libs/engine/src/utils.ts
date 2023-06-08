@@ -110,7 +110,12 @@ export function advanceToChoiceState(
   // eslint-disable-next-line no-constant-condition
   while (true) {
     if (state.choice) {
-      if (state.choice.multi === false && state.choice.options.length === 1) {
+      if (
+        state.choice.multi === false &&
+        state.choice.dialog &&
+        ((!state.choice.optional && state.choice.options.length === 1) ||
+          (state.choice.optional && state.choice.options.length === 0))
+      ) {
         state.next.unshift(state.choice.options[0].action);
         state.choice = undefined;
       } else if (

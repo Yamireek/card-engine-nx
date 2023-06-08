@@ -13,6 +13,11 @@ export function getTargetPlayer(
     throw new Error('not implemented');
   }
 
+  if (target === 'first') {
+    // TODO fix
+    return ['0'];
+  }
+
   if (['0', '1', '2', '3'].includes(target)) {
     return [target];
   }

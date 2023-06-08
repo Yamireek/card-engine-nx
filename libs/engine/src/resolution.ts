@@ -70,6 +70,10 @@ export function canCardExecute(
       return !card.mark.questing && !card.tapped;
     }
 
+    if (action === 'travel') {
+      return true;
+    }
+
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
     if (action.payResources) {

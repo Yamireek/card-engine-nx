@@ -1,5 +1,7 @@
 import {
+  Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
@@ -9,6 +11,7 @@ import {
 
 export const ChooseSingleDialog = (props: {
   title: string;
+  skippable: boolean;
   choices: Array<{
     title: string;
     image?: {
@@ -18,6 +21,7 @@ export const ChooseSingleDialog = (props: {
     };
     action: () => void;
   }>;
+  onSkip: () => void;
 }) => {
   return (
     <Dialog open={true} maxWidth="md">
@@ -51,6 +55,11 @@ export const ChooseSingleDialog = (props: {
           ))}
         </Grid>
       </DialogContent>
+      {props.skippable && (
+        <DialogActions>
+          <Button onClick={props.onSkip}>Skip</Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };

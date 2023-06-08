@@ -73,6 +73,7 @@ export type CardAction =
   | 'empty'
   | 'ready'
   | 'commitToQuest'
+  | 'travel'
   | {
       dealDamage?: number;
       heal?: number;
@@ -151,6 +152,6 @@ export type ZoneTarget = {
   };
 };
 
-export type PlayerTarget = PlayerId | 'each' | 'owner';
+export type PlayerTarget = PlayerId | 'each' | 'owner' | 'first';
 
 export type Context = { selfCard?: CardId };
