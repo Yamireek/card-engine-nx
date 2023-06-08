@@ -302,11 +302,15 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);
 }
 
-export function beginScenario(scenario: Scenario): Action {
+export function beginScenario(
+  scenario: Scenario,
+  ...decks: PlayerDeck[]
+): Action {
   return sequence(
     {
       setupScenario: scenario,
     },
+    ...decks.map((d) => ({ addPlayer: d })),
     'shuffleEncounterDeck',
     {
       player: {

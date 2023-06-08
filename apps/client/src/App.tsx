@@ -12,6 +12,8 @@ import { core } from '@card-engine-nx/cards';
 import { DetailProvider } from './DetailContext';
 import { LotrLCGBoard, LotrLCGClient } from './bgio/LotrLCGBoard';
 import { Client, Lobby } from 'boardgame.io/react';
+import { GameDisplay } from './GameDisplay';
+import { StateProvider } from './StateContext';
 
 // const state = createState(
 //   beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
@@ -23,8 +25,10 @@ import { Client, Lobby } from 'boardgame.io/react';
 
 // console.log(view.actions);
 
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// (window as any)['state'] = state;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+//(window as any)['state'] = state;
+
+console.log(window.location.hash);
 
 export const App = () => {
   return (
@@ -38,17 +42,20 @@ export const App = () => {
       }}
     >
       <CssBaseline />
-      <DetailProvider>
-        <Lobby
+
+      {/* <Lobby
           gameServer={`http://localhost:3000`}
           lobbyServer={`http://localhost:3000`}
           gameComponents={[{ game: LotrLCGame, board: LotrLCGBoard }]}
-        />
+        /> */}
 
-        {/* <StateProvider init={state}>
-          <GameDisplay />
-        </StateProvider> */}
-        {/* <div style={{ display: 'flex', height: '100%', width: '100%' }}>
+      {/* <StateProvider init={state}>
+        <GameDisplay />
+      </StateProvider> */}
+
+      <LotrLCGClient playerID={window.location.hash.substring(1)} />
+
+      {/* <div style={{ display: 'flex', height: '100%', width: '100%' }}>
           <div style={{ height: '100%', width: '50%' }}>
             <LotrLCGClient playerID="0" />
           </div>
@@ -57,7 +64,6 @@ export const App = () => {
             <LotrLCGClient playerID="1" />
           </div>
         </div> */}
-      </DetailProvider>
     </div>
   );
 };

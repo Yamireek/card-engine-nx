@@ -29,6 +29,7 @@ export const LotrLCGBoard = (props: LotrLCGProps) => {
 export const LotrLCGClient = Client({
   game: LotrLCGame,
   board: LotrLCGBoard,
+  numPlayers: 2,
   multiplayer: SocketIO({ server: 'localhost:3000' }),
   //multiplayer: Local(),
 });

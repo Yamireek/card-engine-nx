@@ -18,6 +18,7 @@ export type State = {
   };
   choice?: {
     id: string;
+    player?: PlayerId;
     title: string;
     dialog: boolean;
     multi: boolean;

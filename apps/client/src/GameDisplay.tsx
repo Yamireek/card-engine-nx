@@ -23,6 +23,7 @@ import { GameAreas } from './GameAreas';
 import { CardDetail } from './CardDetail';
 import { coreTactics } from './decks/coreTactics';
 import { core } from '@card-engine-nx/cards';
+import { Dialog, DialogTitle } from '@mui/material';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -103,6 +104,8 @@ export const GameDisplay = () => {
     []
   );
 
+  console.log(playerId, state.choice?.player);
+
   return (
     <div style={{ width: '100%', height: '100vh' }}>
       <div
@@ -153,48 +156,58 @@ export const GameDisplay = () => {
         </TexturesProvider>
       </div>
       {/* <PlayerHand player="A" /> */}
-      {state.choice?.dialog && !state.choice.multi && (
-        <ChooseSingleDialog
-          key={state.choice.id}
-          title={state.choice.title}
-          choices={state.choice.options.map((o, i) => ({
-            title: o.title,
-            action: () => {
-              moves.choose([i]);
-            },
-            image: o.cardId && {
-              src: getCardImageUrl(
-                view.cards[o.cardId].props,
-                state.cards[o.cardId].sideUp
-              ),
-              width: 430 / 3,
-              height: 600 / 3,
-            },
-          }))}
-        />
+      {state.choice?.dialog && state.choice.player !== playerId && (
+        <Dialog open>
+          <DialogTitle>Waiting for player {state.choice.player}</DialogTitle>
+        </Dialog>
       )}
-      {state.choice?.dialog && state.choice.multi && (
-        <ChooseMultiDialog
-          key={state.choice.id}
-          title={state.choice.title}
-          choices={state.choice.options.map((o, i) => ({
-            id: i,
-            title: o.title,
-            action: () => {
-              moves.choose([i]);
-            },
-            image: o.cardId && {
-              src: getCardImageUrl(
-                view.cards[o.cardId].props,
-                state.cards[o.cardId].sideUp
-              ),
-              width: 430 / 3,
-              height: 600 / 3,
-            },
-          }))}
-          onSubmit={(ids) => moves.choose(ids)}
-        />
-      )}
+      {state.choice?.dialog &&
+        !state.choice.multi &&
+        state.choice.player === playerId && (
+          <ChooseSingleDialog
+            key={state.choice.id}
+            title={state.choice.title}
+            choices={state.choice.options.map((o, i) => ({
+              title: o.title,
+              action: () => {
+                moves.choose([i]);
+              },
+              image: o.cardId && {
+                src: getCardImageUrl(
+                  view.cards[o.cardId].props,
+                  state.cards[o.cardId].sideUp
+                ),
+                width: 430 / 3,
+                height: 600 / 3,
+              },
+            }))}
+          />
+        )}
+
+      {state.choice?.dialog &&
+        state.choice.multi &&
+        state.choice.player === playerId && (
+          <ChooseMultiDialog
+            key={state.choice.id}
+            title={state.choice.title}
+            choices={state.choice.options.map((o, i) => ({
+              id: i,
+              title: o.title,
+              action: () => {
+                moves.choose([i]);
+              },
+              image: o.cardId && {
+                src: getCardImageUrl(
+                  view.cards[o.cardId].props,
+                  state.cards[o.cardId].sideUp
+                ),
+                width: 430 / 3,
+                height: 600 / 3,
+              },
+            }))}
+            onSubmit={(ids) => moves.choose(ids)}
+          />
+        )}
       {!state.choice?.dialog && (
         <NextStepButton
           title={state.choice?.title ?? 'Next'}
