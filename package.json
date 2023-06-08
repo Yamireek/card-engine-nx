@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "test-ui": "npx vitest --ui -r ./apps/client/",
+    "test-ui": "npx vitest --coverage --ui -r ./apps/client/",
     "postinstall": "patch-package"
   },
   "private": true,
