@@ -1,5 +1,4 @@
 import {
-  Action,
   CardDefinition,
   CardState,
   PlayerState,
@@ -139,12 +138,6 @@ export function advanceToChoiceState(
       }
     }
   }
-}
-
-export function sequence(...actions: Action[]): Action {
-  return {
-    sequence: actions,
-  };
 }
 
 export function single<T>(items: T[]): T {

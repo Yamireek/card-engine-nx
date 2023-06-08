@@ -14,7 +14,7 @@
           "e2e",
           "build-storybook"
         ],
-        "accessToken": "Mzk3N2VjYjAtMTVkNy00ZjQxLWJkYjEtMjQyMjE0ZTQ2NDU4fHJlYWQtd3JpdGU="
+        "accessToken": "MTVhZjU0ZWYtMjI1Zi00MjQwLWE2ZDktMWVlYzdkYzBiYWU1fHJlYWQtd3JpdGU="
       }
     }
   },
@@ -22,9 +22,6 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
-    },
-    "e2e": {
-      "inputs": ["default", "^production"]
     },
     "test": {
       "inputs": ["default", "^production"]
@@ -50,25 +47,24 @@
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
       "!{projectRoot}/.storybook/**/*"
     ],
-    "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
+    "sharedGlobals": []
   },
   "generators": {
     "@nx/react": {
       "application": {
-        "style": "css",
+        "style": "none",
         "linter": "eslint",
         "bundler": "vite",
         "babel": true
       },
       "component": {
-        "style": "css"
+        "style": "none"
       },
       "library": {
-        "style": "css",
+        "style": "none",
         "linter": "eslint",
-        "unitTestRunner": "none"
+        "unitTestRunner": "vitest"
       }
     }
-  },
-  "defaultProject": "card-engine-nx"
+  }
 }

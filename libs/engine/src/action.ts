@@ -3,13 +3,8 @@ import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { reverse, shuffle } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
-import {
-  addPlayerCard,
-  addGameCard,
-  createPlayerState,
-  sequence,
-  single,
-} from './utils';
+import { addPlayerCard, addGameCard, createPlayerState, single } from './utils';
+import { sequence } from './utils/sequence';
 import { uiEvent } from './eventFactories';
 import { executeCardAction, getTargetCard } from './card';
 import { calculateNumberExpr } from './expr';

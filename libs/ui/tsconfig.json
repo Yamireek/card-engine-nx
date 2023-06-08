@@ -4,7 +4,8 @@
     "allowJs": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "strict": true
+    "strict": true,
+    "types": ["vitest"]
   },
   "files": [],
   "include": [],
@@ -13,8 +14,11 @@
       "path": "./tsconfig.lib.json"
     },
     {
+      "path": "./tsconfig.spec.json"
+    },
+    {
       "path": "./.storybook/tsconfig.json"
     }
   ],
-  "extends": "../../tsconfig.json"
+  "extends": "../../tsconfig.base.json"
 }
