@@ -1,4 +1,4 @@
-import { State, View } from '@card-engine-nx/state';
+import { PlayerDeck, Scenario, State, View } from '@card-engine-nx/state';
 import React, { useMemo } from 'react';
 import {
   UIEvents,
@@ -6,11 +6,14 @@ import {
   createView,
 } from '@card-engine-nx/engine';
 import { createRxUiEvents } from './GameDisplay';
+import { PlayerId } from '@card-engine-nx/basic';
 
 export type Moves = {
   skip: () => void;
   choose: (choosen: number[]) => void;
   action: (index: number) => void;
+  selectScenario: (scenario: Scenario) => void;
+  selectDeck: (deck: PlayerDeck) => void;
 };
 
 export const StateContext = React.createContext<{
@@ -18,6 +21,7 @@ export const StateContext = React.createContext<{
   view: View;
   moves: Moves;
   events: UIEvents;
+  playerId: PlayerId;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }>({} as any);
 
@@ -59,10 +63,18 @@ export const StateProvider = (
       advanceToChoiceState(state, events, false, true);
       setState({ ...state });
     },
+    selectDeck: () => {
+      return;
+    },
+    selectScenario: () => {
+      return;
+    },
   };
 
   return (
-    <StateContext.Provider value={{ state, moves, view, events }}>
+    <StateContext.Provider
+      value={{ state, moves, view, events, playerId: '0' }}
+    >
       {props.children}
     </StateContext.Provider>
   );

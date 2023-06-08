@@ -6,7 +6,7 @@ export function createState(program?: Action): State {
     round: 1,
     phase: 'setup',
     players: {},
-    firstPlayer: 'A',
+    firstPlayer: '0',
     zones: {
       activeLocation: { cards: [], stack: false },
       discardPile: { cards: [], stack: true },

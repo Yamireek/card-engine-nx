@@ -1,4 +1,4 @@
-export type PlayerId = 'A' | 'B' | 'C' | 'D';
+export type PlayerId = '0' | '1' | '2' | '3';
 
 export type Phase =
   | 'setup'

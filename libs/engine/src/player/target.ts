@@ -13,7 +13,7 @@ export function getTargetPlayer(
     throw new Error('not implemented');
   }
 
-  if (['A', 'B', 'C', 'D'].includes(target)) {
+  if (['0', '1', '2', '3'].includes(target)) {
     return [target];
   }
 

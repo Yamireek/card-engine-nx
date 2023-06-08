@@ -1,0 +1,12 @@
+diff --git a/node_modules/boardgame.io/dist/esm/react.js b/node_modules/boardgame.io/dist/esm/react.js
+index 9c959b3..52e6774 100644
+--- a/node_modules/boardgame.io/dist/esm/react.js
++++ b/node_modules/boardgame.io/dist/esm/react.js
+@@ -583,6 +583,7 @@ class Lobby extends React.Component {
+                 game: gameCode.game,
+                 board: gameCode.board,
+                 debug: this.props.debug,
++                numPlayers: matchOpts.numPlayers,
+                 multiplayer,
+             });
+             const match = {

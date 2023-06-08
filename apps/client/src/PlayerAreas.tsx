@@ -16,22 +16,22 @@ import { UIEvents } from '@card-engine-nx/engine';
 import { indexOf } from 'lodash';
 
 const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
-  '1': { A: [0, 0, 0] },
-  '2': { A: [0.5, 0, 0], B: [-0.5, 0, 0] },
-  '3': { A: [0.5, -0.4, 0], B: [-0.5, -0.4, 0], C: [0, 0.4, 0] },
+  '1': { '0': [0, 0, 0] },
+  '2': { '0': [0.5, 0, 0], '1': [-0.5, 0, 0] },
+  '3': { '0': [0.5, -0.4, 0], '1': [-0.5, -0.4, 0], '2': [0, 0.4, 0] },
   '4': {
-    A: [0.5, -0.4, 0],
-    B: [-0.5, -0.4, 0],
-    C: [0.5, 0.4, 0],
-    D: [-0.5, 0.4, 0],
+    '0': [0.5, -0.4, 0],
+    '1': [-0.5, -0.4, 0],
+    '2': [0.5, 0.4, 0],
+    '3': [-0.5, 0.4, 0],
   },
 };
 
 const rotations: Record<number, Partial<Record<PlayerId, number>>> = {
-  '1': { A: 0 },
-  '2': { A: 0, B: 0 },
-  '3': { A: 0, B: 0, C: Math.PI },
-  '4': { A: 0, B: 0, C: Math.PI, D: Math.PI },
+  '1': { '0': 0 },
+  '2': { '0': 0, '1': 0 },
+  '3': { '0': 0, '1': 0, '2': Math.PI },
+  '4': { '0': 0, '1': 0, '2': Math.PI, '3': Math.PI },
 };
 
 export const PlayerAreas = (props: {

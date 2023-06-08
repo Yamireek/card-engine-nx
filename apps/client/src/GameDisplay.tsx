@@ -21,6 +21,8 @@ import { GameSceneLoader } from './GameScene';
 import { PlayerAreas } from './PlayerAreas';
 import { GameAreas } from './GameAreas';
 import { CardDetail } from './CardDetail';
+import { coreTactics } from './decks/coreTactics';
+import { core } from '@card-engine-nx/cards';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -48,10 +50,52 @@ export function createRxUiEvents(): UIEvents {
   };
 }
 
-const playerIds = ['A', 'B', 'C', 'D'] as const;
+const playerIds = ['0', '1', '2', '3'] as const;
+
+export const GameSetup = () => {
+  const { state, moves, playerId } = useContext(StateContext);
+
+  if (state.phase !== 'setup') {
+    return <GameDisplay />;
+  }
+
+  const waitingPlayers = values(state.players)
+    .filter((p) => p.zones.library.cards.length === 0)
+    .map((p) => p.id);
+
+  if (waitingPlayers.length > 0) {
+    if (waitingPlayers.includes(playerId)) {
+      return (
+        <button
+          onClick={() => {
+            moves.selectDeck(coreTactics);
+          }}
+        >
+          Choose deck "Core Tactics"
+        </button>
+      );
+    } else {
+      return <>Waiting for others to select deck: {waitingPlayers}</>;
+    }
+  }
+
+  if (state.zones.questDeck.cards.length === 0) {
+    return (
+      <button
+        onClick={() => {
+          moves.selectScenario(core.scenario.passageThroughMirkwood);
+        }}
+      >
+        Choose scenario "Passage Through Mirkwood"
+      </button>
+    );
+  }
+
+  return null;
+};
 
 export const GameDisplay = () => {
-  const { state, view, moves, events } = useContext(StateContext);
+  const { state, view, moves, events, playerId } = useContext(StateContext);
   const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
   const textureUrls = useMemo(
     () => [...staticUrls, ...getAllImageUrls(state)],
@@ -60,7 +104,7 @@ export const GameDisplay = () => {
   );
 
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '100vh' }}>
       <div
         style={{
           position: 'absolute',

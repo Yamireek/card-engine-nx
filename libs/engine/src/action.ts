@@ -124,13 +124,13 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.addPlayer) {
-    const playerId = !ctx.state.players.A
-      ? 'A'
-      : !ctx.state.players.B
-      ? 'B'
-      : ctx.state.players.C
-      ? 'D'
-      : 'C';
+    const playerId = !ctx.state.players[0]
+      ? '0'
+      : !ctx.state.players[1]
+      ? '1'
+      : ctx.state.players[2]
+      ? '3'
+      : '2';
 
     ctx.state.players[playerId] = createPlayerState(playerId);
 
@@ -140,6 +140,23 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     for (const card of action.addPlayer.library) {
       addPlayerCard(ctx.state, card, playerId, 'back', 'library');
+    }
+    return;
+  }
+
+  if (action.loadDeck) {
+    for (const hero of action.loadDeck.deck.heroes) {
+      addPlayerCard(
+        ctx.state,
+        hero,
+        action.loadDeck.player,
+        'front',
+        'playerArea'
+      );
+    }
+
+    for (const card of action.loadDeck.deck.library) {
+      addPlayerCard(ctx.state, card, action.loadDeck.player, 'back', 'library');
     }
     return;
   }
@@ -285,15 +302,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);
 }
 
-export function beginScenario(
-  scenario: Scenario,
-  ...decks: PlayerDeck[]
-): Action {
+export function beginScenario(scenario: Scenario): Action {
   return sequence(
     {
       setupScenario: scenario,
     },
-    ...decks.map((d) => ({ addPlayer: d })),
     'shuffleEncounterDeck',
     {
       player: {
