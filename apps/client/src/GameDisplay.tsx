@@ -24,6 +24,7 @@ import { CardDetail } from './CardDetail';
 import { coreTactics } from './decks/coreTactics';
 import { core } from '@card-engine-nx/cards';
 import { Dialog, DialogTitle } from '@mui/material';
+import { DetailProvider } from './DetailContext';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -57,7 +58,11 @@ export const GameSetup = () => {
   const { state, moves, playerId } = useContext(StateContext);
 
   if (state.phase !== 'setup') {
-    return <GameDisplay />;
+    return (
+      <DetailProvider>
+        <GameDisplay />
+      </DetailProvider>
+    );
   }
 
   const waitingPlayers = values(state.players)
