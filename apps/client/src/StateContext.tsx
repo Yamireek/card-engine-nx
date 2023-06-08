@@ -1,12 +1,8 @@
 import { PlayerDeck, Scenario, State, View } from '@card-engine-nx/state';
 import React, { useMemo } from 'react';
-import {
-  UIEvents,
-  advanceToChoiceState,
-  createView,
-} from '@card-engine-nx/engine';
-import { createRxUiEvents } from './GameDisplay';
+import { advanceToChoiceState, createView } from '@card-engine-nx/engine';
 import { PlayerId } from '@card-engine-nx/basic';
+import { rxEvents } from './GameDisplay';
 
 export type Moves = {
   skip: () => void;
@@ -20,7 +16,6 @@ export const StateContext = React.createContext<{
   state: State;
   view: View;
   moves: Moves;
-  events: UIEvents;
   playerId: PlayerId;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }>({} as any);
@@ -30,12 +25,11 @@ export const StateProvider = (
 ) => {
   const [state, setState] = React.useState<State>(props.init);
   const view = useMemo(() => createView(state), [state]);
-  const events = useMemo(() => createRxUiEvents(), []);
 
   const moves: Moves = {
     skip: () => {
       state.choice = undefined;
-      advanceToChoiceState(state, events, true, true);
+      advanceToChoiceState(state, rxEvents, true, true);
       setState({ ...state });
     },
     choose: (choosen) => {
@@ -47,7 +41,7 @@ export const StateProvider = (
       const choices = choosen.map((index) => options[index]);
       state.choice = undefined;
       state.next.unshift(...choices.map((c) => c.action));
-      advanceToChoiceState(state, events, false, true);
+      advanceToChoiceState(state, rxEvents, false, true);
       setState({ ...state });
     },
     action: (index) => {
@@ -60,7 +54,7 @@ export const StateProvider = (
       state.choice = undefined;
       state.next.unshift({ playerActions: title });
       state.next.unshift(action.action);
-      advanceToChoiceState(state, events, false, true);
+      advanceToChoiceState(state, rxEvents, false, true);
       setState({ ...state });
     },
     selectDeck: () => {
@@ -72,9 +66,7 @@ export const StateProvider = (
   };
 
   return (
-    <StateContext.Provider
-      value={{ state, moves, view, events, playerId: '0' }}
-    >
+    <StateContext.Provider value={{ state, moves, view, playerId: '0' }}>
       {props.children}
     </StateContext.Provider>
   );

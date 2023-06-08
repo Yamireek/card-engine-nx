@@ -8,7 +8,7 @@ import {
   createView,
 } from '@card-engine-nx/engine';
 import { core } from '@card-engine-nx/cards';
-import { GameSetup, createRxUiEvents, rxEvents } from './GameDisplay';
+import { GameSetup, rxEvents } from './GameDisplay';
 import { StateProvider } from './StateContext';
 import { LotrLCGClient } from './bgio/LotrLCGBoard';
 import { useMemo } from 'react';
@@ -28,8 +28,6 @@ console.log(view.actions);
 
 export const App = () => {
   const Client = LotrLCGClient(rxEvents);
-
-  console.log('app render');
 
   return (
     <div
@@ -53,7 +51,8 @@ export const App = () => {
         <GameSetup />
       </StateProvider> */}
 
-      <Client playerID={window.location.hash.substring(1)} />
+      <Client playerID="0" />
+      {/* <Client playerID={window.location.hash.substring(1)} /> */}
 
       {/* <div style={{ display: 'flex', height: '100%', width: '100%' }}>
           <div style={{ height: '100%', width: '50%' }}>

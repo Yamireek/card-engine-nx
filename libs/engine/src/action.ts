@@ -88,7 +88,26 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'revealEncounterCard') {
-    throw new Error('not implemented');
+    // TODO treatchery move to discard pile
+    ctx.state.next.unshift({
+      card: {
+        taget: { top: { game: 'encounterDeck' } },
+        action: {
+          move: {
+            from: {
+              owner: 'game',
+              type: 'encounterDeck',
+            },
+            to: {
+              owner: 'game',
+              type: 'stagingArea',
+            },
+            side: 'front',
+          },
+        },
+      },
+    });
+    return;
   }
 
   if (action.player) {

@@ -4,6 +4,7 @@ import { useGameState } from './StateContext';
 import { Card3d, Card3dProps } from './Card3d';
 import { useThree } from '@react-three/fiber';
 import { rxEvents } from './GameDisplay';
+import { uniqBy } from 'lodash';
 
 export const FloatingCards = (props: {
   cards: [Card3dProps[], (v: (p: Card3dProps[]) => Card3dProps[]) => void];
@@ -146,7 +147,7 @@ export const FloatingCards = (props: {
 
   return (
     <>
-      {floatingCards.map((p) => (
+      {uniqBy(floatingCards, (c) => c.id).map((p) => (
         <Card3d {...p} key={p.id} />
       ))}
     </>

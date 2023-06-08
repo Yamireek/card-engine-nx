@@ -12,7 +12,6 @@ import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
 import { Token3d } from './Token3d';
-import { UIEvents } from '@card-engine-nx/engine';
 import { indexOf } from 'lodash';
 
 const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
@@ -37,7 +36,6 @@ const rotations: Record<number, Partial<Record<PlayerId, number>>> = {
 export const PlayerAreas = (props: {
   player: PlayerId;
   hiddenCards: CardId[];
-  events: UIEvents;
 }) => {
   const { state, view, moves } = useContext(StateContext);
   const { texture } = useTextures();

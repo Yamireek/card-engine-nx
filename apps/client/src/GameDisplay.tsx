@@ -39,7 +39,7 @@ export function getAllImageUrls(state: State): string[] {
   return cardUrls;
 }
 
-export function createRxUiEvents(): UIEvents {
+function createRxUiEvents(): UIEvents {
   const s = new Subject<UiEvent>();
   return {
     send(event) {
@@ -103,7 +103,7 @@ export const GameSetup = () => {
 };
 
 export const GameDisplay = () => {
-  const { state, view, moves, events, playerId } = useContext(StateContext);
+  const { state, view, moves, playerId } = useContext(StateContext);
   const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
   const textureUrls = useMemo(
     () => [...staticUrls, ...getAllImageUrls(state)],
@@ -148,7 +148,6 @@ export const GameDisplay = () => {
                 key={id}
                 player={id}
                 hiddenCards={floatingCards.map((c) => c.id)}
-                events={events}
               />
             ))}
 

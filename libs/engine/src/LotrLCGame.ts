@@ -85,22 +85,3 @@ export function LotrLCGame(events: UIEvents): Game<State> {
     },
   };
 }
-
-// export const LotrLCGame: (events: UIEvents) => Game<State> = (events) => {
-//   return {
-//     name: 'LotrLCG',
-//     setup: ({ ctx }) => {
-//       const state = createState();
-//       for (let index = 0; index < ctx.numPlayers; index++) {
-//         state.players[index] = createPlayerState(index.toString() as any);
-//       }
-//       return state;
-//     },
-//     minPlayers: 1,
-//     maxPlayers: 4,
-//     moves: createMoves(events),
-//     turn: {
-//       activePlayers: ActivePlayers.ALL,
-//     },
-//   };
-// };
