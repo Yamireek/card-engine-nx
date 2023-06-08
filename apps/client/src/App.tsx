@@ -1,9 +1,8 @@
 import { CssBaseline } from '@mui/material';
 import { coreTactics } from './decks/coreTactics';
-import { GameDisplay } from './GameDisplay';
-import { StateProvider } from './StateContext';
 import { createState } from '@card-engine-nx/state';
 import {
+  LotrLCGame,
   advanceToChoiceState,
   beginScenario,
   consoleEvents,
@@ -11,7 +10,8 @@ import {
 } from '@card-engine-nx/engine';
 import { core } from '@card-engine-nx/cards';
 import { DetailProvider } from './DetailContext';
-import { LotrLCGClient } from './bgio/Game';
+import { LotrLCGBoard, LotrLCGClient } from './bgio/LotrLCGBoard';
+import { Lobby } from 'boardgame.io/react';
 
 const state = createState(
   beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
@@ -39,6 +39,12 @@ export const App = () => {
     >
       <CssBaseline />
       <DetailProvider>
+        {/* <Lobby
+          gameServer={`http://localhost:3000`}
+          lobbyServer={`http://localhost:3000`}
+          gameComponents={[{ game: LotrLCGame, board: LotrLCGBoard }]}
+        /> */}
+
         {/* <StateProvider init={state}>
           <GameDisplay />
         </StateProvider> */}

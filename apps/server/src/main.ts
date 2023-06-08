@@ -1,18 +1,12 @@
-import koa from "koa";
-import {} from "@card-engine-nx/engine";
-import { createState } from "@card-engine-nx/state";
+// src/server.js
+import { Server, Origins } from 'boardgame.io/server';
+import { LotrLCGame } from '@card-engine-nx/engine';
 
-const state = createState();
-
-const host = process.env.HOST ?? "localhost";
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
-
-const app = new koa();
-
-app.use(async (ctx) => {
-  ctx.body = state;
+const server = Server({
+  games: [LotrLCGame],
+  origins: [Origins.LOCALHOST],
 });
 
-app.listen(port, host, () => {
-  console.log(`[ ready ] http://${host}:${port}`);
+server.run({
+  port: 3000,
 });
