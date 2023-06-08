@@ -52,6 +52,8 @@ export function createRxUiEvents(): UIEvents {
   };
 }
 
+export const rxEvents = createRxUiEvents();
+
 const playerIds = ['0', '1', '2', '3'] as const;
 
 export const GameSetup = () => {
@@ -109,8 +111,6 @@ export const GameDisplay = () => {
     []
   );
 
-  console.log(playerId, state.choice?.player);
-
   return (
     <div style={{ width: '100%', height: '100vh' }}>
       <div
@@ -139,7 +139,6 @@ export const GameDisplay = () => {
           <GameSceneLoader angle={20} rotation={0} perspective={1500}>
             <Board3d />
             <FloatingCards
-              events={events}
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               cards={[floatingCards, setFloatingCards] as any}
             />
@@ -170,7 +169,7 @@ export const GameDisplay = () => {
         !state.choice.multi &&
         state.choice.player === playerId && (
           <ChooseSingleDialog
-            key={state.choice.id}
+            key={state.choice.id.toString()}
             title={state.choice.title}
             choices={state.choice.options.map((o, i) => ({
               title: o.title,
@@ -193,7 +192,7 @@ export const GameDisplay = () => {
         state.choice.multi &&
         state.choice.player === playerId && (
           <ChooseMultiDialog
-            key={state.choice.id}
+            key={state.choice.id.toString()}
             title={state.choice.title}
             choices={state.choice.options.map((o, i) => ({
               id: i,

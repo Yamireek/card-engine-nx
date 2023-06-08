@@ -144,7 +144,7 @@ export function executePlayerAction(
     );
 
     ctx.state.choice = {
-      id: uuid(),
+      id: ctx.state.nextId++,
       player: player.id,
       dialog: true,
       title: action.chooseCardActions.title,

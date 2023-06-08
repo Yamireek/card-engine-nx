@@ -8,8 +8,10 @@ import {
   createView,
 } from '@card-engine-nx/engine';
 import { core } from '@card-engine-nx/cards';
-import { GameSetup } from './GameDisplay';
+import { GameSetup, createRxUiEvents, rxEvents } from './GameDisplay';
 import { StateProvider } from './StateContext';
+import { LotrLCGClient } from './bgio/LotrLCGBoard';
+import { useMemo } from 'react';
 
 const state = createState(
   beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
@@ -25,6 +27,10 @@ console.log(view.actions);
 (window as any)['state'] = state;
 
 export const App = () => {
+  const Client = LotrLCGClient(rxEvents);
+
+  console.log('app render');
+
   return (
     <div
       style={{
@@ -43,11 +49,11 @@ export const App = () => {
           gameComponents={[{ game: LotrLCGame, board: LotrLCGBoard }]}
         /> */}
 
-      <StateProvider init={state}>
+      {/* <StateProvider init={state}>
         <GameSetup />
-      </StateProvider>
+      </StateProvider> */}
 
-      {/* <LotrLCGClient playerID={window.location.hash.substring(1)} /> */}
+      <Client playerID={window.location.hash.substring(1)} />
 
       {/* <div style={{ display: 'flex', height: '100%', width: '100%' }}>
           <div style={{ height: '100%', width: '50%' }}>

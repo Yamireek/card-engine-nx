@@ -1,4 +1,9 @@
-import { LotrLCGame, consoleEvents, createView } from '@card-engine-nx/engine';
+import {
+  LotrLCGame,
+  UIEvents,
+  consoleEvents,
+  createView,
+} from '@card-engine-nx/engine';
 import { State } from '@card-engine-nx/state';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { GameDisplay, GameSetup } from '../GameDisplay';
@@ -26,10 +31,12 @@ export const LotrLCGBoard = (props: LotrLCGProps) => {
   );
 };
 
-export const LotrLCGClient = Client({
-  game: LotrLCGame,
-  board: LotrLCGBoard,
-  numPlayers: 2,
-  multiplayer: SocketIO({ server: 'localhost:3000' }),
-  //multiplayer: Local(),
-});
+export function LotrLCGClient(events: UIEvents) {
+  return Client({
+    game: LotrLCGame(events),
+    board: LotrLCGBoard,
+    numPlayers: 1,
+    //multiplayer: SocketIO({ server: 'localhost:3000' }),
+    multiplayer: Local(),
+  });
+}

@@ -1,12 +1,11 @@
 import { getCardImageUrl, useTextures } from '@card-engine-nx/ui';
 import { useEffect } from 'react';
 import { useGameState } from './StateContext';
-import { UIEvents as UiEvents } from '@card-engine-nx/engine';
 import { Card3d, Card3dProps } from './Card3d';
 import { useThree } from '@react-three/fiber';
+import { rxEvents } from './GameDisplay';
 
 export const FloatingCards = (props: {
-  events: UiEvents;
   cards: [Card3dProps[], (v: (p: Card3dProps[]) => Card3dProps[]) => void];
 }) => {
   const [floatingCards, setFloatingCards] = props.cards;
@@ -15,7 +14,7 @@ export const FloatingCards = (props: {
   const { texture } = useTextures();
 
   useEffect(() => {
-    const unsub = props.events.subscribe((e) => {
+    const unsub = rxEvents.subscribe((e) => {
       if (e.type === 'card_moved') {
         const card = state.cards[e.cardId];
 

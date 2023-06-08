@@ -17,7 +17,7 @@ export type State = {
     end_of_round: Action[];
   };
   choice?: {
-    id: string;
+    id: number;
     player?: PlayerId;
     title: string;
     dialog: boolean;
