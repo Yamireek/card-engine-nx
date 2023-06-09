@@ -116,7 +116,9 @@ export function advanceToChoiceState(
         ((!state.choice.optional && state.choice.options.length === 1) ||
           (state.choice.optional && state.choice.options.length === 0))
       ) {
-        state.next.unshift(state.choice.options[0].action);
+        if (state.choice.options.length > 0) {
+          state.next.unshift(state.choice.options[0].action);
+        }
         state.choice = undefined;
       } else if (
         autoSkip &&
@@ -137,6 +139,7 @@ export function advanceToChoiceState(
       nextStep({ state, view: createView(state), events, card: {} });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+      console.log(error);
       events.send(uiEvent.error(error.message));
       if (stopOnError) {
         throw error;

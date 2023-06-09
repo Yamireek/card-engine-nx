@@ -71,7 +71,7 @@ export function canCardExecute(
     }
 
     if (action === 'travel') {
-      return true;
+      return ctx.state.zones.activeLocation.cards.length === 0;
     }
 
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
@@ -79,6 +79,10 @@ export function canCardExecute(
     if (action.payResources) {
       const card = ctx.state.cards[cardId];
       return card.token.resources >= action.payResources;
+    }
+
+    if (action.engagePlayer) {
+      return true;
     }
   }
 

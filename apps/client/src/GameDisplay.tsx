@@ -188,7 +188,6 @@ export const GameDisplay = () => {
             }))}
           />
         )}
-
       {state.choice?.dialog &&
         state.choice.multi &&
         state.choice.player === playerId && (

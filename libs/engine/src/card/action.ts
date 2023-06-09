@@ -23,6 +23,38 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'travel') {
+    ctx.state.next.unshift({
+      card: {
+        taget: card.id,
+        action: {
+          move: {
+            from: { owner: 'game', type: 'stagingArea' },
+            to: { owner: 'game', type: 'activeLocation' },
+            side: 'front',
+          },
+        },
+      },
+    });
+    return;
+  }
+
+  if (action.engagePlayer) {
+    ctx.state.next.unshift({
+      card: {
+        taget: card.id,
+        action: {
+          move: {
+            from: { owner: 'game', type: 'stagingArea' },
+            to: { owner: action.engagePlayer, type: 'engaged' },
+            side: 'front',
+          },
+        },
+      },
+    });
+    return;
+  }
+
   if (action.heal) {
     card.token.damage = Math.max(0, card.token.damage - action.heal);
     return;

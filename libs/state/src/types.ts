@@ -82,6 +82,7 @@ export type CardAction =
       sequence?: Action[];
       placeProgress?: number;
       flip?: Side;
+      engagePlayer?: PlayerId;
       move?: {
         from: ZoneId;
         to: ZoneId;

@@ -46,7 +46,28 @@ export function executePlayerAction(
   }
 
   if (action === 'optionalEngagement') {
-    throw new Error('not implemented');
+    ctx.state.next.unshift({
+      player: {
+        target: player.id,
+        action: {
+          chooseCardActions: {
+            title: 'Choose enemy to optionally engage',
+            optional: true,
+            multi: false,
+            target: {
+              and: [
+                { type: ['enemy'] },
+                { zone: { owner: 'game', type: 'stagingArea' } },
+              ],
+            },
+            action: {
+              engagePlayer: player.id,
+            },
+          },
+        },
+      },
+    });
+    return;
   }
 
   if (action === 'resolveEnemyAttacks') {

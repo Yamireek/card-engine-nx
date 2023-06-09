@@ -10,7 +10,6 @@ import { reverse, shuffle } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard, createPlayerState, single } from './utils';
 import { sequence } from './utils/sequence';
-import { uiEvent } from './eventFactories';
 import { executeCardAction, getTargetCard } from './card';
 import { calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
@@ -222,31 +221,26 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action.addToStagingArea) {
     const card = values(ctx.state.cards).find(
       (c) => c.definition.front.name === action.addToStagingArea
-    );
+    ); // TODO filter
 
-    if (card) {
-      ctx.state.zones.encounterDeck.cards =
-        ctx.state.zones.encounterDeck.cards.filter((id) => id !== card.id);
-      ctx.state.zones.stagingArea.cards.push(card.id);
-      card.sideUp = 'front';
-
-      ctx.events.send(
-        uiEvent.card_moved({
-          cardId: card.id,
-          source: {
-            owner: 'game',
-            type: 'encounterDeck',
+    ctx.state.next.unshift({
+      card: {
+        taget: card.id,
+        action: {
+          move: {
+            from: {
+              owner: 'game',
+              type: 'encounterDeck',
+            },
+            to: {
+              owner: 'game',
+              type: 'stagingArea',
+            },
+            side: 'front',
           },
-          destination: {
-            owner: 'game',
-            type: 'stagingArea',
-          },
-          side: 'front',
-        })
-      );
-    } else {
-      throw new Error(`card ${action.addToStagingArea} not found`);
-    }
+        },
+      },
+    });
     return;
   }
 
