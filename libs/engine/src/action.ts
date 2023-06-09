@@ -13,7 +13,6 @@ import { sequence } from './utils/sequence';
 import { executeCardAction, getTargetCard } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
-import { sum } from 'lodash';
 
 export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'empty') {

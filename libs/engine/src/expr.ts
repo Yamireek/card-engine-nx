@@ -61,11 +61,14 @@ export function calculateBoolExpr(
       .map((e) => ctx.view.cards[e])
       .flatMap((e) => (e.props.engagement ? [e.props.engagement] : []));
 
-    if (enemyEngagements.length === 0 || playerThreats.length === 0) {
+    const minEng = min(enemyEngagements);
+    const maxEng = max(playerThreats);
+
+    if (minEng === undefined || maxEng === undefined) {
       return false;
     }
 
-    return min(enemyEngagements) <= max(playerThreats);
+    return minEng <= maxEng;
   }
 
   if (expr.phase) {

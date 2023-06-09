@@ -1,15 +1,15 @@
 import {
   LotrLCGame,
   UIEvents,
-  consoleEvents,
   createView,
 } from '@card-engine-nx/engine';
 import { State } from '@card-engine-nx/state';
 import { BoardProps, Client } from 'boardgame.io/react';
-import { GameDisplay, GameSetup } from '../GameDisplay';
+import { GameSetup } from '../GameDisplay';
 import { StateContext } from '../StateContext';
 import { useMemo } from 'react';
-import { Local, SocketIO } from 'boardgame.io/multiplayer';
+import { Local } from 'boardgame.io/multiplayer';
+import { validPlayerId } from '@card-engine-nx/basic';
 
 export type LotrLCGProps = BoardProps<State>;
 
@@ -20,9 +20,10 @@ export const LotrLCGBoard = (props: LotrLCGProps) => {
     <StateContext.Provider
       value={{
         state: props.G,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         moves: props.moves as any,
         view,
-        playerId: props.playerID as any,
+        playerId: validPlayerId(props.playerID),
       }}
     >
       <GameSetup />

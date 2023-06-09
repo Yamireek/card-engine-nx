@@ -2,7 +2,6 @@ import {
   image,
   getCardImageUrl,
   Vector3,
-  getCardImageUrls,
   useTextures,
 } from '@card-engine-nx/ui';
 import { useContext } from 'react';

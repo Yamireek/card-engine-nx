@@ -6,7 +6,7 @@ import {
 } from '@card-engine-nx/state';
 import type { Game, Move } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
-import { UIEvents, consoleEvents } from './uiEvents';
+import { UIEvents } from './uiEvents';
 import {
   addPlayerCard,
   advanceToChoiceState,
@@ -15,7 +15,7 @@ import {
 import { createView } from './view';
 import { beginScenario } from './action';
 import { ActivePlayers } from 'boardgame.io/core';
-import { PlayerId } from '@card-engine-nx/basic';
+import { PlayerId, validPlayerId } from '@card-engine-nx/basic';
 import { sum } from 'lodash/fp';
 
 function createMoves(events: UIEvents): Record<string, Move<State>> {
@@ -56,18 +56,19 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     advanceToChoiceState(G, events, false, false);
   };
 
-  const selectDeck: Move<State> = ({ G, ctx, playerID }, deck: PlayerDeck) => {
+  const selectDeck: Move<State> = ({ G, playerID }, deck: PlayerDeck) => {
     for (const hero of deck.heroes) {
-      addPlayerCard(G, hero, playerID as any, 'front', 'playerArea');
+      addPlayerCard(G, hero, validPlayerId(playerID), 'front', 'playerArea');
     }
 
     for (const card of deck.library) {
-      addPlayerCard(G, card, playerID as any, 'back', 'library');
+      addPlayerCard(G, card, validPlayerId(playerID), 'back', 'library');
     }
 
-    G.players[playerID as PlayerId].thread = sum(
-      deck.heroes.map((h) => h.front.threatCost ?? 0)
-    );
+    const player = G.players[playerID as PlayerId];
+    if (player) {
+      player.thread = sum(deck.heroes.map((h) => h.front.threatCost ?? 0));
+    }
   };
 
   return { skip, choose, action, selectDeck, selectScenario };
@@ -79,7 +80,8 @@ export function LotrLCGame(events: UIEvents): Game<State> {
     setup: ({ ctx }) => {
       const state = createState();
       for (let index = 0; index < ctx.numPlayers; index++) {
-        state.players[index] = createPlayerState(index.toString() as any);
+        const id = validPlayerId(index);
+        state.players[id] = createPlayerState(id);
       }
       return state;
     },

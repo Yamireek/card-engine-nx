@@ -1,9 +1,4 @@
-import {
-  CardState,
-  CardAction,
-  Action,
-  CardTarget,
-} from '@card-engine-nx/state';
+import { CardState, CardAction, Action } from '@card-engine-nx/state';
 import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
 import { getZoneState } from '../zone/target';

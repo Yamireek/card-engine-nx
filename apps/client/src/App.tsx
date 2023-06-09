@@ -8,10 +8,8 @@ import {
   createView,
 } from '@card-engine-nx/engine';
 import { core } from '@card-engine-nx/cards';
-import { GameSetup, rxEvents } from './GameDisplay';
-import { StateProvider } from './StateContext';
+import { rxEvents } from './GameDisplay';
 import { LotrLCGClient } from './bgio/LotrLCGBoard';
-import { useMemo } from 'react';
 
 const state = createState(
   beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
