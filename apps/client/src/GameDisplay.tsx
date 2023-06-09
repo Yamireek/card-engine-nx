@@ -1,6 +1,7 @@
 import {
   ChooseMultiDialog,
   ChooseSingleDialog,
+  GameInfo,
   NextStepButton,
   TexturesProvider,
   getCardImageUrl,
@@ -23,8 +24,9 @@ import { GameAreas } from './GameAreas';
 import { CardDetail } from './CardDetail';
 import { coreTactics } from './decks/coreTactics';
 import { core } from '@card-engine-nx/cards';
-import { Dialog, DialogTitle } from '@mui/material';
+import { Dialog, DialogTitle, Paper } from '@mui/material';
 import { DetailProvider } from './DetailContext';
+import { sum } from 'lodash/fp';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -102,6 +104,52 @@ export const GameSetup = () => {
   return null;
 };
 
+export const LotrLCGInfo = () => {
+  const { state, view, playerId } = useContext(StateContext);
+
+  const totalWillpower = sum(
+    values(state.cards)
+      .filter((c) => c.mark.questing)
+      .map((c) => view.cards[c.id].props.willpower ?? 0)
+  );
+
+  const totalThreat = sum(
+    state.zones.stagingArea.cards.map((id) => view.cards[id].props.threat ?? 0)
+  );
+
+  const currentProgress = sum(
+    state.zones.questArea.cards.map((id) => state.cards[id].token.progress)
+  );
+
+  const targetProgress = sum(
+    state.zones.questArea.cards.map((id) => view.cards[id].props.questPoints)
+  );
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        width: 300,
+        padding: 8,
+        zIndex: 10,
+        right: 0,
+      }}
+    >
+      <GameInfo
+        players={values(state.players).map((p) => ({
+          id: p.id,
+          threat: p.thread,
+          state: 'active', // TODO other states
+        }))}
+        progress={{ current: currentProgress, target: targetProgress }}
+        showPlayer={playerId}
+        threat={totalThreat}
+        willpower={totalWillpower}
+      />
+    </div>
+  );
+};
+
 export const GameDisplay = () => {
   const { state, view, moves, playerId } = useContext(StateContext);
   const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
@@ -113,18 +161,18 @@ export const GameDisplay = () => {
 
   return (
     <div style={{ width: '100%', height: '100vh' }}>
-      <div
+      <Paper
         style={{
           position: 'absolute',
           width: 300,
-          border: '1px solid black',
           background: 'rgba(255,255,255,0.75)',
           padding: 8,
           zIndex: 10,
         }}
       >
         <CardDetail />
-      </div>
+      </Paper>
+      <LotrLCGInfo />
       <div style={{ width: '100%', height: '100%' }}>
         <TexturesProvider
           textures={textureUrls}

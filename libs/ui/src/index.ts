@@ -8,3 +8,4 @@ export * from './contexts/textures';
 export * from './PhasesDisplay';
 export * from './dialogs/ChooseSingleDialog';
 export * from './dialogs/ChooseMultiDialog';
+export * from './GameInfo';
