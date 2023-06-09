@@ -102,11 +102,16 @@ export function nextStep(ctx: ExecutionContext) {
   }
 }
 
-export function crateContext(state: State, events: UIEvents): ExecutionContext {
+export function crateContext(
+  state: State,
+  events: UIEvents,
+  shuffle: <T>(items: T[]) => T[]
+): ExecutionContext {
   let view: View | undefined = undefined;
   return {
     state,
     events,
+    shuffle,
     card: {},
     get view() {
       if (view) {
@@ -123,7 +128,8 @@ export function advanceToChoiceState(
   state: State,
   events: UIEvents,
   autoSkip: boolean,
-  stopOnError: boolean
+  stopOnError: boolean,
+  shuffle: <T>(items: T[]) => T[]
 ) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -154,7 +160,7 @@ export function advanceToChoiceState(
     }
 
     try {
-      nextStep(crateContext(state, events));
+      nextStep(crateContext(state, events, shuffle));
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);

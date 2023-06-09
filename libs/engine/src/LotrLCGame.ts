@@ -19,12 +19,12 @@ import { PlayerId, validPlayerId } from '@card-engine-nx/basic';
 import { sum } from 'lodash/fp';
 
 function createMoves(events: UIEvents): Record<string, Move<State>> {
-  const skip: Move<State> = ({ G }) => {
+  const skip: Move<State> = ({ G, random }) => {
     G.choice = undefined;
-    advanceToChoiceState(G, events, true, false);
+    advanceToChoiceState(G, events, true, false, random.Shuffle);
   };
 
-  const choose: Move<State> = ({ G }, choosen: number[]) => {
+  const choose: Move<State> = ({ G, random }, choosen: number[]) => {
     if (!G.choice) {
       return INVALID_MOVE;
     }
@@ -33,10 +33,10 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     const choices = choosen.map((index) => options[index]);
     G.choice = undefined;
     G.next.unshift(...choices.map((c) => c.action));
-    advanceToChoiceState(G, events, false, false);
+    advanceToChoiceState(G, events, false, false, random.Shuffle);
   };
 
-  const action: Move<State> = ({ G }, index: number) => {
+  const action: Move<State> = ({ G, random }, index: number) => {
     if (!G.choice) {
       return INVALID_MOVE;
     }
@@ -48,12 +48,12 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     G.choice = undefined;
     G.next.unshift({ playerActions: title });
     G.next.unshift(action.action);
-    advanceToChoiceState(G, events, false, false);
+    advanceToChoiceState(G, events, false, false, random.Shuffle);
   };
 
-  const selectScenario: Move<State> = ({ G }, scenario: Scenario) => {
+  const selectScenario: Move<State> = ({ G, random }, scenario: Scenario) => {
     G.next.unshift(beginScenario(scenario));
-    advanceToChoiceState(G, events, false, false);
+    advanceToChoiceState(G, events, false, false, random.Shuffle);
   };
 
   const selectDeck: Move<State> = ({ G, playerID }, deck: PlayerDeck) => {

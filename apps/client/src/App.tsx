@@ -1,28 +1,19 @@
 import { CssBaseline } from '@mui/material';
-import { coreTactics } from './decks/coreTactics';
-import { createState } from '@card-engine-nx/state';
-import {
-  advanceToChoiceState,
-  beginScenario,
-  consoleEvents,
-  createView,
-} from '@card-engine-nx/engine';
-import { core } from '@card-engine-nx/cards';
 import { rxEvents } from './GameDisplay';
 import { LotrLCGClient } from './bgio/LotrLCGBoard';
 
-const state = createState(
-  beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
-);
+// const state = createState(
+//   beginScenario(core.scenario.passageThroughMirkwood, coreTactics)
+// );
 
-advanceToChoiceState(state, consoleEvents, true, true);
+// advanceToChoiceState(state, consoleEvents, true, true);
 
-const view = createView(state);
+// const view = createView(state);
 
-console.log(view.actions);
+// console.log(view.actions);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(window as any)['state'] = state;
+// // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// (window as any)['state'] = state;
 
 export const App = () => {
   const Client = LotrLCGClient(rxEvents);

@@ -7,6 +7,7 @@ export type ExecutionContext = {
   view: View;
   events: UIEvents;
   card: Record<string, CardId>;
+  shuffle: <T>(items: T[]) => T[];
 };
 
 export function cardIds(ctx: ExecutionContext) {

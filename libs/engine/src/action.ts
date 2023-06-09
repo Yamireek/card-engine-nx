@@ -6,7 +6,7 @@ import {
 } from '@card-engine-nx/state';
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
-import { reverse, shuffle } from 'lodash/fp';
+import { reverse } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard, createPlayerState, single } from './utils';
 import { sequence } from './utils/sequence';
@@ -21,7 +21,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action === 'shuffleEncounterDeck') {
     const zone = ctx.state.zones.encounterDeck;
-    zone.cards = shuffle(zone.cards);
+    zone.cards = ctx.shuffle(zone.cards);
     return;
   }
 

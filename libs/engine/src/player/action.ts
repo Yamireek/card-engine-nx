@@ -1,5 +1,4 @@
 import { PlayerState, PlayerAction, CardTarget } from '@card-engine-nx/state';
-import { shuffle } from 'lodash';
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
@@ -17,7 +16,7 @@ export function executePlayerAction(
 
   if (action === 'shuffleLibrary') {
     const zone = player.zones['library'];
-    zone.cards = shuffle(zone.cards);
+    zone.cards = ctx.shuffle(zone.cards);
     return;
   }
 

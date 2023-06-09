@@ -1,8 +1,4 @@
-import {
-  LotrLCGame,
-  UIEvents,
-  createView,
-} from '@card-engine-nx/engine';
+import { LotrLCGame, UIEvents, createView } from '@card-engine-nx/engine';
 import { State } from '@card-engine-nx/state';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { GameSetup } from '../GameDisplay';
