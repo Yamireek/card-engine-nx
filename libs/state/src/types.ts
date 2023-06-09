@@ -133,10 +133,11 @@ export type CardTarget =
   | 'inAPlay'
   | 'character'
   | CardId
+  | CardId[]
   | {
       owner?: PlayerId;
       and?: CardTarget[];
-      type?: CardType[];
+      type?: CardType[]; // TODO single
       top?: ZoneTarget;
       sphere?: Sphere | 'any';
       canExecute?: CardAction;

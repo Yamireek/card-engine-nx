@@ -9,6 +9,7 @@ import { intersection, last, uniq } from 'lodash';
 import { ExecutionContext, cardIds } from '../context';
 import { getTargetZone, getZoneState } from '../zone/target';
 import { canCardExecute } from '../resolution';
+import { isArray } from 'lodash/fp';
 
 export function getTargetCard(
   target: CardTarget,
@@ -51,6 +52,10 @@ export function getTargetCard(
     return values(ctx.view.cards)
       .filter((c) => c.props.type === 'ally' || c.props.type === 'hero')
       .map((c) => c.id);
+  }
+
+  if (isArray(target)) {
+    return target;
   }
 
   if (target.and) {

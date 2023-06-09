@@ -11,8 +11,9 @@ import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard, createPlayerState, single } from './utils';
 import { sequence } from './utils/sequence';
 import { executeCardAction, getTargetCard } from './card';
-import { calculateNumberExpr } from './expr';
+import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
+import { sum } from 'lodash';
 
 export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'empty') {
@@ -108,7 +109,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     }
     if (diff < 0) {
       ctx.state.next = [
-        { player: { target: 'each', action: { incrementThreat: diff } } },
+        { player: { target: 'each', action: { incrementThreat: -diff } } },
         ...ctx.state.next,
       ];
     }
@@ -191,6 +192,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.loadDeck) {
+    // TODO not used
     for (const hero of action.loadDeck.deck.heroes) {
       addPlayerCard(
         ctx.state,
@@ -338,6 +340,14 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       },
       ...ctx.state.next,
     ];
+    return;
+  }
+
+  if (action.while) {
+    const condition = calculateBoolExpr(action.while.condition, ctx);
+    if (condition) {
+      ctx.state.next.unshift(action.while.action, action);
+    }
     return;
   }
 

@@ -4,6 +4,7 @@ import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
 import { v4 as uuid } from 'uuid';
+import { max } from 'lodash/fp';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -42,7 +43,49 @@ export function executePlayerAction(
   }
 
   if (action === 'engagementCheck') {
-    throw new Error('not implemented');
+    const threat = player.thread;
+    const enemies = getTargetCard(
+      {
+        and: [
+          { type: ['enemy'] },
+          { zone: { owner: 'game', type: 'stagingArea' } },
+        ],
+      },
+      ctx
+    ).map((id) => ctx.view.cards[id]);
+
+    const maxEngagement = max(
+      enemies
+
+        .filter((e) => e.props.engagement && e.props.engagement <= threat)
+        .map((e) => e.props.engagement)
+    );
+
+    if (maxEngagement === undefined) {
+      return;
+    }
+
+    const enemyChoices = enemies.filter(
+      (e) => e.props.engagement === maxEngagement
+    );
+
+    ctx.state.next.unshift({
+      player: {
+        target: player.id,
+        action: {
+          chooseCardActions: {
+            title: 'Choose enemy to engage',
+            target: enemyChoices.map((e) => e.id),
+            multi: false,
+            optional: false,
+            action: {
+              engagePlayer: player.id,
+            },
+          },
+        },
+      },
+    });
+    return;
   }
 
   if (action === 'optionalEngagement') {

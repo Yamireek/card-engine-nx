@@ -3,6 +3,7 @@ import { getTargetCard } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
 import { ExecutionContext } from './context';
+import { max, min, values } from 'lodash/fp';
 
 export function calculateNumberExpr(
   expr: NumberExpr,
@@ -43,7 +44,28 @@ export function calculateBoolExpr(
   }
 
   if (expr === 'enemiesToEngage') {
-    throw new Error('not implemented');
+    // TODO use exprs
+    const playerThreats = values(ctx.state.players).map((p) => p.thread);
+
+    const enemies = getTargetCard(
+      {
+        and: [
+          { type: ['enemy'] },
+          { zone: { owner: 'game', type: 'stagingArea' } },
+        ],
+      },
+      ctx
+    );
+
+    const enemyEngagements = enemies
+      .map((e) => ctx.view.cards[e])
+      .flatMap((e) => (e.props.engagement ? [e.props.engagement] : []));
+
+    if (enemyEngagements.length === 0 || playerThreats.length === 0) {
+      return false;
+    }
+
+    return min(enemyEngagements) <= max(playerThreats);
   }
 
   if (expr.phase) {

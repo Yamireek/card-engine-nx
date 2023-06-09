@@ -15,6 +15,8 @@ import {
 import { createView } from './view';
 import { beginScenario } from './action';
 import { ActivePlayers } from 'boardgame.io/core';
+import { PlayerId } from '@card-engine-nx/basic';
+import { sum } from 'lodash/fp';
 
 function createMoves(events: UIEvents): Record<string, Move<State>> {
   const skip: Move<State> = ({ G }) => {
@@ -62,6 +64,10 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     for (const card of deck.library) {
       addPlayerCard(G, card, playerID as any, 'back', 'library');
     }
+
+    G.players[playerID as PlayerId].thread = sum(
+      deck.heroes.map((h) => h.front.threatCost ?? 0)
+    );
   };
 
   return { skip, choose, action, selectDeck, selectScenario };
