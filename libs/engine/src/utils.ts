@@ -3,6 +3,7 @@ import {
   CardState,
   PlayerState,
   State,
+  View,
 } from '@card-engine-nx/state';
 import {
   CardId,
@@ -101,6 +102,23 @@ export function nextStep(ctx: ExecutionContext) {
   }
 }
 
+export function crateContext(state: State, events: UIEvents): ExecutionContext {
+  let view: View | undefined = undefined;
+  return {
+    state,
+    events,
+    card: {},
+    get view() {
+      if (view) {
+        return view;
+      } else {
+        view = createView(state);
+        return view;
+      }
+    },
+  };
+}
+
 export function advanceToChoiceState(
   state: State,
   events: UIEvents,
@@ -136,7 +154,7 @@ export function advanceToChoiceState(
     }
 
     try {
-      nextStep({ state, view: createView(state), events, card: {} });
+      nextStep(crateContext(state, events));
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);

@@ -10,7 +10,7 @@ export function values<TK extends string | number, TI>(
 }
 
 export function validPlayerId(id?: number | string | null): PlayerId {
-  if (!id) {
+  if (id === undefined || id === null) {
     throw new Error('invalid playerId');
   }
 
