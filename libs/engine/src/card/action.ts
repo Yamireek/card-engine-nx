@@ -1,7 +1,13 @@
-import { CardState, CardAction } from '@card-engine-nx/state';
+import {
+  CardState,
+  CardAction,
+  Action,
+  CardTarget,
+} from '@card-engine-nx/state';
 import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
 import { getZoneState } from '../zone/target';
+import { sequence } from '../utils/sequence';
 
 export function executeCardAction(
   action: CardAction,
@@ -36,6 +42,11 @@ export function executeCardAction(
         },
       },
     });
+    return;
+  }
+
+  if (action === 'exhaust') {
+    card.tapped = true;
     return;
   }
 
@@ -101,6 +112,55 @@ export function executeCardAction(
 
   if (action.placeProgress) {
     card.token.progress += action.placeProgress;
+    return;
+  }
+
+  if (action.resolveEnemyAttacking) {
+    ctx.state.next.unshift(
+      sequence(
+        {
+          card: {
+            taget: card.id,
+            action: { mark: 'attacking' },
+          },
+        },
+        { playerActions: 'Declare defender' },
+        {
+          player: {
+            target: action.resolveEnemyAttacking,
+            action: 'declareDefender',
+          },
+        },
+        {
+          player: {
+            target: action.resolveEnemyAttacking,
+            action: 'determineCombatDamage',
+          },
+        },
+        { clearMarks: 'attacking' },
+        { clearMarks: 'defending' },
+        {
+          card: {
+            taget: card.id,
+            action: { mark: 'attacked' },
+          },
+        }
+      )
+    );
+    return;
+  }
+
+  if (action.mark) {
+    card.mark[action.mark] = true;
+    return;
+  }
+
+  if (action.sequence) {
+    const actions: Action[] = action.sequence.map((a) => ({
+      card: { taget: card.id, action: a },
+    }));
+
+    ctx.state.next.unshift(...actions);
     return;
   }
 

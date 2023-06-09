@@ -72,5 +72,10 @@ export function calculateBoolExpr(
     return ctx.state.phase === expr.phase;
   }
 
-  throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);
+  if (expr.someCard) {
+    const ids = getTargetCard(expr.someCard, ctx);
+    return ids.length > 0;
+  }
+
+  throw new Error(`unknown bool expression: ${JSON.stringify(expr)}`);
 }

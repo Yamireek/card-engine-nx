@@ -140,6 +140,7 @@ export function advanceToChoiceState(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
+      throw error;
       events.send(uiEvent.error(error.message));
       if (stopOnError) {
         throw error;

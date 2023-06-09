@@ -74,6 +74,10 @@ export function canCardExecute(
       return ctx.state.zones.activeLocation.cards.length === 0;
     }
 
+    if (action === 'exhaust') {
+      return !card.tapped;
+    }
+
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
     if (action.payResources) {
@@ -82,6 +86,22 @@ export function canCardExecute(
     }
 
     if (action.engagePlayer) {
+      return true;
+    }
+
+    if (action.resolveEnemyAttacking) {
+      return true;
+    }
+
+    if (action.sequence) {
+      return action.sequence.every((a) => canCardExecute(a, cardId, ctx));
+    }
+
+    if (action.mark) {
+      return true;
+    }
+
+    if (action.dealDamage) {
       return true;
     }
   }

@@ -55,6 +55,8 @@ export type PlayerAction =
   | 'commitCharactersToQuest'
   | 'engagementCheck'
   | 'optionalEngagement'
+  | 'declareDefender'
+  | 'determineCombatDamage'
   | {
       draw?: number;
       sequence?: Action[];
@@ -74,15 +76,18 @@ export type CardAction =
   | 'ready'
   | 'commitToQuest'
   | 'travel'
+  | 'exhaust'
   | {
       dealDamage?: number;
       heal?: number;
       generateResources?: number;
       payResources?: number;
-      sequence?: Action[];
+      sequence?: CardAction[];
       placeProgress?: number;
       flip?: Side;
       engagePlayer?: PlayerId;
+      resolveEnemyAttacking?: PlayerId;
+      mark?: Mark;
       move?: {
         from: ZoneId;
         to: ZoneId;
@@ -116,7 +121,10 @@ export type NumberExpr =
       };
     };
 
-export type BoolExpr = boolean | 'enemiesToEngage' | { phase?: Phase };
+export type BoolExpr =
+  | boolean
+  | 'enemiesToEngage'
+  | { phase?: Phase; someCard?: CardTarget };
 
 export type CardNumberExpr =
   | number
@@ -132,11 +140,13 @@ export type CardTarget =
   | 'each'
   | 'inAPlay'
   | 'character'
+  | 'ready'
   | CardId
   | CardId[]
   | {
       owner?: PlayerId;
       and?: CardTarget[];
+      not?: CardTarget;
       type?: CardType[]; // TODO single
       top?: ZoneTarget;
       sphere?: Sphere | 'any';

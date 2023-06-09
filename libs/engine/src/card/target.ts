@@ -9,7 +9,7 @@ import { intersection, last, uniq } from 'lodash';
 import { ExecutionContext, cardIds } from '../context';
 import { getTargetZone, getZoneState } from '../zone/target';
 import { canCardExecute } from '../resolution';
-import { isArray } from 'lodash/fp';
+import { difference, isArray } from 'lodash/fp';
 
 export function getTargetCard(
   target: CardTarget,
@@ -58,9 +58,20 @@ export function getTargetCard(
     return target;
   }
 
+  if (target === 'ready') {
+    return values(ctx.state.cards)
+      .filter((c) => !c.tapped)
+      .map((c) => c.id);
+  }
+
   if (target.and) {
     const lists = target.and.map((t) => getTargetCard(t, ctx));
     return uniq(intersection(...lists));
+  }
+
+  if (target.not) {
+    const valid = getTargetCard(target.not, ctx);
+    return difference(cardIds(ctx), valid);
   }
 
   if (target.owner) {

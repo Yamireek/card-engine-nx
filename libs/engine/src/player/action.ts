@@ -3,8 +3,7 @@ import { shuffle } from 'lodash';
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
-import { v4 as uuid } from 'uuid';
-import { max } from 'lodash/fp';
+import { max, sum } from 'lodash/fp';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -114,11 +113,121 @@ export function executePlayerAction(
   }
 
   if (action === 'resolveEnemyAttacks') {
-    throw new Error('not implemented');
+    const filter: CardTarget = {
+      and: [
+        { type: ['enemy'] },
+        { not: { mark: 'attacked' } },
+        { zone: { owner: player.id, type: 'engaged' } },
+      ],
+    };
+
+    ctx.state.next.unshift({
+      while: {
+        condition: { someCard: filter },
+        action: {
+          player: {
+            target: player.id,
+            action: {
+              chooseCardActions: {
+                title: 'Choose enemy attacker',
+                target: filter,
+                multi: false,
+                optional: false,
+                action: {
+                  resolveEnemyAttacking: player.id,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    return;
   }
 
   if (action === 'resolvePlayerAttacks') {
     throw new Error('not implemented');
+  }
+
+  if (action === 'declareDefender') {
+    ctx.state.next.unshift({
+      player: {
+        target: player.id,
+        action: {
+          chooseCardActions: {
+            title: 'Declare defender',
+            target: {
+              and: [
+                'character',
+                'ready',
+                { zone: { owner: player.id, type: 'playerArea' } },
+              ],
+            },
+            multi: false,
+            optional: true,
+            action: {
+              sequence: ['exhaust', { mark: 'defending' }],
+            },
+          },
+        },
+      },
+    });
+    return;
+  }
+
+  if (action === 'determineCombatDamage') {
+    const attacking = getTargetCard({ mark: 'attacking' }, ctx).map(
+      (id) => ctx.view.cards[id]
+    );
+
+    const defending = getTargetCard({ mark: 'defending' }, ctx).map(
+      (id) => ctx.view.cards[id]
+    );
+
+    const attack = sum(attacking.map((a) => a.props.attack || 0));
+    const defense = sum(defending.map((d) => d.props.defense || 0));
+
+    if (
+      defending.length === 0 &&
+      attacking.some((a) => a.props.type === 'enemy')
+    ) {
+      ctx.state.next.unshift({
+        player: {
+          target: player.id,
+          action: {
+            chooseCardActions: {
+              title: 'Choose hero for undefended attack',
+              target: {
+                and: [
+                  { type: ['hero'] },
+                  { zone: { owner: player.id, type: 'playerArea' } },
+                ],
+              },
+              multi: false,
+              optional: false,
+              action: {
+                dealDamage: attack,
+              },
+            },
+          },
+        },
+      });
+    } else {
+      const damage = attack - defense;
+      if (damage > 0) {
+        if (defending.length === 1) {
+          ctx.state.next.unshift({
+            card: {
+              taget: defending.map((c) => c.id),
+              action: { dealDamage: damage },
+            },
+          });
+        } else {
+          // TODO multiple defenders
+        }
+      }
+    }
+    return;
   }
 
   if (action.draw) {
