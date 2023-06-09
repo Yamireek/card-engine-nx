@@ -24,6 +24,7 @@ export function executeCardAction(
   }
 
   if (action === 'commitToQuest') {
+    // TODO split
     card.tapped = true;
     card.mark.questing = true;
     return;
@@ -146,6 +147,33 @@ export function executeCardAction(
           },
         }
       )
+    );
+    return;
+  }
+
+  if (action.resolvePlayerAttacking) {
+    const enemy = card.id;
+    ctx.state.next.unshift(
+      { card: { taget: enemy, action: { mark: 'defending' } } },
+      { playerActions: 'Declare attackers' },
+      {
+        player: {
+          target: action.resolvePlayerAttacking,
+          action: {
+            declareAttackers: enemy,
+          },
+        },
+      },
+      { playerActions: 'Determine combat damage' },
+      {
+        player: {
+          target: action.resolvePlayerAttacking,
+          action: 'determineCombatDamage',
+        },
+      },
+      { clearMarks: 'attacking' },
+      { clearMarks: 'defending' },
+      { card: { taget: enemy, action: { mark: 'attacked' } } }
     );
     return;
   }

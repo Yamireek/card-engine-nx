@@ -62,10 +62,17 @@ export type PlayerAction =
       sequence?: Action[];
       incrementThreat?: NumberExpr;
       payResources?: { amount: number; sphere: Sphere };
+      declareAttackers?: CardId;
       chooseCardActions?: {
         title: string;
         target: CardTarget;
         action: CardAction;
+        multi: boolean;
+        optional: boolean;
+      };
+      chooseActions?: {
+        title: string;
+        actions: Array<{ title: string; cardId?: CardId; action: Action }>;
         multi: boolean;
         optional: boolean;
       };
@@ -87,6 +94,7 @@ export type CardAction =
       flip?: Side;
       engagePlayer?: PlayerId;
       resolveEnemyAttacking?: PlayerId;
+      resolvePlayerAttacking?: PlayerId;
       mark?: Mark;
       move?: {
         from: ZoneId;

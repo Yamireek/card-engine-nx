@@ -77,7 +77,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'passFirstPlayerToken') {
-    throw new Error('not implemented');
+    // TODO passFirstPlayerToken
+    return;
   }
 
   if (action === 'resolveQuesting') {
@@ -225,24 +226,27 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       (c) => c.definition.front.name === action.addToStagingArea
     ); // TODO filter
 
-    ctx.state.next.unshift({
-      card: {
-        taget: card.id,
-        action: {
-          move: {
-            from: {
-              owner: 'game',
-              type: 'encounterDeck',
+    if (card) {
+      ctx.state.next.unshift({
+        card: {
+          taget: card.id,
+          action: {
+            move: {
+              from: {
+                owner: 'game',
+                type: 'encounterDeck',
+              },
+              to: {
+                owner: 'game',
+                type: 'stagingArea',
+              },
+              side: 'front',
             },
-            to: {
-              owner: 'game',
-              type: 'stagingArea',
-            },
-            side: 'front',
           },
         },
-      },
-    });
+      });
+    }
+
     return;
   }
 

@@ -4,6 +4,7 @@ import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
 import { max, sum } from 'lodash/fp';
+import { sequence } from '../utils/sequence';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -146,7 +147,62 @@ export function executePlayerAction(
   }
 
   if (action === 'resolvePlayerAttacks') {
-    throw new Error('not implemented');
+    const enemies = getTargetCard(
+      {
+        and: [
+          { type: ['enemy'] },
+          { not: { mark: 'attacked' } },
+          { zone: { owner: player.id, type: 'engaged' } },
+        ],
+      },
+      ctx
+    );
+
+    const attackers = getTargetCard(
+      {
+        and: [
+          'ready',
+          'character',
+          { zone: { owner: player.id, type: 'playerArea' } },
+        ],
+      },
+      ctx
+    );
+
+    if (enemies && attackers && attackers.length > 0 && enemies.length > 0) {
+      ctx.state.next.unshift({
+        player: {
+          target: player.id,
+          action: {
+            chooseActions: {
+              title: 'Choose enemy to attack',
+              multi: false,
+              actions: enemies.map((e) => ({
+                title: e.toString(),
+                cardId: e,
+                action: sequence(
+                  {
+                    card: {
+                      taget: e,
+                      action: { resolvePlayerAttacking: player.id },
+                    },
+                  },
+                  {
+                    player: {
+                      target: player.id,
+                      action: 'resolvePlayerAttacks',
+                    },
+                  }
+                ),
+              })),
+              optional: true,
+            },
+          },
+        },
+      });
+    }
+
+    return;
   }
 
   if (action === 'declareDefender') {
@@ -334,6 +390,41 @@ export function executePlayerAction(
         },
       })),
     };
+    return;
+  }
+
+  if (action.chooseActions) {
+    ctx.state.choice = {
+      id: ctx.state.nextId++,
+      player: player.id,
+      dialog: true,
+      title: action.chooseActions.title,
+      multi: action.chooseActions.multi,
+      optional: action.chooseActions.optional,
+      options: action.chooseActions.actions,
+    };
+    return;
+  }
+
+  if (action.declareAttackers) {
+    ctx.state.next.unshift({
+      player: {
+        target: player.id,
+        action: {
+          chooseCardActions: {
+            title: 'Declare attackers',
+            target: {
+              and: ['character', 'inAPlay', { owner: player.id }],
+            },
+            action: {
+              sequence: [{ mark: 'attacking' }, 'exhaust'],
+            },
+            multi: true,
+            optional: true,
+          },
+        },
+      },
+    });
     return;
   }
 
