@@ -1,6 +1,6 @@
 import { PrintedProps, Side } from '@card-engine-nx/basic';
-import { image } from '..';
 import { CardDefinition } from '@card-engine-nx/state';
+import { image } from '.';
 
 export type CardImageUrls = { front: string; back: string };
 

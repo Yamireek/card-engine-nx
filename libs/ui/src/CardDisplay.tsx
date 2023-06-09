@@ -1,7 +1,7 @@
 import { Marks, Orientation, Tokens } from '@card-engine-nx/basic';
-import damageImage from './../images/damage.png';
-import resourceImage from './../images/resource.png';
-import progressImage from './../images/progress.png';
+import damageImage from './images/damage.png';
+import resourceImage from './images/resource.png';
+import progressImage from './images/progress.png';
 
 export const cardRatio = 430 / 600;
 

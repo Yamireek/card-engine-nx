@@ -123,7 +123,7 @@ export type NumberExpr =
   | 'countOfPlayers'
   | {
       fromCard?: {
-        sum?: true;
+        sum?: true; // TODO min, max, single
         card: CardTarget;
         value: CardNumberExpr;
       };
