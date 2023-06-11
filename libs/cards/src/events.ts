@@ -6,16 +6,26 @@ export const loreOfImladris = event(
     cost: 2,
     sphere: 'lore',
   },
-  // eventAction({
-  //   description:
-  //     'Action: Choose a character. Heal all damage from that character.',
-  //   effect: chooseCard({
-  //     label: 'Choose character to heal',
-  //     filter: 'isCharacter',
-  //     action: heal('all'),
-  //     optional: false,
-  //   }),
-  // })
+  {
+    description:
+      'Action: Choose a character. Heal all damage from that character.',
+    action: {
+      player: {
+        target: 'owner',
+        action: {
+          chooseCardActions: {
+            title: 'Choose character to heal',
+            multi: false,
+            optional: false,
+            target: 'character',
+            action: {
+              heal: 'all',
+            },
+          },
+        },
+      },
+    },
+  }
 );
 
 export const bladeMastery = event(

@@ -86,7 +86,12 @@ export function executeCardAction(
   }
 
   if (action.heal) {
-    card.token.damage = Math.max(0, card.token.damage - action.heal);
+    if (action.heal === 'all') {
+      card.token.damage = 0;
+    } else {
+      card.token.damage = Math.max(0, card.token.damage - action.heal);
+    }
+
     return;
   }
 

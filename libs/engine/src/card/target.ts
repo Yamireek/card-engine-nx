@@ -87,7 +87,7 @@ export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target.top) {
-    const zones = getTargetZone(target.top, ctx.state);
+    const zones = getTargetZone(target.top, ctx);
     return zones.flatMap((z) => last(z.cards) ?? []);
   }
 

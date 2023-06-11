@@ -115,6 +115,7 @@ export function crateExecutionContext(
     events,
     shuffle,
     card: {},
+    player: {},
     get view() {
       if (view) {
         return view;

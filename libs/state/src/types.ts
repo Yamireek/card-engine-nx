@@ -41,10 +41,15 @@ export type Action =
       playerActions?: string;
       playAlly?: CardTarget;
       setCardVar?: { name: string; value: CardId | undefined };
+      setPlayerVar?: { name: string; value: PlayerId | undefined };
       clearMarks?: Mark;
       while?: { condition: BoolExpr; action: Action };
       repeat?: { amount: NumberExpr; action: Action };
       placeProgress?: number;
+      payment?: {
+        cost: Action;
+        effect: Action;
+      };
     };
 
 export type PlayerAction =
@@ -88,7 +93,7 @@ export type CardAction =
   | 'destroy'
   | {
       dealDamage?: number;
-      heal?: number;
+      heal?: number | 'all';
       generateResources?: number;
       payResources?: number;
       sequence?: CardAction[];

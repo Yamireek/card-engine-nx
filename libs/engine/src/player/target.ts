@@ -1,23 +1,30 @@
 import { PlayerId, values } from '@card-engine-nx/basic';
-import { State, PlayerTarget } from '@card-engine-nx/state';
+import { PlayerTarget } from '@card-engine-nx/state';
 import { isArray } from 'lodash';
+import { ViewContext } from '../context';
 
 export function getTargetPlayer(
   target: PlayerTarget,
-  state: State
+  ctx: ViewContext
 ): PlayerId[] {
   if (isArray(target)) {
     return target;
   }
 
   if (target === 'each') {
-    return values(state.players)
+    return values(ctx.state.players)
       .filter((p) => !p.eliminated)
       .map((p) => p.id);
   }
 
   if (target === 'owner') {
-    throw new Error('not implemented');
+    if (ctx.player['owner']) {
+      return [ctx.player['owner']];
+    } else if (ctx.state.vars.player['owner']) {
+      return [ctx.state.vars.player['owner']];
+    } else {
+      throw new Error('no owner player in context');
+    }
   }
 
   if (target === 'first') {

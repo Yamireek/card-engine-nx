@@ -8,6 +8,7 @@ import {
 import { State, ZoneState, ZoneTarget } from '@card-engine-nx/state';
 import { getTargetPlayer } from '../player/target';
 import { keys } from 'lodash/fp';
+import { ViewContext } from '../context';
 
 export function getZoneState(zoneId: ZoneId, state: State): ZoneState {
   if (zoneId.owner === 'game') {
@@ -24,16 +25,19 @@ export function getZoneState(zoneId: ZoneId, state: State): ZoneState {
   throw new Error(`unknown zone target: ${JSON.stringify(zoneId)}`);
 }
 
-export function getTargetZone(target: ZoneTarget, state: State): ZoneState[] {
+export function getTargetZone(
+  target: ZoneTarget,
+  ctx: ViewContext
+): ZoneState[] {
   if (target.game) {
-    return [state.zones[target.game]];
+    return [ctx.state.zones[target.game]];
   }
 
   if (target.player) {
-    const ids = getTargetPlayer(target.player.id, state);
+    const ids = getTargetPlayer(target.player.id, ctx);
     const zone = target.player.zone;
     return ids.map((id) => {
-      const player = state.players[id];
+      const player = ctx.state.players[id];
       if (!player) {
         throw new Error('player not found');
       }

@@ -23,6 +23,7 @@ export function createState(program?: Action): State {
     effects: [],
     vars: {
       card: {},
+      player: {},
     },
   };
 }

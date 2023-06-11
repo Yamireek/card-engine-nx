@@ -140,7 +140,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.player) {
-    const ids = getTargetPlayer(action.player.target, ctx.state);
+    const ids = getTargetPlayer(action.player.target, ctx);
     for (const id of ids) {
       const player = ctx.state.players[id];
       if (player) {
@@ -307,6 +307,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if (action.setPlayerVar) {
+    ctx.state.vars.player[action.setPlayerVar.name] = action.setPlayerVar.value;
+    return;
+  }
+
   if (action.repeat) {
     const amount = calculateNumberExpr(action.repeat.amount, ctx);
     if (amount === 0) {
@@ -391,6 +396,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if (action.payment) {
+    ctx.state.next.unshift(action.payment.cost, action.payment.effect);
+    return;
+  }
+
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);
 }
 
@@ -442,6 +452,12 @@ export function beginScenario(
             type: 'questArea',
           },
         },
+      },
+    },
+    {
+      card: {
+        taget: { type: ['hero'] },
+        action: { sequence: [{ dealDamage: 1 }, { generateResources: 1 }] },
       },
     },
     gameRound()
