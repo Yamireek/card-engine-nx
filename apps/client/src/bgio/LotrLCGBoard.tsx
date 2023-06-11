@@ -20,7 +20,7 @@ export const LotrLCGBoard = (props: LotrLCGProps) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         moves: props.moves as any,
         view,
-        playerId: validPlayerId(props.playerID),
+        playerId: props.playerID ? validPlayerId(props.playerID) : undefined,
       }}
     >
       <GameSetup />

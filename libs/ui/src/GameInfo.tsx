@@ -11,7 +11,7 @@ import {
 import { CSSProperties } from 'react';
 
 type GameInfoProps = {
-  showPlayer: PlayerId;
+  showPlayer?: PlayerId;
   threat: number;
   willpower: number;
   progress: {

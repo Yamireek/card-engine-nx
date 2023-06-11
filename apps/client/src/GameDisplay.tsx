@@ -1,10 +1,6 @@
 import {
-  ChooseMultiDialog,
-  ChooseSingleDialog,
   GameInfo,
-  NextStepButton,
   TexturesProvider,
-  getCardImageUrl,
   getCardImageUrls,
   image,
 } from '@card-engine-nx/ui';
@@ -24,9 +20,10 @@ import { GameAreas } from './GameAreas';
 import { CardDetail } from './CardDetail';
 import { coreTactics } from './decks/coreTactics';
 import { core } from '@card-engine-nx/cards';
-import { Dialog, DialogTitle, Paper } from '@mui/material';
+import { Paper } from '@mui/material';
 import { DetailProvider } from './DetailContext';
 import { sum } from 'lodash/fp';
+import { GameDialogs } from './GameDialogs';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -74,7 +71,7 @@ export const GameSetup = () => {
     .map((p) => p.id);
 
   if (waitingPlayers.length > 0) {
-    if (waitingPlayers.includes(playerId)) {
+    if (!playerId || waitingPlayers.includes(playerId)) {
       return (
         <button
           onClick={() => {
@@ -151,7 +148,7 @@ export const LotrLCGInfo = () => {
 };
 
 export const GameDisplay = () => {
-  const { state, view, moves, playerId } = useContext(StateContext);
+  const { state } = useContext(StateContext);
   const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
   const textureUrls = useMemo(
     () => [...staticUrls, ...getAllImageUrls(state)],
@@ -207,67 +204,7 @@ export const GameDisplay = () => {
         </TexturesProvider>
       </div>
       {/* <PlayerHand player="A" /> */}
-      {state.choice?.dialog && state.choice.player !== playerId && (
-        <Dialog open>
-          <DialogTitle>Waiting for player {state.choice.player}</DialogTitle>
-        </Dialog>
-      )}
-      {state.choice?.dialog &&
-        !state.choice.multi &&
-        state.choice.player === playerId && (
-          <ChooseSingleDialog
-            key={state.choice.id.toString()}
-            title={state.choice.title}
-            skippable={state.choice.optional}
-            onSkip={() => moves.skip()}
-            choices={state.choice.options.map((o, i) => ({
-              title: o.title,
-              action: () => {
-                moves.choose([i]);
-              },
-              image: o.cardId && {
-                src: getCardImageUrl(
-                  view.cards[o.cardId].props,
-                  state.cards[o.cardId].sideUp
-                ),
-                width: 430 / 3,
-                height: 600 / 3,
-              },
-            }))}
-          />
-        )}
-      {state.choice?.dialog &&
-        state.choice.multi &&
-        state.choice.player === playerId && (
-          <ChooseMultiDialog
-            key={state.choice.id.toString()}
-            title={state.choice.title}
-            choices={state.choice.options.map((o, i) => ({
-              id: i,
-              title: o.title,
-              action: () => {
-                moves.choose([i]);
-              },
-              image: o.cardId && {
-                src: getCardImageUrl(
-                  view.cards[o.cardId].props,
-                  state.cards[o.cardId].sideUp
-                ),
-                width: 430 / 3,
-                height: 600 / 3,
-              },
-            }))}
-            onSubmit={(ids) => moves.choose(ids)}
-          />
-        )}
-      {!state.choice?.dialog && (
-        <NextStepButton
-          title={state.choice?.title ?? 'Next'}
-          onClick={() => {
-            moves.skip();
-          }}
-        />
-      )}
+      <GameDialogs />
     </div>
   );
 };
