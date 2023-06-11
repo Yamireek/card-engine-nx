@@ -91,6 +91,7 @@ export function createPlayerState(playerId: PlayerId): PlayerState {
     },
     limitUses: { game: {} },
     flags: {},
+    eliminated: false,
   };
 }
 
@@ -176,7 +177,7 @@ export function advanceToChoiceState(
 
       // TODO json target
       if (destoryed.length > 0) {
-        //state.next.unshift({ card: { taget: destoryed, action: 'destroy' } });
+        state.next.unshift({ card: { taget: destoryed, action: 'destroy' } });
       }
 
       const explored = values(state.cards)
@@ -192,6 +193,32 @@ export function advanceToChoiceState(
       // TODO json target
       if (explored.length > 0) {
         state.next.unshift({ card: { taget: explored, action: 'destroy' } });
+      }
+
+      const eliminated = values(state.players)
+        .filter((p) => {
+          const heroes = p.zones.playerArea.cards.filter(
+            (id) => view.cards[id].props.type === 'hero'
+          );
+
+          return !p.eliminated && (p.thread >= 50 || heroes.length === 0);
+        })
+        .map((s) => s.id);
+
+      if (eliminated.length > 0) {
+        state.next.unshift({
+          player: { target: eliminated, action: 'eliminate' },
+        });
+      }
+
+      const notEleliminated = values(state.players).filter(
+        (p) => !p.eliminated
+      );
+
+      if (notEleliminated.length === 0) {
+        console.log('game lost');
+        state.result = 'lost';
+        return;
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -285,6 +285,14 @@ export function executePlayerAction(
     return;
   }
 
+  if (action === 'eliminate') {
+    player.eliminated = true;
+    ctx.state.next.unshift({
+      card: { taget: { owner: player.id }, action: 'destroy' },
+    });
+    return;
+  }
+
   if (action.draw) {
     ctx.state.next = [
       {

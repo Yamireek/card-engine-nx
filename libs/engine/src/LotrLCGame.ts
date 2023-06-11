@@ -91,5 +91,8 @@ export function LotrLCGame(events: UIEvents): Game<State> {
     turn: {
       activePlayers: ActivePlayers.ALL,
     },
+    endIf: ({ G }) => {
+      return G.result;
+    },
   };
 }

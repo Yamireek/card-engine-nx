@@ -57,6 +57,7 @@ export type PlayerAction =
   | 'optionalEngagement'
   | 'declareDefender'
   | 'determineCombatDamage'
+  | 'eliminate'
   | {
       draw?: number;
       sequence?: Action[];
@@ -173,6 +174,6 @@ export type ZoneTarget = {
   };
 };
 
-export type PlayerTarget = PlayerId | 'each' | 'owner' | 'first';
+export type PlayerTarget = PlayerId | PlayerId[] | 'each' | 'owner' | 'first';
 
 export type Context = { selfCard?: CardId };

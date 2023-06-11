@@ -1,12 +1,19 @@
-import { PlayerId } from '@card-engine-nx/basic';
+import { PlayerId, values } from '@card-engine-nx/basic';
 import { State, PlayerTarget } from '@card-engine-nx/state';
+import { isArray } from 'lodash';
 
 export function getTargetPlayer(
   target: PlayerTarget,
   state: State
 ): PlayerId[] {
+  if (isArray(target)) {
+    return target;
+  }
+
   if (target === 'each') {
-    return Object.keys(state.players) as PlayerId[]; // TODO
+    return values(state.players)
+      .filter((p) => !p.eliminated)
+      .map((p) => p.id);
   }
 
   if (target === 'owner') {
