@@ -43,7 +43,6 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     }
 
     const view = createView(G);
-
     const action = view.actions[index];
     const title = G.choice.title;
     G.choice = undefined;

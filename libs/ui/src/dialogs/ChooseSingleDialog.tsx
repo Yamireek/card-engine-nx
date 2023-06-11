@@ -21,7 +21,7 @@ export const ChooseSingleDialog = (props: {
     };
     action: () => void;
   }>;
-  onSkip: () => void;
+  onSkip?: () => void;
 }) => {
   return (
     <Dialog open={true} maxWidth="md">
