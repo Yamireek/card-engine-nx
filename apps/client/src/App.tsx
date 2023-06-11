@@ -40,7 +40,7 @@ export const App = () => {
         <GameSetup />
       </StateProvider> */}
 
-      <Client />
+      <Client playerID="0" />
       {/* <Client playerID={window.location.hash.substring(1)} /> */}
 
       {/* <div style={{ display: 'flex', height: '100%', width: '100%' }}>

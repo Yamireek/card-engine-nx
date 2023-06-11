@@ -1,6 +1,6 @@
 import { CardId, PrintedProps } from '@card-engine-nx/basic';
 import { ModifierState } from './modifier';
-import { Ability, Action } from './types';
+import { Ability, Action, CardTarget } from './types';
 
 export type View = {
   cards: Record<CardId, CardView>;
@@ -24,4 +24,5 @@ export type CardView = {
   modifiers: Array<{ applied: boolean } & ModifierState>;
   setup: Action[];
   actions: ActivableCardAction[];
+  attachesTo?: CardTarget;
 };

@@ -146,6 +146,10 @@ export function canCardExecute(
     if (action.move) {
       return true;
     }
+
+    if (action.attachCard) {
+      return true;
+    }
   }
 
   throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);

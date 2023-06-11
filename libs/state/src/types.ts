@@ -38,7 +38,7 @@ export type Action =
       setupScenario?: Scenario;
       addToStagingArea?: string;
       beginPhase?: Phase;
-      playerActions?: string;      
+      playerActions?: string;
       setCardVar?: { name: string; value: CardId | undefined };
       setPlayerVar?: { name: string; value: PlayerId | undefined };
       clearMarks?: Mark;
@@ -102,6 +102,7 @@ export type CardAction =
       resolveEnemyAttacking?: PlayerId;
       resolvePlayerAttacking?: PlayerId;
       mark?: Mark;
+      attachCard?: CardId;
       move?: {
         from?: ZoneId;
         to: ZoneId;
@@ -115,6 +116,7 @@ export type Ability = {
   selfModifier?: Modifier;
   action?: Action;
   setup?: Action;
+  attachesTo?: CardTarget;
 };
 
 export type Modifier = {

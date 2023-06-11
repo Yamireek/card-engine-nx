@@ -101,6 +101,68 @@ function createPlayAllyAction(
   ];
 }
 
+function createPlayAttachmentAction(
+  card: CardView,
+  self: CardId,
+  owner: PlayerId
+): Action[] {
+  const sphere = card.props.sphere;
+  const cost = card.props.cost;
+
+  if (!sphere || !cost || !card.attachesTo) {
+    return [];
+  }
+
+  const payment: Action = {
+    player: {
+      target: owner,
+      action: { payResources: { amount: cost, sphere } },
+    },
+  };
+
+  const attachTo: Action = {
+    player: {
+      target: owner,
+      action: {
+        chooseCardActions: {
+          title: 'Choose target for attachment',
+          multi: false,
+          optional: false,
+          target: card.attachesTo,
+          action: {
+            attachCard: card.id,
+          },
+        },
+      },
+    },
+  };
+
+  const moveToPlay: Action = {
+    card: {
+      taget: self,
+      action: {
+        move: {
+          from: { owner, type: 'hand' },
+          to: { owner, type: 'playerArea' },
+          side: 'front',
+        },
+      },
+    },
+  };
+
+  return [
+    sequence(
+      { setCardVar: { name: 'self', value: self } },
+      { setPlayerVar: { name: 'owner', value: owner } },
+      sequence({
+        payment: { cost: payment, effect: sequence(moveToPlay, attachTo) },
+      }),
+      { setPlayerVar: { name: 'owner', value: undefined } },
+      { setCardVar: { name: 'self', value: undefined } }
+    ),
+  ];
+}
+
 export function createCardActions(
   zone: PlayerZoneType,
   card: CardView,
@@ -119,6 +181,13 @@ export function createCardActions(
   if (zone === 'hand' && card.props.type === 'ally') {
     return createPlayAllyAction(card, self, owner).map((action) => ({
       description: `Play ally ${card.props.name}`,
+      action,
+    }));
+  }
+
+  if (zone === 'hand' && card.props.type === 'attachment') {
+    return createPlayAttachmentAction(card, self, owner).map((action) => ({
+      description: `Play attachment ${card.props.name}`,
       action,
     }));
   }

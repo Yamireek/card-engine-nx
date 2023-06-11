@@ -216,5 +216,11 @@ export function executeCardAction(
     return;
   }
 
+  if (action.attachCard) {
+    card.attachments.push(action.attachCard);
+    ctx.state.cards[action.attachCard].attachedTo = card.id;
+    return;
+  }
+
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
 }

@@ -36,6 +36,7 @@ export type CardState = {
   token: Tokens;
   mark: Marks;
   attachments: CardId[];
+  attachedTo?: CardId;
   owner: PlayerId | 'game';
   controller: PlayerId | 'game';
   limitUses: {

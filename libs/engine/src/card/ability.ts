@@ -23,5 +23,10 @@ export function applyAbility(ability: Ability, card: CardView) {
     return;
   }
 
+  if (ability.attachesTo) {
+    card.attachesTo = ability.attachesTo;
+    return;
+  }
+
   throw new Error(`unknown ability: ${JSON.stringify(ability)}`);
 }
