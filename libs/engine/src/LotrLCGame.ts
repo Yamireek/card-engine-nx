@@ -17,6 +17,7 @@ import { beginScenario } from './action';
 import { ActivePlayers } from 'boardgame.io/core';
 import { PlayerId, validPlayerId } from '@card-engine-nx/basic';
 import { sum } from 'lodash/fp';
+import { PowerSet } from 'js-combinatorics';
 
 function createMoves(events: UIEvents): Record<string, Move<State>> {
   const skip: Move<State> = ({ G, random }) => {
@@ -24,7 +25,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     advanceToChoiceState(G, events, true, false, random.Shuffle);
   };
 
-  const choose: Move<State> = ({ G, random }, choosen: number[]) => {
+  const choose: Move<State> = ({ G, random }, ...choosen: number[]) => {
     if (!G.choice) {
       return INVALID_MOVE;
     }
@@ -92,7 +93,55 @@ export function LotrLCGame(events: UIEvents): Game<State> {
       activePlayers: ActivePlayers.ALL,
     },
     endIf: ({ G }) => {
+      if (G.result?.win) {
+        return {
+          score: G.result.score,
+          winner: '0',
+        };
+      }
+
       return G.result;
+    },
+    ai: {
+      enumerate: (G) => {
+        const choice = G.choice;
+        if (!choice) {
+          return [];
+        }
+
+        if (!choice.dialog) {
+          const view = createView(G);
+          return [
+            { move: 'skip' },
+            ...view.actions.map((_, i) => ({ move: 'action', args: [i] })),
+          ];
+        }
+
+        if (choice.multi) {
+          const sets = new PowerSet(choice.options.map((o, i) => i));
+          const array = sets.toArray();
+          return array.map((a) => ({
+            move: 'choose',
+            args: a,
+          }));
+        }
+
+        if (!choice.multi) {
+          if (choice.optional) {
+            return [
+              { move: 'skip' },
+              ...choice.options.map((o, i) => ({ move: 'choose', args: [i] })),
+            ];
+          } else {
+            return choice.options.map((o, i) => ({
+              move: 'choose',
+              args: [i],
+            }));
+          }
+        }
+
+        return [];
+      },
     },
   };
 }

@@ -26,7 +26,10 @@ export type State = {
     options: Array<{ title: string; action: Action; cardId?: CardId }>;
   };
   next: Action[];
-  result?: 'win' | 'lost';
+  result?: {
+    win: boolean;
+    score: number;
+  };
   nextId: CardId;
   vars: {
     card: Record<string, CardId | undefined>;

@@ -215,9 +215,23 @@ export function advanceToChoiceState(
         (p) => !p.eliminated
       );
 
+      const score = state.zones.discardPile.cards.length * 50;
+
       if (notEleliminated.length === 0) {
-        console.log('game lost');
-        state.result = 'lost';
+        console.log('game lost', score);
+        state.result = {
+          win: false,
+          score,
+        };
+        return;
+      }
+
+      if (state.zones.discardPile.cards.length > 50) {
+        console.log('game won', score);
+        state.result = {
+          win: true,
+          score,
+        };
         return;
       }
 
