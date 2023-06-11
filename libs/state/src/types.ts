@@ -84,6 +84,7 @@ export type CardAction =
   | 'commitToQuest'
   | 'travel'
   | 'exhaust'
+  | 'destroy'
   | {
       dealDamage?: number;
       heal?: number;
@@ -97,7 +98,7 @@ export type CardAction =
       resolvePlayerAttacking?: PlayerId;
       mark?: Mark;
       move?: {
-        from: ZoneId;
+        from?: ZoneId;
         to: ZoneId;
         side: Side;
       };

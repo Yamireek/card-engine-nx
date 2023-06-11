@@ -1,7 +1,7 @@
 import { CardState, CardAction, Action } from '@card-engine-nx/state';
 import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
-import { getZoneState } from '../zone/target';
+import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
 
 export function executeCardAction(
@@ -43,6 +43,29 @@ export function executeCardAction(
 
   if (action === 'exhaust') {
     card.tapped = true;
+    return;
+  }
+
+  if (action === 'destroy') {
+    card.token = { damage: 0, progress: 0, resources: 0 };
+    card.mark = {
+      attacked: false,
+      attacking: false,
+      defending: false,
+      questing: false,
+    };
+    card.tapped = false;
+    ctx.state.next.unshift({
+      card: {
+        taget: card.id,
+        action: {
+          move: {
+            to: { owner: card.owner, type: 'discardPile' },
+            side: 'front',
+          },
+        },
+      },
+    });
     return;
   }
 
@@ -88,7 +111,8 @@ export function executeCardAction(
   }
 
   if (action.move) {
-    const sourceZone = getZoneState(action.move.from, ctx.state);
+    const fromId = action.move.from ?? getCardZoneId(card.id, ctx.state);
+    const sourceZone = getZoneState(fromId, ctx.state);
     const destinationZone = getZoneState(action.move.to, ctx.state);
 
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);
@@ -98,7 +122,7 @@ export function executeCardAction(
     ctx.events.send(
       uiEvent.card_moved({
         cardId: card.id,
-        source: action.move.from,
+        source: fromId,
         destination: action.move.to,
         side: action.move.side,
       })

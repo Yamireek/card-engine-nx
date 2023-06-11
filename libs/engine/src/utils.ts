@@ -11,6 +11,7 @@ import {
   PlayerId,
   PlayerZoneType,
   Side,
+  values,
 } from '@card-engine-nx/basic';
 import { executeAction } from './action';
 import { ExecutionContext } from './context';
@@ -161,6 +162,25 @@ export function advanceToChoiceState(
 
     try {
       nextStep(crateContext(state, events, shuffle));
+
+      const view = createView(state);
+      const destoryed = values(state.cards)
+        .filter((c) => {
+          const hp = view.cards[c.id].props.hitPoints;
+          const damage = c.token.damage;
+          if (hp !== undefined && damage >= hp) {
+            return true;
+          }
+        })
+        .map((c) => c.id);
+
+      // TODO json target
+      if (destoryed.length > 0) {
+        state.next.unshift({ card: { taget: destoryed, action: 'destroy' } });
+      }
+
+      // TODO check progress
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
