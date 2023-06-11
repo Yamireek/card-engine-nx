@@ -334,15 +334,52 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.placeProgress) {
-    ctx.state.next = [
-      {
-        card: {
-          taget: { top: { game: 'questArea' } },
-          action: { placeProgress: action.placeProgress },
+    const activeLocation = getTargetCard(
+      { top: { game: 'activeLocation' } },
+      ctx
+    );
+
+    if (activeLocation.length === 0) {
+      ctx.state.next = [
+        {
+          card: {
+            taget: { top: { game: 'questArea' } },
+            action: { placeProgress: action.placeProgress },
+          },
         },
-      },
-      ...ctx.state.next,
-    ];
+        ...ctx.state.next,
+      ];
+      return;
+    }
+
+    if (activeLocation.length === 1) {
+      const id = activeLocation[0];
+      const cardView = ctx.view.cards[id];
+      const qp = cardView.props.questPoints;
+      if (qp) {
+        const cardState = ctx.state.cards[id];
+        const remaining = qp - cardState.token.progress;
+        const progressLocation = Math.min(action.placeProgress, remaining);
+        const progressQuest = action.placeProgress - progressLocation;
+
+        ctx.state.next.unshift(
+          {
+            card: {
+              taget: activeLocation,
+              action: { placeProgress: progressLocation },
+            },
+          },
+          {
+            card: {
+              taget: { top: { game: 'questArea' } },
+              action: { placeProgress: progressQuest },
+            },
+          }
+        );
+      }
+    } else {
+      throw new Error('multiple active locations');
+    }
     return;
   }
 

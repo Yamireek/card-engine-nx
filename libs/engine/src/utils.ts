@@ -176,10 +176,23 @@ export function advanceToChoiceState(
 
       // TODO json target
       if (destoryed.length > 0) {
-        state.next.unshift({ card: { taget: destoryed, action: 'destroy' } });
+        //state.next.unshift({ card: { taget: destoryed, action: 'destroy' } });
       }
 
-      // TODO check progress
+      const explored = values(state.cards)
+        .filter((c) => {
+          const qp = view.cards[c.id].props.questPoints;
+          const progress = c.token.progress;
+          if (qp !== undefined && progress >= qp) {
+            return true;
+          }
+        })
+        .map((c) => c.id);
+
+      // TODO json target
+      if (explored.length > 0) {
+        state.next.unshift({ card: { taget: explored, action: 'destroy' } });
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
