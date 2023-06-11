@@ -1,17 +1,17 @@
 import { State, View } from '@card-engine-nx/state';
-import { cloneDeep, mapValues, values } from 'lodash';
+import { mapValues, values } from 'lodash';
 import { applyModifier } from './card/modifier';
 import { applyAbility } from './card/ability';
 import { createCardView } from './card/view';
 import { emptyEvents } from './uiEvents';
 import { canExecute } from './resolution';
-import { sequence } from "./utils/sequence";
+import { sequence } from './utils/sequence';
 
 export function createView(state: State): View {
-  const view: View = cloneDeep({
+  const view: View = {
     cards: mapValues(state.cards, (c) => createCardView(c)),
     actions: [],
-  });
+  };
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -31,6 +31,7 @@ export function createView(state: State): View {
           view,
           card: { self: card.id },
           events: emptyEvents,
+          shuffle: (v) => v,
         });
         modifier.applied = true;
       }
@@ -48,6 +49,7 @@ export function createView(state: State): View {
         view,
         card: { self: card.id },
         events: emptyEvents,
+        shuffle: (v) => v,
       });
       if (allowed) {
         view.actions.push({
