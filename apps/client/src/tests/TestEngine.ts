@@ -10,6 +10,7 @@ import {
   addPlayerCard,
   advanceToChoiceState,
   consoleEvents,
+  crateExecutionContext,
   createPlayerState,
   createView,
   executeCardAction,
@@ -17,14 +18,14 @@ import {
 
 export class TestEngine {
   constructor(public state = createState()) {
-    advanceToChoiceState(state, consoleEvents);
+    advanceToChoiceState(state, consoleEvents, true, true, (v) => v);
     state.choice = undefined;
     state.next = [];
   }
 
   do(action: Action) {
     this.state.next.unshift(action);
-    advanceToChoiceState(this.state, consoleEvents);
+    advanceToChoiceState(this.state, consoleEvents, true, true, (v) => v);
   }
 
   // doAction(title: string) {
@@ -67,30 +68,30 @@ export class TestEngine {
   //   }
   // }
 
-  private ensurePlayerA() {
-    if (!this.state.players.A) {
+  private ensurePlayer0() {
+    if (!this.state.players['0']) {
       this.addPlayer();
     }
   }
 
   addPlayer() {
-    if (!this.state.players.A) {
-      this.state.players.A = createPlayerState('A');
-      return new PlayerProxy(this.state, 'A');
+    if (!this.state.players['0']) {
+      this.state.players['0'] = createPlayerState('0');
+      return new PlayerProxy(this.state, '0');
     }
 
-    if (!this.state.players.B) {
-      this.state.players.A = createPlayerState('B');
-      return new PlayerProxy(this.state, 'B');
+    if (!this.state.players['1']) {
+      this.state.players['1'] = createPlayerState('1');
+      return new PlayerProxy(this.state, '1');
     }
 
     throw new Error('cant add new player');
   }
 
   addHero(hero: CardDefinition): CardProxy {
-    this.ensurePlayerA();
+    this.ensurePlayer0();
 
-    const id = addPlayerCard(this.state, hero, 'A', 'front', 'playerArea');
+    const id = addPlayerCard(this.state, hero, '0', 'front', 'playerArea');
     return new CardProxy(this.state, id);
   }
 }
@@ -99,8 +100,12 @@ export class CardProxy {
   constructor(private state: State, private id: CardId) {}
 
   update(cardAction: CardAction) {
-    executeCardAction(cardAction, this.state.cards[this.id]);
-    advanceToChoiceState(this.state, consoleEvents);
+    executeCardAction(
+      cardAction,
+      this.state.cards[this.id],
+      crateExecutionContext(this.state, consoleEvents, (v) => v)
+    );
+    advanceToChoiceState(this.state, consoleEvents, true, true, (v) => v);
   }
 
   get props() {

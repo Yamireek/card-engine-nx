@@ -7,6 +7,7 @@
     "server": "nx run-many -t serve",
     "lint": "nx run-many -t lint --max-warnings=0",
     "storybook": "nx run ui:storybook",
+    "test": "npx vitest --coverage -r ./apps/client/",
     "test-ui": "npx vitest --coverage --ui -r ./apps/client/",
     "postinstall": "patch-package"
   },

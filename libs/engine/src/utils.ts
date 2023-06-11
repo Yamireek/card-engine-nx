@@ -104,7 +104,7 @@ export function nextStep(ctx: ExecutionContext) {
   }
 }
 
-export function crateContext(
+export function crateExecutionContext(
   state: State,
   events: UIEvents,
   shuffle: <T>(items: T[]) => T[]
@@ -162,7 +162,7 @@ export function advanceToChoiceState(
     }
 
     try {
-      nextStep(crateContext(state, events, shuffle));
+      nextStep(crateExecutionContext(state, events, shuffle));
 
       const view = createView(state);
       const destoryed = values(state.cards)
