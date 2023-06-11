@@ -8,7 +8,7 @@ import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
 import { reverse } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
-import { addPlayerCard, addGameCard, createPlayerState, single } from './utils';
+import { addPlayerCard, addGameCard, createPlayerState } from './utils';
 import { sequence } from './utils/sequence';
 import { executeCardAction, getTargetCard } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
@@ -263,42 +263,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       options: [],
       optional: true,
     };
-    return;
-  }
-
-  if (action.playAlly) {
-    const cardId = single(getTargetCard(action.playAlly, ctx));
-    const card = ctx.view.cards[cardId];
-    const owner = ctx.state.cards[cardId].owner;
-
-    if (card.props.cost && card.props.sphere && owner !== 'game') {
-      ctx.state.next = [
-        {
-          player: {
-            target: owner,
-            action: {
-              payResources: {
-                amount: card.props.cost,
-                sphere: card.props.sphere,
-              },
-            },
-          },
-        },
-        {
-          card: {
-            taget: cardId,
-            action: {
-              move: {
-                from: { owner, type: 'hand' },
-                to: { owner, type: 'playerArea' },
-                side: 'front',
-              },
-            },
-          },
-        },
-        ...ctx.state.next,
-      ];
-    }
     return;
   }
 

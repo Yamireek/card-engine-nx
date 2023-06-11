@@ -1,4 +1,10 @@
-import { Action, CardView, State, View } from '@card-engine-nx/state';
+import {
+  Action,
+  ActivableCardAction,
+  CardView,
+  State,
+  View,
+} from '@card-engine-nx/state';
 import { mapValues, values } from 'lodash';
 import { applyModifier } from './card/modifier';
 import { applyAbility } from './card/ability';
@@ -13,12 +19,12 @@ function createEventAction(
   effect: Action,
   self: CardId,
   owner: PlayerId
-): Action | undefined {
+): Action[] {
   const sphere = card.props.sphere;
   const cost = card.props.cost;
 
   if (!sphere || !cost) {
-    return undefined;
+    return [];
   }
 
   const payment: Action = {
@@ -41,13 +47,83 @@ function createEventAction(
     },
   };
 
-  return sequence(
-    { setCardVar: { name: 'self', value: self } },
-    { setPlayerVar: { name: 'owner', value: owner } },
-    sequence({ payment: { cost: payment, effect: effect } }, discard),
-    { setPlayerVar: { name: 'owner', value: undefined } },
-    { setCardVar: { name: 'self', value: undefined } }
-  );
+  return [
+    sequence(
+      { setCardVar: { name: 'self', value: self } },
+      { setPlayerVar: { name: 'owner', value: owner } },
+      sequence({ payment: { cost: payment, effect: effect } }, discard),
+      { setPlayerVar: { name: 'owner', value: undefined } },
+      { setCardVar: { name: 'self', value: undefined } }
+    ),
+  ];
+}
+
+function createPlayAllyAction(
+  card: CardView,
+  self: CardId,
+  owner: PlayerId
+): Action[] {
+  const sphere = card.props.sphere;
+  const cost = card.props.cost;
+
+  if (!sphere || !cost) {
+    return [];
+  }
+
+  const payment: Action = {
+    player: {
+      target: owner,
+      action: { payResources: { amount: cost, sphere } },
+    },
+  };
+
+  const moveToPlay: Action = {
+    card: {
+      taget: self,
+      action: {
+        move: {
+          from: { owner, type: 'hand' },
+          to: { owner, type: 'playerArea' },
+          side: 'front',
+        },
+      },
+    },
+  };
+
+  return [
+    sequence(
+      { setCardVar: { name: 'self', value: self } },
+      { setPlayerVar: { name: 'owner', value: owner } },
+      sequence({ payment: { cost: payment, effect: moveToPlay } }),
+      { setPlayerVar: { name: 'owner', value: undefined } },
+      { setCardVar: { name: 'self', value: undefined } }
+    ),
+  ];
+}
+
+export function createCardActions(
+  zone: PlayerZoneType,
+  card: CardView,
+  self: CardId,
+  owner: PlayerId
+): ActivableCardAction[] {
+  if (zone === 'hand' && card.props.type === 'event') {
+    return card.actions.flatMap((effect) =>
+      createEventAction(card, effect.action, self, owner).map((action) => ({
+        description: effect.description,
+        action,
+      }))
+    );
+  }
+
+  if (zone === 'hand' && card.props.type === 'ally') {
+    return createPlayAllyAction(card, self, owner).map((action) => ({
+      description: `Play ally ${card.props.name}`,
+      action,
+    }));
+  }
+
+  return [];
 }
 
 export function createView(state: State): View {
@@ -88,29 +164,20 @@ export function createView(state: State): View {
     for (const zoneType of keys(player.zones) as PlayerZoneType[]) {
       for (const cardId of player.zones[zoneType].cards) {
         const card = view.cards[cardId];
-        if (zoneType === 'hand' && card.props.type === 'event') {
-          for (const action of card.actions) {
-            const eventAction = createEventAction(
-              card,
-              action.action,
-              card.id,
-              player.id
-            );
-            if (eventAction) {
-              const allowed = canExecute(eventAction, true, {
-                state,
-                view,
-                card: { self: card.id },
-                player: { owner: player.id },
-              });
-              if (allowed) {
-                view.actions.push({
-                  card: card.id,
-                  description: action.description,
-                  action: eventAction,
-                });
-              }
-            }
+        const actions = createCardActions(zoneType, card, card.id, player.id);
+        for (const action of actions) {
+          const allowed = canExecute(action.action, true, {
+            state,
+            view,
+            card: { self: card.id },
+            player: { owner: player.id },
+          });
+          if (allowed) {
+            view.actions.push({
+              card: card.id,
+              description: action.description,
+              action: action.action,
+            });
           }
         }
       }
