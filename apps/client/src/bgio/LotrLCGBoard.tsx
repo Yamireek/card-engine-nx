@@ -4,7 +4,6 @@ import { BoardProps, Client } from 'boardgame.io/react';
 import { GameSetup } from '../GameDisplay';
 import { StateContext } from '../StateContext';
 import { useMemo } from 'react';
-import { Local } from 'boardgame.io/multiplayer';
 import { validPlayerId } from '@card-engine-nx/basic';
 import { Debug } from 'boardgame.io/debug';
 

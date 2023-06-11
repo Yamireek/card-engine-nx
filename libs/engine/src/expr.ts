@@ -2,12 +2,12 @@ import { BoolExpr, NumberExpr } from '@card-engine-nx/state';
 import { getTargetCard } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
-import { ExecutionContext } from './context';
+import { ExecutionContext, ViewContext } from './context';
 import { max, min, values } from 'lodash/fp';
 
 export function calculateNumberExpr(
   expr: NumberExpr,
-  ctx: ExecutionContext
+  ctx: ViewContext
 ): number {
   if (typeof expr === 'number') {
     return expr;

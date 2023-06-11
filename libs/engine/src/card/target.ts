@@ -6,15 +6,12 @@ import {
 } from '@card-engine-nx/basic';
 import { CardTarget } from '@card-engine-nx/state';
 import { intersection, last, uniq } from 'lodash';
-import { ExecutionContext, cardIds } from '../context';
+import { ViewContext, cardIds } from '../context';
 import { getTargetZone, getZoneState } from '../zone/target';
 import { canCardExecute } from '../resolution';
 import { difference, isArray } from 'lodash/fp';
 
-export function getTargetCard(
-  target: CardTarget,
-  ctx: ExecutionContext
-): CardId[] {
+export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId[] {
   if (typeof target === 'number') {
     return [target];
   }

@@ -10,6 +10,12 @@ export type ExecutionContext = {
   shuffle: <T>(items: T[]) => T[];
 };
 
-export function cardIds(ctx: ExecutionContext) {
+export type ViewContext = {
+  state: State;
+  view: View;
+  card: Record<string, CardId>;
+};
+
+export function cardIds(ctx: ViewContext) {
   return Object.keys(ctx.state.cards).map((id) => Number(id)) as CardId[];
 }

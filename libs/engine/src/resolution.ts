@@ -1,5 +1,5 @@
 import { Action, CardAction } from '@card-engine-nx/state';
-import { ExecutionContext } from './context';
+import { ViewContext } from './context';
 import { getTargetCard } from './card';
 import { single } from './utils';
 import { sumBy } from 'lodash';
@@ -8,7 +8,7 @@ import { CardId } from '@card-engine-nx/basic';
 export function canExecute(
   action: Action,
   full: boolean,
-  ctx: ExecutionContext
+  ctx: ViewContext
 ): boolean {
   if (typeof action === 'string') {
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
@@ -61,7 +61,7 @@ export function canExecute(
 export function canCardExecute(
   action: CardAction,
   cardId: CardId,
-  ctx: ExecutionContext
+  ctx: ViewContext
 ): boolean {
   const card = ctx.state.cards[cardId];
 

@@ -3,7 +3,6 @@ import { mapValues, values } from 'lodash';
 import { applyModifier } from './card/modifier';
 import { applyAbility } from './card/ability';
 import { createCardView } from './card/view';
-import { emptyEvents } from './uiEvents';
 import { canExecute } from './resolution';
 import { sequence } from './utils/sequence';
 
@@ -30,8 +29,6 @@ export function createView(state: State): View {
           state,
           view,
           card: { self: card.id },
-          events: emptyEvents,
-          shuffle: (v) => v,
         });
         modifier.applied = true;
       }
@@ -48,8 +45,6 @@ export function createView(state: State): View {
         state,
         view,
         card: { self: card.id },
-        events: emptyEvents,
-        shuffle: (v) => v,
       });
       if (allowed) {
         view.actions.push({

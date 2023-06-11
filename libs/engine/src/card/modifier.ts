@@ -1,11 +1,11 @@
 import { CardView, Modifier } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
-import { ExecutionContext } from "../context";
+import { ViewContext } from '../context';
 
 export function applyModifier(
   modifier: Modifier,
   card: CardView,
-  ctx: ExecutionContext
+  ctx: ViewContext
 ) {
   if (modifier.increment) {
     const amount = calculateNumberExpr(modifier.increment.amount, ctx);
