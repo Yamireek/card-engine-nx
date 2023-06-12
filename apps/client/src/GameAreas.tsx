@@ -12,6 +12,7 @@ import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { Deck3d } from './Deck3d';
 import { Token3d } from './Token3d';
+import { LotrDeck3d } from './LotrDeck3d';
 
 const positions: Record<number, Vector3> = {
   '1': [0, 0, 0],
@@ -75,19 +76,13 @@ export const GameAreas = (props: {
 
   return (
     <group position={positions[playerCount]}>
-      <Deck3d
-        owner="game"
-        type="encounterDeck"
+      <LotrDeck3d
+        zone={{ owner: 'game', type: 'encounterDeck' }}
         position={[0.35, 0.4, 0]}
-        cardCount={state.zones.encounterDeck.cards.length}
-        texture={texture[image.encounterBack]}
       />
-      <Deck3d
-        owner="game"
-        type="discardPile"
+      <LotrDeck3d
+        zone={{ owner: 'game', type: 'discardPile' }}
         position={[0.45, 0.4, 0]}
-        cardCount={state.zones.discardPile.cards.length}
-        texture={texture[image.encounterBack]}
       />
       <CardAreaLayout
         color="gold"

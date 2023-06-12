@@ -27,7 +27,7 @@ export type Card3dProps = React.PropsWithChildren<{
 export const cardSize: Dimensions3 = {
   width: 0.0635,
   height: 0.0889,
-  depth: 0.000305,
+  thick: 0.000305,
 };
 
 export const Card3d = (props: Card3dProps) => {
@@ -69,8 +69,8 @@ export const Card3d = (props: Card3dProps) => {
             <boxGeometry
               args={
                 props.orientation === 'landscape'
-                  ? [cardSize.height, cardSize.width, cardSize.depth]
-                  : [cardSize.width, cardSize.height, cardSize.depth]
+                  ? [cardSize.height, cardSize.width, cardSize.thick]
+                  : [cardSize.width, cardSize.height, cardSize.thick]
               }
             />
             <meshBasicMaterial attach="material-0" color="gray" />

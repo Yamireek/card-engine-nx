@@ -1,17 +1,12 @@
-import { Texture } from "three";
-import {
-  GameZoneType,
-  Orientation,
-  PlayerId,
-  PlayerZoneType,
-} from "@card-engine-nx/basic";
-import { cardSize } from "./Card3d";
-import { Vector3, useTextures } from "@card-engine-nx/ui";
-import { Text } from "@react-three/drei";
+import { Texture } from 'three';
+import { Orientation } from '@card-engine-nx/basic';
+import { cardSize } from './Card3d';
+import { Vector3, useTextures } from '@card-engine-nx/ui';
+import { Text } from '@react-three/drei';
 
 export type Deck3dProps = {
-  owner: "game" | PlayerId;
-  type: GameZoneType | PlayerZoneType;
+  name: string;
+  title: string;
   position: Vector3;
   texture: Texture;
   cardCount: number;
@@ -21,12 +16,12 @@ export type Deck3dProps = {
 export const Deck3d = (props: Deck3dProps) => {
   const { material } = useTextures();
 
-  const depth = props.cardCount * cardSize.depth;
+  const depth = props.cardCount * cardSize.thick;
 
   return (
     <group
-      key={props.cardCount > 0 ? "cards" : "empty"}
-      name={`deck-${props.owner}-${props.type}`}
+      key={props.cardCount > 0 ? 'cards' : 'empty'}
+      name={props.name}
       position={[
         props.position[0],
         props.position[1],
@@ -39,7 +34,7 @@ export const Deck3d = (props: Deck3dProps) => {
           <>
             <boxGeometry
               args={
-                props.orientation === "landscape"
+                props.orientation === 'landscape'
                   ? [cardSize.height, cardSize.width, depth]
                   : [cardSize.width, cardSize.height, depth]
               }
@@ -75,7 +70,7 @@ export const Deck3d = (props: Deck3dProps) => {
         outlineWidth={0.0005}
         fontSize={0.007}
       >
-        {props.type} ({props.cardCount})
+        {props.title} ({props.cardCount})
       </Text>
     </group>
   );

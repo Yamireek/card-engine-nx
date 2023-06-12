@@ -17,6 +17,7 @@ import { Token3d } from './Token3d';
 import { indexOf } from 'lodash';
 import { max } from 'lodash/fp';
 import React from 'react';
+import { LotrDeck3d } from './LotrDeck3d';
 
 const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
   '1': { '0': [0, 0, 0] },
@@ -254,19 +255,13 @@ export const PlayerAreas = (props: {
       position={positions[playerCount][props.player]}
       rotation={[0, 0, rotations[playerCount][props.player] ?? 0]}
     >
-      <Deck3d
-        owner={props.player}
-        type="library"
+      <LotrDeck3d
+        zone={{ owner: props.player, type: 'library' }}
         position={[0.35, -0.4, 0]}
-        cardCount={playerState.zones.library.cards.length}
-        texture={texture[image.playerBack]}
       />
-      <Deck3d
-        owner={props.player}
-        type="discardPile"
+      <LotrDeck3d
+        zone={{ owner: props.player, type: 'discardPile' }}
         position={[0.45, -0.4, 0]}
-        cardCount={playerState.zones.discardPile.cards.length}
-        texture={texture[image.playerBack]}
       />
       <CardAreaLayout
         color="blue"

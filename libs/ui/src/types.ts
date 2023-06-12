@@ -14,4 +14,4 @@ export type Material = {
 
 export type Dimensions = { width: number; height: number };
 
-export type Dimensions3 = { width: number; height: number; depth: number };
+export type Dimensions3 = { width: number; height: number; thick: number };
