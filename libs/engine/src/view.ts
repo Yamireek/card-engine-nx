@@ -155,7 +155,7 @@ function createPlayAttachmentAction(
       { setCardVar: { name: 'self', value: self } },
       { setPlayerVar: { name: 'owner', value: owner } },
       sequence({
-        payment: { cost: payment, effect: sequence(moveToPlay, attachTo) },
+        payment: { cost: payment, effect: sequence(attachTo, moveToPlay) },
       }),
       { setPlayerVar: { name: 'owner', value: undefined } },
       { setCardVar: { name: 'self', value: undefined } }
