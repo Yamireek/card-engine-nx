@@ -8,7 +8,8 @@ import { uniqBy } from 'lodash';
 import { useFloatingCards } from './FloatingCardsContext';
 
 export const FloatingCards = () => {
-  const { floatingCards: cards, setFloatingCards: setCards } = useFloatingCards();
+  const { floatingCards: cards, setFloatingCards: setCards } =
+    useFloatingCards();
   const { state } = useGameState();
   const scene = useThree((s) => s.scene);
   const { texture } = useTextures();
@@ -23,6 +24,8 @@ export const FloatingCards = () => {
         );
 
         const cardMesh = scene.getObjectByName(`card-${e.cardId}`);
+
+        const targetDeckName = `deck-${e.destination.owner}-${e.destination.type}`;
 
         if (deckMesh && !cardMesh) {
           setCards((p) => [
@@ -113,18 +116,38 @@ export const FloatingCards = () => {
 
           setTimeout(() => {
             const newCardMesh = scene.getObjectByName('card-' + e.cardId);
-            if (newCardMesh) {
+            const newDeckMesh = scene.getObjectByName(targetDeckName);
+
+            if (newCardMesh && !newDeckMesh) {
               const position = newCardMesh.getWorldPosition(
                 newCardMesh.position.clone()
               );
 
               setCards((p) =>
                 p.map((c) =>
-                  c.id === e.cardId && newCardMesh.parent
+                  c.id === e.cardId
                     ? {
                         ...c,
                         position: [position.x, position.y, position.z],
                         scale: newCardMesh.scale.x,
+                      }
+                    : { ...c }
+                )
+              );
+            }
+
+            if (newDeckMesh && !newCardMesh) {
+              const position = newDeckMesh.getWorldPosition(
+                newDeckMesh.position.clone()
+              );
+
+              setCards((p) =>
+                p.map((c) =>
+                  c.id === e.cardId
+                    ? {
+                        ...c,
+                        position: [position.x, position.y, position.z],
+                        scale: 1,
                       }
                     : { ...c }
                 )
