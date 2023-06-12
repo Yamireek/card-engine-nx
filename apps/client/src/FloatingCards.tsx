@@ -1,15 +1,14 @@
 import { getCardImageUrl, useTextures } from '@card-engine-nx/ui';
 import { useEffect } from 'react';
 import { useGameState } from './StateContext';
-import { Card3d, Card3dProps } from './Card3d';
+import { Card3d } from './Card3d';
 import { useThree } from '@react-three/fiber';
 import { rxEvents } from './GameDisplay';
 import { uniqBy } from 'lodash';
+import { useFloatingCards } from './FloatingCardsContext';
 
-export const FloatingCards = (props: {
-  cards: [Card3dProps[], (v: (p: Card3dProps[]) => Card3dProps[]) => void];
-}) => {
-  const [floatingCards, setFloatingCards] = props.cards;
+export const FloatingCards = () => {
+  const { floatingCards: cards, setFloatingCards: setCards } = useFloatingCards();
   const { state } = useGameState();
   const scene = useThree((s) => s.scene);
   const { texture } = useTextures();
@@ -26,7 +25,7 @@ export const FloatingCards = (props: {
         const cardMesh = scene.getObjectByName(`card-${e.cardId}`);
 
         if (deckMesh && !cardMesh) {
-          setFloatingCards((p) => [
+          setCards((p) => [
             ...p,
             {
               id: e.cardId,
@@ -45,7 +44,7 @@ export const FloatingCards = (props: {
           ]);
 
           setTimeout(() => {
-            setFloatingCards((p) =>
+            setCards((p) =>
               p.map((c) =>
                 c.id === e.cardId
                   ? {
@@ -58,7 +57,7 @@ export const FloatingCards = (props: {
           }, 500);
 
           setTimeout(() => {
-            setFloatingCards((p) =>
+            setCards((p) =>
               p.map((c) =>
                 c.id === e.cardId ? { ...c, rotation: [0, 0, 0] } : { ...c }
               )
@@ -73,7 +72,7 @@ export const FloatingCards = (props: {
                 cardMesh.position.clone()
               );
 
-              setFloatingCards((p) =>
+              setCards((p) =>
                 p.map((c) =>
                   c.id === e.cardId && cardMesh.parent
                     ? {
@@ -88,7 +87,7 @@ export const FloatingCards = (props: {
           }, 2000);
 
           setTimeout(() => {
-            setFloatingCards((p) => p.filter((c) => c.id !== e.cardId));
+            setCards((p) => p.filter((c) => c.id !== e.cardId));
           }, 2500);
         }
 
@@ -98,7 +97,7 @@ export const FloatingCards = (props: {
           const x = matrix.elements[12];
           const y = matrix.elements[13];
           const z = matrix.elements[14];
-          setFloatingCards((p) => [
+          setCards((p) => [
             ...p,
             {
               id: e.cardId,
@@ -119,7 +118,7 @@ export const FloatingCards = (props: {
                 newCardMesh.position.clone()
               );
 
-              setFloatingCards((p) =>
+              setCards((p) =>
                 p.map((c) =>
                   c.id === e.cardId && newCardMesh.parent
                     ? {
@@ -134,7 +133,7 @@ export const FloatingCards = (props: {
           }, 1);
 
           setTimeout(() => {
-            setFloatingCards((p) => p.filter((c) => c.id !== e.cardId));
+            setCards((p) => p.filter((c) => c.id !== e.cardId));
           }, 500);
         }
 
@@ -147,7 +146,7 @@ export const FloatingCards = (props: {
 
   return (
     <>
-      {uniqBy(floatingCards, (c) => c.id).map((p) => (
+      {uniqBy(cards, (c) => c.id).map((p) => (
         <Card3d {...p} key={p.id} />
       ))}
     </>

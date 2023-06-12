@@ -4,12 +4,11 @@ import {
   getCardImageUrls,
   image,
 } from '@card-engine-nx/ui';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo } from 'react';
 import { StateContext } from './StateContext';
 import { UiEvent, UIEvents } from '@card-engine-nx/engine';
 import { values } from '@card-engine-nx/basic';
 import { Board3d } from './Board3d';
-import { Card3dProps } from './Card3d';
 import { State } from '@card-engine-nx/state';
 import { uniq } from 'lodash';
 import { Subject } from 'rxjs';
@@ -21,6 +20,7 @@ import { CardDetail } from './CardDetail';
 import { Paper } from '@mui/material';
 import { sum } from 'lodash/fp';
 import { GameDialogs } from './GameDialogs';
+import { FloatingCardsProvider } from './FloatingCardsContext';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -100,7 +100,6 @@ export const LotrLCGInfo = () => {
 
 export const GameDisplay = () => {
   const { state } = useContext(StateContext);
-  const [floatingCards, setFloatingCards] = useState<Card3dProps[]>([]);
   const textureUrls = useMemo(
     () => [...staticUrls, ...getAllImageUrls(state)],
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,54 +107,46 @@ export const GameDisplay = () => {
   );
 
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
-      <Paper
-        style={{
-          position: 'absolute',
-          width: 300,
-          background: 'rgba(255,255,255,0.75)',
-          padding: 8,
-          zIndex: 10,
-        }}
-      >
-        <CardDetail />
-      </Paper>
-      <LotrLCGInfo />
-      <div style={{ width: '100%', height: '100%' }}>
-        <TexturesProvider
-          textures={textureUrls}
-          materials={{
-            wood: {
-              color: './textures/wood-2k/Wood026_2K_Color.png',
-              roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
-              normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
-            },
+    <FloatingCardsProvider>
+      <div style={{ width: '100%', height: '100vh' }}>
+        <Paper
+          style={{
+            position: 'absolute',
+            width: 300,
+            background: 'rgba(255,255,255,0.75)',
+            padding: 8,
+            zIndex: 10,
           }}
         >
-          <GameSceneLoader angle={20} rotation={0} perspective={1500}>
-            <Board3d />
-            <FloatingCards
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              cards={[floatingCards, setFloatingCards] as any}
-            />
+          <CardDetail />
+        </Paper>
+        <LotrLCGInfo />
+        <div style={{ width: '100%', height: '100%' }}>
+          <TexturesProvider
+            textures={textureUrls}
+            materials={{
+              wood: {
+                color: './textures/wood-2k/Wood026_2K_Color.png',
+                roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
+                normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
+              },
+            }}
+          >
+            <GameSceneLoader angle={20} rotation={0} perspective={1500}>
+              <Board3d />
+              <FloatingCards />
 
-            {playerIds.map((id) => (
-              <PlayerAreas
-                key={id}
-                player={id}
-                hiddenCards={floatingCards.map((c) => c.id)}
-              />
-            ))}
+              {playerIds.map((id) => (
+                <PlayerAreas key={id} player={id} />
+              ))}
 
-            <GameAreas
-              playerCount={Object.keys(state.players).length}
-              hiddenCards={floatingCards.map((c) => c.id)}
-            />
-          </GameSceneLoader>
-        </TexturesProvider>
+              <GameAreas playerCount={Object.keys(state.players).length} />
+            </GameSceneLoader>
+          </TexturesProvider>
+        </div>
+        {/* <PlayerHand player="A" /> */}
+        <GameDialogs />
       </div>
-      {/* <PlayerHand player="A" /> */}
-      <GameDialogs />
-    </div>
+    </FloatingCardsProvider>
   );
 };
