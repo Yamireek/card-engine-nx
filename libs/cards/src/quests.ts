@@ -1,30 +1,31 @@
 import { quest } from '@card-engine-nx/state';
 
-export const fliesAndSpiders = quest(
-  {
-    sequence: 1,
-    name: 'Flies and Spiders',
-    a: {},
-    b: {
-      questPoints: 8,
-    },
+export const fliesAndSpiders = quest({
+  sequence: 1,
+  name: 'Flies and Spiders',
+  a: {
+    abilities: [
+      {
+        description:
+          'Setup: Search the encounter deck for 1 copy of the Forest Spider and 1 copy of the Old Forest Road, and add them to the staging area. Then, shuffle the encounter deck.',
+        setup: {
+          sequence: [
+            {
+              addToStagingArea: 'Forest Spider',
+            },
+            {
+              addToStagingArea: 'Old Forest Road',
+            },
+            'shuffleEncounterDeck',
+          ],
+        },
+      },
+    ],
   },
-  {
-    description:
-      'Setup: Search the encounter deck for 1 copy of the Forest Spider and 1 copy of the Old Forest Road, and add them to the staging area. Then, shuffle the encounter deck.',
-    setup: {
-      sequence: [
-        {
-          addToStagingArea: 'Forest Spider',
-        },
-        {
-          addToStagingArea: 'Old Forest Road',
-        },
-        'shuffleEncounterDeck',
-      ],
-    },
-  }
-);
+  b: {
+    questPoints: 8,
+  },
+});
 
 export const aForkInTheRoad = quest({
   sequence: 2,
@@ -32,6 +33,15 @@ export const aForkInTheRoad = quest({
   a: {},
   b: {
     questPoints: 2,
+    abilities: [
+      {
+        description:
+          'Forced: When you defeat this stage, proceed to one of the 2 "A Chosen Path" stages, at random.',
+        selfModifier: {
+          setNextStage: 'random',
+        },
+      },
+    ],
   },
 });
 

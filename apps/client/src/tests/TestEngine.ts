@@ -18,14 +18,28 @@ import {
 
 export class TestEngine {
   constructor(public state = createState()) {
-    advanceToChoiceState(state, consoleEvents, true, true, (v) => v);
+    advanceToChoiceState(
+      state,
+      consoleEvents,
+      true,
+      true,
+      (v) => v,
+      (i) => i[0]
+    );
     state.choice = undefined;
     state.next = [];
   }
 
   do(action: Action) {
     this.state.next.unshift(action);
-    advanceToChoiceState(this.state, consoleEvents, true, true, (v) => v);
+    advanceToChoiceState(
+      this.state,
+      consoleEvents,
+      true,
+      true,
+      (v) => v,
+      (i) => i[0]
+    );
   }
 
   // doAction(title: string) {
@@ -105,7 +119,14 @@ export class CardProxy {
       this.state.cards[this.id],
       crateExecutionContext(this.state, consoleEvents, (v) => v)
     );
-    advanceToChoiceState(this.state, consoleEvents, true, true, (v) => v);
+    advanceToChoiceState(
+      this.state,
+      consoleEvents,
+      true,
+      true,
+      (v) => v,
+      (i) => i[0]
+    );
   }
 
   get props() {

@@ -23,6 +23,10 @@ export function calculateCardExpr(
     return ctx.view.cards[cardId].props.threat || 0;
   }
 
+  if (expr === 'sequence') {
+    return ctx.view.cards[cardId].props.sequence || 0;
+  }
+
   if (expr.tokens) {
     return ctx.state.cards[cardId].token[expr.tokens];
   }

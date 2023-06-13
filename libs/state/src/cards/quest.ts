@@ -5,20 +5,17 @@ export type QuestDefinition =
   | {
       sequence: number;
       name?: never;
-      a: { name: string };
-      b: { name: string; questPoints: number };
+      a: { name: string; abilities?: Ability[] };
+      b: { name: string; questPoints: number; abilities?: Ability[] };
     }
   | {
       sequence: number;
       name: string;
-      a: { name?: never };
-      b: { name?: never; questPoints: number };
+      a: { name?: never; abilities?: Ability[] };
+      b: { name?: never; questPoints: number; abilities?: Ability[] };
     };
 
-export function quest(
-  def: QuestDefinition,
-  ...abilities: Ability[]
-): CardDefinition {
+export function quest(def: QuestDefinition): CardDefinition {
   const nameA = def.name ?? def.a.name;
   const nameB = def.name ?? def.b.name;
 
@@ -27,14 +24,14 @@ export function quest(
       name: nameA,
       sequence: def.sequence,
       type: 'quest',
-      abilities,
+      abilities: def.a.abilities ?? [],
     },
     back: {
       name: nameB,
       sequence: def.sequence,
       type: 'quest',
       questPoints: def.b.questPoints,
-      abilities: [],
+      abilities: def.b.abilities ?? [],
     },
     orientation: 'landscape',
   };

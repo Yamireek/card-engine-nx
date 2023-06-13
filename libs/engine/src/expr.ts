@@ -32,6 +32,11 @@ export function calculateNumberExpr(
     }
   }
 
+  if (expr.plus) {
+    const values = expr.plus.map((e) => calculateNumberExpr(e, ctx));
+    return sum(values) ?? 0;
+  }
+
   throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);
 }
 

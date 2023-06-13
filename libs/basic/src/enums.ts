@@ -34,7 +34,8 @@ export type GameZoneType =
   | 'encounterDeck'
   | 'questDeck'
   | 'questArea'
-  | 'victoryDisplay';
+  | 'victoryDisplay'
+  | 'removed';
 
 export type PlayerZoneType =
   | 'hand'

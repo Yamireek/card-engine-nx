@@ -10,6 +10,7 @@ import { ViewContext, cardIds } from '../context';
 import { getTargetZone, getZoneState } from '../zone/target';
 import { canCardExecute } from '../resolution';
 import { difference, isArray } from 'lodash/fp';
+import { calculateNumberExpr } from '../expr';
 
 export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId[] {
   if (typeof target === 'number') {
@@ -83,6 +84,13 @@ export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId[] {
   if (target.type) {
     return values(ctx.view.cards)
       .filter((c) => target.type?.includes(c.props.type))
+      .map((s) => s.id);
+  }
+
+  if (target.sequence) {
+    const value = calculateNumberExpr(target.sequence, ctx);
+    return values(ctx.view.cards)
+      .filter((c) => value === c.props.sequence)
       .map((s) => s.id);
   }
 

@@ -17,5 +17,10 @@ export function applyModifier(
     return;
   }
 
+  if (modifier.setNextStage) {
+    card.nextStage = modifier.setNextStage;
+    return;
+  }
+
   throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);
 }

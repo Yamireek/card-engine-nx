@@ -1,6 +1,9 @@
 import {
+  Action,
   CardDefinition,
   CardState,
+  CardTarget,
+  NextStage,
   PlayerState,
   State,
   View,
@@ -14,10 +17,11 @@ import {
   values,
 } from '@card-engine-nx/basic';
 import { executeAction } from './action';
-import { ExecutionContext } from './context';
+import { ExecutionContext, ViewContext } from './context';
 import { uiEvent } from './eventFactories';
 import { UIEvents } from './uiEvents';
 import { createView } from './view';
+import { getTargetCard } from './card';
 
 export function addPlayerCard(
   state: State,
@@ -127,12 +131,14 @@ export function crateExecutionContext(
   };
 }
 
+// TODO less params
 export function advanceToChoiceState(
   state: State,
   events: UIEvents,
   autoSkip: boolean,
   stopOnError: boolean,
-  shuffle: <T>(items: T[]) => T[]
+  shuffle: <T>(items: T[]) => T[],
+  randomItem: <T>(items: T[]) => T
 ) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -181,19 +187,136 @@ export function advanceToChoiceState(
         state.next.unshift({ card: { taget: destoryed, action: 'destroy' } });
       }
 
-      const explored = values(state.cards)
+      const exploredLocations = values(state.cards)
         .filter((c) => {
           const qp = view.cards[c.id].props.questPoints;
           const progress = c.token.progress;
-          if (qp !== undefined && progress >= qp) {
-            return true;
-          }
+          return qp !== undefined && progress >= qp;
         })
         .map((c) => c.id);
 
       // TODO json target
-      if (explored.length > 0) {
-        state.next.unshift({ card: { taget: explored, action: 'destroy' } });
+      if (exploredLocations.length > 0) {
+        state.next.unshift({
+          card: { taget: exploredLocations, action: 'destroy' },
+        });
+      }
+
+      const exploredQuest = state.zones.questArea.cards.filter((id) => {
+        const qp = view.cards[id].props.questPoints;
+        const progress = state.cards[id].token.progress;
+        return qp !== undefined && progress >= qp;
+      });
+
+      if (exploredQuest.length === 1) {
+        const quest = view.cards[exploredQuest[0]];
+
+        const removedExplored: Action = {
+          card: {
+            taget: exploredQuest,
+            action: {
+              move: {
+                from: {
+                  owner: 'game',
+                  type: 'questArea',
+                },
+                to: {
+                  owner: 'game',
+                  type: 'removed',
+                },
+                side: 'front',
+              },
+            },
+          },
+        };
+
+        const ctx: ViewContext = { state, view, card: {}, player: {} };
+
+        const nextQuest = getTargetCard(
+          {
+            and: [
+              {
+                zone: {
+                  owner: 'game',
+                  type: 'questDeck',
+                },
+              },
+              {
+                sequence: {
+                  plus: [
+                    { fromCard: { card: quest.id, value: 'sequence' } },
+                    1,
+                  ],
+                },
+              },
+            ],
+          },
+          ctx
+        );
+
+        if (nextQuest.length === 0) {
+          console.log('game won');
+          state.result = {
+            win: true,
+            score: 1,
+          };
+          return;
+        }
+
+        if (nextQuest.length === 1) {
+          state.next.unshift(removedExplored, {
+            card: {
+              taget: nextQuest,
+              action: {
+                sequence: [
+                  {
+                    move: {
+                      from: {
+                        owner: 'game',
+                        type: 'questDeck',
+                      },
+                      to: {
+                        owner: 'game',
+                        type: 'questArea',
+                      },
+                      side: 'front',
+                    },
+                  },
+                  { flip: 'back' },
+                ],
+              },
+            },
+          });
+        } else {
+          if (quest.nextStage === 'random') {
+            const rnd = randomItem(nextQuest);
+            state.next.unshift(removedExplored, {
+              card: {
+                taget: rnd,
+                action: {
+                  sequence: [
+                    {
+                      move: {
+                        from: {
+                          owner: 'game',
+                          type: 'questDeck',
+                        },
+                        to: {
+                          owner: 'game',
+                          type: 'questArea',
+                        },
+                        side: 'front',
+                      },
+                    },
+                    { flip: 'back' },
+                  ],
+                },
+              },
+            });
+          } else {
+            throw new Error('found multiple stages');
+          }
+        }
       }
 
       const eliminated = values(state.players)
@@ -202,7 +325,7 @@ export function advanceToChoiceState(
             (id) => view.cards[id].props.type === 'hero'
           );
 
-          return !p.eliminated && (p.thread >= 50 || heroes.length === 0);
+          return !p.eliminated && heroes.length === 0;
         })
         .map((s) => s.id);
 
@@ -216,22 +339,11 @@ export function advanceToChoiceState(
         (p) => !p.eliminated
       );
 
-      const score = state.zones.discardPile.cards.length * 50;
-
       if (notEleliminated.length === 0) {
-        console.log('game lost', score);
+        console.log('game lost');
         state.result = {
           win: false,
-          score,
-        };
-        return;
-      }
-
-      if (state.zones.discardPile.cards.length > 50) {
-        console.log('game won', score);
-        state.result = {
-          win: true,
-          score,
+          score: 0,
         };
         return;
       }

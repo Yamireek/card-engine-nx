@@ -19,10 +19,24 @@ import { PlayerId, validPlayerId } from '@card-engine-nx/basic';
 import { sum } from 'lodash/fp';
 import { PowerSet } from 'js-combinatorics';
 
+export const getRandomItem =
+  <T>(rnd: () => number) =>
+  (items: T[]): T => {
+    const index = Math.floor(rnd() * items.length);
+    return items[index];
+  };
+
 function createMoves(events: UIEvents): Record<string, Move<State>> {
   const skip: Move<State> = ({ G, random }) => {
     G.choice = undefined;
-    advanceToChoiceState(G, events, true, false, random.Shuffle);
+    advanceToChoiceState(
+      G,
+      events,
+      true,
+      false,
+      random.Shuffle,
+      getRandomItem(random.Number)
+    );
   };
 
   const choose: Move<State> = ({ G, random }, ...choosen: number[]) => {
@@ -34,7 +48,14 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     const choices = choosen.map((index) => options[index]);
     G.choice = undefined;
     G.next.unshift(...choices.map((c) => c.action));
-    advanceToChoiceState(G, events, false, false, random.Shuffle);
+    advanceToChoiceState(
+      G,
+      events,
+      false,
+      false,
+      random.Shuffle,
+      getRandomItem(random.Number)
+    );
   };
 
   const action: Move<State> = ({ G, random }, index: number) => {
@@ -48,12 +69,26 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     G.choice = undefined;
     G.next.unshift({ playerActions: title });
     G.next.unshift(action.action);
-    advanceToChoiceState(G, events, false, false, random.Shuffle);
+    advanceToChoiceState(
+      G,
+      events,
+      false,
+      false,
+      random.Shuffle,
+      getRandomItem(random.Number)
+    );
   };
 
   const selectScenario: Move<State> = ({ G, random }, scenario: Scenario) => {
     G.next.unshift(beginScenario(scenario));
-    advanceToChoiceState(G, events, false, false, random.Shuffle);
+    advanceToChoiceState(
+      G,
+      events,
+      false,
+      false,
+      random.Shuffle,
+      getRandomItem(random.Number)
+    );
   };
 
   const selectDeck: Move<State> = ({ G, playerID }, deck: PlayerDeck) => {

@@ -11,6 +11,9 @@ export function applyAbility(ability: Ability, card: CardView) {
   }
 
   if (ability.setup) {
+    if (!card.setup) {
+      card.setup = [];
+    }
     card.setup.push(ability.setup);
     return;
   }

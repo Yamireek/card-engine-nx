@@ -26,7 +26,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'executeSetupActions') {
-    const actions = values(ctx.view.cards).flatMap((c) => c.setup);
+    const actions = values(ctx.view.cards).flatMap((c) => c.setup ?? []);
     if (actions.length > 0) {
       ctx.state.next = [...actions, ...ctx.state.next];
     }
@@ -302,7 +302,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
-  if (action.placeProgress) {
+  if (action.placeProgress !== undefined) {
+    if (action.placeProgress === 0) {
+      return;
+    }
+
     const activeLocation = getTargetCard(
       { top: { game: 'activeLocation' } },
       ctx

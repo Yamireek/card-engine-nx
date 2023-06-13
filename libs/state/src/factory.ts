@@ -15,6 +15,7 @@ export function createState(program?: Action): State {
       questArea: { cards: [], stack: false },
       stagingArea: { cards: [], stack: false },
       victoryDisplay: { cards: [], stack: true },
+      removed: { cards: [], stack: false },
     },
     next: program ? [program] : [],
     triggers: { end_of_phase: [], end_of_round: [] },

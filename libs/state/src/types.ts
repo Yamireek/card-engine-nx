@@ -49,6 +49,10 @@ export type Action =
         cost: Action;
         effect: Action;
       };
+      chooseRandomCardForAction?: {
+        target: CardTarget;
+        action: CardAction;
+      };
     };
 
 export type PlayerAction =
@@ -119,11 +123,14 @@ export type Ability = {
   attachesTo?: CardTarget;
 };
 
+export type NextStage = 'default' | 'random';
+
 export type Modifier = {
   increment?: {
     prop: 'attack' | 'defense';
     amount: NumberExpr;
   };
+  setNextStage?: NextStage;
 };
 
 export type NumberExpr =
@@ -135,6 +142,7 @@ export type NumberExpr =
         card: CardTarget;
         value: CardNumberExpr;
       };
+      plus?: NumberExpr[];
     };
 
 export type BoolExpr =
@@ -147,6 +155,7 @@ export type CardNumberExpr =
   | 'threadCost'
   | 'willpower'
   | 'threat'
+  | 'sequence'
   | {
       tokens: Token;
     };
@@ -170,6 +179,7 @@ export type CardTarget =
       controller?: PlayerId;
       mark?: Mark;
       zone?: ZoneId;
+      sequence?: NumberExpr;
     };
 
 export type ZoneTarget = {
