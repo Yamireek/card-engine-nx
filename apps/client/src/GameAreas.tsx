@@ -36,6 +36,7 @@ export const GameAreas = (props: { playerCount: number }) => {
           size: { width: 0.2, height: 0.1 },
         }}
         cards={state.zones.questArea.cards}
+        orientation='landscape'
       />
 
       <LotrCardArea

@@ -1,12 +1,12 @@
 import { useContext } from 'react';
 import { StateContext } from './StateContext';
-import { CardId } from '@card-engine-nx/basic';
+import { CardId, Orientation } from '@card-engine-nx/basic';
 import { cardSize } from './Card3d';
 import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { max } from 'lodash/fp';
 import React from 'react';
-import { LotrCard3d } from './PlayerAreas';
+import { LotrCard3d } from './LotrCard3d';
 
 export const LotrCardArea = (props: {
   layout: Omit<
@@ -14,6 +14,7 @@ export const LotrCardArea = (props: {
     'itemSize' | 'items' | 'renderer'
   >;
   cards: CardId[];
+  orientation?: Orientation;
 }) => {
   const { state } = useContext(StateContext);
 
@@ -51,6 +52,7 @@ export const LotrCardArea = (props: {
               cardId={p.item.id}
               position={[p.position[0], p.position[1] + offsetMin, 0.01]}
               size={realItemSize}
+              orientation={props.orientation}
             />
             {p.item.attachments.map((a, i) => {
               return (

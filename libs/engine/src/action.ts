@@ -524,7 +524,7 @@ export function gameRound(): Action {
     phaseQuest,
     phaseTravel,
     phaseEncounter,
-    phaseCombat,
+    //phaseCombat,
     phaseRefresh,
     'endRound'
   );
