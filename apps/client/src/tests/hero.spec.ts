@@ -1,5 +1,6 @@
 import { core } from '@card-engine-nx/cards';
 import { TestEngine } from './TestEngine';
+import { it, expect } from 'vitest';
 
 it("Gimli's attack bonus", () => {
   const game = new TestEngine();
