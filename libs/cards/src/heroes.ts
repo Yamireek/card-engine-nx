@@ -39,7 +39,7 @@ export const legolas = hero(
     hitPoints: 4,
     traits: ['noble', 'silvan', 'warrior'],
     sphere: 'tactics',
-  },
+  }
   // keyword('ranged'),
   // response({
   //   description:
@@ -60,7 +60,7 @@ export const thalin = hero(
     hitPoints: 4,
     traits: ['dwarf', 'warrior'],
     sphere: 'tactics',
-  },
+  }
   // response({
   //   description:
   //     'While Thalin is committed to a quest, deal 1 damage to each enemy as it is revealed by the encounter deck.',
@@ -80,7 +80,7 @@ export const gloin = hero(
     hitPoints: 4,
     traits: ['dwarf', 'noble'],
     sphere: 'leadership',
-  },
+  }
   // response({
   //   description:
   //     'After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered.',
@@ -100,7 +100,7 @@ export const eowyn = hero(
     hitPoints: 3,
     traits: ['noble', 'rohan'],
     sphere: 'spirit',
-  },
+  }
   // action({
   //   description:
   //     'Discard 1 card from your hand to give Éowyn +1 [willpower] until the end of the phase. This effect may be triggered by each player once each round.',
@@ -137,7 +137,7 @@ export const beravor = hero(
     hitPoints: 4,
     traits: ['dúnedain', 'ranger'],
     sphere: 'lore',
-  },
+  }
   // action({
   //   description:
   //     'Exhaust Beravor to choose a player. That player draws 2 cards. Limit once per round.',
@@ -161,16 +161,28 @@ export const glorfindel = hero(
     traits: ['noble', 'noldor', 'warrior'],
     sphere: 'lore',
   },
-  // action({
-  //   description:
-  //     "Pay 1 resource from Glorfindel's pool to heal 1 damage on any character. (Limit once per round.)",
-  //   cost: (caster, self) => targetCard(self).to(payCardResources(1)),
-  //   limit: perRound(1, 'glorfindel_ability'),
-  //   effect: chooseCard({
-  //     label: 'Choose character to heal',
-  //     filter: 'isCharacter',
-  //     action: heal(1),
-  //     optional: false,
-  //   }),
-  // })
+  {
+    description:
+      "Pay 1 resource from Glorfindel's pool to heal 1 damage on any character. (Limit once per round.)",
+    limit: 'once_per_round',
+    action: {
+      payment: {
+        cost: { card: { taget: 'self', action: { payResources: 1 } } },
+        effect: {
+          player: {
+            target: 'owner',
+            action: {
+              chooseCardActions: {
+                title: 'Choose character to heal',
+                multi: false,
+                optional: false,
+                action: { heal: 1 },
+                target: 'character',
+              },
+            },
+          },
+        },
+      },
+    },
+  }
 );

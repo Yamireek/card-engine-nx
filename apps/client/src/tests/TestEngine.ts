@@ -42,6 +42,23 @@ export class TestEngine {
     );
   }
 
+  get view() {
+    return createView(this.state);
+  }
+
+  get actions() {
+    return this.view.actions;
+  }
+
+  chooseAction(description: string) {
+    const action = this.actions.find((a) => a.description === description);
+    if (!action) {
+      throw new Error('action not found');
+    }
+
+    this.do(action.action);
+  }
+
   // doAction(title: string) {
   //   const action = this.actions.find((a) => a.description === title);
   //   if (action) {

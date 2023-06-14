@@ -28,7 +28,7 @@ export function canExecute(
     }
 
     if (action.sequence) {
-      return action.sequence.every((a) => canExecute(a, false, ctx));
+      return action.sequence.every((a) => canExecute(a, payment, ctx));
     }
 
     if (action.setCardVar) {
@@ -43,6 +43,15 @@ export function canExecute(
       const payment = canExecute(action.payment.cost, true, ctx);
       const effect = canExecute(action.payment.effect, false, ctx);
       return payment && effect;
+    }
+
+    if (action.useLimit) {
+      const existing = ctx.state.actionLimits.some(
+        (u) =>
+          u.card === action.useLimit?.card && u.index === action.useLimit.index
+      );
+
+      return !existing;
     }
   }
 

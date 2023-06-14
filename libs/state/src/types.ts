@@ -15,6 +15,8 @@ import { PlayerDeck, Scenario } from './card';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
+export type Limit = 'none' | 'once_per_round';
+
 export type Action =
   | 'empty'
   | 'shuffleEncounterDeck'
@@ -52,6 +54,11 @@ export type Action =
       chooseRandomCardForAction?: {
         target: CardTarget;
         action: CardAction;
+      };
+      useLimit?: {
+        type: Limit;
+        card: CardId;
+        index: number;
       };
     };
 
@@ -121,6 +128,7 @@ export type Ability = {
   action?: Action;
   setup?: Action;
   attachesTo?: CardTarget;
+  limit?: 'once_per_round';
 };
 
 export type NextStage = 'default' | 'random';

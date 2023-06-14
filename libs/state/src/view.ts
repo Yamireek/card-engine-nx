@@ -1,6 +1,6 @@
 import { CardId, PrintedProps } from '@card-engine-nx/basic';
 import { ModifierState } from './modifier';
-import { Ability, Action, CardTarget, NextStage } from './types';
+import { Ability, Action, CardTarget, Limit, NextStage } from './types';
 
 export type View = {
   cards: Record<CardId, CardView>;
@@ -14,6 +14,7 @@ export type View = {
 export type ActivableCardAction = {
   description: string;
   action: Action;
+  limit?: Limit;
 };
 
 export type CardView = {

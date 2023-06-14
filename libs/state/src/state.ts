@@ -2,7 +2,7 @@ import { CardId, GameZoneType, Phase, PlayerId } from '@card-engine-nx/basic';
 import { CardState } from './card';
 import { PlayerState } from './player';
 import { ZoneState } from './zone';
-import { Action } from './types';
+import { Action, Limit } from './types';
 
 export type State = {
   round: number;
@@ -35,4 +35,5 @@ export type State = {
     card: Record<string, CardId | undefined>;
     player: Record<string, PlayerId | undefined>;
   };
+  actionLimits: Array<{ type: Limit; card: CardId; index: number }>;
 };

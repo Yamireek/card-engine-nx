@@ -26,5 +26,6 @@ export function createState(program?: Action): State {
       card: {},
       player: {},
     },
+    actionLimits: [],
   };
 }

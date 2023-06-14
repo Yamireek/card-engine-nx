@@ -22,6 +22,7 @@ export function applyAbility(ability: Ability, card: CardView) {
     card.actions.push({
       description: ability.description,
       action: ability.action,
+      limit: ability.limit,
     });
     return;
   }

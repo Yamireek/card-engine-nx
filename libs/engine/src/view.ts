@@ -192,6 +192,28 @@ export function createCardActions(
     }));
   }
 
+  if (zone === 'playerArea') {
+    return card.actions.map((action, index) => {
+      return {
+        description: action.description,
+        action: sequence(
+          { setCardVar: { name: 'self', value: self } },
+          { setPlayerVar: { name: 'owner', value: owner } },
+          {
+            useLimit: {
+              type: action.limit ?? 'none',
+              card: card.id,
+              index,
+            },
+          },
+          action.action,
+          { setPlayerVar: { name: 'owner', value: undefined } },
+          { setCardVar: { name: 'self', value: undefined } }
+        ),
+      };
+    });
+  }
+
   return [];
 }
 

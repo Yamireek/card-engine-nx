@@ -34,6 +34,9 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'endRound') {
+    ctx.state.actionLimits = ctx.state.actionLimits.filter(
+      (l) => l.type !== 'once_per_round'
+    );
     ctx.state.next = [gameRound()];
     return;
   }
@@ -367,6 +370,15 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action.payment) {
     ctx.state.next.unshift(action.payment.cost, action.payment.effect);
     return;
+  }
+
+  if (action.useLimit) {
+    if (action.useLimit.type === 'none') {
+      return;
+    } else {
+      ctx.state.actionLimits.push(action.useLimit);
+      return;
+    }
   }
 
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);
