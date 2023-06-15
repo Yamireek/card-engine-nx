@@ -381,6 +381,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     }
   }
 
+  if (action.setEvent) {
+    ctx.state.event = action.setEvent;
+    return;
+  }
+
   throw new Error(`unknown  action: ${JSON.stringify(action)}`);
 }
 

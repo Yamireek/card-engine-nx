@@ -3,6 +3,7 @@ import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
 import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
+import { calculateNumberExpr } from '../expr';
 
 export function executeCardAction(
   action: CardAction,
@@ -96,7 +97,42 @@ export function executeCardAction(
   }
 
   if (action.dealDamage) {
-    card.token.damage += action.dealDamage;
+    const damage = action.dealDamage;
+    card.token.damage += damage;
+    const reponses = ctx.view.cards[card.id].responses?.receivedDamage; // TODO all responses
+    if (reponses) {
+      ctx.state.next.unshift({
+        player: {
+          target: '0', // TODO owner
+          action: {
+            chooseActions: {
+              title: 'Choose responses for receiving damage',
+              actions: reponses.map((r) => ({
+                title: r.description,
+                cardId: card.id,
+                action: sequence(
+                  {
+                    setEvent: {
+                      type: 'receivedDamage',
+                      cardId: card.id,
+                      damage,
+                    },
+                  },
+                  { setCardVar: { name: 'self', value: card.id } },
+                  r.action,
+                  { setCardVar: { name: 'self', value: undefined } },
+                  {
+                    setEvent: 'none',
+                  }
+                ),
+              })),
+              optional: true,
+              multi: true,
+            },
+          },
+        },
+      });
+    }
     return;
   }
 
@@ -106,7 +142,8 @@ export function executeCardAction(
   }
 
   if (action.generateResources) {
-    card.token.resources += action.generateResources;
+    const amount = calculateNumberExpr(action.generateResources, ctx);
+    card.token.resources += amount;
     return;
   }
 

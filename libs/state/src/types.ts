@@ -12,6 +12,7 @@ import {
   ZoneId,
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
+import { Event } from './state';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
@@ -60,6 +61,7 @@ export type Action =
         card: CardId;
         index: number;
       };
+      setEvent?: Event;
     };
 
 export type PlayerAction =
@@ -104,7 +106,7 @@ export type CardAction =
   | {
       dealDamage?: number;
       heal?: number | 'all';
-      generateResources?: number;
+      generateResources?: NumberExpr;
       payResources?: number;
       sequence?: CardAction[];
       placeProgress?: number;
@@ -124,14 +126,20 @@ export type CardAction =
 export type Ability = {
   description: string;
   implicit?: boolean;
-  selfModifier?: Modifier;
+  modifier?: Modifier;
   action?: Action;
   setup?: Action;
   attachesTo?: CardTarget;
   limit?: 'once_per_round';
+  response?: ActionResponse;
 };
 
 export type NextStage = 'default' | 'random';
+
+export type ActionResponse = {
+  event: 'receivedDamage';
+  action: Action;
+};
 
 export type Modifier = {
   increment?: {
@@ -140,6 +148,8 @@ export type Modifier = {
   };
   setNextStage?: NextStage;
 };
+
+export type EventNumbers = { type: 'receivedDamage'; value: 'damage' };
 
 export type NumberExpr =
   | number
@@ -150,6 +160,7 @@ export type NumberExpr =
         card: CardTarget;
         value: CardNumberExpr;
       };
+      fromEvent?: EventNumbers;
       plus?: NumberExpr[];
     };
 

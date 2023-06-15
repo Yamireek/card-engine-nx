@@ -1,11 +1,11 @@
 import { CardView, Ability } from '@card-engine-nx/state';
 
 export function applyAbility(ability: Ability, card: CardView) {
-  if (ability.selfModifier) {
+  if (ability.modifier) {
     card.modifiers.push({
       applied: false,
       description: ability.description,
-      modifier: ability.selfModifier,
+      modifier: ability.modifier,
     });
     return;
   }
@@ -29,6 +29,20 @@ export function applyAbility(ability: Ability, card: CardView) {
 
   if (ability.attachesTo) {
     card.attachesTo = ability.attachesTo;
+    return;
+  }
+
+  if (ability.response) {
+    if (!card.responses) {
+      card.responses = {};
+    }
+    if (!card.responses[ability.response.event]) {
+      card.responses[ability.response.event] = [];
+    }
+    card.responses[ability.response.event]?.push({
+      description: ability.description,
+      action: ability.response.action,
+    });
     return;
   }
 

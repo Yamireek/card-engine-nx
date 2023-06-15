@@ -53,10 +53,29 @@ export class TestEngine {
   chooseAction(description: string) {
     const action = this.actions.find((a) => a.description === description);
     if (!action) {
-      throw new Error('action not found');
+      throw new Error(
+        `action not found, available: ${this.actions
+          .map((a) => a.description)
+          .join(', ')}`
+      );
     }
 
     this.do(action.action);
+  }
+
+  chooseOption(description: string) {
+    const option = this.state.choice?.options.find(
+      (o) => o.title === description
+    );
+    if (!option) {
+      throw new Error(
+        `option not found, available: ${this.state.choice?.options
+          .map((a) => a.title)
+          .join(', ')}`
+      );
+    }
+    this.state.choice = undefined;
+    this.do(option.action);
   }
 
   // doAction(title: string) {
@@ -153,6 +172,11 @@ export class CardProxy {
 
   get token() {
     return this.state.cards[this.id].token;
+  }
+
+  get responses() {
+    const view = createView(this.state);
+    return view.cards[this.id].responses;
   }
 }
 

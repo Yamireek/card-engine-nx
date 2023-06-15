@@ -4,6 +4,14 @@ import { PlayerState } from './player';
 import { ZoneState } from './zone';
 import { Action, Limit } from './types';
 
+export type Event =
+  | 'none'
+  | {
+      type: 'receivedDamage';
+      cardId: CardId;
+      damage: number;
+    };
+
 export type State = {
   round: number;
   phase: Phase;
@@ -36,4 +44,5 @@ export type State = {
     player: Record<string, PlayerId | undefined>;
   };
   actionLimits: Array<{ type: Limit; card: CardId; index: number }>;
+  event?: Event;
 };

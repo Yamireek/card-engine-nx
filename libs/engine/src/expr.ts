@@ -32,6 +32,20 @@ export function calculateNumberExpr(
     }
   }
 
+  if (expr.fromEvent) {
+    if (ctx.state.event === 'none' || !ctx.state.event) {
+      throw new Error('no active event');
+    }
+
+    if (expr.fromEvent.type === ctx.state.event.type) {
+      if (expr.fromEvent.type === 'receivedDamage') {
+        if (expr.fromEvent.value === 'damage') {
+          return ctx.state.event.damage;
+        }
+      }
+    }
+  }
+
   if (expr.plus) {
     const values = expr.plus.map((e) => calculateNumberExpr(e, ctx));
     return sum(values) ?? 0;

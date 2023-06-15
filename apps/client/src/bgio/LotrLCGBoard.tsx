@@ -1,7 +1,6 @@
 import { LotrLCGame, UIEvents, createView } from '@card-engine-nx/engine';
 import { State } from '@card-engine-nx/state';
 import { BoardProps, Client } from 'boardgame.io/react';
-import { Local } from 'boardgame.io/multiplayer';
 import { GameSetup } from '../GameSetup';
 import { StateContext } from '../StateContext';
 import { useMemo } from 'react';

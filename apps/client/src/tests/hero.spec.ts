@@ -31,18 +31,18 @@ it("Glorfindel's action", () => {
   expect(game.actions.length).toEqual(1);
 });
 
-// it("Gloin's resource generator", () => {
-//   const game = new GameEngine();
-//   const gloin = game.addHero(hero.gloin);
-//   expect(gloin.token.resources).toEqual(0);
-//   expect(gloin.responses.receivedDamage.length).toEqual(1);
-//   gloin.update(dealDamage(2));
-//   expect(game.state.choice?.title).toBe("Choose response for dealing damage");
-//   game.chooseOption(
-//     "After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered."
-//   );
-//   expect(gloin.token.resources).toEqual(2);
-// });
+it("Gloin's resource generator", () => {
+  const game = new TestEngine();
+  const gloin = game.addHero(core.hero.gloin);
+  expect(gloin.token.resources).toEqual(0);
+  expect(gloin.responses?.receivedDamage?.length).toEqual(1);
+  gloin.update({ dealDamage: 2 });
+  expect(game.state.choice?.title).toBe('Choose responses for receiving damage');
+  game.chooseOption(
+    'After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered.'
+  );
+  expect(gloin.token.resources).toEqual(2);
+});
 
 // it("Beravor's card drawing action", () => {
 //   const game = new GameEngine();

@@ -27,4 +27,7 @@ export type CardView = {
   setup?: Action[];
   attachesTo?: CardTarget;
   nextStage?: NextStage;
+  responses?: {
+    receivedDamage?: Array<{ description: string; action: Action }>;
+  };
 };

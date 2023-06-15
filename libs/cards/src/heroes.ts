@@ -13,7 +13,7 @@ export const gimli = hero(
   },
   {
     description: 'Gimli gets +1 [attack] for each damage token on him.',
-    selfModifier: {
+    modifier: {
       increment: {
         prop: 'attack',
         amount: {
@@ -80,14 +80,24 @@ export const gloin = hero(
     hitPoints: 4,
     traits: ['dwarf', 'noble'],
     sphere: 'leadership',
+  },
+  {
+    description:
+      'After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered.',
+    response: {
+      event: 'receivedDamage',
+      action: {
+        card: {
+          taget: 'self',
+          action: {
+            generateResources: {
+              fromEvent: { type: 'receivedDamage', value: 'damage' },
+            },
+          },
+        },
+      },
+    },
   }
-  // response({
-  //   description:
-  //     'After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered.',
-  //   type: 'receivedDamage',
-  //   condition: 'IsSelf',
-  //   action: targetCard('self').to(addResources('damageAmount')),
-  // })
 );
 
 export const eowyn = hero(
