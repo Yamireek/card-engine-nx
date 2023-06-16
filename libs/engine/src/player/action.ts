@@ -4,6 +4,7 @@ import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
 import { max, sum } from 'lodash/fp';
 import { sequence } from '../utils/sequence';
+import { getTargetPlayer } from './target';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -379,6 +380,8 @@ export function executePlayerAction(
       ctx
     );
 
+    const cardAction = action.chooseCardActions.action;
+
     ctx.state.choice = {
       id: ctx.state.nextId++,
       player: player.id,
@@ -392,7 +395,42 @@ export function executePlayerAction(
         action: {
           card: {
             taget: c,
-            action: action.chooseCardActions?.action ?? 'empty',
+            action: cardAction,
+          },
+        },
+      })),
+    };
+    return;
+  }
+
+  if (action.choosePlayerActions) {
+    const playerIds = getTargetPlayer(
+      {
+        and: [
+          action.choosePlayerActions.target,
+          {
+            canExecute: action.choosePlayerActions.action,
+          },
+        ],
+      },
+      ctx
+    );
+
+    const playerAction = action.choosePlayerActions.action;
+
+    ctx.state.choice = {
+      id: ctx.state.nextId++,
+      player: player.id,
+      dialog: true,
+      title: action.choosePlayerActions.title,
+      multi: action.choosePlayerActions.multi,
+      optional: action.choosePlayerActions.optional,
+      options: playerIds.map((c) => ({
+        title: c.toString(),
+        action: {
+          player: {
+            target: c,
+            action: playerAction,
           },
         },
       })),

@@ -74,6 +74,12 @@ export function canPlayerExecute(
       return targets.some((id) => canCardExecute(cardAction, id, ctx));
     }
 
+    if (action.choosePlayerActions) {
+      const targets = getTargetPlayer(action.choosePlayerActions.target, ctx);
+      const playerAction = action.choosePlayerActions.action;
+      return targets.some((id) => canPlayerExecute(playerAction, id, ctx));
+    }
+
     if (action.payResources) {
       const player = ctx.state.players[playerId];
       if (!player) {
@@ -93,6 +99,15 @@ export function canPlayerExecute(
       );
 
       return available >= cost;
+    }
+
+    if (action.draw) {
+      const player = ctx.state.players[playerId];
+      if (player) {
+        return player.zones.library.cards.length > 0;
+      } else {
+        return false;
+      }
     }
 
     throw new Error(

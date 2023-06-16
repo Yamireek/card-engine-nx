@@ -37,7 +37,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     ctx.state.actionLimits = ctx.state.actionLimits.filter(
       (l) => l.type !== 'once_per_round'
     );
-    ctx.state.next = [gameRound()];
     return;
   }
 

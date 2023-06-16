@@ -37,33 +37,36 @@ it("Gloin's resource generator", () => {
   expect(gloin.token.resources).toEqual(0);
   expect(gloin.responses?.receivedDamage?.length).toEqual(1);
   gloin.update({ dealDamage: 2 });
-  expect(game.state.choice?.title).toBe('Choose responses for receiving damage');
+  expect(game.state.choice?.title).toBe(
+    'Choose responses for receiving damage'
+  );
   game.chooseOption(
     'After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered.'
   );
   expect(gloin.token.resources).toEqual(2);
 });
 
-// it("Beravor's card drawing action", () => {
-//   const game = new GameEngine();
-//   const player = game.addPlayer();
-//   const beravor = game.addHero(hero.beravor);
-//   game.addToLibrary(ally.veteranAxehand);
-//   game.addToLibrary(ally.veteranAxehand);
-//   expect(player.hand.cards.length).toEqual(0);
-//   expect(game.actions.length).toEqual(1);
-//   game.doAction(
-//     "Exhaust Beravor to choose a player. That player draws 2 cards. Limit once per round."
-//   );
-//   expect(player.hand.cards.length).toEqual(2);
-//   expect(game.actions.length).toEqual(0);
-//   beravor.update("Ready");
-//   expect(game.actions.length).toEqual(0);
-//   game.addToLibrary(ally.veteranAxehand);
-//   expect(game.actions.length).toEqual(0);
-//   game.do("EndRound");
-//   expect(game.actions.length).toEqual(1);
-// });
+it("Beravor's card drawing action", () => {
+  const game = new TestEngine();
+  const player = game.addPlayer();
+  const beravor = game.addHero(core.hero.beravor);
+  game.addToLibrary(core.ally.veteranAxehand);
+  game.addToLibrary(core.ally.veteranAxehand);
+  expect(player.hand.cards.length).toEqual(0);
+  expect(player.library.cards.length).toEqual(2);
+  expect(game.actions.length).toEqual(1);
+  game.chooseAction(
+    'Exhaust Beravor to choose a player. That player draws 2 cards. Limit once per round.'
+  );
+  expect(player.hand.cards.length).toEqual(2);
+  expect(game.actions.length).toEqual(0);
+  beravor.update('ready');
+  expect(game.actions.length).toEqual(0);
+  game.addToLibrary(core.ally.veteranAxehand);
+  expect(game.actions.length).toEqual(0);
+  game.do('endRound');
+  expect(game.actions.length).toEqual(1);
+});
 
 // it("Eowyns bonus will", async () => {
 //   const game = new GameEngine();

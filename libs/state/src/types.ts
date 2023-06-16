@@ -88,6 +88,13 @@ export type PlayerAction =
         multi: boolean;
         optional: boolean;
       };
+      choosePlayerActions?: {
+        title: string;
+        target: PlayerTarget;
+        action: PlayerAction;
+        multi: boolean;
+        optional: boolean;
+      };
       chooseActions?: {
         title: string;
         actions: Array<{ title: string; cardId?: CardId; action: Action }>;
@@ -209,6 +216,12 @@ export type ZoneTarget = {
   };
 };
 
-export type PlayerTarget = PlayerId | PlayerId[] | 'each' | 'owner' | 'first';
+export type PlayerTarget =
+  | PlayerId
+  | PlayerId[]
+  | 'each'
+  | 'owner'
+  | 'first'
+  | { and?: PlayerTarget[]; canExecute?: PlayerAction };
 
 export type Context = { selfCard?: CardId };

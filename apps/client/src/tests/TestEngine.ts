@@ -144,19 +144,26 @@ export class TestEngine {
     const id = addPlayerCard(this.state, hero, '0', 'front', 'playerArea');
     return new CardProxy(this.state, id);
   }
+
+  addToLibrary(hero: CardDefinition): CardProxy {
+    this.ensurePlayer0();
+
+    const id = addPlayerCard(this.state, hero, '0', 'front', 'library');
+    return new CardProxy(this.state, id);
+  }
 }
 
 export class CardProxy {
-  constructor(private state: State, private id: CardId) {}
+  constructor(private _state: State, private id: CardId) {}
 
   update(cardAction: CardAction) {
     executeCardAction(
       cardAction,
-      this.state.cards[this.id],
-      crateExecutionContext(this.state, consoleEvents, (v) => v)
+      this._state.cards[this.id],
+      crateExecutionContext(this._state, consoleEvents, (v) => v)
     );
     advanceToChoiceState(
-      this.state,
+      this._state,
       consoleEvents,
       true,
       true,
@@ -166,20 +173,32 @@ export class CardProxy {
   }
 
   get props() {
-    const view = createView(this.state);
+    const view = createView(this._state);
     return view.cards[this.id].props;
   }
 
   get token() {
-    return this.state.cards[this.id].token;
+    return this._state.cards[this.id].token;
   }
 
   get responses() {
-    const view = createView(this.state);
+    const view = createView(this._state);
     return view.cards[this.id].responses;
+  }
+
+  get state() {
+    return this._state.cards[this.id];
   }
 }
 
 export class PlayerProxy {
   constructor(private state: State, public id: PlayerId) {}
+
+  get hand() {
+    return this.state.players[this.id]!.zones.hand;
+  }
+
+  get library() {
+    return this.state.players[this.id]!.zones.library;
+  }
 }

@@ -147,17 +147,38 @@ export const beravor = hero(
     hitPoints: 4,
     traits: ['dúnedain', 'ranger'],
     sphere: 'lore',
+  },
+  {
+    description:
+      'Exhaust Beravor to choose a player. That player draws 2 cards. Limit once per round.',
+    limit: 'once_per_round',
+    action: {
+      payment: {
+        cost: {
+          card: {
+            taget: 'self',
+            action: 'exhaust',
+          },
+        },
+        effect: {
+          player: {
+            target: 'owner',
+            action: {
+              choosePlayerActions: {
+                title: 'Choose player to draw 2 cards',
+                action: {
+                  draw: 2,
+                },
+                optional: false,
+                target: 'each',
+                multi: false,
+              },
+            },
+          },
+        },
+      },
+    },
   }
-  // action({
-  //   description:
-  //     'Exhaust Beravor to choose a player. That player draws 2 cards. Limit once per round.',
-  //   limit: perRound(1, 'beravor_ability'),
-  //   cost: (caster, self) => targetCard(self).to('Exhaust'),
-  //   effect: choosePlayer({
-  //     label: 'Choose player to draw 2 cards',
-  //     action: draw(2),
-  //   }),
-  // })
 );
 
 export const glorfindel = hero(

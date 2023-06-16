@@ -1,7 +1,8 @@
 import { PlayerId, values } from '@card-engine-nx/basic';
 import { PlayerTarget } from '@card-engine-nx/state';
-import { isArray } from 'lodash';
+import { intersection, isArray, uniq } from 'lodash';
 import { ViewContext } from '../context';
+import { canPlayerExecute } from '../resolution';
 
 export function getTargetPlayer(
   target: PlayerTarget,
@@ -30,6 +31,22 @@ export function getTargetPlayer(
   if (target === 'first') {
     // TODO fix
     return ['0'];
+  }
+
+  if (typeof target === 'object') {
+    if (target.and) {
+      const lists = target.and.map((t) => getTargetPlayer(t, ctx));
+      return uniq(intersection(...lists));
+    }
+
+    if (target.canExecute) {
+      const action = target.canExecute;
+      return values(ctx.state.players)
+        .filter((p) => canPlayerExecute(action, p.id, ctx))
+        .map((p) => p.id);
+    }
+
+    throw new Error(`unknown player target: ${JSON.stringify(target)}`);
   }
 
   if (['0', '1', '2', '3'].includes(target)) {
