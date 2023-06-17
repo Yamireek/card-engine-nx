@@ -18,6 +18,8 @@ export type ActionResult = 'none' | 'partial' | 'full';
 
 export type Limit = 'none' | 'once_per_round';
 
+export type Until = 'end_of_phase' | 'end_of_round';
+
 export type Action =
   | 'empty'
   | 'shuffleEncounterDeck'
@@ -77,7 +79,9 @@ export type PlayerAction =
   | 'eliminate'
   | {
       draw?: number;
-      sequence?: Action[];
+      discard?: number;
+      setLimit?: { key: string; limit: Limit };
+      sequence?: PlayerAction[];
       incrementThreat?: NumberExpr;
       payResources?: { amount: number; sphere: Sphere };
       declareAttackers?: CardId;
@@ -128,6 +132,7 @@ export type CardAction =
         to: ZoneId;
         side: Side;
       };
+      modify?: Modifier;
     };
 
 export type Ability = {
@@ -149,8 +154,9 @@ export type ActionResponse = {
 };
 
 export type Modifier = {
-  increment?: {
-    prop: 'attack' | 'defense';
+  until?: Until;
+  add?: {
+    prop: 'attack' | 'defense' | 'willpower';
     amount: NumberExpr;
   };
   setNextStage?: NextStage;

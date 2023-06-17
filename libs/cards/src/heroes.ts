@@ -14,7 +14,7 @@ export const gimli = hero(
   {
     description: 'Gimli gets +1 [attack] for each damage token on him.',
     modifier: {
-      increment: {
+      add: {
         prop: 'attack',
         amount: {
           fromCard: {
@@ -110,6 +110,54 @@ export const eowyn = hero(
     hitPoints: 3,
     traits: ['noble', 'rohan'],
     sphere: 'spirit',
+  },
+  {
+    description:
+      'Discard 1 card from your hand to give Éowyn +1 [willpower] until the end of the phase. This effect may be triggered by each player once each round.',
+    action: {
+      payment: {
+        cost: {
+          player: {
+            target: 'owner',
+            action: {
+              choosePlayerActions: {
+                target: 'each',
+                title: 'Choose player to discar card',
+                action: {
+                  sequence: [
+                    {
+                      discard: 1,
+                    },
+                    {
+                      setLimit: {
+                        key: 'eowyn_action',
+                        limit: 'once_per_round',
+                      },
+                    },
+                  ],
+                },
+                multi: false,
+                optional: false,
+              },
+            },
+          },
+        },
+        effect: {
+          card: {
+            taget: 'self',
+            action: {
+              modify: {
+                add: {
+                  prop: 'willpower',
+                  amount: 1,
+                },
+                until: 'end_of_phase',
+              },
+            },
+          },
+        },
+      },
+    },
   }
   // action({
   //   description:

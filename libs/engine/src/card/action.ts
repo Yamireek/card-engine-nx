@@ -259,5 +259,14 @@ export function executeCardAction(
     return;
   }
 
+  if (action.modify) {
+    card.modifiers.push({
+      modifier: action.modify,
+      description: 'REMOVE', // TODO remove
+      until: action.modify.until,
+    });
+    return;
+  }
+
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
 }

@@ -6,7 +6,7 @@ import {
 } from '@card-engine-nx/state';
 import { getTargetPlayer } from './player/target';
 import { executePlayerAction } from './player/action';
-import { reverse } from 'lodash/fp';
+import { keys, reverse } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard, createPlayerState } from './utils';
 import { sequence } from './utils/sequence';
@@ -37,10 +37,20 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     ctx.state.actionLimits = ctx.state.actionLimits.filter(
       (l) => l.type !== 'once_per_round'
     );
+    for (const player of values(ctx.state.players)) {
+      for (const limit of keys(player.limits)) {
+        if (player.limits[limit] === 'once_per_round') {
+          delete player.limits[limit];
+        }
+      }
+    }
     return;
   }
 
   if (action === 'endPhase') {
+    for (const card of values(ctx.state.cards)) {
+      card.modifiers = card.modifiers.filter((m) => m.until !== 'end_of_phase');
+    }
     return;
   }
 

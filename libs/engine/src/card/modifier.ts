@@ -7,11 +7,11 @@ export function applyModifier(
   card: CardView,
   ctx: ViewContext
 ) {
-  if (modifier.increment) {
-    const amount = calculateNumberExpr(modifier.increment.amount, ctx);
-    const value = card.props[modifier.increment.prop];
+  if (modifier.add) {
+    const amount = calculateNumberExpr(modifier.add.amount, ctx);
+    const value = card.props[modifier.add.prop];
     if (value !== undefined && amount) {
-      card.props[modifier.increment.prop] = value + amount;
+      card.props[modifier.add.prop] = value + amount;
     }
 
     return;

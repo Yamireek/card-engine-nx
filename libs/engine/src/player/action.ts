@@ -1,4 +1,9 @@
-import { PlayerState, PlayerAction, CardTarget } from '@card-engine-nx/state';
+import {
+  PlayerState,
+  PlayerAction,
+  CardTarget,
+  Action,
+} from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
@@ -451,6 +456,35 @@ export function executePlayerAction(
     return;
   }
 
+  if (action.discard) {
+    ctx.state.next.unshift({
+      repeat: {
+        amount: action.discard,
+        action: {
+          player: {
+            target: player.id,
+            action: {
+              chooseCardActions: {
+                title: 'Choose card to discard',
+                target: { zone: { owner: player.id, type: 'hand' } },
+                action: {
+                  move: {
+                    from: { owner: player.id, type: 'hand' },
+                    to: { owner: player.id, type: 'discardPile' },
+                    side: 'front',
+                  },
+                },
+                multi: false,
+                optional: false,
+              },
+            },
+          },
+        },
+      },
+    });
+    return;
+  }
+
   if (action.declareAttackers) {
     ctx.state.next.unshift({
       player: {
@@ -470,6 +504,20 @@ export function executePlayerAction(
         },
       },
     });
+    return;
+  }
+
+  if (action.sequence) {
+    const actions: Action[] = action.sequence.map((a) => ({
+      player: { target: player.id, action: a },
+    }));
+
+    ctx.state.next.unshift(...actions);
+    return;
+  }
+
+  if (action.setLimit) {
+    player.limits[action.setLimit.key] = action.setLimit.limit;
     return;
   }
 

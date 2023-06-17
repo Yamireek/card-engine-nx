@@ -63,6 +63,11 @@ export function canPlayerExecute(
   playerId: PlayerId,
   ctx: ViewContext
 ): boolean {
+  const player = ctx.state.players[playerId];
+  if (!player || player.eliminated) {
+    return false;
+  }
+
   if (typeof action === 'string') {
     throw new Error(
       `not implemented: canPlayerExecute ${JSON.stringify(action)}`
@@ -81,11 +86,6 @@ export function canPlayerExecute(
     }
 
     if (action.payResources) {
-      const player = ctx.state.players[playerId];
-      if (!player) {
-        return false;
-      }
-
       const sphere = action.payResources.sphere;
       const cost = action.payResources.amount;
       const heroes = player.zones.playerArea.cards
@@ -102,12 +102,19 @@ export function canPlayerExecute(
     }
 
     if (action.draw) {
-      const player = ctx.state.players[playerId];
-      if (player) {
-        return player.zones.library.cards.length > 0;
-      } else {
-        return false;
-      }
+      return player.zones.library.cards.length > 0;
+    }
+
+    if (action.discard) {
+      return player.zones.hand.cards.length >= action.discard;
+    }
+
+    if (action.sequence) {
+      return action.sequence.every((a) => canPlayerExecute(a, playerId, ctx));
+    }
+
+    if (action.setLimit) {
+      return !player.limits[action.setLimit.key];
     }
 
     throw new Error(
@@ -172,6 +179,10 @@ export function canCardExecute(
     }
 
     if (action.attachCard) {
+      return true;
+    }
+
+    if (action.modify) {
       return true;
     }
   }

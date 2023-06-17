@@ -138,17 +138,28 @@ export class TestEngine {
     throw new Error('cant add new player');
   }
 
-  addHero(hero: CardDefinition): CardProxy {
+  addHero(hero: CardDefinition, player?: PlayerProxy): CardProxy {
     this.ensurePlayer0();
 
-    const id = addPlayerCard(this.state, hero, '0', 'front', 'playerArea');
+    const id = addPlayerCard(
+      this.state,
+      hero,
+      player?.id ?? '0',
+      'front',
+      'playerArea'
+    );
     return new CardProxy(this.state, id);
   }
 
   addToLibrary(hero: CardDefinition): CardProxy {
     this.ensurePlayer0();
 
-    const id = addPlayerCard(this.state, hero, '0', 'front', 'library');
+    const id = addPlayerCard(this.state, hero, '0', 'back', 'library');
+    return new CardProxy(this.state, id);
+  }
+
+  addToHand(card: CardDefinition, player: PlayerProxy): CardProxy {
+    const id = addPlayerCard(this.state, card, player.id, 'front', 'hand');
     return new CardProxy(this.state, id);
   }
 }

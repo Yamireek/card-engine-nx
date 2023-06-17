@@ -1,7 +1,7 @@
 import {
   Action,
   CardDefinition,
-  CardState,  
+  CardState,
   PlayerState,
   State,
   View,
@@ -94,6 +94,7 @@ export function createPlayerState(playerId: PlayerId): PlayerState {
     limitUses: { game: {} },
     flags: {},
     eliminated: false,
+    limits: {},
   };
 }
 
@@ -102,6 +103,7 @@ export function nextStep(ctx: ExecutionContext) {
   if (!action) {
     return;
   } else {
+    console.log('executing ', action);
     executeAction(action, ctx);
   }
 }
