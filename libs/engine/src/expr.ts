@@ -68,10 +68,7 @@ export function calculateBoolExpr(
 
     const enemies = getTargetCard(
       {
-        and: [
-          { type: ['enemy'] },
-          { zone: { owner: 'game', type: 'stagingArea' } },
-        ],
+        and: [{ type: ['enemy'] }, { zone: 'stagingArea' }],
       },
       ctx
     );

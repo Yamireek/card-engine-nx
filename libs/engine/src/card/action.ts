@@ -32,8 +32,8 @@ export function executeCardAction(
         taget: card.id,
         action: {
           move: {
-            from: { owner: 'game', type: 'stagingArea' },
-            to: { owner: 'game', type: 'activeLocation' },
+            from: 'stagingArea',
+            to: 'activeLocation',
             side: 'front',
           },
         },
@@ -61,7 +61,7 @@ export function executeCardAction(
         taget: card.id,
         action: {
           move: {
-            to: { owner: card.owner, type: 'discardPile' },
+            to: 'discardPile',
             side: 'front',
           },
         },
@@ -76,7 +76,7 @@ export function executeCardAction(
         taget: card.id,
         action: {
           move: {
-            from: { owner: 'game', type: 'stagingArea' },
+            from: 'stagingArea',
             to: { owner: action.engagePlayer, type: 'engaged' },
             side: 'front',
           },

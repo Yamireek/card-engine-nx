@@ -5,9 +5,7 @@ export type CardId = Flavor<number, 'CardId'>;
 
 export type CardNumProp = 'attack' | 'defense' | 'willpower';
 
-export type ZoneId =
-  | { owner: 'game'; type: GameZoneType } // TODO optional owner
-  | { owner: PlayerId; type: PlayerZoneType };
+export type ZoneId = GameZoneType | { owner: PlayerId; type: PlayerZoneType };
 
 export type Keywords = {
   ranged: boolean;

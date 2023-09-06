@@ -51,10 +51,7 @@ export function executePlayerAction(
     const threat = player.thread;
     const enemies = getTargetCard(
       {
-        and: [
-          { type: ['enemy'] },
-          { zone: { owner: 'game', type: 'stagingArea' } },
-        ],
+        and: [{ type: ['enemy'] }, { zone: 'stagingArea' }],
       },
       ctx
     ).map((id) => ctx.view.cards[id]);
@@ -103,10 +100,7 @@ export function executePlayerAction(
             optional: true,
             multi: false,
             target: {
-              and: [
-                { type: ['enemy'] },
-                { zone: { owner: 'game', type: 'stagingArea' } },
-              ],
+              and: [{ type: ['enemy'] }, { zone: 'stagingArea' }],
             },
             action: {
               engagePlayer: player.id,

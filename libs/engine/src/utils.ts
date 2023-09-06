@@ -216,14 +216,8 @@ export function advanceToChoiceState(
             taget: exploredQuest,
             action: {
               move: {
-                from: {
-                  owner: 'game',
-                  type: 'questArea',
-                },
-                to: {
-                  owner: 'game',
-                  type: 'removed',
-                },
+                from: 'questArea',
+                to: 'removed',
                 side: 'front',
               },
             },
@@ -236,10 +230,7 @@ export function advanceToChoiceState(
           {
             and: [
               {
-                zone: {
-                  owner: 'game',
-                  type: 'questDeck',
-                },
+                zone: 'questDeck',
               },
               {
                 sequence: {
@@ -271,14 +262,8 @@ export function advanceToChoiceState(
                 sequence: [
                   {
                     move: {
-                      from: {
-                        owner: 'game',
-                        type: 'questDeck',
-                      },
-                      to: {
-                        owner: 'game',
-                        type: 'questArea',
-                      },
+                      from: 'questDeck',
+                      to: 'questArea',
                       side: 'front',
                     },
                   },
@@ -297,14 +282,8 @@ export function advanceToChoiceState(
                   sequence: [
                     {
                       move: {
-                        from: {
-                          owner: 'game',
-                          type: 'questDeck',
-                        },
-                        to: {
-                          owner: 'game',
-                          type: 'questArea',
-                        },
+                        from: 'questDeck',
+                        to: 'questArea',
                         side: 'front',
                       },
                     },

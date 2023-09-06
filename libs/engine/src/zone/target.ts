@@ -11,8 +11,8 @@ import { keys } from 'lodash/fp';
 import { ViewContext } from '../context';
 
 export function getZoneState(zoneId: ZoneId, state: State): ZoneState {
-  if (zoneId.owner === 'game') {
-    return state.zones[zoneId.type];
+  if (typeof zoneId === 'string') {
+    return state.zones[zoneId];
   } else {
     const player = state.players[zoneId.owner];
     if (player) {
@@ -51,7 +51,7 @@ export function getTargetZone(
 export function getCardZoneId(cardId: CardId, state: State): ZoneId {
   for (const zone of keys(state.zones) as GameZoneType[]) {
     if (state.zones[zone].cards.includes(cardId)) {
-      return { owner: 'game', type: zone };
+      return zone;
     }
   }
 

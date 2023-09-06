@@ -57,10 +57,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action === 'chooseTravelDestination') {
     const target: CardTarget = {
-      and: [
-        { zone: { owner: 'game', type: 'stagingArea' } },
-        { type: ['location'] },
-      ],
+      and: [{ zone: 'stagingArea' }, { type: ['location'] }],
     };
 
     const locations = getTargetCard(target, ctx);
@@ -108,7 +105,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     const totalThreat = calculateNumberExpr(
       {
         fromCard: {
-          card: { zone: { owner: 'game', type: 'stagingArea' } },
+          card: { zone: 'stagingArea' },
           value: 'threat',
           sum: true,
         },
@@ -136,14 +133,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         taget: { top: { game: 'encounterDeck' } },
         action: {
           move: {
-            from: {
-              owner: 'game',
-              type: 'encounterDeck',
-            },
-            to: {
-              owner: 'game',
-              type: 'stagingArea',
-            },
+            from: 'encounterDeck',
+            to: 'stagingArea',
             side: 'front',
           },
         },
@@ -244,14 +235,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           taget: card.id,
           action: {
             move: {
-              from: {
-                owner: 'game',
-                type: 'encounterDeck',
-              },
-              to: {
-                owner: 'game',
-                type: 'stagingArea',
-              },
+              from: 'encounterDeck',
+              to: 'stagingArea',
               side: 'front',
             },
           },
@@ -428,8 +413,8 @@ export function beginScenario(
         taget: { top: { game: 'questDeck' } },
         action: {
           move: {
-            from: { owner: 'game', type: 'questDeck' },
-            to: { owner: 'game', type: 'questArea' },
+            from: 'questDeck',
+            to: 'questArea',
             side: 'front',
           },
         },
@@ -442,10 +427,7 @@ export function beginScenario(
           flip: 'back',
         },
         taget: {
-          zone: {
-            owner: 'game',
-            type: 'questArea',
-          },
+          zone: 'questArea',
         },
       },
     },
