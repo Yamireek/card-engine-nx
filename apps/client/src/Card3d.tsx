@@ -17,7 +17,6 @@ export type Card3dProps = React.PropsWithChildren<{
   position: Vector3;
   rotation?: Vector3;
   textures: CardTextures;
-  scale?: number; // TODO remove
   size?: Dimensions;
   hidden?: boolean;
   orientation?: Orientation;
@@ -35,9 +34,7 @@ export const Card3d = (props: Card3dProps) => {
   const detail = useContext(DetailContext);
 
   const spring = useSpring({
-    scale:
-      props.scale ??
-      (props.size?.width ? props.size.width / cardSize.width : 1),
+    scale: props.size?.width ? props.size.width / cardSize.width : 1,
     x: props.position[0],
     y: props.position[1],
     z: props.position[2],

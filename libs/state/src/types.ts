@@ -36,10 +36,6 @@ export type Action =
       card?: { action: CardAction; taget: CardTarget };
       sequence?: Action[];
       addPlayer?: PlayerDeck;
-      loadDeck?: {
-        player: PlayerId;
-        deck: PlayerDeck;
-      };
       setupScenario?: Scenario;
       addToStagingArea?: string;
       beginPhase?: Phase;

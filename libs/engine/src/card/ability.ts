@@ -4,7 +4,6 @@ export function applyAbility(ability: Ability, card: CardView) {
   if (ability.modifier) {
     card.modifiers.push({
       applied: false,
-      description: ability.description,
       modifier: ability.modifier,
     });
     return;

@@ -206,10 +206,10 @@ export class PlayerProxy {
   constructor(private state: State, public id: PlayerId) {}
 
   get hand() {
-    return this.state.players[this.id]!.zones.hand;
+    return this.state.players[this.id]?.zones.hand;
   }
 
   get library() {
-    return this.state.players[this.id]!.zones.library;
+    return this.state.players[this.id]?.zones.library;
   }
 }

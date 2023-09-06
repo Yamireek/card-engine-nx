@@ -195,24 +195,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
-  if (action.loadDeck) {
-    // TODO not used
-    for (const hero of action.loadDeck.deck.heroes) {
-      addPlayerCard(
-        ctx.state,
-        hero,
-        action.loadDeck.player,
-        'front',
-        'playerArea'
-      );
-    }
-
-    for (const card of action.loadDeck.deck.library) {
-      addPlayerCard(ctx.state, card, action.loadDeck.player, 'back', 'library');
-    }
-    return;
-  }
-
   if (action.setupScenario) {
     for (const encounterCard of action.setupScenario.encounterCards) {
       addGameCard(ctx.state, encounterCard, 'back', 'encounterDeck');

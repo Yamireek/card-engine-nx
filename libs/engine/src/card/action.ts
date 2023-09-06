@@ -262,7 +262,6 @@ export function executeCardAction(
   if (action.modify) {
     card.modifiers.push({
       modifier: action.modify,
-      description: 'REMOVE', // TODO remove
       until: action.modify.until,
     });
     return;
