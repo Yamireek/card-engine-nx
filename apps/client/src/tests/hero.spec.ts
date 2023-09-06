@@ -65,6 +65,7 @@ it("Beravor's card drawing action", () => {
   game.addToLibrary(core.ally.veteranAxehand);
   expect(game.actions.length).toEqual(0);
   game.do('endRound');
+  game.addToLibrary(core.ally.veteranAxehand);
   expect(game.actions.length).toEqual(1);
 });
 

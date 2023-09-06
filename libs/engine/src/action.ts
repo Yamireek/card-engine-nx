@@ -44,6 +44,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         }
       }
     }
+    ctx.state.next.unshift(gameRound());
     return;
   }
 

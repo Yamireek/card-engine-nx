@@ -6,6 +6,7 @@ import { StateContext } from '../StateContext';
 import { useMemo } from 'react';
 import { validPlayerId } from '@card-engine-nx/basic';
 import { Debug } from 'boardgame.io/debug';
+import { ClientOpts } from 'boardgame.io/dist/types/src/client/client';
 
 export type LotrLCGProps = BoardProps<State>;
 
@@ -27,13 +28,16 @@ export const LotrLCGBoard = (props: LotrLCGProps) => {
   );
 };
 
-export function LotrLCGClient(events: UIEvents) {
+export function LotrLCGClient(
+  events: UIEvents,
+  numPlayers: number,
+  multiplayer?: ClientOpts['multiplayer']
+) {
   return Client({
     game: LotrLCGame(events),
     board: LotrLCGBoard,
-    numPlayers: 1,
-    //multiplayer: SocketIO({ server: 'localhost:3000' }),
-    //multiplayer: Local({ persist: true }),
+    numPlayers,
+    multiplayer,
     debug: { collapseOnLoad: true, impl: Debug },
   });
 }

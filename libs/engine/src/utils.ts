@@ -103,7 +103,7 @@ export function nextStep(ctx: ExecutionContext) {
   if (!action) {
     return;
   } else {
-    console.log('executing ', action);
+    console.log('executing ', JSON.parse(JSON.stringify(action)));
     executeAction(action, ctx);
   }
 }
