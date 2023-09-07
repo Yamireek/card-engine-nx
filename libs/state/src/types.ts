@@ -223,6 +223,6 @@ export type PlayerTarget =
   | 'each'
   | 'owner'
   | 'first'
-  | { and?: PlayerTarget[]; canExecute?: PlayerAction };
+  | { and?: PlayerTarget[]; canExecute?: PlayerAction; controller?: CardId };
 
 export type Context = { selfCard?: CardId };

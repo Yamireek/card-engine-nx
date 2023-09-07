@@ -4,6 +4,7 @@ import { uiEvent } from '../eventFactories';
 import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
 import { calculateNumberExpr } from '../expr';
+import { getTargetPlayer } from '../player/target';
 
 export function executeCardAction(
   action: CardAction,
@@ -92,11 +93,12 @@ export function executeCardAction(
   if (action.dealDamage) {
     const damage = action.dealDamage;
     card.token.damage += damage;
-    const reponses = ctx.view.cards[card.id].responses?.receivedDamage; // TODO all responses
+    const reponses = ctx.view.cards[card.id].responses?.receivedDamage;
     if (reponses) {
+      const controller = getTargetPlayer({ controller: card.id }, ctx);
       ctx.state.next.unshift({
         player: {
-          target: '0', // TODO owner
+          target: controller,
           action: {
             chooseActions: {
               title: 'Choose responses for receiving damage',

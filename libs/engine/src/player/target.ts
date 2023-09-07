@@ -46,6 +46,15 @@ export function getTargetPlayer(
         .map((p) => p.id);
     }
 
+    if (target.controller) {
+      const card = ctx.state.cards[target.controller];
+      if (card.controller) {
+        return [card.controller];
+      } else {
+        return [];
+      }
+    }
+
     throw new Error(`unknown player target: ${JSON.stringify(target)}`);
   }
 
