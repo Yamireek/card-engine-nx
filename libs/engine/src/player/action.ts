@@ -37,7 +37,14 @@ export function executePlayerAction(
               multi: true,
               optional: true,
               target: { and: ['character', { controller: player.id }] },
-              action: 'commitToQuest',
+              action: {
+                sequence: [
+                  'exhaust',
+                  {
+                    mark: 'questing',
+                  },
+                ],
+              },
             },
           },
         },

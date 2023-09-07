@@ -14,7 +14,7 @@ import { State, ZoneState } from '@card-engine-nx/state';
 function getDeckImage(zoneId: ZoneId, zone: ZoneState, state: State): string {
   const topCardId = last(zone.cards);
   if (!topCardId) {
-    return zoneId.owner === 'game' ? image.encounterBack : image.playerBack;
+    return typeof zoneId === 'string' ? image.encounterBack : image.playerBack;
   }
 
   const card = state.cards[topCardId];
@@ -33,8 +33,12 @@ export const LotrDeck3d = (props: LotrDeck3dProps) => {
 
   return (
     <Deck3d
-      name={`deck-${props.zone.owner}-${props.zone.type}`}
-      title={props.zone.type}
+      name={
+        typeof props.zone === 'string'
+          ? `deck-${props.zone}`
+          : `deck-${props.zone.owner}-${props.zone.type}`
+      }
+      title={typeof props.zone === 'string' ? props.zone : props.zone.type}
       position={props.position}
       cardCount={zone.cards.length}
       texture={texture[getDeckImage(props.zone, zone, state)]}

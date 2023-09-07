@@ -106,7 +106,6 @@ export type PlayerAction =
 export type CardAction =
   | 'empty'
   | 'ready'
-  | 'commitToQuest'
   | 'travel'
   | 'exhaust'
   | 'destroy'

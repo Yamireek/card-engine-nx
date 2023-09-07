@@ -131,10 +131,6 @@ export function canCardExecute(
   const card = ctx.state.cards[cardId];
 
   if (typeof action === 'string') {
-    if (action === 'commitToQuest') {
-      return !card.mark.questing && !card.tapped;
-    }
-
     if (action === 'travel') {
       return ctx.state.zones.activeLocation.cards.length === 0;
     }

@@ -19,13 +19,6 @@ export function executeCardAction(
     return;
   }
 
-  if (action === 'commitToQuest') {
-    // TODO split
-    card.tapped = true;
-    card.mark.questing = true;
-    return;
-  }
-
   if (action === 'travel') {
     ctx.state.next.unshift({
       card: {
