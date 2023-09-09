@@ -87,6 +87,10 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action === 'passFirstPlayerToken') {
     // TODO passFirstPlayerToken
+
+    const next = getTargetPlayer('next', ctx)[0];
+    ctx.state.firstPlayer = next;
+
     return;
   }
 

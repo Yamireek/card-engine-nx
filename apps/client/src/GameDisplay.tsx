@@ -87,7 +87,7 @@ export const LotrLCGInfo = () => {
         players={values(state.players).map((p) => ({
           id: p.id,
           threat: p.thread,
-          state: 'active', // TODO other states
+          state: p.eliminated ? 'eliminated' : 'active',
         }))}
         progress={{ current: currentProgress, target: targetProgress }}
         showPlayer={playerId}

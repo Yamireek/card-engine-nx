@@ -164,7 +164,7 @@ export type NumberExpr =
   | 'countOfPlayers'
   | {
       fromCard?: {
-        sum?: true; // TODO min, max, single
+        sum?: true;
         card: CardTarget;
         value: CardNumberExpr;
       };
@@ -223,6 +223,7 @@ export type PlayerTarget =
   | 'each'
   | 'owner'
   | 'first'
+  | 'next'
   | { and?: PlayerTarget[]; canExecute?: PlayerAction; controller?: CardId };
 
 export type Context = { selfCard?: CardId };

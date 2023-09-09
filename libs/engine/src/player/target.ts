@@ -29,8 +29,7 @@ export function getTargetPlayer(
   }
 
   if (target === 'first') {
-    // TODO fix
-    return ['0'];
+    return [ctx.state.firstPlayer];
   }
 
   if (typeof target === 'object') {
@@ -56,6 +55,23 @@ export function getTargetPlayer(
     }
 
     throw new Error(`unknown player target: ${JSON.stringify(target)}`);
+  }
+
+  if (target === 'next') {
+    const players = values(ctx.state.players)
+      .filter((p) => !p.eliminated)
+      .map((p) => p.id);
+
+    if (players.length === 1) {
+      return players;
+    }
+
+    const index = players.findIndex((p) => p === ctx.state.firstPlayer);
+    if (index === players.length - 1) {
+      return [players[0]];
+    } else {
+      return [players[index + 1]];
+    }
   }
 
   if (['0', '1', '2', '3'].includes(target)) {
