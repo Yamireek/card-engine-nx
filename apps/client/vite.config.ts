@@ -2,6 +2,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import viteTsConfigPaths from 'vite-tsconfig-paths';
+import { checker } from 'vite-plugin-checker';
 
 export default defineConfig({
   cacheDir: '../../node_modules/.vite/client',
@@ -18,6 +19,12 @@ export default defineConfig({
 
   plugins: [
     react(),
+    checker({
+      typescript: {
+        root: `${process.cwd()}/apps/client`,
+        tsconfigPath: 'tsconfig.app.json',
+      },
+    }),
     viteTsConfigPaths({
       root: '../../',
     }),

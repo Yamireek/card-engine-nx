@@ -1,9 +1,9 @@
 import React, { useContext, useMemo } from "react";
 import { useAsync } from "react-use";
 import { Texture, TextureLoader } from "three";
-import { Material } from "../lib/types";
 import { mapValues } from "lodash";
 import { values } from "@card-engine-nx/basic";
+import { Material } from "../types";
 
 type MaterialDefiniton = { color: string; roughness: string; normal: string };
 

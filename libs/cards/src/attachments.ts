@@ -10,7 +10,7 @@ export const dwarvenAxe = attachment(
   },
   {
     description: 'Attach to a hero.',
-    attachesTo: { type: ['hero'] },
+    attachesTo: { type: 'hero' },
   }
   // modifyAttached({
   //   description: "Attached hero gains +1 ATT (+2 ATT instead if attached hero is a Dwarf.)",
@@ -28,7 +28,7 @@ export const citadelPlate = attachment(
   },
   {
     description: 'Attach to a hero.',
-    attachesTo: { type: ['hero'] },
+    attachesTo: { type: 'hero' },
   }
   // modifyAttached({
   //   description: "Attached hero gets +4 Hit Points.",
@@ -46,7 +46,7 @@ export const bladeOfGondolin = attachment(
   },
   {
     description: 'Attach to a hero.',
-    attachesTo: { type: ['hero'] },
+    attachesTo: { type: 'hero' },
   }
   // modifyAttached({
   //   description: "Attached hero gets +1 Attack when attacking an Orc.",
@@ -71,7 +71,7 @@ export const hornOfGondor = attachment(
   },
   {
     description: 'Attach to a hero.',
-    attachesTo: { type: ['hero'] },
+    attachesTo: { type: 'hero' },
   }
   // response({
   //   description: "Response: After a character is destroyed, add 1 resource to attached hero's pool.",

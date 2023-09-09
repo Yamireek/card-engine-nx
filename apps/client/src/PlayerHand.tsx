@@ -14,7 +14,7 @@ export const PlayerHand = (props: { player: PlayerId }) => {
     >
       <HandLayout
         cardImages={state.players[props.player]?.zones.hand.cards.map((id) =>
-          getCardImageUrl(state.cards[id].definition.front)
+          getCardImageUrl(state.cards[id].definition.front, 'front')
         )}
         cardWidth={200}
         rotate={2}
