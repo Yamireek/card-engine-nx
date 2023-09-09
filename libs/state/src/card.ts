@@ -37,7 +37,7 @@ export type CardState = {
   mark: Marks;
   attachments: CardId[];
   attachedTo?: CardId;
-  owner: PlayerId | 'game';
+  owner: PlayerId | undefined;
   controller: PlayerId | undefined;
   limitUses: {
     phase: Record<string, number>;

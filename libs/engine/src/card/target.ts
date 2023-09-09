@@ -83,7 +83,7 @@ export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId[] {
 
   if (target.type) {
     return values(ctx.view.cards)
-      .filter((c) => target.type?.includes(c.props.type))
+      .filter((c) => target.type === c.props.type)
       .map((s) => s.id);
   }
 

@@ -199,7 +199,7 @@ export type CardTarget =
       owner?: PlayerId;
       and?: CardTarget[];
       not?: CardTarget;
-      type?: CardType[]; // TODO single
+      type?: CardType;
       top?: ZoneTarget;
       sphere?: Sphere | 'any';
       canExecute?: CardAction;

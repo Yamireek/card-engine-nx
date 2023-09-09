@@ -58,7 +58,7 @@ export function executePlayerAction(
     const threat = player.thread;
     const enemies = getTargetCard(
       {
-        and: [{ type: ['enemy'] }, { zone: 'stagingArea' }],
+        and: [{ type: 'enemy' }, { zone: 'stagingArea' }],
       },
       ctx
     ).map((id) => ctx.view.cards[id]);
@@ -107,7 +107,7 @@ export function executePlayerAction(
             optional: true,
             multi: false,
             target: {
-              and: [{ type: ['enemy'] }, { zone: 'stagingArea' }],
+              and: [{ type: 'enemy' }, { zone: 'stagingArea' }],
             },
             action: {
               engagePlayer: player.id,
@@ -122,7 +122,7 @@ export function executePlayerAction(
   if (action === 'resolveEnemyAttacks') {
     const filter: CardTarget = {
       and: [
-        { type: ['enemy'] },
+        { type: 'enemy' },
         { not: { mark: 'attacked' } },
         { zone: { owner: player.id, type: 'engaged' } },
       ],
@@ -156,7 +156,7 @@ export function executePlayerAction(
     const enemies = getTargetCard(
       {
         and: [
-          { type: ['enemy'] },
+          { type: 'enemy' },
           { not: { mark: 'attacked' } },
           { zone: { owner: player.id, type: 'engaged' } },
         ],
@@ -261,7 +261,7 @@ export function executePlayerAction(
               title: 'Choose hero for undefended attack',
               target: {
                 and: [
-                  { type: ['hero'] },
+                  { type: 'hero' },
                   { zone: { owner: player.id, type: 'playerArea' } },
                 ],
               },
@@ -340,7 +340,7 @@ export function executePlayerAction(
 
     const target: CardTarget = {
       and: [
-        { type: ['hero'] },
+        { type: 'hero' },
         { owner: player.id },
         {
           sphere,

@@ -42,7 +42,7 @@ export function addGameCard(
   zone: GameZoneType
 ) {
   const id = state.nextId;
-  state.cards[id] = createCardState(id, side, definition, 'game');
+  state.cards[id] = createCardState(id, side, definition, undefined);
   state.zones[zone].cards.push(id);
   state.nextId++;
 }
@@ -51,7 +51,7 @@ export function createCardState(
   id: CardId,
   side: Side,
   definition: CardDefinition,
-  owner: PlayerId | 'game'
+  owner: PlayerId | undefined
 ): CardState {
   return {
     id,

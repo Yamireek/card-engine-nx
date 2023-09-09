@@ -57,7 +57,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action === 'chooseTravelDestination') {
     const target: CardTarget = {
-      and: [{ zone: 'stagingArea' }, { type: ['location'] }],
+      and: [{ zone: 'stagingArea' }, { type: 'location' }],
     };
 
     const locations = getTargetCard(target, ctx);
@@ -419,7 +419,7 @@ export function beginScenario(
     },
     {
       card: {
-        taget: { type: ['hero'] },
+        taget: { type: 'hero' },
         action: { sequence: [{ dealDamage: 1 }, { generateResources: 1 }] },
       },
     },
@@ -432,7 +432,7 @@ export const phaseResource = sequence(
   { player: { target: 'each', action: { draw: 1 } } },
   {
     card: {
-      taget: { and: ['inAPlay', { type: ['hero'] }] },
+      taget: { and: ['inAPlay', { type: 'hero' }] },
       action: { generateResources: 1 },
     },
   },
