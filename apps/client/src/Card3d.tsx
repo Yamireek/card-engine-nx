@@ -1,7 +1,7 @@
 import { Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import {
-  CardTextures,
+  CardTexture,
   Dimensions,
   Dimensions3,
   Vector3,
@@ -10,13 +10,14 @@ import {
 import { useContext } from 'react';
 import { DetailContext } from './DetailContext';
 import { Orientation } from '@card-engine-nx/basic';
+import { Texture } from 'three';
 
 export type Card3dProps = React.PropsWithChildren<{
   id: number;
   name: string;
   position: Vector3;
   rotation?: Vector3;
-  textures: CardTextures;
+  texture: CardTexture;
   size?: Dimensions;
   hidden?: boolean;
   orientation?: Orientation;
@@ -76,13 +77,21 @@ export const Card3d = (props: Card3dProps) => {
             <meshBasicMaterial attach="material-3" color="gray" />
             <meshPhysicalMaterial
               attach="material-4"
-              map={props.textures.front}
+              map={
+                props.texture instanceof Texture
+                  ? props.texture
+                  : props.texture.front
+              }
               roughnessMap={material.wood.roughness}
               normalMap={material.wood.normal}
             />
             <meshPhysicalMaterial
               attach="material-5"
-              map={props.textures.back}
+              map={
+                props.texture instanceof Texture
+                  ? props.texture
+                  : props.texture.back
+              }
               roughnessMap={material.wood.roughness}
               normalMap={material.wood.normal}
             />

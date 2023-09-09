@@ -6,6 +6,7 @@ import { useThree } from '@react-three/fiber';
 import { rxEvents } from './GameDisplay';
 import { uniqBy } from 'lodash';
 import { useFloatingCards } from './FloatingCardsContext';
+import { getZoneIdString } from '@card-engine-nx/basic';
 
 export const FloatingCards = () => {
   const { floatingCards: cards, setFloatingCards: setCards } =
@@ -20,12 +21,12 @@ export const FloatingCards = () => {
         const card = state.cards[e.cardId];
 
         const deckMesh = scene.getObjectByName(
-          `deck-${e.source.owner}-${e.source.type}`
+          `deck-${getZoneIdString(e.source)}`
         );
 
         const cardMesh = scene.getObjectByName(`card-${e.cardId}`);
 
-        const targetDeckName = `deck-${e.destination.owner}-${e.destination.type}`;
+        const targetDeckName = `deck-${getZoneIdString(e.destination)}`;
 
         if (deckMesh && !cardMesh) {
           setCards((p) => [
@@ -39,7 +40,7 @@ export const FloatingCards = () => {
                 deckMesh.position.z,
               ],
               rotation: [0, Math.PI, 0],
-              textures: {
+              texture: {
                 front: texture[getCardImageUrl(card.definition.front, 'front')],
                 back: texture[getCardImageUrl(card.definition.back, 'back')],
               },
@@ -107,7 +108,7 @@ export const FloatingCards = () => {
               name: `floating-card-${e.cardId}`,
               position: [x, y, z],
               scale,
-              textures: {
+              texture: {
                 front: texture[getCardImageUrl(card.definition.front, 'front')],
                 back: texture[getCardImageUrl(card.definition.back, 'back')],
               },

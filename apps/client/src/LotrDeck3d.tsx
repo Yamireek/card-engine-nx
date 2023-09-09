@@ -1,4 +1,4 @@
-import { ZoneId } from '@card-engine-nx/basic';
+import { ZoneId, getZoneIdString } from '@card-engine-nx/basic';
 import {
   Vector3,
   getCardImageUrl,
@@ -33,11 +33,7 @@ export const LotrDeck3d = (props: LotrDeck3dProps) => {
 
   return (
     <Deck3d
-      name={
-        typeof props.zone === 'string'
-          ? `deck-${props.zone}`
-          : `deck-${props.zone.owner}-${props.zone.type}`
-      }
+      name={`deck-${getZoneIdString(props.zone)}`}
       title={typeof props.zone === 'string' ? props.zone : props.zone.type}
       position={props.position}
       cardCount={zone.cards.length}

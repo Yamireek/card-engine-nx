@@ -11,3 +11,11 @@ export type Keywords = {
   ranged: boolean;
   sentinel: boolean;
 };
+
+export function getZoneIdString(zoneId: ZoneId) {
+  if (typeof zoneId === 'string') {
+    return zoneId;
+  } else {
+    return `${zoneId.owner}-${zoneId.type}`;
+  }
+}

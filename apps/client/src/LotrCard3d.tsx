@@ -41,7 +41,7 @@ export const LotrCard3d = (props: {
       }}
       position={props.position}
       rotation={[0, 0, card.tapped ? -Math.PI / 4 : 0]}
-      textures={
+      texture={
         card.sideUp === 'front'
           ? textures
           : { front: textures.back, back: textures.front }
