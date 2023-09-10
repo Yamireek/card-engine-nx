@@ -211,7 +211,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action.addToStagingArea) {
     const card = values(ctx.state.cards).find(
       (c) => c.definition.front.name === action.addToStagingArea
-    ); // TODO filter
+    );
 
     if (card) {
       ctx.state.next.unshift({
