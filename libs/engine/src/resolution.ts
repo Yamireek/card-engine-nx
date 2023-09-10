@@ -3,7 +3,7 @@ import { ViewContext } from './context';
 import { getTargetCard } from './card';
 import { sumBy } from 'lodash';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
-import { getTargetPlayer } from './player/target';
+import { getTargetPlayers } from './player/target';
 
 export function canExecute(
   action: Action,
@@ -15,7 +15,7 @@ export function canExecute(
   } else {
     if (action.player) {
       const playerAction = action.player;
-      const players = getTargetPlayer(playerAction.target, ctx);
+      const players = getTargetPlayers(playerAction.target, ctx);
       return players.some((p) => canPlayerExecute(playerAction.action, p, ctx));
     }
 
@@ -80,7 +80,7 @@ export function canPlayerExecute(
     }
 
     if (action.choosePlayerActions) {
-      const targets = getTargetPlayer(action.choosePlayerActions.target, ctx);
+      const targets = getTargetPlayers(action.choosePlayerActions.target, ctx);
       const playerAction = action.choosePlayerActions.action;
       return targets.some((id) => canPlayerExecute(playerAction, id, ctx));
     }

@@ -4,7 +4,7 @@ import {
   PlayerDeck,
   Scenario,
 } from '@card-engine-nx/state';
-import { getTargetPlayer } from './player/target';
+import { getTargetPlayer, getTargetPlayers } from './player/target';
 import { executePlayerAction } from './player/action';
 import { keys, reverse } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
@@ -86,11 +86,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'passFirstPlayerToken') {
-    // TODO passFirstPlayerToken
-
-    const next = getTargetPlayer('next', ctx)[0];
+    const next = getTargetPlayer('next', ctx);
     ctx.state.firstPlayer = next;
-
     return;
   }
 
@@ -148,7 +145,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.player) {
-    const ids = getTargetPlayer(action.player.target, ctx);
+    const ids = getTargetPlayers(action.player.target, ctx);
     for (const id of ids) {
       const player = ctx.state.players[id];
       if (player) {

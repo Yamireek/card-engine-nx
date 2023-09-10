@@ -4,7 +4,7 @@ import { uiEvent } from '../eventFactories';
 import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
 import { calculateNumberExpr } from '../expr';
-import { getTargetPlayer } from '../player/target';
+import { getTargetPlayers } from '../player/target';
 
 export function executeCardAction(
   action: CardAction,
@@ -95,7 +95,7 @@ export function executeCardAction(
     card.token.damage += damage;
     const reponses = ctx.view.cards[card.id].responses?.receivedDamage;
     if (reponses) {
-      const controller = getTargetPlayer({ controller: card.id }, ctx);
+      const controller = getTargetPlayers({ controller: card.id }, ctx);
       ctx.state.next.unshift({
         player: {
           target: controller,

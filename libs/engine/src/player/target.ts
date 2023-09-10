@@ -4,7 +4,16 @@ import { intersection, isArray, uniq } from 'lodash';
 import { ViewContext } from '../context';
 import { canPlayerExecute } from '../resolution';
 
-export function getTargetPlayer(
+export function getTargetPlayer(target: PlayerTarget, ctx: ViewContext) {
+  const results = getTargetPlayers(target, ctx);
+  if (results.length === 1) {
+    return results[0];
+  } else {
+    throw new Error('unexpected result count');
+  }
+}
+
+export function getTargetPlayers(
   target: PlayerTarget,
   ctx: ViewContext
 ): PlayerId[] {
@@ -34,7 +43,7 @@ export function getTargetPlayer(
 
   if (typeof target === 'object') {
     if (target.and) {
-      const lists = target.and.map((t) => getTargetPlayer(t, ctx));
+      const lists = target.and.map((t) => getTargetPlayers(t, ctx));
       return uniq(intersection(...lists));
     }
 

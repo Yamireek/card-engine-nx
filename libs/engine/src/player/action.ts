@@ -9,7 +9,7 @@ import { ExecutionContext } from '../context';
 import { getTargetCard } from '../card';
 import { max, sum } from 'lodash/fp';
 import { sequence } from '../utils/sequence';
-import { getTargetPlayer } from './target';
+import { getTargetPlayers } from './target';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -410,7 +410,7 @@ export function executePlayerAction(
   }
 
   if (action.choosePlayerActions) {
-    const playerIds = getTargetPlayer(
+    const playerIds = getTargetPlayers(
       {
         and: [
           action.choosePlayerActions.target,
