@@ -12,7 +12,19 @@ import { canCardExecute } from '../resolution';
 import { difference, isArray } from 'lodash/fp';
 import { calculateNumberExpr } from '../expr';
 
-export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId[] {
+export function getTargetCard(
+  target: CardTarget,
+  ctx: ViewContext
+): CardId | undefined {
+  const results = getTargetCards(target, ctx);
+  if (results.length <= 1) {
+    return results[0];
+  } else {
+    throw new Error('unexpected result count');
+  }
+}
+
+export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   if (typeof target === 'number') {
     return [target];
   }
@@ -63,12 +75,12 @@ export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target.and) {
-    const lists = target.and.map((t) => getTargetCard(t, ctx));
+    const lists = target.and.map((t) => getTargetCards(t, ctx));
     return uniq(intersection(...lists));
   }
 
   if (target.not) {
-    const valid = getTargetCard(target.not, ctx);
+    const valid = getTargetCards(target.not, ctx);
     return difference(cardIds(ctx), valid);
   }
 

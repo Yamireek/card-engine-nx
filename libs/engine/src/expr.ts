@@ -1,5 +1,5 @@
 import { BoolExpr, NumberExpr } from '@card-engine-nx/state';
-import { getTargetCard } from './card/target';
+import { getTargetCards } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
 import { ExecutionContext, ViewContext } from './context';
@@ -18,7 +18,7 @@ export function calculateNumberExpr(
   }
 
   if (expr.fromCard) {
-    const ids = getTargetCard(expr.fromCard.card, ctx);
+    const ids = getTargetCards(expr.fromCard.card, ctx);
     if (ids.length === 1) {
       return calculateCardExpr(expr.fromCard.value, ids[0], ctx);
     } else {
@@ -66,7 +66,7 @@ export function calculateBoolExpr(
     // TODO use exprs
     const playerThreats = values(ctx.state.players).map((p) => p.thread);
 
-    const enemies = getTargetCard(
+    const enemies = getTargetCards(
       {
         and: [{ type: 'enemy' }, { zone: 'stagingArea' }],
       },
@@ -92,7 +92,7 @@ export function calculateBoolExpr(
   }
 
   if (expr.someCard) {
-    const ids = getTargetCard(expr.someCard, ctx);
+    const ids = getTargetCards(expr.someCard, ctx);
     return ids.length > 0;
   }
 

@@ -10,7 +10,7 @@ import { keys, reverse } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard, createPlayerState } from './utils';
 import { sequence } from './utils/sequence';
-import { executeCardAction, getTargetCard } from './card';
+import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
 
@@ -60,7 +60,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       and: [{ zone: 'stagingArea' }, { type: 'location' }],
     };
 
-    const locations = getTargetCard(target, ctx);
+    const locations = getTargetCards(target, ctx);
     if (locations.length > 0) {
       ctx.state.next.unshift({
         player: {
@@ -128,19 +128,20 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'revealEncounterCard') {
-    // TODO treatchery move to discard pile
+    const card = getTargetCard({ top: { game: 'encounterDeck' } }, ctx);
+
+    if (!card) {
+      // reshuffle encounter deck
+      return;
+    }
+
     ctx.state.next.unshift({
       card: {
-        taget: { top: { game: 'encounterDeck' } },
-        action: {
-          move: {
-            from: 'encounterDeck',
-            to: 'stagingArea',
-            side: 'front',
-          },
-        },
+        taget: card,
+        action: 'reveal',
       },
     });
+
     return;
   }
 
@@ -158,7 +159,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.card) {
-    const ids = getTargetCard(action.card.taget, ctx);
+    const ids = getTargetCards(action.card.taget, ctx);
     for (const id of ids) {
       const card = ctx.state.cards[id];
       if (card) {
@@ -288,7 +289,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       return;
     }
 
-    const activeLocation = getTargetCard(
+    const activeLocation = getTargetCards(
       { top: { game: 'activeLocation' } },
       ctx
     );
@@ -414,12 +415,6 @@ export function beginScenario(
         },
       },
     },
-    {
-      card: {
-        taget: { type: 'hero' },
-        action: { sequence: [{ dealDamage: 1 }, { generateResources: 1 }] },
-      },
-    },
     gameRound()
   );
 }
@@ -520,7 +515,7 @@ export function gameRound(): Action {
     phaseQuest,
     phaseTravel,
     phaseEncounter,
-    //phaseCombat,
+    phaseCombat,
     phaseRefresh,
     'endRound'
   );

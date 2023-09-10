@@ -1,6 +1,6 @@
 import { Action, CardAction, PlayerAction } from '@card-engine-nx/state';
 import { ViewContext } from './context';
-import { getTargetCard } from './card';
+import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
 import { getTargetPlayers } from './player/target';
@@ -21,7 +21,7 @@ export function canExecute(
 
     if (action.card) {
       const cardAction = action.card;
-      const players = getTargetCard(cardAction.taget, ctx);
+      const players = getTargetCards(cardAction.taget, ctx);
       return players.some((card) =>
         canCardExecute(cardAction.action, card, ctx)
       );
@@ -74,7 +74,7 @@ export function canPlayerExecute(
     );
   } else {
     if (action.chooseCardActions) {
-      const targets = getTargetCard(action.chooseCardActions.target, ctx);
+      const targets = getTargetCards(action.chooseCardActions.target, ctx);
       const cardAction = action.chooseCardActions.action;
       return targets.some((id) => canCardExecute(cardAction, id, ctx));
     }

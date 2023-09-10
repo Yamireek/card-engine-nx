@@ -109,6 +109,7 @@ export type CardAction =
   | 'travel'
   | 'exhaust'
   | 'destroy'
+  | 'reveal'
   | {
       dealDamage?: number;
       heal?: number | 'all';

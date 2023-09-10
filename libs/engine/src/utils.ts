@@ -19,7 +19,7 @@ import { ExecutionContext, ViewContext } from './context';
 import { uiEvent } from './eventFactories';
 import { UIEvents } from './uiEvents';
 import { createView } from './view';
-import { getTargetCard } from './card';
+import { getTargetCards } from './card';
 
 export function addPlayerCard(
   state: State,
@@ -226,7 +226,7 @@ export function advanceToChoiceState(
 
         const ctx: ViewContext = { state, view, card: {}, player: {} };
 
-        const nextQuest = getTargetCard(
+        const nextQuest = getTargetCards(
           {
             and: [
               {

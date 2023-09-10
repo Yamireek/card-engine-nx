@@ -64,6 +64,38 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'reveal') {
+    const props = ctx.view.cards[card.id].props;
+    // TODO when revealed effects
+
+    if (card.sideUp === 'back') {
+      ctx.state.next.unshift({
+        card: {
+          taget: card.id,
+          action: {
+            sequence: [{ flip: 'front' }, 'reveal'],
+          },
+        },
+      });
+      return;
+    }
+
+    ctx.state.next.unshift({
+      card: {
+        taget: card.id,
+        action: {
+          move: {
+            from: 'encounterDeck',
+            to: props.type === 'treachery' ? 'discardPile' : 'stagingArea',
+            side: 'front',
+          },
+        },
+      },
+    });
+
+    return;
+  }
+
   if (action.engagePlayer) {
     ctx.state.next.unshift({
       card: {

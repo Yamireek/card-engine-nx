@@ -6,7 +6,7 @@ import {
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
-import { getTargetCard } from '../card';
+import { getTargetCards } from '../card';
 import { max, sum } from 'lodash/fp';
 import { sequence } from '../utils/sequence';
 import { getTargetPlayers } from './target';
@@ -56,7 +56,7 @@ export function executePlayerAction(
 
   if (action === 'engagementCheck') {
     const threat = player.thread;
-    const enemies = getTargetCard(
+    const enemies = getTargetCards(
       {
         and: [{ type: 'enemy' }, { zone: 'stagingArea' }],
       },
@@ -153,7 +153,7 @@ export function executePlayerAction(
   }
 
   if (action === 'resolvePlayerAttacks') {
-    const enemies = getTargetCard(
+    const enemies = getTargetCards(
       {
         and: [
           { type: 'enemy' },
@@ -164,7 +164,7 @@ export function executePlayerAction(
       ctx
     );
 
-    const attackers = getTargetCard(
+    const attackers = getTargetCards(
       {
         and: [
           'ready',
@@ -238,11 +238,11 @@ export function executePlayerAction(
   }
 
   if (action === 'determineCombatDamage') {
-    const attacking = getTargetCard({ mark: 'attacking' }, ctx).map(
+    const attacking = getTargetCards({ mark: 'attacking' }, ctx).map(
       (id) => ctx.view.cards[id]
     );
 
-    const defending = getTargetCard({ mark: 'defending' }, ctx).map(
+    const defending = getTargetCards({ mark: 'defending' }, ctx).map(
       (id) => ctx.view.cards[id]
     );
 
@@ -374,7 +374,7 @@ export function executePlayerAction(
   }
 
   if (action.chooseCardActions) {
-    const cardIds = getTargetCard(
+    const cardIds = getTargetCards(
       {
         and: [
           action.chooseCardActions.target,
