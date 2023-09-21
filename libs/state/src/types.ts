@@ -167,15 +167,15 @@ export type NumberExpr =
   | number
   | 'countOfPlayers'
   | {
-      fromCard?: {
+      card?: {
         sum?: true;
-        card: CardTarget;
+        target: CardTarget;
         value: CardNumberExpr;
       };
-      fromEvent?: EventNumbers;
+      event?: EventNumbers;
       plus?: NumberExpr[];
       if?: {
-        expr: BoolExpr;
+        cond: BoolExpr;
         true: NumberExpr;
         false: NumberExpr;
       };
@@ -188,8 +188,8 @@ export type BoolExpr =
       and?: BoolExpr[];
       phase?: Phase;
       someCard?: CardTarget;
-      fromCard?: {
-        card: CardTarget;
+      card?: {
+        target: CardTarget;
         value: CardBoolExpr;
       };
     };

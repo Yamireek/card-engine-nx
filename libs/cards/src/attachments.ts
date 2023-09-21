@@ -23,9 +23,9 @@ export const dwarvenAxe = attachment(
         prop: 'attack',
         amount: {
           if: {
-            expr: {
-              fromCard: {
-                card: { hasAttachment: 'self' },
+            cond: {
+              card: {
+                target: { hasAttachment: 'self' },
                 value: { hasTrait: 'dwarf' },
               },
             },
@@ -86,11 +86,11 @@ export const bladeOfGondolin = attachment(
         prop: 'attack',
         amount: {
           if: {
-            expr: {
+            cond: {
               and: [
                 {
-                  fromCard: {
-                    card: { hasAttachment: 'self' },
+                  card: {
+                    target: { hasAttachment: 'self' },
                     value: { hasMark: 'attacking' },
                   },
                 },

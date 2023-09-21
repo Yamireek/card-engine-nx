@@ -94,8 +94,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'resolveQuesting') {
     const totalWillpower = calculateNumberExpr(
       {
-        fromCard: {
-          card: { mark: 'questing' },
+        card: {
+          target: { mark: 'questing' },
           value: 'willpower',
           sum: true,
         },
@@ -105,8 +105,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     const totalThreat = calculateNumberExpr(
       {
-        fromCard: {
-          card: { zone: 'stagingArea' },
+        card: {
+          target: { zone: 'stagingArea' },
           value: 'threat',
           sum: true,
         },

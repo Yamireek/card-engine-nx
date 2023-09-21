@@ -18,14 +18,14 @@ export function calculateNumberExpr(
     return Object.keys(ctx.state.players).length;
   }
 
-  if (expr.fromCard) {
-    const ids = getTargetCards(expr.fromCard.card, ctx);
+  if (expr.card) {
+    const ids = getTargetCards(expr.card.target, ctx);
     if (ids.length === 1) {
-      return calculateCardExpr(expr.fromCard.value, ids[0], ctx);
+      return calculateCardExpr(expr.card.value, ids[0], ctx);
     } else {
-      if (expr.fromCard.sum) {
+      if (expr.card.sum) {
         return sum(
-          ids.map((id) => calculateCardExpr(expr.fromCard?.value || 0, id, ctx))
+          ids.map((id) => calculateCardExpr(expr.card?.value || 0, id, ctx))
         );
       } else {
         throw new Error('multiple card');
@@ -33,14 +33,14 @@ export function calculateNumberExpr(
     }
   }
 
-  if (expr.fromEvent) {
+  if (expr.event) {
     if (ctx.state.event === 'none' || !ctx.state.event) {
       throw new Error('no active event');
     }
 
-    if (expr.fromEvent.type === ctx.state.event.type) {
-      if (expr.fromEvent.type === 'receivedDamage') {
-        if (expr.fromEvent.value === 'damage') {
+    if (expr.event.type === ctx.state.event.type) {
+      if (expr.event.type === 'receivedDamage') {
+        if (expr.event.value === 'damage') {
           return ctx.state.event.damage;
         }
       }
@@ -53,7 +53,7 @@ export function calculateNumberExpr(
   }
 
   if (expr.if) {
-    const result = calculateBoolExpr(expr.if.expr, ctx);
+    const result = calculateBoolExpr(expr.if.cond, ctx);
     if (result) {
       return calculateNumberExpr(expr.if.true, ctx);
     } else {
@@ -103,14 +103,14 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
     return ids.length > 0;
   }
 
-  if (expr.fromCard) {
-    const target = getTargetCards(expr.fromCard.card, ctx);
+  if (expr.card) {
+    const target = getTargetCards(expr.card.target, ctx);
     if (target.length === 0) {
       return false;
     }
 
     if (target.length === 1) {
-      return calculateCardBoolExpr(expr.fromCard.value, target[0], ctx);
+      return calculateCardBoolExpr(expr.card.value, target[0], ctx);
     }
   }
 

@@ -17,8 +17,8 @@ export const gimli = hero(
       add: {
         prop: 'attack',
         amount: {
-          fromCard: {
-            card: 'self',
+          card: {
+            target: 'self',
             value: {
               tokens: 'damage',
             },
@@ -95,7 +95,7 @@ export const gloin = hero(
           taget: 'self',
           action: {
             generateResources: {
-              fromEvent: { type: 'receivedDamage', value: 'damage' },
+              event: { type: 'receivedDamage', value: 'damage' },
             },
           },
         },

@@ -236,7 +236,7 @@ export function advanceToChoiceState(
               {
                 sequence: {
                   plus: [
-                    { fromCard: { card: quest.id, value: 'sequence' } },
+                    { card: { target: quest.id, value: 'sequence' } },
                     1,
                   ],
                 },
