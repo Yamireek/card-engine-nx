@@ -30,12 +30,19 @@ export const citadelPlate = attachment(
   {
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
+  },
+  {
+    description: 'Attached hero gets +4 Hit Points.',
+    modifier: {
+      target: {
+        hasAttachment: 'self',
+      },
+      add: {
+        prop: 'hitPoints',
+        amount: 4,
+      },
+    },
   }
-  // TODO ability
-  // modifyAttached({
-  //   description: "Attached hero gets +4 Hit Points.",
-  //   modifier: increment("hitPoints")(4),
-  // })
 );
 
 export const bladeOfGondolin = attachment(

@@ -1,24 +1,32 @@
 import { CardView, Modifier } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
 import { ViewContext } from '../context';
+import { getTargetCards } from './target';
 
 export function applyModifier(
   modifier: Modifier,
-  card: CardView,
+  self: CardView,
   ctx: ViewContext
 ) {
   if (modifier.add) {
-    const amount = calculateNumberExpr(modifier.add.amount, ctx);
-    const value = card.props[modifier.add.prop];
-    if (value !== undefined && amount) {
-      card.props[modifier.add.prop] = value + amount;
+    const targets = modifier.target
+      ? getTargetCards(modifier.target, ctx)
+      : getTargetCards(self.id, ctx);
+
+    for (const id of targets) {
+      const amount = calculateNumberExpr(modifier.add.amount, ctx);
+      const card = ctx.view.cards[id];
+      const value = card.props[modifier.add.prop];
+      if (value !== undefined && amount) {
+        card.props[modifier.add.prop] = value + amount;
+      }
     }
 
     return;
   }
 
   if (modifier.setNextStage) {
-    card.nextStage = modifier.setNextStage;
+    self.nextStage = modifier.setNextStage;
     return;
   }
 

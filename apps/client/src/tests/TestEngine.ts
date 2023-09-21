@@ -14,6 +14,7 @@ import {
   createPlayerState,
   createView,
   executeCardAction,
+  getCardZoneId,
 } from '@card-engine-nx/engine';
 
 export class TestEngine {
@@ -162,10 +163,26 @@ export class TestEngine {
     const id = addPlayerCard(this.state, card, player.id, 'front', 'hand');
     return new CardProxy(this.state, id);
   }
+
+  addAttachment(attachment: CardDefinition, card: CardProxy) {
+    const zone = getCardZoneId(card.id, this.state);
+
+    if (typeof zone !== 'string') {
+      const id = addPlayerCard(
+        this.state,
+        attachment,
+        zone.owner,
+        'front',
+        zone.type
+      );
+      card.state.attachments.push(id);
+      return new CardProxy(this.state, id);
+    }
+  }
 }
 
 export class CardProxy {
-  constructor(private _state: State, private id: CardId) {}
+  constructor(private _state: State, public id: CardId) {}
 
   update(cardAction: CardAction) {
     executeCardAction(
@@ -206,10 +223,10 @@ export class PlayerProxy {
   constructor(private state: State, public id: PlayerId) {}
 
   get hand() {
-    return this.state.players[this.id]?.zones.hand;
+    return this.state.players[this.id]!.zones.hand;
   }
 
   get library() {
-    return this.state.players[this.id]?.zones.library;
+    return this.state.players[this.id]!.zones.library;
   }
 }

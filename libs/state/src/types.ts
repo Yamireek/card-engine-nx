@@ -153,9 +153,10 @@ export type ActionResponse = {
 export type Modifier = {
   until?: Until;
   add?: {
-    prop: 'attack' | 'defense' | 'willpower';
+    prop: 'attack' | 'defense' | 'willpower' | 'hitPoints';
     amount: NumberExpr;
   };
+  target?: CardTarget;
   setNextStage?: NextStage;
 };
 
@@ -209,6 +210,7 @@ export type CardTarget =
       mark?: Mark;
       zone?: ZoneId;
       sequence?: NumberExpr;
+      hasAttachment?: CardTarget;
     };
 
 export type ZoneTarget = {

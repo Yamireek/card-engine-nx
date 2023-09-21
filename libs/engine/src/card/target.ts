@@ -143,5 +143,12 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
     return zone.cards;
   }
 
+  if (target.hasAttachment) {
+    const attachments = getTargetCards(target.hasAttachment, ctx);
+    return values(ctx.state.cards)
+      .filter((c) => c.attachments.some((a) => attachments.includes(a)))
+      .map((c) => c.id);
+  }
+
   throw new Error(`unknown card target: ${JSON.stringify(target)}`);
 }
