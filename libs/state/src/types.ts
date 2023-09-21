@@ -185,6 +185,7 @@ export type BoolExpr =
   | boolean
   | 'enemiesToEngage'
   | {
+      and?: BoolExpr[];
       phase?: Phase;
       someCard?: CardTarget;
       fromCard?: {
@@ -207,6 +208,7 @@ export type CardBoolExpr =
   | boolean
   | {
       hasTrait?: Trait;
+      hasMark?: Mark;
     };
 
 export type CardTarget =
@@ -227,6 +229,7 @@ export type CardTarget =
       canExecute?: CardAction;
       controller?: PlayerId;
       mark?: Mark;
+      trait?: Trait;
       zone?: ZoneId;
       sequence?: NumberExpr;
       hasAttachment?: CardTarget;

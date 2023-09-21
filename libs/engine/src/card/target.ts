@@ -138,6 +138,13 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       .map((c) => c.id);
   }
 
+  if (target.trait) {
+    const type = target.trait;
+    return values(ctx.view.cards)
+      .filter((c) => c.props.traits?.includes(type))
+      .map((c) => c.id);
+  }
+
   if (target.zone) {
     const zone = getZoneState(target.zone, ctx.state);
     return zone.cards;

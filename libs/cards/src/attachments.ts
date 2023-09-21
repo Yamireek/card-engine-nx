@@ -75,6 +75,38 @@ export const bladeOfGondolin = attachment(
   {
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
+  },
+  {
+    description: 'Attached hero gets +1 Attack when attacking an Orc.',
+    modifier: {
+      target: {
+        hasAttachment: 'self',
+      },
+      add: {
+        prop: 'attack',
+        amount: {
+          if: {
+            expr: {
+              and: [
+                {
+                  fromCard: {
+                    card: { hasAttachment: 'self' },
+                    value: { hasMark: 'attacking' },
+                  },
+                },
+                {
+                  someCard: {
+                    and: [{ mark: 'defending' }, { trait: 'orc' }],
+                  },
+                },
+              ],
+            },
+            true: 1,
+            false: 0,
+          },
+        },
+      },
+    },
   }
   // TODO ability
   // modifyAttached({

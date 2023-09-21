@@ -152,6 +152,19 @@ export class TestEngine {
     return new CardProxy(this.state, id);
   }
 
+  addEnemy(enemy: CardDefinition, player?: PlayerProxy): CardProxy {
+    this.ensurePlayer0();
+
+    const id = addPlayerCard(
+      this.state,
+      enemy,
+      player?.id ?? '0',
+      'front',
+      'engaged'
+    );
+    return new CardProxy(this.state, id);
+  }
+
   addToLibrary(hero: CardDefinition): CardProxy {
     this.ensurePlayer0();
 

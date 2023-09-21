@@ -105,9 +105,17 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
 
   if (expr.fromCard) {
     const target = getTargetCards(expr.fromCard.card, ctx);
+    if (target.length === 0) {
+      return false;
+    }
+
     if (target.length === 1) {
       return calculateCardBoolExpr(expr.fromCard.value, target[0], ctx);
     }
+  }
+
+  if (expr.and) {
+    return expr.and.every((e) => calculateBoolExpr(e, ctx));
   }
 
   throw new Error(`unknown bool expression: ${JSON.stringify(expr)}`);
@@ -125,6 +133,11 @@ export function calculateCardBoolExpr(
   if (expr.hasTrait) {
     const traits = ctx.view.cards[cardId].props.traits;
     return traits?.includes(expr.hasTrait) ?? false;
+  }
+
+  if (expr.hasMark) {
+    const mark = ctx.state.cards[cardId].mark;
+    return mark[expr.hasMark];
   }
 
   throw new Error(`unknown card bool expression: ${JSON.stringify(expr)}`);
