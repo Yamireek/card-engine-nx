@@ -12,6 +12,7 @@ export const dwarvenAxe = attachment(
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
   }
+  // TODO ability
   // modifyAttached({
   //   description: "Attached hero gains +1 ATT (+2 ATT instead if attached hero is a Dwarf.)",
   //   modifier: dynamicModifier(hasTrait("dwarf"), (isDwarf) => increment("attack")(isDwarf ? 2 : 1)),
@@ -30,6 +31,7 @@ export const citadelPlate = attachment(
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
   }
+  // TODO ability
   // modifyAttached({
   //   description: "Attached hero gets +4 Hit Points.",
   //   modifier: increment("hitPoints")(4),
@@ -48,6 +50,7 @@ export const bladeOfGondolin = attachment(
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
   }
+  // TODO ability
   // modifyAttached({
   //   description: "Attached hero gets +1 Attack when attacking an Orc.",
   //   modifier: attackBonus(hasTrait("orc"), 1),
@@ -73,6 +76,7 @@ export const hornOfGondor = attachment(
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
   }
+  // TODO ability
   // response({
   //   description: "Response: After a character is destroyed, add 1 resource to attached hero's pool.",
   //   event: destroyed(),

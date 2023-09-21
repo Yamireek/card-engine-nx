@@ -34,6 +34,7 @@ export const bladeMastery = event(
     cost: 1,
     sphere: 'tactics',
   }
+  // TODO ability
   // action({
   //   description:
   //     "Action: Choose a character. Until the end of the phase, that character gains +1 Attack and +1 Defense.",
@@ -55,6 +56,7 @@ export const feint = event(
     cost: 1,
     sphere: 'tactics',
   }
+  // TODO ability
   // action({
   //   description:
   //     "Combat Action: Choose an enemy engaged with a player. That enemy cannot attack that player this phase.",
@@ -73,6 +75,7 @@ export const quickStrike = event(
     cost: 1,
     sphere: 'tactics',
   }
+  // TODO ability
   // action({
   //   description:
   //     "Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.",
@@ -91,6 +94,7 @@ export const rainOfArrows = event(
     cost: 1,
     sphere: 'tactics',
   }
+  // TODO ability
   // action({
   //   description:
   //     "Action: Exhaust a character you control with the ranged keyword to choose a player. Deal 1 damage to each enemy engaged with that player.",
@@ -109,6 +113,7 @@ export const standTogether = event(
     cost: 0,
     sphere: 'tactics',
   }
+  // TODO ability
   // action({
   //   description:
   //     "Action: Choose a player. That player may declare any number of his eligible characters as defenders against each enemy attacking him this phase.",
@@ -128,6 +133,7 @@ export const swiftStrike = event(
     cost: 2,
     sphere: 'tactics',
   }
+  // TODO ability
   // response({
   //   description: "Response: After a character is declared as a defender, deal 2 damage to the attacking enemy.",
   //   event: declaredAsDefender,
@@ -142,6 +148,7 @@ export const thicketOfSpears = event(
     cost: 3,
     sphere: 'tactics',
   }
+  // TODO ability
   // action({
   //   description:
   //     "You must use resources from 3 different heroes' pools to pay for this card. Action: Choose a player. That player's engaged enemies cannot attack that player this phase.",

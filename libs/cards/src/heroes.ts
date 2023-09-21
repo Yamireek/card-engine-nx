@@ -40,6 +40,7 @@ export const legolas = hero(
     traits: ['noble', 'silvan', 'warrior'],
     sphere: 'tactics',
   }
+  // TODO ability
   // keyword('ranged'),
   // response({
   //   description:
@@ -61,6 +62,7 @@ export const thalin = hero(
     traits: ['dwarf', 'warrior'],
     sphere: 'tactics',
   }
+  // TODO ability
   // response({
   //   description:
   //     'While Thalin is committed to a quest, deal 1 damage to each enemy as it is revealed by the encounter deck.',

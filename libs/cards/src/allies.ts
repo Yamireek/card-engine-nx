@@ -24,6 +24,7 @@ export const gondorianSpearman = ally(
     traits: ['gondor', 'warrior'],
     sphere: 'tactics',
   }
+  // TODO ability
   // keyword("sentinel"),
   // response((s) => s.declaredDefender, {
   //   description:
@@ -48,6 +49,7 @@ export const beorn = ally(
     traits: ['beorning', 'warrior'],
     sphere: 'tactics',
   }
+  // TODO ability
   // action({
   //   description:
   //     "Action: Beorn gains +5 Attack until the end of the phase. At the end of the phase in which you trigger this effect, shuffle Beorn back into your deck. (Limit once per round.)",
@@ -74,6 +76,7 @@ export const horsebackArcher = ally(
     traits: ['rohan', 'archer'],
     sphere: 'tactics',
   }
+  // TODO ability
   //keyword("ranged")
 );
 
@@ -89,6 +92,7 @@ export const gandalf = ally(
     traits: ['istari'],
     sphere: 'neutral',
   }
+  // TODO ability
   // response((s) => s.enteredPlay, {
   //   description:
   //     "Response: After Gandalf enters play, (choose 1): draw 3 cards, deal 4 damage to 1 enemy in play, or reduce your threat by 5.",
