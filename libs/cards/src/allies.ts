@@ -23,9 +23,11 @@ export const gondorianSpearman = ally(
     hitPoints: 1,
     traits: ['gondor', 'warrior'],
     sphere: 'tactics',
+    keywords: {
+      sentinel: true,
+    },
   }
-  // TODO ability
-  // keyword("sentinel"),
+  // TODO ability  
   // response((s) => s.declaredDefender, {
   //   description:
   //     "Response: After Gondorian Spearman is declared as a defender, deal 1 damage to the attacking enemy.",

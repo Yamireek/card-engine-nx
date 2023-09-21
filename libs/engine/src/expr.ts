@@ -1,9 +1,10 @@
-import { BoolExpr, NumberExpr } from '@card-engine-nx/state';
+import { BoolExpr, CardBoolExpr, NumberExpr } from '@card-engine-nx/state';
 import { getTargetCards } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
 import { ExecutionContext, ViewContext } from './context';
 import { max, min, values } from 'lodash/fp';
+import { CardId } from '@card-engine-nx/basic';
 
 export function calculateNumberExpr(
   expr: NumberExpr,
@@ -51,13 +52,19 @@ export function calculateNumberExpr(
     return sum(values) ?? 0;
   }
 
+  if (expr.if) {
+    const result = calculateBoolExpr(expr.if.expr, ctx);
+    if (result) {
+      return calculateNumberExpr(expr.if.true, ctx);
+    } else {
+      return calculateNumberExpr(expr.if.false, ctx);
+    }
+  }
+
   throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);
 }
 
-export function calculateBoolExpr(
-  expr: BoolExpr,
-  ctx: ExecutionContext
-): boolean {
+export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
   if (typeof expr === 'boolean') {
     return expr;
   }
@@ -96,5 +103,29 @@ export function calculateBoolExpr(
     return ids.length > 0;
   }
 
+  if (expr.fromCard) {
+    const target = getTargetCards(expr.fromCard.card, ctx);
+    if (target.length === 1) {
+      return calculateCardBoolExpr(expr.fromCard.value, target[0], ctx);
+    }
+  }
+
   throw new Error(`unknown bool expression: ${JSON.stringify(expr)}`);
+}
+
+export function calculateCardBoolExpr(
+  expr: CardBoolExpr,
+  cardId: CardId,
+  ctx: ViewContext
+): boolean {
+  if (typeof expr === 'boolean') {
+    return expr;
+  }
+
+  if (expr.hasTrait) {
+    const traits = ctx.view.cards[cardId].props.traits;
+    return traits?.includes(expr.hasTrait) ?? false;
+  }
+
+  throw new Error(`unknown card bool expression: ${JSON.stringify(expr)}`);
 }

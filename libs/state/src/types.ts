@@ -10,6 +10,7 @@ import {
   Side,
   Sphere,
   Token,
+  Trait,
   ZoneId,
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
@@ -173,12 +174,24 @@ export type NumberExpr =
       };
       fromEvent?: EventNumbers;
       plus?: NumberExpr[];
+      if?: {
+        expr: BoolExpr;
+        true: NumberExpr;
+        false: NumberExpr;
+      };
     };
 
 export type BoolExpr =
   | boolean
   | 'enemiesToEngage'
-  | { phase?: Phase; someCard?: CardTarget };
+  | {
+      phase?: Phase;
+      someCard?: CardTarget;
+      fromCard?: {
+        card: CardTarget;
+        value: CardBoolExpr;
+      };
+    };
 
 export type CardNumberExpr =
   | number
@@ -188,6 +201,12 @@ export type CardNumberExpr =
   | 'sequence'
   | {
       tokens: Token;
+    };
+
+export type CardBoolExpr =
+  | boolean
+  | {
+      hasTrait?: Trait;
     };
 
 export type CardTarget =

@@ -11,12 +11,31 @@ export const dwarvenAxe = attachment(
   {
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
+  },
+  {
+    description:
+      'Attached hero gains +1 ATT (+2 ATT instead if attached hero is a Dwarf.)',
+    modifier: {
+      target: {
+        hasAttachment: 'self',
+      },
+      add: {
+        prop: 'attack',
+        amount: {
+          if: {
+            expr: {
+              fromCard: {
+                card: { hasAttachment: 'self' },
+                value: { hasTrait: 'dwarf' },
+              },
+            },
+            true: 2,
+            false: 1,
+          },
+        },
+      },
+    },
   }
-  // TODO ability
-  // modifyAttached({
-  //   description: "Attached hero gains +1 ATT (+2 ATT instead if attached hero is a Dwarf.)",
-  //   modifier: dynamicModifier(hasTrait("dwarf"), (isDwarf) => increment("attack")(isDwarf ? 2 : 1)),
-  // })
 );
 
 export const citadelPlate = attachment(
