@@ -8,8 +8,8 @@ export type CardNumProp = 'attack' | 'defense' | 'willpower';
 export type ZoneId = GameZoneType | { owner: PlayerId; type: PlayerZoneType };
 
 export type Keywords = {
-  ranged: boolean;
-  sentinel: boolean;
+  ranged?: boolean;
+  sentinel?: boolean;
 };
 
 export function getZoneIdString(zoneId: ZoneId) {

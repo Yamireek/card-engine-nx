@@ -64,21 +64,20 @@ export const beorn = ally(
   // })
 );
 
-export const horsebackArcher = ally(
-  {
-    name: 'Horseback Archer',
-    unique: false,
-    cost: 3,
-    willpower: 0,
-    attack: 2,
-    defense: 1,
-    hitPoints: 2,
-    traits: ['rohan', 'archer'],
-    sphere: 'tactics',
-  }
-  // TODO ability
-  //keyword("ranged")
-);
+export const horsebackArcher = ally({
+  name: 'Horseback Archer',
+  unique: false,
+  cost: 3,
+  willpower: 0,
+  attack: 2,
+  defense: 1,
+  hitPoints: 2,
+  traits: ['rohan', 'archer'],
+  sphere: 'tactics',
+  keywords: {
+    ranged: true,
+  },
+});
 
 export const gandalf = ally(
   {

@@ -39,9 +39,11 @@ export const legolas = hero(
     hitPoints: 4,
     traits: ['noble', 'silvan', 'warrior'],
     sphere: 'tactics',
+    keywords: {
+      ranged: true,
+    },
   }
-  // TODO ability
-  // keyword('ranged'),
+  // TODO ability  
   // response({
   //   description:
   //     'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.',

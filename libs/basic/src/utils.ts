@@ -28,3 +28,7 @@ export function validPlayerId(id?: number | string | null): PlayerId {
     throw new Error('invalid playerId');
   }
 }
+
+export function capitalizeFirst(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

@@ -1,4 +1,10 @@
-import { Sphere, Tokens, Trait } from '@card-engine-nx/basic';
+import {
+  Keywords,
+  Sphere,
+  Tokens,
+  Trait,
+  capitalizeFirst,
+} from '@card-engine-nx/basic';
 import React from 'react';
 
 type PropertyProps = { name: string; printed?: number; current?: number };
@@ -45,6 +51,7 @@ export const CardText = (props: {
   traits: Trait[];
   abilities: string[];
   attachments: string[];
+  keywords: Keywords;
 }) => {
   return (
     <table style={{ width: '100%' }}>
@@ -82,17 +89,28 @@ export const CardText = (props: {
           </tr>
         )}
         <tr>
-          <td>
-            {props.traits.map((t) => (
-              <React.Fragment key={t}>{t} </React.Fragment>
-            ))}
+          <td colSpan={2}>
+            <div
+              style={{
+                textAlign: 'center',
+                fontStyle: 'italic',
+                fontWeight: 'bold',
+              }}
+            >
+              {props.traits
+                .map((t) => {
+                  return capitalizeFirst(t) + '.';
+                })
+                .join(' ')}
+            </div>
           </td>
         </tr>
+        {Object.keys(props.keywords).map((k) => (
+          <React.Fragment key={k}>{capitalizeFirst(k)}.</React.Fragment>
+        ))}
         {props.abilities.map((a, i) => (
           <tr key={i}>
-            <td colSpan={2}>
-              <b>{a}</b>
-            </td>
+            <td colSpan={2}>{a}</td>
           </tr>
         ))}
       </tbody>

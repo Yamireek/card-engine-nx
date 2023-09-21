@@ -1,4 +1,5 @@
 import { CardType, Mark, Sphere, Token, Trait } from './enums';
+import { Keywords } from './types';
 
 export type PrintedProps = {
   type: CardType;
@@ -16,6 +17,7 @@ export type PrintedProps = {
   unique?: boolean;
   engagement?: number;
   threat?: number;
+  keywords?: Keywords;
 };
 
 export type HeroProps = {
@@ -29,6 +31,7 @@ export type HeroProps = {
   traits: Trait[];
   sphere: Sphere;
   unique: true;
+  keywords?: Keywords;
 };
 
 export type AllyProps = {
@@ -42,6 +45,7 @@ export type AllyProps = {
   hitPoints: number;
   traits: Trait[];
   sphere: Sphere;
+  keywords?: Keywords;
 };
 
 export type EventProps = {
@@ -49,6 +53,7 @@ export type EventProps = {
   name: string;
   cost: number;
   sphere: Sphere;
+  keywords?: Keywords;
 };
 
 export type AttachmentProps = {
@@ -58,6 +63,7 @@ export type AttachmentProps = {
   cost: number;
   traits: Trait[];
   sphere: Sphere;
+  keywords?: Keywords;
 };
 
 export type LocationProps = {
@@ -67,6 +73,7 @@ export type LocationProps = {
   questPoints: number;
   traits: Trait[];
   victory?: number;
+  keywords?: Keywords;
 };
 
 export type EnemyProps = {
@@ -79,6 +86,7 @@ export type EnemyProps = {
   hitPoints: number;
   traits: Trait[];
   victory?: number;
+  keywords?: Keywords;
 };
 
 export type QuestProps = {
@@ -91,6 +99,7 @@ export type QuestProps = {
 export type TreacheryProps = {
   type: 'treachery';
   name: string;
+  keywords?: Keywords;
 };
 
 export type BackSideProps = {

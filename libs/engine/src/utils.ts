@@ -77,6 +77,7 @@ export function createCardState(
       round: {},
     },
     modifiers: [],
+    keywords: {},
   };
 }
 

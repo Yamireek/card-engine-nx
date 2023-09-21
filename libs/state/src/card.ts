@@ -6,6 +6,7 @@ import {
   Tokens,
   Orientation,
   PrintedProps,
+  Keywords,
 } from '@card-engine-nx/basic';
 import { ModifierState } from './modifier';
 import { Ability } from './types';
@@ -28,6 +29,8 @@ export type CardDefinition = {
   orientation: Orientation;
 };
 
+
+
 export type CardState = {
   id: CardId;
   definition: CardDefinition;
@@ -44,4 +47,5 @@ export type CardState = {
     round: Record<string, number>;
   };
   modifiers: Array<ModifierState>;
+  keywords: Keywords;
 };

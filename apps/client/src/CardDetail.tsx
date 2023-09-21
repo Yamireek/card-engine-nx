@@ -48,6 +48,7 @@ export const CardDetail = () => {
         current: card.view.props[p],
       }))}
       tokens={card.state.token}
+      keywords={card.view.props.keywords ?? {}}
     />
   );
 };
