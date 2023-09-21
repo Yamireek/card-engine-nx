@@ -108,11 +108,6 @@ export const bladeOfGondolin = attachment(
       },
     },
   }
-  // TODO ability
-  // modifyAttached({
-  //   description: "Attached hero gets +1 Attack when attacking an Orc.",
-  //   modifier: attackBonus(hasTrait("orc"), 1),
-  // }),
   // response({
   //   description:
   //     "Response: After attached hero attacks and destroys an enemy, place 1 progress token on the current quest.",
