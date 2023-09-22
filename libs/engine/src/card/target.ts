@@ -7,7 +7,7 @@ import {
 import { CardTarget } from '@card-engine-nx/state';
 import { intersection, last, uniq } from 'lodash';
 import { ViewContext, cardIds } from '../context';
-import { getTargetZone, getZoneState } from '../zone/target';
+import { getCardZoneId, getTargetZone, getZoneState } from '../zone/target';
 import { canCardExecute } from '../resolution';
 import { difference, isArray } from 'lodash/fp';
 import { calculateNumberExpr } from '../expr';
@@ -150,10 +150,25 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
     return zone.cards;
   }
 
+  if (target.zoneType) {
+    if (target.zoneType === 'engaged') {
+      return values(ctx.state.players)
+        .map((p) => p.zones.engaged)
+        .flatMap((z) => z.cards);
+    }
+  }
+
   if (target.hasAttachment) {
     const attachments = getTargetCards(target.hasAttachment, ctx);
     return values(ctx.state.cards)
       .filter((c) => c.attachments.some((a) => attachments.includes(a)))
+      .map((c) => c.id);
+  }
+
+  if (target.enabled) {
+    const type = target.enabled;
+    return values(ctx.view.cards)
+      .filter((c) => !c.disabled || !c.disabled[type])
       .map((c) => c.id);
   }
 

@@ -1,4 +1,4 @@
-import { CardId, PrintedProps } from '@card-engine-nx/basic';
+import { CardId, Mark, Phase, PrintedProps } from '@card-engine-nx/basic';
 import { ModifierState } from './modifier';
 import { Ability, Action, CardTarget, Limit, NextStage } from './types';
 
@@ -15,6 +15,7 @@ export type ActivableCardAction = {
   description: string;
   action: Action;
   limit?: Limit;
+  phase?: Phase;
 };
 
 export type CardView = {
@@ -30,4 +31,5 @@ export type CardView = {
   responses?: {
     receivedDamage?: Array<{ description: string; action: Action }>;
   };
+  disabled?: Partial<Record<Mark, boolean>>;
 };

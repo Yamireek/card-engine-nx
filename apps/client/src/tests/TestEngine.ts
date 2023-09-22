@@ -149,7 +149,7 @@ export class TestEngine {
       'front',
       'playerArea'
     );
-    return new CardProxy(this.state, id);
+    return new CardProxy(this.state, id, this);
   }
 
   addEnemy(enemy: CardDefinition, player?: PlayerProxy): CardProxy {
@@ -162,14 +162,14 @@ export class TestEngine {
       'front',
       'engaged'
     );
-    return new CardProxy(this.state, id);
+    return new CardProxy(this.state, id, this);
   }
 
   addToLibrary(hero: CardDefinition): CardProxy {
     this.ensurePlayer0();
 
     const id = addPlayerCard(this.state, hero, '0', 'back', 'library');
-    return new CardProxy(this.state, id);
+    return new CardProxy(this.state, id, this);
   }
 
   addToHand(card: CardDefinition, player?: PlayerProxy): CardProxy {
@@ -180,7 +180,7 @@ export class TestEngine {
       'front',
       'hand'
     );
-    return new CardProxy(this.state, id);
+    return new CardProxy(this.state, id, this);
   }
 
   addAttachment(attachment: CardDefinition, card: CardProxy) {
@@ -195,13 +195,17 @@ export class TestEngine {
         zone.type
       );
       card.state.attachments.push(id);
-      return new CardProxy(this.state, id);
+      return new CardProxy(this.state, id, this);
     }
   }
 }
 
 export class CardProxy {
-  constructor(private _state: State, public id: CardId) {}
+  constructor(
+    private _state: State,
+    public id: CardId,
+    private game: TestEngine
+  ) {}
 
   update(cardAction: CardAction) {
     executeCardAction(
@@ -235,6 +239,10 @@ export class CardProxy {
 
   get state() {
     return this._state.cards[this.id];
+  }
+
+  get view() {
+    return this.game.view.cards[this.id];
   }
 }
 

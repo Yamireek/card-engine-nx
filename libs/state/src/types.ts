@@ -137,6 +137,7 @@ export type Ability = {
   description: string;
   implicit?: boolean;
   modifier?: Modifier;
+  phase?: Phase;
   action?: Action;
   setup?: Action;
   attachesTo?: CardTarget;
@@ -157,6 +158,7 @@ export type Modifier = {
     amount: NumberExpr;
   };
   target?: CardTarget;
+  disable?: Mark;
   setNextStage?: NextStage;
 };
 
@@ -228,8 +230,10 @@ export type CardTarget =
       canExecute?: CardAction;
       controller?: PlayerId;
       mark?: Mark;
+      enabled?: Mark;
       trait?: Trait;
       zone?: ZoneId;
+      zoneType?: PlayerZoneType | GameZoneType;
       sequence?: NumberExpr;
       hasAttachment?: CardTarget;
     };

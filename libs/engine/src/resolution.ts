@@ -159,7 +159,8 @@ export function canCardExecute(
     }
 
     if (action.mark) {
-      return true;
+      const disabled = ctx.view.cards[cardId].disabled?.[action.mark];
+      return !disabled;
     }
 
     if (action.dealDamage) {

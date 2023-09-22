@@ -69,18 +69,33 @@ export const feint = event(
     name: 'Feint',
     cost: 1,
     sphere: 'tactics',
+  },
+  {
+    description:
+      'Combat Action: Choose an enemy engaged with a player. That enemy cannot attack that player this phase.',
+    phase: 'combat',
+    action: {
+      player: {
+        target: 'owner',
+        action: {
+          chooseCardActions: {
+            action: {
+              modify: {
+                disable: 'attacking',
+              },
+              until: 'end_of_phase',
+            },
+            multi: false,
+            optional: false,
+            title: 'Choose enemy',
+            target: {
+              and: [{ type: 'enemy' }, { zoneType: 'engaged' }],
+            },
+          },
+        },
+      },
+    },
   }
-  // TODO ability action
-  // action({
-  //   description:
-  //     "Combat Action: Choose an enemy engaged with a player. That enemy cannot attack that player this phase.",
-  //   effect: chooseCardAction(
-  //     "Choose enemy",
-  //     and(isEnemy, isInZoneType("engaged")),
-  //     addModifier(cantAttackEngagedPlayer("end_of_phase")),
-  //     false
-  //   ),
-  // })
 );
 
 export const quickStrike = event(

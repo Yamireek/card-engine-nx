@@ -124,6 +124,7 @@ export function executePlayerAction(
       and: [
         { type: 'enemy' },
         { not: { mark: 'attacked' } },
+        { enabled: 'attacking' },
         { zone: { owner: player.id, type: 'engaged' } },
       ],
     };

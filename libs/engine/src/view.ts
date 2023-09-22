@@ -12,7 +12,7 @@ import { createCardView } from './card/view';
 import { canExecute } from './resolution';
 import { sequence } from './utils/sequence';
 import { keys } from 'lodash/fp';
-import { CardId, PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
+import { CardId, Phase, PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
 
 function createEventAction(
   card: CardView,
@@ -167,15 +167,18 @@ export function createCardActions(
   zone: PlayerZoneType,
   card: CardView,
   self: CardId,
-  owner: PlayerId
+  owner: PlayerId,
+  phase: Phase
 ): ActivableCardAction[] {
   if (zone === 'hand' && card.props.type === 'event') {
-    return card.actions.flatMap((effect) =>
-      createEventAction(card, effect.action, self, owner).map((action) => ({
-        description: effect.description,
-        action,
-      }))
-    );
+    return card.actions
+      .filter((a) => !a.phase || a.phase === phase)
+      .flatMap((effect) =>
+        createEventAction(card, effect.action, self, owner).map((action) => ({
+          description: effect.description,
+          action,
+        }))
+      );
   }
 
   if (zone === 'hand' && card.props.type === 'ally') {
@@ -267,7 +270,13 @@ export function createView(state: State): View {
     for (const zoneType of keys(player.zones) as PlayerZoneType[]) {
       for (const cardId of player.zones[zoneType].cards) {
         const card = view.cards[cardId];
-        const actions = createCardActions(zoneType, card, card.id, player.id);
+        const actions = createCardActions(
+          zoneType,
+          card,
+          card.id,
+          player.id,
+          state.phase
+        );
         for (const action of actions) {
           const allowed = canExecute(action.action, true, {
             state,

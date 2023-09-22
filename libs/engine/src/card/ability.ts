@@ -22,6 +22,7 @@ export function applyAbility(ability: Ability, card: CardView) {
       description: ability.description,
       action: ability.action,
       limit: ability.limit,
+      phase: ability.phase,
     });
     return;
   }

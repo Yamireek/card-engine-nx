@@ -30,5 +30,14 @@ export function applyModifier(
     return;
   }
 
+  if (modifier.disable) {
+    if (!self.disabled) {
+      self.disabled = {};
+    }
+
+    self.disabled[modifier.disable] = true;
+    return;
+  }
+
   throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);
 }
