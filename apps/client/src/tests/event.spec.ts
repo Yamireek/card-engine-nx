@@ -39,3 +39,18 @@ it('Feint', () => {
   game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
   expect(game.state.choice?.title).toBe('Declare defender');
 });
+
+it('Rain of Arrows', () => {
+  const game = new TestEngine();
+  const hero = game.addHero(core.hero.legolas);
+  hero.update({ generateResources: 1 });
+  const enemy1 = game.addEnemy(core.enemiy.dolGuldurOrcs);
+  const enemy2 = game.addEnemy(core.enemiy.kingSpider);
+  game.addToHand(core.event.rainOfArrows);
+  expect(game.actions.length).toBe(1);
+  game.chooseAction(
+    'Action: Exhaust a character you control with the ranged keyword to choose a player. Deal 1 damage to each enemy engaged with that player.'
+  );
+  expect(enemy1.state.token.damage).toBe(1);
+  expect(enemy2.state.token.damage).toBe(1);
+});

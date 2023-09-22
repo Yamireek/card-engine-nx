@@ -21,8 +21,8 @@ export function canExecute(
 
     if (action.card) {
       const cardAction = action.card;
-      const players = getTargetCards(cardAction.taget, ctx);
-      return players.some((card) =>
+      const cards = getTargetCards(cardAction.taget, ctx);
+      return cards.some((card) =>
         canCardExecute(cardAction.action, card, ctx)
       );
     }
@@ -115,6 +115,13 @@ export function canPlayerExecute(
 
     if (action.setLimit) {
       return !player.limits[action.setLimit.key];
+    }
+
+    if (action.engaged) {
+      const cardAction = action.engaged;
+      return player.zones.engaged.cards.some((c) =>
+        canCardExecute(cardAction, c, ctx)
+      );
     }
 
     throw new Error(

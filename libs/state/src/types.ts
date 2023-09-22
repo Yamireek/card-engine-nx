@@ -2,6 +2,7 @@ import {
   CardId,
   CardType,
   GameZoneType,
+  Keywords,
   Mark,
   Phase,
   PlayerId,
@@ -102,6 +103,7 @@ export type PlayerAction =
         multi: boolean;
         optional: boolean;
       };
+      engaged?: CardAction;
     };
 
 export type CardAction =
@@ -228,7 +230,7 @@ export type CardTarget =
       top?: ZoneTarget;
       sphere?: Sphere | 'any';
       canExecute?: CardAction;
-      controller?: PlayerId;
+      controller?: PlayerTarget;
       mark?: Mark;
       enabled?: Mark;
       trait?: Trait;
@@ -236,6 +238,7 @@ export type CardTarget =
       zoneType?: PlayerZoneType | GameZoneType;
       sequence?: NumberExpr;
       hasAttachment?: CardTarget;
+      keyword?: keyof Keywords;
     };
 
 export type ZoneTarget = {

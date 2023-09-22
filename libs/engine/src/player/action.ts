@@ -523,5 +523,20 @@ export function executePlayerAction(
     return;
   }
 
+  if (action.engaged) {
+    ctx.state.next.unshift({
+      card: {
+        action: action.engaged,
+        taget: {
+          zone: {
+            owner: player.id,
+            type: 'engaged',
+          },
+        },
+      },
+    });
+    return;
+  }
+
   throw new Error(`unknown player action: ${JSON.stringify(action)}`);
 }

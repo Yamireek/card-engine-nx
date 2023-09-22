@@ -11,6 +11,7 @@ import { getCardZoneId, getTargetZone, getZoneState } from '../zone/target';
 import { canCardExecute } from '../resolution';
 import { difference, isArray } from 'lodash/fp';
 import { calculateNumberExpr } from '../expr';
+import { getTargetPlayers } from '../player/target';
 
 export function getTargetCard(
   target: CardTarget,
@@ -127,8 +128,10 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target.controller) {
-    const player = ctx.state.players[target.controller];
-    return player?.zones.playerArea.cards ?? [];
+    const targets = getTargetPlayers(target.controller, ctx);
+    return targets.flatMap(
+      (t) => ctx.state.players[t]?.zones.playerArea.cards ?? []
+    );
   }
 
   if (target.mark) {
@@ -169,6 +172,13 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
     const type = target.enabled;
     return values(ctx.view.cards)
       .filter((c) => !c.disabled || !c.disabled[type])
+      .map((c) => c.id);
+  }
+
+  if (target.keyword) {
+    const type = target.keyword;
+    return values(ctx.view.cards)
+      .filter((c) => c.props.keywords && c.props.keywords[type])
       .map((c) => c.id);
   }
 

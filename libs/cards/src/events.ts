@@ -122,18 +122,44 @@ export const rainOfArrows = event(
     name: 'Rain of Arrows',
     cost: 1,
     sphere: 'tactics',
+  },
+  {
+    description:
+      'Action: Exhaust a character you control with the ranged keyword to choose a player. Deal 1 damage to each enemy engaged with that player.',
+    action: {
+      payment: {
+        cost: {
+          card: {
+            taget: {
+              and: [
+                {
+                  controller: 'owner',
+                },
+                { keyword: 'ranged' },
+              ],
+            },
+            action: 'exhaust',
+          },
+        },
+        effect: {
+          player: {
+            target: 'owner',
+            action: {
+              choosePlayerActions: {
+                title: 'Choose player',
+                multi: false,
+                optional: false,
+                target: 'each',
+                action: {
+                  engaged: { dealDamage: 1 },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   }
-  // TODO ability action
-  // action({
-  //   description:
-  //     "Action: Exhaust a character you control with the ranged keyword to choose a player. Deal 1 damage to each enemy engaged with that player.",
-  //   effect: pay(
-  //     chooseCardFor(and(isCharacter, hasKeyword("ranged"), hasController(ownerOf(self))), exhaust),
-  //     choosePlayerFor(any(), (player) =>
-  //       applyToCards(inZone(and(ofType("engaged"), ofPlayer(player))), dealDamage(1))
-  //     )
-  //   ),
-  // })
 );
 
 export const standTogether = event(
