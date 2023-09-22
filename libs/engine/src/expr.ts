@@ -2,7 +2,7 @@ import { BoolExpr, CardBoolExpr, NumberExpr } from '@card-engine-nx/state';
 import { getTargetCards } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
-import { ExecutionContext, ViewContext } from './context';
+import { ViewContext } from './context';
 import { max, min, values } from 'lodash/fp';
 import { CardId } from '@card-engine-nx/basic';
 

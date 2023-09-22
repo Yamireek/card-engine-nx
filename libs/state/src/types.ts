@@ -2,7 +2,6 @@ import {
   CardId,
   CardType,
   GameZoneType,
-  Keywords,
   Mark,
   Phase,
   PlayerId,
@@ -130,7 +129,8 @@ export type CardAction =
         to: ZoneId;
         side: Side;
       };
-      modify?: Modifier;
+      modify?: Modifier | Modifier[];
+      until?: Until;
     };
 
 export type Ability = {
@@ -152,7 +152,6 @@ export type ActionResponse = {
 };
 
 export type Modifier = {
-  until?: Until;
   add?: {
     prop: 'attack' | 'defense' | 'willpower' | 'hitPoints';
     amount: NumberExpr;

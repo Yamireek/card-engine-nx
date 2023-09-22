@@ -1,6 +1,6 @@
 import { Modifier, Until } from './types';
 
 export type ModifierState = {
-  modifier: Modifier;
+  modifier: Modifier | Modifier[];
   until?: Until;
 };

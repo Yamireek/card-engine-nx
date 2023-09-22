@@ -289,7 +289,7 @@ export function executeCardAction(
   if (action.modify) {
     card.modifiers.push({
       modifier: action.modify,
-      until: action.modify.until,
+      until: action.until,
     });
     return;
   }

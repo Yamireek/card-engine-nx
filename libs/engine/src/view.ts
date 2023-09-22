@@ -5,7 +5,7 @@ import {
   State,
   View,
 } from '@card-engine-nx/state';
-import { mapValues, values } from 'lodash';
+import { isArray, mapValues, values } from 'lodash';
 import { applyModifier } from './card/modifier';
 import { applyAbility } from './card/ability';
 import { createCardView } from './card/view';
@@ -236,12 +236,24 @@ export function createView(state: State): View {
 
       for (const modifier of card.modifiers.filter((m) => !m.applied)) {
         allApplied = false;
-        applyModifier(modifier.modifier, card, {
-          state,
-          view,
-          card: { self: card.id },
-          player: {},
-        });
+        if (isArray(modifier.modifier)) {
+          for (const item of modifier.modifier) {
+            applyModifier(item, card, {
+              state,
+              view,
+              card: { self: card.id },
+              player: {},
+            });
+          }
+        } else {
+          applyModifier(modifier.modifier, card, {
+            state,
+            view,
+            card: { self: card.id },
+            player: {},
+          });
+        }
+
         modifier.applied = true;
       }
     }

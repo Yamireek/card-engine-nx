@@ -43,7 +43,7 @@ export const legolas = hero(
       ranged: true,
     },
   }
-  // TODO ability  
+  // TODO ability
   // response({
   //   description:
   //     'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.',
@@ -155,8 +155,8 @@ export const eowyn = hero(
                   prop: 'willpower',
                   amount: 1,
                 },
-                until: 'end_of_phase',
               },
+              until: 'end_of_phase',
             },
           },
         },

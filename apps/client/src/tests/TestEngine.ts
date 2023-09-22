@@ -172,8 +172,14 @@ export class TestEngine {
     return new CardProxy(this.state, id);
   }
 
-  addToHand(card: CardDefinition, player: PlayerProxy): CardProxy {
-    const id = addPlayerCard(this.state, card, player.id, 'front', 'hand');
+  addToHand(card: CardDefinition, player?: PlayerProxy): CardProxy {
+    const id = addPlayerCard(
+      this.state,
+      card,
+      player?.id ?? '0',
+      'front',
+      'hand'
+    );
     return new CardProxy(this.state, id);
   }
 
@@ -235,11 +241,19 @@ export class CardProxy {
 export class PlayerProxy {
   constructor(private state: State, public id: PlayerId) {}
 
+  get player() {
+    const player = this.state.players[this.id];
+    if (!player) {
+      throw new Error('player not found');
+    }
+    return player;
+  }
+
   get hand() {
-    return this.state.players[this.id]!.zones.hand;
+    return this.player.zones.hand;
   }
 
   get library() {
-    return this.state.players[this.id]!.zones.library;
+    return this.player.zones.library;
   }
 }

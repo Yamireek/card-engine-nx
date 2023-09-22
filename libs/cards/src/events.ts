@@ -33,21 +33,35 @@ export const bladeMastery = event(
     name: 'Blade Mastery',
     cost: 1,
     sphere: 'tactics',
+  },
+  {
+    description:
+      'Action: Choose a character. Until the end of the phase, that character gains +1 Attack and +1 Defense.',
+    action: {
+      player: {
+        target: 'owner',
+        action: {
+          chooseCardActions: {
+            action: {
+              modify: [
+                {
+                  add: { prop: 'attack', amount: 1 },
+                },
+                {
+                  add: { prop: 'defense', amount: 1 },
+                },
+              ],
+              until: 'end_of_phase',
+            },
+            multi: false,
+            optional: false,
+            target: 'character',
+            title: 'Choose character for +1 Attack and +1 Defense.',
+          },
+        },
+      },
+    },
   }
-  // TODO ability
-  // action({
-  //   description:
-  //     "Action: Choose a character. Until the end of the phase, that character gains +1 Attack and +1 Defense.",
-  //   effect: chooseCardAction(
-  //     "Choose character for +1/+1",
-  //     isCharacter,
-  //     cardActionSequence([
-  //       addModifier(increment("attack", 1, "end_of_phase")),
-  //       addModifier(increment("defense", 1, "end_of_phase")),
-  //     ]),
-  //     false
-  //   ),
-  // })
 );
 
 export const feint = event(
@@ -56,7 +70,7 @@ export const feint = event(
     cost: 1,
     sphere: 'tactics',
   }
-  // TODO ability
+  // TODO ability action
   // action({
   //   description:
   //     "Combat Action: Choose an enemy engaged with a player. That enemy cannot attack that player this phase.",
@@ -75,7 +89,7 @@ export const quickStrike = event(
     cost: 1,
     sphere: 'tactics',
   }
-  // TODO ability
+  // TODO ability action
   // action({
   //   description:
   //     "Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.",
@@ -94,7 +108,7 @@ export const rainOfArrows = event(
     cost: 1,
     sphere: 'tactics',
   }
-  // TODO ability
+  // TODO ability action
   // action({
   //   description:
   //     "Action: Exhaust a character you control with the ranged keyword to choose a player. Deal 1 damage to each enemy engaged with that player.",
@@ -113,7 +127,7 @@ export const standTogether = event(
     cost: 0,
     sphere: 'tactics',
   }
-  // TODO ability
+  // TODO ability action
   // action({
   //   description:
   //     "Action: Choose a player. That player may declare any number of his eligible characters as defenders against each enemy attacking him this phase.",
@@ -148,7 +162,7 @@ export const thicketOfSpears = event(
     cost: 3,
     sphere: 'tactics',
   }
-  // TODO ability
+  // TODO ability action
   // action({
   //   description:
   //     "You must use resources from 3 different heroes' pools to pay for this card. Action: Choose a player. That player's engaged enemies cannot attack that player this phase.",
