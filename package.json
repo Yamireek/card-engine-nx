@@ -16,6 +16,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.9",
     "@mui/material": "^5.13.1",
     "@nx/esbuild": "16.3.2",
     "@nx/eslint-plugin": "16.3.2",
