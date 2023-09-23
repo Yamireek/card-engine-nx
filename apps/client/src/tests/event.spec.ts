@@ -54,3 +54,26 @@ it('Rain of Arrows', () => {
   expect(enemy1.state.token.damage).toBe(1);
   expect(enemy2.state.token.damage).toBe(1);
 });
+
+it('Thicket of Spears', () => {
+  // TODO need multiple heroes
+  const game = new TestEngine();
+  const legolas = game.addHero(core.hero.legolas);
+  //const gimli = game.addHero(core.hero.gimli);
+  //const thalin = game.addHero(core.hero.thalin);
+  legolas.update({ generateResources: 3 });
+  //gimli.update({ generateResources: 1 });
+  //thalin.update({ generateResources: 1 });
+  game.addEnemy(core.enemiy.dolGuldurOrcs);
+  game.addToHand(core.event.thicketOfSpears);
+  game.do({ beginPhase: 'combat' });
+  expect(game.actions.length).toBe(1);
+  game.chooseAction(
+    "You must use resources from 3 different heroes' pools to pay for this card. Action: Choose a player. That player's engaged enemies cannot attack that player this phase."
+  );
+  game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
+  expect(game.state.choice).toBeUndefined();
+  game.do('endPhase');
+  game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
+  expect(game.state.choice?.title).toBe('Declare defender');
+});

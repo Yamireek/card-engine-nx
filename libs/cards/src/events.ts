@@ -202,20 +202,33 @@ export const thicketOfSpears = event(
     name: 'Thicket of Spears',
     cost: 3,
     sphere: 'tactics',
+  },
+  {
+    description:
+      "You must use resources from 3 different heroes' pools to pay for this card. Action: Choose a player. That player's engaged enemies cannot attack that player this phase.",
+    payment: {
+      heroes: 3,
+    },
+    action: {
+      player: {
+        target: 'owner',
+        action: {
+          choosePlayerActions: {
+            title: 'Choose player',
+            optional: false,
+            multi: false,
+            target: 'each',
+            action: {
+              engaged: {
+                modify: {
+                  disable: 'attacking',
+                },
+                until: 'end_of_phase',
+              },
+            },
+          },
+        },
+      },
+    },
   }
-  // TODO ability action
-  // action({
-  //   description:
-  //     "You must use resources from 3 different heroes' pools to pay for this card. Action: Choose a player. That player's engaged enemies cannot attack that player this phase.",
-  //   cost: cost3diffHeroes(3, "tactics")(ownerOf(self)),
-  //   effect: choosePlayerFor(any(), (player) =>
-  //     applyToCards(
-  //       inZone(and(ofType("engaged"), ofPlayer(player))),
-  //       modifyCard({
-  //         modifier: cantAttackPlayer(player),
-  //         until: "end_of_phase",
-  //       })
-  //     )
-  //   ),
-  // })
 );

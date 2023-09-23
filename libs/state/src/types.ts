@@ -145,6 +145,9 @@ export type Ability = {
   attachesTo?: CardTarget;
   limit?: 'once_per_round';
   response?: ActionResponse;
+  payment?: {
+    heroes?: number;
+  };
 };
 
 export type NextStage = 'default' | 'random';
