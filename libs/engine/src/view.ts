@@ -1,6 +1,6 @@
 import {
   Action,
-  ActivableCardAction,
+  UserCardAction,
   CardView,
   State,
   View,
@@ -16,7 +16,7 @@ import { CardId, Phase, PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
 
 function createEventAction(
   card: CardView,
-  effect: Action,
+  effect: UserCardAction,
   self: CardId,
   owner: PlayerId
 ): Action[] {
@@ -30,7 +30,7 @@ function createEventAction(
   const payment: Action = {
     player: {
       target: owner,
-      action: { payResources: { amount: cost, sphere } },
+      action: { payResources: { ...effect.payment, amount: cost, sphere } },
     },
   };
 
@@ -51,7 +51,7 @@ function createEventAction(
     sequence(
       { setCardVar: { name: 'self', value: self } },
       { setPlayerVar: { name: 'owner', value: owner } },
-      sequence({ payment: { cost: payment, effect: effect } }, discard),
+      sequence({ payment: { cost: payment, effect: effect.action } }, discard),
       { setPlayerVar: { name: 'owner', value: undefined } },
       { setCardVar: { name: 'self', value: undefined } }
     ),
@@ -169,12 +169,12 @@ export function createCardActions(
   self: CardId,
   owner: PlayerId,
   phase: Phase
-): ActivableCardAction[] {
+): UserCardAction[] {
   if (zone === 'hand' && card.props.type === 'event') {
     return card.actions
       .filter((a) => !a.phase || a.phase === phase)
       .flatMap((effect) =>
-        createEventAction(card, effect.action, self, owner).map((action) => ({
+        createEventAction(card, effect, self, owner).map((action) => ({
           description: effect.description,
           action,
         }))

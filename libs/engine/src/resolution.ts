@@ -22,9 +22,7 @@ export function canExecute(
     if (action.card) {
       const cardAction = action.card;
       const cards = getTargetCards(cardAction.taget, ctx);
-      return cards.some((card) =>
-        canCardExecute(cardAction.action, card, ctx)
-      );
+      return cards.some((card) => canCardExecute(cardAction.action, card, ctx));
     }
 
     if (action.sequence) {
@@ -91,7 +89,15 @@ export function canPlayerExecute(
       const heroes = player.zones.playerArea.cards
         .map((c) => ctx.view.cards[c])
         .filter((c) => c.props.type === 'hero')
-        .filter((c) => sphere === 'neutral' || c.props.sphere === sphere);
+        .filter((c) => sphere === 'neutral' || c.props.sphere === sphere)
+        .filter((c) => ctx.state.cards[c.id].token.resources > 0);
+
+      if (
+        action.payResources.heroes &&
+        heroes.length < action.payResources.heroes
+      ) {
+        return false;
+      }
 
       const available = sumBy(
         heroes,

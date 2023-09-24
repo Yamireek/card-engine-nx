@@ -81,7 +81,7 @@ export type PlayerAction =
       setLimit?: { key: string; limit: Limit };
       sequence?: PlayerAction[];
       incrementThreat?: NumberExpr;
-      payResources?: { amount: number; sphere: Sphere };
+      payResources?: { amount: number; sphere: Sphere; heroes?: number };
       declareAttackers?: CardId;
       chooseCardActions?: {
         title: string;
@@ -145,9 +145,11 @@ export type Ability = {
   attachesTo?: CardTarget;
   limit?: 'once_per_round';
   response?: ActionResponse;
-  payment?: {
-    heroes?: number;
-  };
+  payment?: PaymentConditions;
+};
+
+export type PaymentConditions = {
+  heroes?: number;
 };
 
 export type NextStage = 'default' | 'random';

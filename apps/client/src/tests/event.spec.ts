@@ -56,14 +56,13 @@ it('Rain of Arrows', () => {
 });
 
 it('Thicket of Spears', () => {
-  // TODO need multiple heroes
   const game = new TestEngine();
   const legolas = game.addHero(core.hero.legolas);
-  //const gimli = game.addHero(core.hero.gimli);
-  //const thalin = game.addHero(core.hero.thalin);
-  legolas.update({ generateResources: 3 });
-  //gimli.update({ generateResources: 1 });
-  //thalin.update({ generateResources: 1 });
+  const gimli = game.addHero(core.hero.gimli);
+  const thalin = game.addHero(core.hero.thalin);
+  legolas.update({ generateResources: 1 });
+  gimli.update({ generateResources: 1 });
+  thalin.update({ generateResources: 1 });
   game.addEnemy(core.enemiy.dolGuldurOrcs);
   game.addToHand(core.event.thicketOfSpears);
   game.do({ beginPhase: 'combat' });

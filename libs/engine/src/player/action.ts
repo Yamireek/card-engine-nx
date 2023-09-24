@@ -380,6 +380,19 @@ export function executePlayerAction(
       return;
     }
 
+    if (
+      options.length === action.payResources.heroes &&
+      options.length === action.payResources.amount
+    ) {
+      ctx.state.next.unshift({
+        card: {
+          taget: options.map((o) => o.cardId),
+          action: { payResources: 1 },
+        },
+      });
+      return;
+    }
+
     ctx.state.choice = {
       player: player.id,
       type: 'split',
@@ -388,6 +401,9 @@ export function executePlayerAction(
       id: ctx.state.nextId++,
       title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
       options,
+      count: {
+        min: action.payResources.heroes ?? 1,
+      },
     };
     return;
   }

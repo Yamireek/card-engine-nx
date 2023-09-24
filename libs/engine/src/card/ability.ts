@@ -23,6 +23,7 @@ export function applyAbility(ability: Ability, card: CardView) {
       action: ability.action,
       limit: ability.limit,
       phase: ability.phase,
+      payment: ability.payment,
     });
     return;
   }
