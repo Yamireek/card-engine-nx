@@ -3,11 +3,21 @@ import { TestEngine } from './TestEngine';
 import { it, expect } from 'vitest';
 
 it('Blade Mastery', () => {
-  const game = new TestEngine();
-  const hero = game.addHero(core.hero.gimli);
-  hero.update({ generateResources: 1 });
-  expect(hero.token.resources).toEqual(1);
-  game.addToHand(core.event.bladeMastery);
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.gimli,
+            resources: 1,
+          },
+        ],
+        hand: [core.event.bladeMastery],
+      },
+    ],
+  });
+
+  const hero = game.getCard('Gimli');
   expect(hero.props.attack).toEqual(2);
   expect(hero.props.defense).toEqual(2);
   game.chooseAction(
@@ -15,18 +25,27 @@ it('Blade Mastery', () => {
   );
   expect(hero.props.attack).toEqual(3);
   expect(hero.props.defense).toEqual(3);
-  console.log(hero.state.modifiers);
   game.do('endPhase');
   expect(hero.props.attack).toEqual(2);
   expect(hero.props.defense).toEqual(2);
 });
 
 it('Feint', () => {
-  const game = new TestEngine();
-  const hero = game.addHero(core.hero.legolas);
-  hero.update({ generateResources: 1 });
-  game.addEnemy(core.enemiy.dolGuldurOrcs);
-  game.addToHand(core.event.feint);
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.legolas,
+            resources: 1,
+          },
+        ],
+        hand: [core.event.feint],
+        engaged: [core.enemy.dolGuldurOrcs],
+      },
+    ],
+  });
+
   expect(game.actions.length).toBe(0);
   game.do({ beginPhase: 'combat' });
   expect(game.actions.length).toBe(1);
@@ -41,12 +60,23 @@ it('Feint', () => {
 });
 
 it('Rain of Arrows', () => {
-  const game = new TestEngine();
-  const hero = game.addHero(core.hero.legolas);
-  hero.update({ generateResources: 1 });
-  const enemy1 = game.addEnemy(core.enemiy.dolGuldurOrcs);
-  const enemy2 = game.addEnemy(core.enemiy.kingSpider);
-  game.addToHand(core.event.rainOfArrows);
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.legolas,
+            resources: 1,
+          },
+        ],
+        hand: [core.event.rainOfArrows],
+        engaged: [core.enemy.dolGuldurOrcs, core.enemy.kingSpider],
+      },
+    ],
+  });
+
+  const enemy1 = game.getCard('Dol Guldur Orcs');
+  const enemy2 = game.getCard('King Spider');
   expect(game.actions.length).toBe(1);
   game.chooseAction(
     'Action: Exhaust a character you control with the ranged keyword to choose a player. Deal 1 damage to each enemy engaged with that player.'
@@ -56,15 +86,29 @@ it('Rain of Arrows', () => {
 });
 
 it('Thicket of Spears', () => {
-  const game = new TestEngine();
-  const legolas = game.addHero(core.hero.legolas);
-  const gimli = game.addHero(core.hero.gimli);
-  const thalin = game.addHero(core.hero.thalin);
-  legolas.update({ generateResources: 1 });
-  gimli.update({ generateResources: 1 });
-  thalin.update({ generateResources: 1 });
-  game.addEnemy(core.enemiy.dolGuldurOrcs);
-  game.addToHand(core.event.thicketOfSpears);
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.legolas,
+            resources: 1,
+          },
+          {
+            card: core.hero.gimli,
+            resources: 1,
+          },
+          {
+            card: core.hero.thalin,
+            resources: 1,
+          },
+        ],
+        hand: [core.event.thicketOfSpears],
+        engaged: [core.enemy.dolGuldurOrcs],
+      },
+    ],
+  });
+
   game.do({ beginPhase: 'combat' });
   expect(game.actions.length).toBe(1);
   game.chooseAction(

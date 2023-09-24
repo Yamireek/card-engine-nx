@@ -3,36 +3,77 @@ import { TestEngine } from './TestEngine';
 import { it, expect } from 'vitest';
 
 it('Citadel plate', () => {
-  const game = new TestEngine();
-  const gimli = game.addHero(core.hero.gimli);
-  expect(gimli.props.hitPoints).toEqual(5);
-  game.addAttachment(core.attachment.citadelPlate, gimli);
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.gimli,
+            attachments: [core.attachment.citadelPlate],
+          },
+        ],
+      },
+    ],
+  });
+
+  const gimli = game.getCard('Gimli');
   expect(gimli.props.hitPoints).toEqual(9);
 });
 
 it('Dwarwen axe - dwarf', () => {
-  const game = new TestEngine();
-  const gimli = game.addHero(core.hero.gimli);
-  expect(gimli.props.attack).toEqual(2);
-  game.addAttachment(core.attachment.dwarvenAxe, gimli);
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.gimli,
+            attachments: [core.attachment.dwarvenAxe],
+          },
+        ],
+      },
+    ],
+  });
+
+  const gimli = game.getCard('Gimli');
   expect(gimli.props.attack).toEqual(4);
 });
 
 it('Dwarwen axe - elf', () => {
-  const game = new TestEngine();
-  const legolas = game.addHero(core.hero.legolas);
-  expect(legolas.props.attack).toEqual(3);
-  game.addAttachment(core.attachment.dwarvenAxe, legolas);
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.legolas,
+            attachments: [core.attachment.dwarvenAxe],
+          },
+        ],
+      },
+    ],
+  });
+
+  const legolas = game.getCard('Legolas');
   expect(legolas.props.attack).toEqual(4);
 });
 
 it('Blade of Gondolin', () => {
-  const game = new TestEngine();
-  const legolas = game.addHero(core.hero.legolas);
-  const orc = game.addEnemy(core.enemiy.dolGuldurOrcs);
-  const bats = game.addEnemy(core.enemiy.blackForestBats);
-  expect(legolas.props.attack).toEqual(3);
-  game.addAttachment(core.attachment.bladeOfGondolin, legolas);
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.legolas,
+            attachments: [core.attachment.bladeOfGondolin],
+          },
+        ],
+        engaged: [core.enemy.dolGuldurOrcs, core.enemy.blackForestBats],
+      },
+    ],
+  });
+
+  const legolas = game.getCard('Legolas');
+  const orc = game.getCard('Dol Guldur Orcs');
+  const bats = game.getCard('Black Forest Bats');  
   expect(legolas.props.attack).toEqual(3);
   legolas.update({ mark: 'attacking' });
   orc.update({ mark: 'defending' });

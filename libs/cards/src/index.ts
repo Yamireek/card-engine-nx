@@ -1,6 +1,6 @@
 import * as ally from './allies';
 import * as attachment from './attachments';
-import * as enemiy from './enemies';
+import * as enemy from './enemies';
 import * as event from './events';
 import * as hero from './heroes';
 import * as location from './locations';
@@ -12,7 +12,7 @@ export const core = {
   ally,
   hero,
   attachment,
-  enemiy,
+  enemy,
   event,
   location,
   quest,
