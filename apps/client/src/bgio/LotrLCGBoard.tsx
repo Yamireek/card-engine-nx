@@ -3,7 +3,7 @@ import { State } from '@card-engine-nx/state';
 import { BoardProps, Client } from 'boardgame.io/react';
 import { GameSetup } from '../GameSetup';
 import { StateContext } from '../StateContext';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { validPlayerId } from '@card-engine-nx/basic';
 import { Debug } from 'boardgame.io/debug';
 import { ClientOpts } from 'boardgame.io/dist/types/src/client/client';
@@ -12,6 +12,22 @@ export type LotrLCGProps = BoardProps<State>;
 
 export const LotrLCGBoard = (props: LotrLCGProps) => {
   const view = useMemo(() => createView(props.G), [props.G]);
+
+  useEffect(() => {
+    const value = localStorage.getItem('saved_state');
+    if (!value) {
+      return;
+    }
+    try {
+      const loaded = JSON.parse(value);
+      props.moves.load(loaded);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <StateContext.Provider

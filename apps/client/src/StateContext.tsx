@@ -9,6 +9,7 @@ export type Moves = {
   action: (index: number) => void;
   selectScenario: (scenario: Scenario) => void;
   selectDeck: (deck: PlayerDeck) => void;
+  load: (state: State) => void;
 };
 
 export const StateContext = createContext<{

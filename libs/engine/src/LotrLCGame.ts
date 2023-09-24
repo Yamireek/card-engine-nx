@@ -39,6 +39,10 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     );
   };
 
+  const load: Move<State> = (_, state: State) => {
+    return state;
+  };
+
   const choose: Move<State> = ({ G, random }, ...choosen: number[]) => {
     if (!G.choice) {
       return INVALID_MOVE;
@@ -140,7 +144,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     }
   };
 
-  return { skip, choose, split, action, selectDeck, selectScenario };
+  return { skip, choose, split, action, selectDeck, selectScenario, load };
 }
 
 export function LotrLCGame(events: UIEvents): Game<State> {

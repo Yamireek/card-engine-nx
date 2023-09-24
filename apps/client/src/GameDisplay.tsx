@@ -17,7 +17,7 @@ import { GameSceneLoader } from './GameScene';
 import { PlayerAreas } from './PlayerAreas';
 import { GameAreas } from './GameAreas';
 import { CardDetail } from './CardDetail';
-import { Paper } from '@mui/material';
+import { Button, Icon, IconButton, Paper, Stack } from '@mui/material';
 import { sum } from 'lodash/fp';
 import { GameDialogs } from './GameDialogs';
 import { FloatingCardsProvider } from './FloatingCardsContext';
@@ -53,7 +53,7 @@ export const rxEvents = createRxUiEvents();
 const playerIds = ['0', '1', '2', '3'] as const;
 
 export const LotrLCGInfo = () => {
-  const { state, view, playerId } = useContext(StateContext);
+  const { state, view, playerId, moves } = useContext(StateContext);
 
   const totalWillpower = sum(
     values(state.cards)
@@ -94,6 +94,49 @@ export const LotrLCGInfo = () => {
         threat={totalThreat}
         willpower={totalWillpower}
       />
+      <Paper>
+        <Stack direction="row">
+          <IconButton
+            onClick={() => {
+              localStorage.setItem('saved_state', JSON.stringify(state));
+            }}
+          >
+            <Icon>save</Icon>
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              const value = localStorage.getItem('saved_state');
+              if (!value) {
+                return;
+              }
+              try {
+                const loaded = JSON.parse(value);
+                moves.load(loaded);
+              } catch (error) {
+                if (error instanceof Error) {
+                  console.log(error.message);
+                }
+              }
+            }}
+          >
+            <Icon>upload</Icon>
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              localStorage.removeItem('saved_state');
+            }}
+          >
+            <Icon>delete</Icon>
+          </IconButton>
+          <IconButton
+            onClick={() => {
+              console.log(view);
+            }}
+          >
+            <Icon>bug_report</Icon>
+          </IconButton>
+        </Stack>
+      </Paper>
     </div>
   );
 };
