@@ -26,10 +26,10 @@ export type State = {
   };
   choice?: {
     id: number;
-    player?: PlayerId;
+    player?: PlayerId; // TODO required
     title: string;
     dialog: boolean;
-    multi: boolean;
+    type: 'single' | 'multi';
     optional: boolean;
     options: Array<{ title: string; action: Action; cardId?: CardId }>;
   };

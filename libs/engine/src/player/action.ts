@@ -394,7 +394,7 @@ export function executePlayerAction(
       player: player.id,
       dialog: true,
       title: action.chooseCardActions.title,
-      multi: action.chooseCardActions.multi,
+      type: action.chooseCardActions.multi ? 'multi' : 'single',
       optional: action.chooseCardActions.optional,
       options: cardIds.map((c) => ({
         title: c.toString(),
@@ -430,7 +430,7 @@ export function executePlayerAction(
       player: player.id,
       dialog: true,
       title: action.choosePlayerActions.title,
-      multi: action.choosePlayerActions.multi,
+      type: action.choosePlayerActions.multi ? 'multi' : 'single',
       optional: action.choosePlayerActions.optional,
       options: playerIds.map((c) => ({
         title: c.toString(),
@@ -451,7 +451,7 @@ export function executePlayerAction(
       player: player.id,
       dialog: true,
       title: action.chooseActions.title,
-      multi: action.chooseActions.multi,
+      type: action.chooseActions.multi ? 'multi' : 'single',
       optional: action.chooseActions.optional,
       options: action.chooseActions.actions,
     };

@@ -7,7 +7,7 @@ import {
 import { CardTarget } from '@card-engine-nx/state';
 import { intersection, last, uniq } from 'lodash';
 import { ViewContext, cardIds } from '../context';
-import { getCardZoneId, getTargetZone, getZoneState } from '../zone/target';
+import { getTargetZone, getZoneState } from '../zone/target';
 import { canCardExecute } from '../resolution';
 import { difference, isArray } from 'lodash/fp';
 import { calculateNumberExpr } from '../expr';

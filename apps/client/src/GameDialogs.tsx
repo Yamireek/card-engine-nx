@@ -50,7 +50,7 @@ export const GameDialogs = () => {
     );
   }
 
-  if (state.choice.multi) {
+  if (state.choice.type === 'multi') {
     return (
       <ChooseMultiDialog
         key={state.choice.id.toString()}
@@ -73,7 +73,9 @@ export const GameDialogs = () => {
         onSubmit={(ids) => moves.choose(...ids)}
       />
     );
-  } else {
+  }
+
+  if (state.choice.type === 'single') {
     return (
       <ChooseSingleDialog
         key={state.choice.id.toString()}

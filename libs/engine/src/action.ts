@@ -241,7 +241,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       id: ctx.state.nextId++,
       title: action.playerActions,
       dialog: false,
-      multi: false,
+      type: 'single',
       options: [],
       optional: true,
     };

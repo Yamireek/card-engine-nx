@@ -151,7 +151,7 @@ export function LotrLCGame(events: UIEvents): Game<State> {
           ];
         }
 
-        if (choice.multi) {
+        if (choice.type === 'multi') {
           const sets = new PowerSet(choice.options.map((o, i) => i));
           const array = sets.toArray();
           return array.map((a) => ({
@@ -160,7 +160,7 @@ export function LotrLCGame(events: UIEvents): Game<State> {
           }));
         }
 
-        if (!choice.multi) {
+        if (choice.type === 'single') {
           if (choice.optional) {
             return [
               { move: 'skip' },
