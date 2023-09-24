@@ -58,6 +58,40 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     );
   };
 
+  const split: Move<State> = ({ G, random }, ...amounts: number[]) => {
+    if (!G.choice || G.choice.type !== 'split') {
+      return INVALID_MOVE;
+    }
+
+    const options = G.choice.options;
+    G.choice = undefined;
+    G.next.unshift(
+      ...options.flatMap((o, i) => {
+        const amount = amounts[i];
+        if (amount > 0) {
+          return [
+            {
+              repeat: {
+                amount,
+                action: o.action,
+              },
+            },
+          ];
+        } else {
+          return [];
+        }
+      })
+    );
+    advanceToChoiceState(
+      G,
+      events,
+      false,
+      false,
+      random.Shuffle,
+      getRandomItem(random.Number)
+    );
+  };
+
   const action: Move<State> = ({ G, random }, index: number) => {
     if (!G.choice) {
       return INVALID_MOVE;
@@ -106,7 +140,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     }
   };
 
-  return { skip, choose, action, selectDeck, selectScenario };
+  return { skip, choose, split, action, selectDeck, selectScenario };
 }
 
 export function LotrLCGame(events: UIEvents): Game<State> {

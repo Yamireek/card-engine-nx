@@ -5,6 +5,7 @@ import { createContext, useContext } from 'react';
 export type Moves = {
   skip: () => void;
   choose: (...choosen: number[]) => void;
+  split: (...amounts: number[]) => void;
   action: (index: number) => void;
   selectScenario: (scenario: Scenario) => void;
   selectDeck: (deck: PlayerDeck) => void;

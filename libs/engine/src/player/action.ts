@@ -349,28 +349,46 @@ export function executePlayerAction(
       ],
     };
 
-    ctx.state.next = [
-      {
-        repeat: {
-          amount: action.payResources.amount,
-          action: {
-            player: {
-              target: player.id,
-              action: {
-                chooseCardActions: {
-                  title: 'Choose hero to pay 1 resource',
-                  target,
-                  action: { payResources: 1 },
-                  multi: false,
-                  optional: false,
-                },
-              },
-            },
+    const targets = getTargetCards(target, ctx);
+
+    const options = targets.flatMap((t) => {
+      const card = ctx.state.cards[t];
+      if (card.token.resources === 0) {
+        return [];
+      }
+      return {
+        title: t.toString(),
+        cardId: t,
+        min: 0,
+        max: card.token.resources,
+        action: {
+          card: {
+            taget: t,
+            action: { payResources: 1 },
           },
         },
-      },
-      ...ctx.state.next,
-    ];
+      };
+    });
+
+    if (options.length === 1) {
+      ctx.state.next.unshift({
+        card: {
+          taget: options[0].cardId,
+          action: { payResources: action.payResources.amount },
+        },
+      });
+      return;
+    }
+
+    ctx.state.choice = {
+      player: player.id,
+      type: 'split',
+      amount: action.payResources.amount,
+      dialog: true,
+      id: ctx.state.nextId++,
+      title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
+      options,
+    };
     return;
   }
 

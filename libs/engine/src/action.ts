@@ -425,7 +425,7 @@ export const phaseResource = sequence(
   {
     card: {
       taget: { and: ['inAPlay', { type: 'hero' }] },
-      action: { generateResources: 1 },
+      action: { generateResources: 2 },
     },
   },
   { playerActions: 'End resource phase' },

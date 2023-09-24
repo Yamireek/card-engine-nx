@@ -24,15 +24,32 @@ export type State = {
     end_of_phase: Action[];
     end_of_round: Action[];
   };
-  choice?: {
-    id: number;
-    player?: PlayerId; // TODO required
-    title: string;
-    dialog: boolean;
-    type: 'single' | 'multi';
-    optional: boolean;
-    options: Array<{ title: string; action: Action; cardId?: CardId }>;
-  };
+  choice?:
+    | {
+        id: number;
+        player?: PlayerId; // TODO required
+        title: string;
+        dialog: boolean;
+        type: 'single' | 'multi';
+        optional: boolean;
+        options: Array<{ title: string; action: Action; cardId?: CardId }>;
+      }
+    | {
+        id: number;
+        player: PlayerId;
+        title: string;
+        dialog: boolean;
+        type: 'split';
+        amount: number;
+        count?: { min?: number; max?: number };
+        options: Array<{
+          title: string;
+          action: Action;
+          cardId: CardId;
+          min: number;
+          max: number;
+        }>;
+      };
   next: Action[];
   result?: {
     win: boolean;

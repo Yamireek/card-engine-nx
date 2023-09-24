@@ -1,4 +1,5 @@
 import {
+  ChooseDistributionDialog,
   ChooseMultiDialog,
   ChooseSingleDialog,
   NextStepButton,
@@ -96,6 +97,37 @@ export const GameDialogs = () => {
             height: 600 / 3,
           },
         }))}
+      />
+    );
+  }
+
+  if (state.choice.type === 'split') {
+    return (
+      <ChooseDistributionDialog
+        key={state.choice.id.toString()}
+        title={state.choice.title}
+        total={{ min: state.choice.amount, max: state.choice.amount }}
+        choices={state.choice.options.map((o, i) => ({
+          id: i,
+          title: o.title,
+          action: () => {
+            moves.choose(i);
+          },
+          image: {
+            src: getCardImageUrl(
+              view.cards[o.cardId].props,
+              state.cards[o.cardId].sideUp
+            ),
+            width: 430 / 3,
+            height: 600 / 3,
+          },
+          min: o.min,
+          max: o.max,
+        }))}
+        onSubmit={(amounts) => {
+          // TODO simple array
+          moves.split(...amounts.map((a) => a.value));
+        }}
       />
     );
   }
