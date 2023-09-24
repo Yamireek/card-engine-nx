@@ -209,6 +209,7 @@ export const thicketOfSpears = event(
     payment: {
       heroes: 3,
     },
+    phase: 'combat',
     action: {
       player: {
         target: 'owner',
