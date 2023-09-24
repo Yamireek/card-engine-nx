@@ -2,16 +2,13 @@ import {
   PlayerDeck,
   Scenario,
   State,
+  createPlayerState,
   createState,
 } from '@card-engine-nx/state';
 import type { Game, Move } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { UIEvents } from './uiEvents';
-import {
-  addPlayerCard,
-  advanceToChoiceState,
-  createPlayerState,
-} from './utils';
+import { addPlayerCard, advanceToChoiceState } from './utils';
 import { createView } from './view';
 import { beginScenario } from './action';
 import { ActivePlayers } from 'boardgame.io/core';

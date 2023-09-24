@@ -3,12 +3,13 @@ import {
   CardTarget,
   PlayerDeck,
   Scenario,
+  createPlayerState,
 } from '@card-engine-nx/state';
 import { getTargetPlayer, getTargetPlayers } from './player/target';
 import { executePlayerAction } from './player/action';
 import { keys, reverse } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
-import { addPlayerCard, addGameCard, createPlayerState } from './utils';
+import { addPlayerCard, addGameCard } from './utils';
 import { sequence } from './utils/sequence';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';

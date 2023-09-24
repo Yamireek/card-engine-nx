@@ -17,7 +17,7 @@ import { GameSceneLoader } from './GameScene';
 import { PlayerAreas } from './PlayerAreas';
 import { GameAreas } from './GameAreas';
 import { CardDetail } from './CardDetail';
-import { Button, Icon, IconButton, Paper, Stack } from '@mui/material';
+import { Icon, IconButton, Paper, Stack } from '@mui/material';
 import { sum } from 'lodash/fp';
 import { GameDialogs } from './GameDialogs';
 import { FloatingCardsProvider } from './FloatingCardsContext';

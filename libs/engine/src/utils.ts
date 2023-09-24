@@ -1,13 +1,11 @@
 import {
   Action,
   CardDefinition,
-  CardState,
-  PlayerState,
   State,
   View,
+  createCardState,
 } from '@card-engine-nx/state';
 import {
-  CardId,
   GameZoneType,
   PlayerId,
   PlayerZoneType,
@@ -45,58 +43,6 @@ export function addGameCard(
   state.cards[id] = createCardState(id, side, definition, undefined);
   state.zones[zone].cards.push(id);
   state.nextId++;
-}
-
-export function createCardState(
-  id: CardId,
-  side: Side,
-  definition: CardDefinition,
-  owner: PlayerId | undefined
-): CardState {
-  return {
-    id,
-    token: {
-      damage: 0,
-      progress: 0,
-      resources: 0,
-    },
-    mark: {
-      questing: false,
-      attacking: false,
-      defending: false,
-      attacked: false,
-    },
-    sideUp: side,
-    tapped: false,
-    definition: definition,
-    attachments: [],
-    owner: owner,
-    controller: owner,
-    limitUses: {
-      phase: {},
-      round: {},
-    },
-    modifiers: [],
-    keywords: {},
-  };
-}
-
-export function createPlayerState(playerId: PlayerId): PlayerState {
-  return {
-    id: playerId,
-    thread: 0,
-    zones: {
-      hand: { cards: [] },
-      library: { cards: [] },
-      playerArea: { cards: [] },
-      discardPile: { cards: [] },
-      engaged: { cards: [] },
-    },
-    limitUses: { game: {} },
-    flags: {},
-    eliminated: false,
-    limits: {},
-  };
 }
 
 export function nextStep(ctx: ExecutionContext) {

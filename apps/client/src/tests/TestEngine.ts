@@ -2,33 +2,38 @@ import {
   Action,
   CardAction,
   CardDefinition,
+  SimpleState,
   State,
+  createPlayerState,
   createState,
 } from '@card-engine-nx/state';
-import { CardId, PlayerId } from '@card-engine-nx/basic';
+import { CardId, PlayerId, values } from '@card-engine-nx/basic';
 import {
   addPlayerCard,
   advanceToChoiceState,
   consoleEvents,
   crateExecutionContext,
-  createPlayerState,
   createView,
   executeCardAction,
   getCardZoneId,
 } from '@card-engine-nx/engine';
 
 export class TestEngine {
-  constructor(public state = createState()) {
+  state: State;
+
+  constructor(state?: SimpleState) {
+    this.state = createState(state);
+
     advanceToChoiceState(
-      state,
+      this.state,
       consoleEvents,
       true,
       true,
       (v) => v,
       (i) => i[0]
     );
-    state.choice = undefined;
-    state.next = [];
+    this.state.choice = undefined;
+    this.state.next = [];
   }
 
   do(action: Action) {
@@ -197,6 +202,22 @@ export class TestEngine {
       card.state.attachments.push(id);
       return new CardProxy(this.state, id, this);
     }
+  }
+
+  getPlayer(playerId: PlayerId) {
+    return new PlayerProxy(this.state, playerId);
+  }
+
+  getCard(name: string) {
+    const card = values(this.state.cards).find(
+      (c) => c.definition.front.name === name
+    );
+
+    if (!card) {
+      throw new Error('card not found');
+    }
+
+    return new CardProxy(this.state, card.id, this);
   }
 }
 

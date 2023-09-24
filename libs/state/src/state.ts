@@ -1,5 +1,11 @@
-import { CardId, GameZoneType, Phase, PlayerId } from '@card-engine-nx/basic';
-import { CardState } from './card';
+import {
+  CardId,
+  GameZoneType,
+  Phase,
+  PlayerId,
+  PlayerZoneType,
+} from '@card-engine-nx/basic';
+import { CardDefinition, CardState } from './card';
 import { PlayerState } from './player';
 import { ZoneState } from './zone';
 import { Action, Limit } from './types';
@@ -63,3 +69,18 @@ export type State = {
   actionLimits: Array<{ type: Limit; card: CardId; index: number }>;
   event?: Event;
 };
+
+export type SimpleCardState =
+  | CardDefinition
+  | {
+      card: CardDefinition;
+      resources?: number;
+      progress?: number;
+      damage?: number;
+      exhausted?: boolean;
+      attachments?: CardDefinition[];
+    };
+
+export type SimpleState = {
+  players: Array<Partial<Record<PlayerZoneType, SimpleCardState[]>>>;
+} & Partial<Record<GameZoneType, SimpleCardState[]>>;
