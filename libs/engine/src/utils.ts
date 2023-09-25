@@ -92,7 +92,6 @@ export function advanceToChoiceState(
     if (state.choice) {
       if (
         state.choice.type === 'single' &&
-        state.choice.dialog &&
         ((!state.choice.optional && state.choice.options.length === 1) ||
           (state.choice.optional && state.choice.options.length === 0))
       ) {
@@ -102,7 +101,7 @@ export function advanceToChoiceState(
         state.choice = undefined;
       } else if (
         autoSkip &&
-        !state.choice.dialog &&
+        state.choice.type === 'actions' &&
         createView(state).actions.length === 0
       ) {
         state.choice = undefined;

@@ -33,10 +33,14 @@ export type State = {
   choice?:
     | {
         id: number;
-        player?: PlayerId; // TODO required
         title: string;
-        dialog: boolean;
-        type: 'single' | 'multi';
+        type: 'actions';
+      }
+    | {
+        id: number;
+        player: PlayerId;
+        title: string;
+        type: 'single';
         optional: boolean;
         options: Array<{ title: string; action: Action; cardId?: CardId }>;
       }
@@ -44,7 +48,13 @@ export type State = {
         id: number;
         player: PlayerId;
         title: string;
-        dialog: boolean;
+        type: 'multi';
+        options: Array<{ title: string; action: Action; cardId?: CardId }>;
+      }
+    | {
+        id: number;
+        player: PlayerId;
+        title: string;
         type: 'split';
         amount: number;
         count?: { min?: number; max?: number };

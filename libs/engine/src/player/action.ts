@@ -397,7 +397,6 @@ export function executePlayerAction(
       player: player.id,
       type: 'split',
       amount: action.payResources.amount,
-      dialog: true,
       id: ctx.state.nextId++,
       title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
       options,
@@ -426,7 +425,6 @@ export function executePlayerAction(
     ctx.state.choice = {
       id: ctx.state.nextId++,
       player: player.id,
-      dialog: true,
       title: action.chooseCardActions.title,
       type: action.chooseCardActions.multi ? 'multi' : 'single',
       optional: action.chooseCardActions.optional,
@@ -462,7 +460,6 @@ export function executePlayerAction(
     ctx.state.choice = {
       id: ctx.state.nextId++,
       player: player.id,
-      dialog: true,
       title: action.choosePlayerActions.title,
       type: action.choosePlayerActions.multi ? 'multi' : 'single',
       optional: action.choosePlayerActions.optional,
@@ -483,7 +480,6 @@ export function executePlayerAction(
     ctx.state.choice = {
       id: ctx.state.nextId++,
       player: player.id,
-      dialog: true,
       title: action.chooseActions.title,
       type: action.chooseActions.multi ? 'multi' : 'single',
       optional: action.chooseActions.optional,

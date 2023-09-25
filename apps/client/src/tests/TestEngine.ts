@@ -15,13 +15,12 @@ import {
   crateExecutionContext,
   createView,
   executeCardAction,
-  getCardZoneId,
 } from '@card-engine-nx/engine';
 
 export class TestEngine {
   state: State;
 
-  constructor(state?: SimpleState) {
+  constructor(state: SimpleState) {
     this.state = createState(state);
 
     advanceToChoiceState(
@@ -70,6 +69,10 @@ export class TestEngine {
   }
 
   chooseOption(description: string) {
+    if (this.state.choice?.type === 'actions') {
+      throw new Error('no options');
+    }
+
     const option = this.state.choice?.options.find(
       (o) => o.title === description
     );
@@ -83,46 +86,6 @@ export class TestEngine {
     this.state.choice = undefined;
     this.do(option.action);
   }
-
-  // doAction(title: string) {
-  //   const action = this.actions.find((a) => a.description === title);
-  //   if (action) {
-  //     this.do(action.action);
-  //   } else {
-  //     throw new Error(
-  //       'action not found, choices are: \r\n' +
-  //         this.actions.map((o) => o.description).join('\r\n')
-  //     );
-  //   }
-  // }
-  // makeChoice(title: string, index: number) {
-  //   if (this.state.choice) {
-  //     if (this.state.choice.title === title) {
-  //       const action = this.state.choice.options[index].action;
-  //       this.state.choice = undefined;
-  //       this.do(action);
-  //     } else {
-  //       throw new Error(`Different choice title: ${this.state.choice.title}`);
-  //     }
-  //   } else {
-  //     throw new Error('no choices');
-  //   }
-  // }
-  // chooseOption(title: string) {
-  //   if (!this.state.choice) {
-  //     throw new Error('no choice');
-  //   }
-  //   const option = this.state.choice.options.find((o) => o.title === title);
-  //   if (option) {
-  //     this.state.choice = undefined;
-  //     this.do(option.action);
-  //   } else {
-  //     throw new Error(
-  //       'option not found, choices are: \r\n' +
-  //         this.state.choice.options.map((o) => o.title).join('\r\n')
-  //     );
-  //   }
-  // }
 
   private ensurePlayer0() {
     if (!this.state.players['0']) {
@@ -144,64 +107,11 @@ export class TestEngine {
     throw new Error('cant add new player');
   }
 
-  addHero(hero: CardDefinition, player?: PlayerProxy): CardProxy {
-    this.ensurePlayer0();
-
-    const id = addPlayerCard(
-      this.state,
-      hero,
-      player?.id ?? '0',
-      'front',
-      'playerArea'
-    );
-    return new CardProxy(this.state, id, this);
-  }
-
-  addEnemy(enemy: CardDefinition, player?: PlayerProxy): CardProxy {
-    this.ensurePlayer0();
-
-    const id = addPlayerCard(
-      this.state,
-      enemy,
-      player?.id ?? '0',
-      'front',
-      'engaged'
-    );
-    return new CardProxy(this.state, id, this);
-  }
-
   addToLibrary(hero: CardDefinition): CardProxy {
     this.ensurePlayer0();
 
     const id = addPlayerCard(this.state, hero, '0', 'back', 'library');
     return new CardProxy(this.state, id, this);
-  }
-
-  addToHand(card: CardDefinition, player?: PlayerProxy): CardProxy {
-    const id = addPlayerCard(
-      this.state,
-      card,
-      player?.id ?? '0',
-      'front',
-      'hand'
-    );
-    return new CardProxy(this.state, id, this);
-  }
-
-  addAttachment(attachment: CardDefinition, card: CardProxy) {
-    const zone = getCardZoneId(card.id, this.state);
-
-    if (typeof zone !== 'string') {
-      const id = addPlayerCard(
-        this.state,
-        attachment,
-        zone.owner,
-        'front',
-        zone.type
-      );
-      card.state.attachments.push(id);
-      return new CardProxy(this.state, id, this);
-    }
   }
 
   getPlayer(playerId: PlayerId) {

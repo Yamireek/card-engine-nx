@@ -241,10 +241,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     ctx.state.choice = {
       id: ctx.state.nextId++,
       title: action.playerActions,
-      dialog: false,
-      type: 'single',
-      options: [],
-      optional: true,
+      type: 'actions',
     };
     return;
   }

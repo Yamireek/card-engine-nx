@@ -49,7 +49,11 @@ export const LotrCard3d = (props: {
       orientation={props.orientation}
       hidden={cards.some((c) => c.id === props.cardId)}
       onClick={() => {
-        if (actions.length === 0 || !state.choice || state.choice.dialog) {
+        if (
+          actions.length === 0 ||
+          !state.choice ||
+          state.choice.type !== 'actions'
+        ) {
           return;
         } else {
           if (actions.length === 1) {

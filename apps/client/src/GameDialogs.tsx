@@ -32,7 +32,7 @@ export const GameDialogs = () => {
     return null;
   }
 
-  if (!state.choice.dialog) {
+  if (state.choice.type === 'actions') {
     return (
       <NextStepButton
         title={state.choice?.title ?? 'Next'}
