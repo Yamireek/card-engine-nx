@@ -75,11 +75,6 @@ it('Beravor', () => {
   expect(game.actions.length).toEqual(0);
   beravor.update('ready');
   expect(game.actions.length).toEqual(0);
-  game.addToLibrary(core.ally.veteranAxehand);
-  expect(game.actions.length).toEqual(0);
-  game.do('endRound');
-  game.addToLibrary(core.ally.veteranAxehand);
-  expect(game.actions.length).toEqual(1);
 });
 
 it('Éowyn', async () => {

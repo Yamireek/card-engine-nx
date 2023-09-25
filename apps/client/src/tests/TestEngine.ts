@@ -1,15 +1,12 @@
 import {
   Action,
   CardAction,
-  CardDefinition,
   SimpleState,
   State,
-  createPlayerState,
   createState,
 } from '@card-engine-nx/state';
 import { CardId, PlayerId, values } from '@card-engine-nx/basic';
 import {
-  addPlayerCard,
   advanceToChoiceState,
   consoleEvents,
   crateExecutionContext,
@@ -35,6 +32,14 @@ export class TestEngine {
     this.state.next = [];
   }
 
+  get view() {
+    return createView(this.state);
+  }
+
+  get actions() {
+    return this.view.actions;
+  }
+
   do(action: Action) {
     this.state.next.unshift(action);
     advanceToChoiceState(
@@ -45,14 +50,6 @@ export class TestEngine {
       (v) => v,
       (i) => i[0]
     );
-  }
-
-  get view() {
-    return createView(this.state);
-  }
-
-  get actions() {
-    return this.view.actions;
   }
 
   chooseAction(description: string) {
@@ -85,33 +82,6 @@ export class TestEngine {
     }
     this.state.choice = undefined;
     this.do(option.action);
-  }
-
-  private ensurePlayer0() {
-    if (!this.state.players['0']) {
-      this.addPlayer();
-    }
-  }
-
-  addPlayer() {
-    if (!this.state.players['0']) {
-      this.state.players['0'] = createPlayerState('0');
-      return new PlayerProxy(this.state, '0');
-    }
-
-    if (!this.state.players['1']) {
-      this.state.players['1'] = createPlayerState('1');
-      return new PlayerProxy(this.state, '1');
-    }
-
-    throw new Error('cant add new player');
-  }
-
-  addToLibrary(hero: CardDefinition): CardProxy {
-    this.ensurePlayer0();
-
-    const id = addPlayerCard(this.state, hero, '0', 'back', 'library');
-    return new CardProxy(this.state, id, this);
   }
 
   getPlayer(playerId: PlayerId) {
