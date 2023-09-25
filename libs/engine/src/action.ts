@@ -7,7 +7,7 @@ import {
 } from '@card-engine-nx/state';
 import { getTargetPlayer, getTargetPlayers } from './player/target';
 import { executePlayerAction } from './player/action';
-import { keys, reverse } from 'lodash/fp';
+import { keys, reverse, sum } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard } from './utils';
 import { sequence } from './utils/sequence';
@@ -360,6 +360,34 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action.setEvent) {
     ctx.state.event = action.setEvent;
+    return;
+  }
+
+  if (action.resolveAttack) {
+    const attacking = getTargetCards(action.resolveAttack.attackers, ctx).map(
+      (id) => ctx.view.cards[id]
+    );
+
+    const defender = getTargetCards(action.resolveAttack.defender, ctx).map(
+      (id) => ctx.view.cards[id]
+    );
+
+    const attack = sum(attacking.map((a) => a.props.attack || 0));
+    const defense = sum(defender.map((d) => d.props.defense || 0));
+
+    const damage = attack - defense;
+    if (damage > 0) {
+      if (defender.length === 1) {
+        ctx.state.next.unshift({
+          card: {
+            taget: defender.map((c) => c.id),
+            action: { dealDamage: damage },
+          },
+        });
+      } else {
+        throw new Error('unexpected defender count');
+      }
+    }
     return;
   }
 

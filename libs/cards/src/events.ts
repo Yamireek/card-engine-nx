@@ -103,18 +103,76 @@ export const quickStrike = event(
     name: 'Quick Strike',
     cost: 1,
     sphere: 'tactics',
+  },
+  {
+    description:
+      'Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.',
+    action: {
+      sequence: [
+        {
+          player: {
+            target: 'owner',
+            action: {
+              chooseCardActions: {
+                title: 'Choose character as attacker',
+                multi: false,
+                optional: false,
+                target: {
+                  and: [{ controller: 'owner' }, 'character'],
+                },
+                action: {
+                  sequence: [
+                    'exhaust',
+                    {
+                      setCardVar: 'attacker',
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
+          player: {
+            target: 'owner',
+            action: {
+              chooseCardActions: {
+                title: 'Choose enemy to attack',
+                multi: false,
+                optional: false,
+                target: {
+                  type: 'enemy',
+                },
+                action: {
+                  setCardVar: 'defender',
+                },
+              },
+            },
+          },
+        },
+        {
+          resolveAttack: {
+            attackers: {
+              var: 'attacker',
+            },
+            defender: { var: 'defender' },
+          },
+        },
+        {
+          setCardVar: {
+            name: 'attacker',
+            value: undefined,
+          },
+        },
+        {
+          setCardVar: {
+            name: 'defender',
+            value: undefined,
+          },
+        },
+      ],
+    },
   }
-  // TODO ability action
-  // action({
-  //   description:
-  //     "Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.",
-  //   effect: chooseCardFor(and(isCharacter, inZone(bindFilter(ofPlayer, ownerOf(self)))), (attacker) =>
-  //     pay(
-  //       exhaust(attacker),
-  //       chooseCardFor(isEnemy, (enemy) => resolvePlayerAttack([attacker], enemy))
-  //     )
-  //   ),
-  // })
 );
 
 export const rainOfArrows = event(

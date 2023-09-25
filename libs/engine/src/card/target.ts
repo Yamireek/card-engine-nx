@@ -182,5 +182,14 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       .map((c) => c.id);
   }
 
+  if (target.var) {
+    const card = ctx.state.vars.card[target.var];
+    if (card) {
+      return [card];
+    } else {
+      return [];
+    }
+  }
+
   throw new Error(`unknown card target: ${JSON.stringify(target)}`);
 }

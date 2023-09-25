@@ -51,6 +51,10 @@ export function canExecute(
 
       return !existing;
     }
+
+    if (action.resolveAttack) {
+      return true;
+    }
   }
 
   throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
@@ -193,6 +197,10 @@ export function canCardExecute(
     }
 
     if (action.modify) {
+      return true;
+    }
+
+    if (action.setCardVar) {
       return true;
     }
   }

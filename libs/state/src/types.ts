@@ -62,6 +62,10 @@ export type Action =
         index: number;
       };
       setEvent?: Event;
+      resolveAttack?: {
+        attackers: CardTarget;
+        defender: CardTarget;
+      };
     };
 
 export type PlayerAction =
@@ -133,6 +137,7 @@ export type CardAction =
       };
       modify?: Modifier | Modifier[];
       until?: Until;
+      setCardVar?: string;
     };
 
 export type Ability = {
@@ -244,6 +249,7 @@ export type CardTarget =
       sequence?: NumberExpr;
       hasAttachment?: CardTarget;
       keyword?: keyof Keywords;
+      var?: string;
     };
 
 export type ZoneTarget = {

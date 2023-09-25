@@ -294,5 +294,10 @@ export function executeCardAction(
     return;
   }
 
+  if (action.setCardVar) {
+    ctx.state.vars.card[action.setCardVar] = card.id;
+    return;
+  }
+
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
 }

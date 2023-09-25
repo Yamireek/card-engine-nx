@@ -120,3 +120,27 @@ it('Thicket of Spears', () => {
   game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
   expect(game.state.choice?.title).toBe('Declare defender');
 });
+
+it('Quick Strike', () => {
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.gimli,
+            resources: 1,
+          },
+        ],
+        hand: [core.event.quickStrike],
+        engaged: [core.enemy.forestSpider],
+      },
+    ],
+  });
+
+  const enemy = game.getCard('Forest Spider');
+  expect(game.actions.length).toBe(1);
+  game.chooseAction(
+    'Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.'
+  );
+  expect(enemy.token.damage).toBe(1);
+});
