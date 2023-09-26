@@ -29,8 +29,6 @@ export type CardDefinition = {
   orientation: Orientation;
 };
 
-
-
 export type CardState = {
   id: CardId;
   definition: CardDefinition;

@@ -11,15 +11,12 @@ import {
 
 export type View = {
   cards: Record<CardId, CardView>;
-  actions: Array<{
-    card: CardId;
-    description: string;
-    action: Action;
-  }>;
+  actions: UserCardAction[];
 };
 
 export type UserCardAction = {
-  description: string;
+  card: CardId;
+  description: string;  
   action: Action;
   payment?: PaymentConditions;
   limit?: Limit;
