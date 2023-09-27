@@ -1,11 +1,106 @@
-import { CardView, Modifier } from '@card-engine-nx/state';
+import {
+  Action,
+  CardView,
+  Modifier,
+  UserCardAction,
+} from '@card-engine-nx/state';
 import { applyModifier } from './modifier';
 import { ViewContext } from '../context';
-import { createCardActions } from '../view';
-import { GameZoneType, PlayerZoneType } from '@card-engine-nx/basic';
+import {
+  CardId,
+  GameZoneType,
+  Phase,
+  PlayerId,
+  PlayerZoneType,
+} from '@card-engine-nx/basic';
 import { sequence } from '../utils/sequence';
 import { getTargetCards } from './target';
 import { calculateNumberExpr } from '../expr';
+import { createEventAction } from '../view';
+
+export function createCardActions(
+  zone: PlayerZoneType | GameZoneType,
+  ability: Modifier,
+  action: Action,
+  self: CardView,
+  controller: PlayerId,
+  phase: Phase
+): UserCardAction[] {
+  if (zone === 'hand' && self.props.type === 'event') {
+    if (!ability.phase || ability.phase === phase) {
+      const eventAction = createEventAction(
+        self,
+        {
+          action,
+          card: self.id,
+          description: ability.description,
+          limit: ability.limit,
+          payment: ability.payment,
+          phase,
+        },
+        self.id,
+        controller
+      );
+
+      if (eventAction) {
+        return [
+          {
+            action: eventAction,
+            card: self.id,
+            description: ability.description,
+            limit: ability.limit,
+            payment: ability.payment,
+            phase,
+          },
+        ];
+      }
+    }
+  }
+
+  // if (zone === 'hand' && card.props.type === 'ally') {
+  //   return createPlayAllyAction(card, self, controller).map((action) => ({
+  //     card: card.id,
+  //     description: `Play ally ${card.props.name}`,
+  //     action,
+  //   }));
+  // }
+
+  // if (zone === 'hand' && card.props.type === 'attachment') {
+  //   return createPlayAttachmentAction(card, self, controller).map((action) => ({
+  //     card: card.id,
+  //     description: `Play attachment ${card.props.name}`,
+  //     action,
+  //   }));
+  // }
+
+  if (zone === 'playerArea') {
+    return [
+      {
+        description: ability.description,
+        card: self.id,
+        action: sequence(
+          { setCardVar: { name: 'self', value: self.id } },
+          { setPlayerVar: { name: 'controller', value: controller } },
+          {
+            useLimit: {
+              type: ability.limit ?? 'none',
+              card: self.id,
+              index: 0, // TODO ability index
+            },
+          },
+          action,
+          { setPlayerVar: { name: 'controller', value: undefined } },
+          { setCardVar: { name: 'self', value: undefined } }
+        ),
+        limit: ability.limit,
+        payment: ability.payment,
+        phase: ability.phase,
+      },
+    ];
+  }
+
+  return [];
+}
 
 export function applyAbility(
   ability: Modifier,
@@ -56,29 +151,15 @@ export function applyAbility(
   if (ability.action) {
     const controller = ctx.state.cards[self.id].controller;
     if (controller) {
-      if (zone === 'playerArea') {
-        ctx.view.actions.push({
-          description: ability.description,
-          card: self.id,
-          action: sequence(
-            { setCardVar: { name: 'self', value: self.id } },
-            { setPlayerVar: { name: 'controller', value: controller } },
-            {
-              useLimit: {
-                type: ability.limit ?? 'none',
-                card: self.id,
-                index: 0, // TODO ability index
-              },
-            },
-            ability.action,
-            { setPlayerVar: { name: 'controller', value: undefined } },
-            { setCardVar: { name: 'self', value: undefined } }
-          ),
-          limit: ability.limit,
-          payment: ability.payment,
-          phase: ability.phase,
-        });
-      }
+      const actions = createCardActions(
+        zone,
+        ability,
+        ability.action,
+        self,
+        controller,
+        ctx.state.phase
+      );
+      ctx.view.actions.push(...actions);
     }
     return;
   }

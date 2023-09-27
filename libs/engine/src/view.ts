@@ -18,17 +18,17 @@ import {
   PlayerZoneType,
 } from '@card-engine-nx/basic';
 
-function createEventAction(
+export function createEventAction(
   card: CardView,
   effect: UserCardAction,
   self: CardId,
   owner: PlayerId
-): Action[] {
+): Action | undefined {
   const sphere = card.props.sphere;
   const cost = card.props.cost;
 
   if (!sphere || !cost) {
-    return [];
+    return;
   }
 
   const payment: Action = {
@@ -51,18 +51,16 @@ function createEventAction(
     },
   };
 
-  return [
-    sequence(
-      { setCardVar: { name: 'self', value: self } },
-      { setPlayerVar: { name: 'owner', value: owner } },
-      sequence({ payment: { cost: payment, effect: effect.action } }, discard),
-      { setPlayerVar: { name: 'owner', value: undefined } },
-      { setCardVar: { name: 'self', value: undefined } }
-    ),
-  ];
+  return sequence(
+    { setCardVar: { name: 'self', value: self } },
+    { setPlayerVar: { name: 'controller', value: owner } },
+    sequence({ payment: { cost: payment, effect: effect.action } }, discard),
+    { setPlayerVar: { name: 'controller', value: undefined } },
+    { setCardVar: { name: 'self', value: undefined } }
+  );
 }
 
-function createPlayAllyAction(
+export function createPlayAllyAction(
   card: CardView,
   self: CardId,
   owner: PlayerId
@@ -97,15 +95,15 @@ function createPlayAllyAction(
   return [
     sequence(
       { setCardVar: { name: 'self', value: self } },
-      { setPlayerVar: { name: 'owner', value: owner } },
+      { setPlayerVar: { name: 'controller', value: owner } },
       sequence({ payment: { cost: payment, effect: moveToPlay } }),
-      { setPlayerVar: { name: 'owner', value: undefined } },
+      { setPlayerVar: { name: 'controller', value: undefined } },
       { setCardVar: { name: 'self', value: undefined } }
     ),
   ];
 }
 
-function createPlayAttachmentAction(
+export function createPlayAttachmentAction(
   card: CardView,
   self: CardId,
   owner: PlayerId
@@ -157,75 +155,14 @@ function createPlayAttachmentAction(
   return [
     sequence(
       { setCardVar: { name: 'self', value: self } },
-      { setPlayerVar: { name: 'owner', value: owner } },
+      { setPlayerVar: { name: 'controller', value: owner } },
       sequence({
         payment: { cost: payment, effect: sequence(attachTo, moveToPlay) },
       }),
-      { setPlayerVar: { name: 'owner', value: undefined } },
+      { setPlayerVar: { name: 'controller', value: undefined } },
       { setCardVar: { name: 'self', value: undefined } }
     ),
   ];
-}
-
-export function createCardActions(
-  zone: PlayerZoneType | GameZoneType,
-  card: CardView,
-  self: CardId,
-  controller: PlayerId,
-  phase: Phase
-): UserCardAction[] {
-  if (zone === 'hand' && card.props.type === 'event') {
-    return card.actions
-      .filter((a) => !a.phase || a.phase === phase)
-      .flatMap((effect) =>
-        createEventAction(card, effect, self, controller).map((action) => ({
-          card: card.id,
-          description: effect.description,
-          action,
-        }))
-      );
-  }
-
-  if (zone === 'hand' && card.props.type === 'ally') {
-    return createPlayAllyAction(card, self, controller).map((action) => ({
-      card: card.id,
-      description: `Play ally ${card.props.name}`,
-      action,
-    }));
-  }
-
-  if (zone === 'hand' && card.props.type === 'attachment') {
-    return createPlayAttachmentAction(card, self, controller).map((action) => ({
-      card: card.id,
-      description: `Play attachment ${card.props.name}`,
-      action,
-    }));
-  }
-
-  if (zone === 'playerArea') {
-    return card.actions.map((action, index) => {
-      return {
-        card: card.id,
-        description: action.description,
-        action: sequence(
-          { setCardVar: { name: 'self', value: self } },
-          { setPlayerVar: { name: 'owner', value: controller } },
-          {
-            useLimit: {
-              type: action.limit ?? 'none',
-              card: card.id,
-              index,
-            },
-          },
-          action.action,
-          { setPlayerVar: { name: 'owner', value: undefined } },
-          { setCardVar: { name: 'self', value: undefined } }
-        ),
-      };
-    });
-  }
-
-  return [];
 }
 
 export function createView(state: State): View {

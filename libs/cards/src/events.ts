@@ -11,7 +11,7 @@ export const loreOfImladris = event(
       'Action: Choose a character. Heal all damage from that character.',
     action: {
       player: {
-        target: 'owner',
+        target: 'controller',
         action: {
           chooseCardActions: {
             title: 'Choose character to heal',
@@ -39,7 +39,7 @@ export const bladeMastery = event(
       'Action: Choose a character. Until the end of the phase, that character gains +1 Attack and +1 Defense.',
     action: {
       player: {
-        target: 'owner',
+        target: 'controller',
         action: {
           chooseCardActions: {
             action: {
@@ -79,7 +79,7 @@ export const feint = event(
     phase: 'combat',
     action: {
       player: {
-        target: 'owner',
+        target: 'controller',
         action: {
           chooseCardActions: {
             action: {
@@ -115,14 +115,14 @@ export const quickStrike = event(
       sequence: [
         {
           player: {
-            target: 'owner',
+            target: 'controller',
             action: {
               chooseCardActions: {
                 title: 'Choose character as attacker',
                 multi: false,
                 optional: false,
                 target: {
-                  and: [{ controller: 'owner' }, 'character'],
+                  and: [{ controller: 'controller' }, 'character'],
                 },
                 action: {
                   sequence: [
@@ -138,7 +138,7 @@ export const quickStrike = event(
         },
         {
           player: {
-            target: 'owner',
+            target: 'controller',
             action: {
               chooseCardActions: {
                 title: 'Choose enemy to attack',
@@ -195,7 +195,7 @@ export const rainOfArrows = event(
             taget: {
               and: [
                 {
-                  controller: 'owner',
+                  controller: 'controller',
                 },
                 { keyword: 'ranged' },
               ],
@@ -205,7 +205,7 @@ export const rainOfArrows = event(
         },
         effect: {
           player: {
-            target: 'owner',
+            target: 'controller',
             action: {
               choosePlayerActions: {
                 title: 'Choose player',
@@ -274,7 +274,7 @@ export const thicketOfSpears = event(
     phase: 'combat',
     action: {
       player: {
-        target: 'owner',
+        target: 'controller',
         action: {
           choosePlayerActions: {
             title: 'Choose player',

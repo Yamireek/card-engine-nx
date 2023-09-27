@@ -20,6 +20,7 @@ it('Blade Mastery', () => {
   const hero = game.getCard('Gimli');
   expect(hero.props.attack).toEqual(2);
   expect(hero.props.defense).toEqual(2);
+  console.log(game.actions);
   game.chooseAction(
     'Action: Choose a character. Until the end of the phase, that character gains +1 Attack and +1 Defense.'
   );
