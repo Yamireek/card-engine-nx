@@ -8,7 +8,6 @@ import {
   PrintedProps,
   Keywords,
 } from '@card-engine-nx/basic';
-import { ModifierState } from './modifier';
 import { Modifier } from './types';
 
 export type PlayerDeck = {

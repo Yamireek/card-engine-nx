@@ -7,7 +7,7 @@ import {
 } from './card/ability';
 import { createCardView } from './card/view';
 import { keys } from 'lodash/fp';
-import { GameZoneType, Phase, PlayerZoneType } from '@card-engine-nx/basic';
+import { GameZoneType, PlayerZoneType } from '@card-engine-nx/basic';
 import { canExecute } from './resolution';
 
 export function createView(state: State): View {

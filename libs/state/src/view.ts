@@ -1,12 +1,9 @@
-import { CardId, Mark, Phase, PrintedProps } from '@card-engine-nx/basic';
-import { ModifierState } from './modifier';
+import { CardId, Mark, PrintedProps } from '@card-engine-nx/basic';
 import {
   Modifier,
   Action,
   CardTarget,
-  Limit,
   NextStage,
-  PaymentConditions,
 } from './types';
 
 export type View = {

@@ -1,7 +1,5 @@
-import { AbilityView, CardState, CardView } from '@card-engine-nx/state';
+import { CardState, CardView } from '@card-engine-nx/state';
 import { cloneDeep } from 'lodash/fp';
-import { createAllyAction } from './ability';
-import { CardId, PlayerId, PrintedProps } from '@card-engine-nx/basic';
 
 export function createCardView(state: CardState): CardView {
   const printed = state.definition[state.sideUp];
@@ -26,5 +24,5 @@ export function createCardView(state: CardState): CardView {
     props: cloneDeep(printed),
     abilities: [...abilities, ...modifiers],
     setup: [],
-  }; 
+  };
 }

@@ -8,7 +8,6 @@ import {
 import { CardId, PlayerId, values } from '@card-engine-nx/basic';
 import {
   advanceToChoiceState,
-  canExecute,
   consoleEvents,
   crateExecutionContext,
   createView,

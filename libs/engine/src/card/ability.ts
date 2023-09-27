@@ -1,13 +1,11 @@
 import {
   Action,
-  CardState,
   CardTarget,
   CardView,
   Modifier,
   PaymentConditions,
   UserCardAction,
 } from '@card-engine-nx/state';
-import { applyModifier } from './modifier';
 import { ViewContext } from '../context';
 import {
   CardId,
