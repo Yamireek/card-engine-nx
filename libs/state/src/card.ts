@@ -9,7 +9,7 @@ import {
   Keywords,
 } from '@card-engine-nx/basic';
 import { ModifierState } from './modifier';
-import { Ability } from './types';
+import { Modifier } from './types';
 
 export type PlayerDeck = {
   name: string;
@@ -24,8 +24,8 @@ export type Scenario = {
 };
 
 export type CardDefinition = {
-  front: PrintedProps & { abilities: Ability[] };
-  back: PrintedProps & { abilities: Ability[] };
+  front: PrintedProps & { abilities: Modifier[] };
+  back: PrintedProps & { abilities: Modifier[] };
   orientation: Orientation;
 };
 

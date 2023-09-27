@@ -1,10 +1,10 @@
 import { TreacheryProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
-import { Ability } from '../types';
+import { Modifier } from '../types';
 
 export function treachery(
   props: Omit<TreacheryProps, 'type'>,
-  ...abilities: Ability[]
+  ...abilities: Modifier[]
 ): CardDefinition {
   return {
     front: {

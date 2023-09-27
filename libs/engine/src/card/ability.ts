@@ -1,58 +1,102 @@
-import { CardView, Ability } from '@card-engine-nx/state';
+import { CardView, Modifier } from '@card-engine-nx/state';
 import { applyModifier } from './modifier';
 import { ViewContext } from '../context';
 import { createCardActions } from '../view';
 import { GameZoneType, PlayerZoneType } from '@card-engine-nx/basic';
+import { sequence } from '../utils/sequence';
+import { getTargetCards } from './target';
+import { calculateNumberExpr } from '../expr';
 
 export function applyAbility(
-  ability: Ability,
-  card: CardView,
+  ability: Modifier,
+  self: CardView,
   zone: PlayerZoneType | GameZoneType,
   ctx: ViewContext
 ) {
-  if (ability.modifier) {
-    applyModifier(ability.modifier, card, ctx);
+  if (ability.bonus) {
+    const targets = ability.target
+      ? getTargetCards(ability.target, ctx)
+      : getTargetCards(self.id, ctx);
+
+    for (const id of targets) {
+      const amount = calculateNumberExpr(ability.bonus.amount, ctx);
+      const card = ctx.view.cards[id];
+      const value = card.props[ability.bonus.property];
+      if (value !== undefined && amount) {
+        card.props[ability.bonus.property] = value + amount;
+      }
+    }
+
+    return;
+  }
+
+  if (ability.setNextStage) {
+    // TODO setNextStage
+    //self.ability = ability.setNextStage;
+    return;
+  }
+
+  if (ability.disable) {
+    if (!self.disabled) {
+      self.disabled = {};
+    }
+
+    self.disabled[ability.disable] = true;
     return;
   }
 
   if (ability.setup) {
-    if (!card.setup) {
-      card.setup = [];
+    if (!self.setup) {
+      self.setup = [];
     }
-    card.setup.push(ability.setup);
+    self.setup.push(ability.setup);
     return;
   }
 
   if (ability.action) {
-    const controller = ctx.state.cards[card.id].controller;
+    const controller = ctx.state.cards[self.id].controller;
     if (controller) {
-      const actions = createCardActions(
-        zone,
-        card,
-        card.id,
-        controller,
-        ctx.state.phase
-      );
-
-      ctx.view.actions.push(...actions);
+      if (zone === 'playerArea') {
+        ctx.view.actions.push({
+          description: ability.description,
+          card: self.id,
+          action: sequence(
+            { setCardVar: { name: 'self', value: self.id } },
+            { setPlayerVar: { name: 'controller', value: controller } },
+            {
+              useLimit: {
+                type: ability.limit ?? 'none',
+                card: self.id,
+                index: 0, // TODO ability index
+              },
+            },
+            ability.action,
+            { setPlayerVar: { name: 'controller', value: undefined } },
+            { setCardVar: { name: 'self', value: undefined } }
+          ),
+          limit: ability.limit,
+          payment: ability.payment,
+          phase: ability.phase,
+        });
+      }
     }
     return;
   }
 
   if (ability.attachesTo) {
-    card.attachesTo = ability.attachesTo;
+    self.attachesTo = ability.attachesTo;
     return;
   }
 
   if (ability.response) {
-    if (!card.responses) {
-      card.responses = {};
+    if (!self.responses) {
+      self.responses = {};
     }
-    if (!card.responses[ability.response.event]) {
-      card.responses[ability.response.event] = [];
+    if (!self.responses[ability.response.event]) {
+      self.responses[ability.response.event] = [];
     }
 
-    card.responses[ability.response.event]?.push({
+    self.responses[ability.response.event]?.push({
       description: ability.description,
       action: ability.response.action,
     });

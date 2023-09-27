@@ -1,7 +1,7 @@
 import { CardId, Mark, Phase, PrintedProps } from '@card-engine-nx/basic';
 import { ModifierState } from './modifier';
 import {
-  Ability,
+  Modifier,
   Action,
   CardTarget,
   Limit,
@@ -27,7 +27,7 @@ export type CardView = {
   id: CardId;
   printed: PrintedProps;
   props: PrintedProps;
-  abilities: Array<{ applied: boolean; ability: Ability }>;
+  abilities: Array<{ applied: boolean; ability: Modifier }>;
   modifiers: Array<{ applied: boolean } & ModifierState>;
   actions: UserCardAction[];
   setup?: Action[];

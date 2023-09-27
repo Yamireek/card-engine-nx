@@ -45,13 +45,16 @@ export const bladeMastery = event(
             action: {
               modify: [
                 {
-                  add: { prop: 'attack', amount: 1 },
+                  description: "Can't attack until end of phase",
+                  bonus: { property: 'attack', amount: 1 },
+                  until: 'end_of_phase',
                 },
                 {
-                  add: { prop: 'defense', amount: 1 },
+                  description: "Can't attack until end of phase",
+                  bonus: { property: 'defense', amount: 1 },
+                  until: 'end_of_phase',
                 },
               ],
-              until: 'end_of_phase',
             },
             multi: false,
             optional: false,
@@ -81,9 +84,10 @@ export const feint = event(
           chooseCardActions: {
             action: {
               modify: {
+                description: "Can't attack until end of phase",
                 disable: 'attacking',
+                until: 'end_of_phase',
               },
-              until: 'end_of_phase',
             },
             multi: false,
             optional: false,
@@ -280,9 +284,10 @@ export const thicketOfSpears = event(
             action: {
               engaged: {
                 modify: {
+                  description: "Can't attack until end of phase",
                   disable: 'attacking',
+                  until: 'end_of_phase',
                 },
-                until: 'end_of_phase',
               },
             },
           },
