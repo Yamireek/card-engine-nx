@@ -1,5 +1,7 @@
 import {
   Action,
+  CardState,
+  CardTarget,
   CardView,
   Modifier,
   PaymentConditions,
@@ -13,22 +15,18 @@ import {
   Phase,
   PlayerId,
   PlayerZoneType,
+  Sphere,
 } from '@card-engine-nx/basic';
 import { sequence } from '../utils/sequence';
 import { getTargetCards } from './target';
 import { calculateNumberExpr } from '../expr';
 
-export function createPlayAllyAction(
-  self: CardView,
-  owner: PlayerId
-): Action[] {
-  const sphere = self.props.sphere;
-  const cost = self.props.cost;
-
-  if (!sphere || !cost) {
-    return [];
-  }
-
+export function createAllyAction(
+  sphere: Sphere,
+  cost: number,
+  owner: PlayerId,
+  self: CardId
+): Action {
   const payment: Action = {
     player: {
       target: owner,
@@ -38,7 +36,7 @@ export function createPlayAllyAction(
 
   const moveToPlay: Action = {
     card: {
-      taget: self.id,
+      taget: self,
       action: {
         move: {
           from: { owner, type: 'hand' },
@@ -49,28 +47,22 @@ export function createPlayAllyAction(
     },
   };
 
-  return [
-    sequence(
-      { setCardVar: { name: 'self', value: self.id } },
-      { setPlayerVar: { name: 'controller', value: owner } },
-      sequence({ payment: { cost: payment, effect: moveToPlay } }),
-      { setPlayerVar: { name: 'controller', value: undefined } },
-      { setCardVar: { name: 'self', value: undefined } }
-    ),
-  ];
+  return sequence(
+    { setCardVar: { name: 'self', value: self } },
+    { setPlayerVar: { name: 'controller', value: owner } },
+    sequence({ payment: { cost: payment, effect: moveToPlay } }),
+    { setPlayerVar: { name: 'controller', value: undefined } },
+    { setCardVar: { name: 'self', value: undefined } }
+  );
 }
 
-export function createPlayAttachmentAction(
-  self: CardView,
-  owner: PlayerId
-): Action[] {
-  const sphere = self.props.sphere;
-  const cost = self.props.cost;
-
-  if (!sphere || !cost || !self.attachesTo) {
-    return [];
-  }
-
+export function createAttachmentAction(
+  sphere: Sphere,
+  cost: number,
+  attachesTo: CardTarget,
+  owner: PlayerId,
+  self: CardId
+): Action {
   const payment: Action = {
     player: {
       target: owner,
@@ -86,9 +78,9 @@ export function createPlayAttachmentAction(
           title: 'Choose target for attachment',
           multi: false,
           optional: false,
-          target: self.attachesTo,
+          target: attachesTo,
           action: {
-            attachCard: self.id,
+            attachCard: self,
           },
         },
       },
@@ -97,7 +89,7 @@ export function createPlayAttachmentAction(
 
   const moveToPlay: Action = {
     card: {
-      taget: self.id,
+      taget: self,
       action: {
         move: {
           from: { owner, type: 'hand' },
@@ -108,17 +100,15 @@ export function createPlayAttachmentAction(
     },
   };
 
-  return [
-    sequence(
-      { setCardVar: { name: 'self', value: self.id } },
-      { setPlayerVar: { name: 'controller', value: owner } },
-      sequence({
-        payment: { cost: payment, effect: sequence(attachTo, moveToPlay) },
-      }),
-      { setPlayerVar: { name: 'controller', value: undefined } },
-      { setCardVar: { name: 'self', value: undefined } }
-    ),
-  ];
+  return sequence(
+    { setCardVar: { name: 'self', value: self } },
+    { setPlayerVar: { name: 'controller', value: owner } },
+    sequence({
+      payment: { cost: payment, effect: sequence(attachTo, moveToPlay) },
+    }),
+    { setPlayerVar: { name: 'controller', value: undefined } },
+    { setCardVar: { name: 'self', value: undefined } }
+  );
 }
 
 export function createCardActions(
@@ -151,22 +141,6 @@ export function createCardActions(
         ];
       }
     }
-  }
-
-  if (zone === 'hand' && self.props.type === 'ally') {
-    return createPlayAllyAction(self, controller).map((action) => ({
-      card: self.id,
-      description: `Play ally ${self.props.name}`,
-      action,
-    }));
-  }
-
-  if (zone === 'hand' && self.props.type === 'attachment') {
-    return createPlayAttachmentAction(self, controller).map((action) => ({
-      card: self.id,
-      description: `Play attachment ${self.props.name}`,
-      action,
-    }));
   }
 
   if (zone === 'playerArea') {

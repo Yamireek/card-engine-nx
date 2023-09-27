@@ -23,11 +23,17 @@ export type UserCardAction = {
   phase?: Phase;
 };
 
+export type AbilityView = {
+  printed: boolean;
+  applied: boolean;
+  ability: Modifier;
+};
+
 export type CardView = {
   id: CardId;
   printed: PrintedProps;
   props: PrintedProps;
-  abilities: Array<{ printed: boolean; applied: boolean; ability: Modifier }>;
+  abilities: Array<AbilityView>;
   actions: UserCardAction[];
   setup?: Action[];
   attachesTo?: CardTarget;
