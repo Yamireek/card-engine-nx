@@ -44,6 +44,6 @@ export type CardState = {
     phase: Record<string, number>;
     round: Record<string, number>;
   };
-  modifiers: Array<ModifierState>;
+  modifiers: Modifier[];
   keywords: Keywords;
 };

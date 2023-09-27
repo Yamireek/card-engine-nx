@@ -5,6 +5,7 @@ import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
 import { calculateNumberExpr } from '../expr';
 import { getTargetPlayers } from '../player/target';
+import { isArray } from 'lodash';
 
 export function executeCardAction(
   action: CardAction,
@@ -287,10 +288,11 @@ export function executeCardAction(
   }
 
   if (action.modify) {
-    card.modifiers.push({
-      modifier: action.modify,
-      until: action.until,
-    });
+    if (isArray(action.modify)) {
+      card.modifiers.push(...action.modify);
+    } else {
+      card.modifiers.push(action.modify);
+    }
     return;
   }
 

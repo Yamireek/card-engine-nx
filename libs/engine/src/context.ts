@@ -14,8 +14,8 @@ export type ExecutionContext = {
 export type ViewContext = {
   state: State;
   view: View;
-  card: Record<string, CardId>;
-  player: Record<string, PlayerId>;
+  card: Record<string, CardId | undefined>;
+  player: Record<string, PlayerId | undefined>;
 };
 
 export function cardIds(ctx: ViewContext) {

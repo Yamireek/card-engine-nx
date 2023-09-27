@@ -16,7 +16,7 @@ export type View = {
 
 export type UserCardAction = {
   card: CardId;
-  description: string;  
+  description: string;
   action: Action;
   payment?: PaymentConditions;
   limit?: Limit;
@@ -27,8 +27,7 @@ export type CardView = {
   id: CardId;
   printed: PrintedProps;
   props: PrintedProps;
-  abilities: Array<{ applied: boolean; ability: Modifier }>;
-  modifiers: Array<{ applied: boolean } & ModifierState>;
+  abilities: Array<{ printed: boolean; applied: boolean; ability: Modifier }>;
   actions: UserCardAction[];
   setup?: Action[];
   attachesTo?: CardTarget;

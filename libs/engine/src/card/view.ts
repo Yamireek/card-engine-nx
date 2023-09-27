@@ -7,16 +7,20 @@ export function createCardView(state: CardState): CardView {
     id: state.id,
     printed,
     props: cloneDeep(printed),
-    abilities: printed.abilities
-      ? printed.abilities.map((a) => ({
-          applied: false,
-          ability: cloneDeep(a),
-        }))
-      : [],
-    modifiers: state.modifiers.map((m) => ({
-      applied: false,
-      ...cloneDeep(m),
-    })),
+    abilities: [
+      ...(printed.abilities
+        ? printed.abilities.map((a) => ({
+            applied: false,
+            printed: true,
+            ability: cloneDeep(a),
+          }))
+        : []),
+      ...state.modifiers.map((m) => ({
+        applied: false,
+        printed: false,
+        ability: cloneDeep(m),
+      })),
+    ],
     setup: [],
     actions: [],
   };

@@ -252,7 +252,7 @@ export const glorfindel = hero(
         cost: { card: { taget: 'self', action: { payResources: 1 } } },
         effect: {
           player: {
-            target: 'owner',
+            target: 'controller',
             action: {
               chooseCardActions: {
                 title: 'Choose character to heal',
