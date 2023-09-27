@@ -1,10 +1,10 @@
 import { HeroProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
-import { Ability } from '../types';
+import { Modifier } from '../types';
 
 export function hero(
   props: Omit<HeroProps, 'type' | 'unique'>,
-  ...abilities: Ability[]
+  ...abilities: Modifier[]
 ): CardDefinition {
   return {
     front: {

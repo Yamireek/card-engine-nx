@@ -13,15 +13,13 @@ export const gimli = hero(
   },
   {
     description: 'Gimli gets +1 [attack] for each damage token on him.',
-    modifier: {
-      add: {
-        prop: 'attack',
-        amount: {
-          card: {
-            target: 'self',
-            value: {
-              tokens: 'damage',
-            },
+    bonus: {
+      property: 'attack',
+      amount: {
+        card: {
+          target: 'self',
+          value: {
+            tokens: 'damage',
           },
         },
       },
@@ -122,7 +120,7 @@ export const eowyn = hero(
       payment: {
         cost: {
           player: {
-            target: 'owner',
+            target: 'controller',
             action: {
               choosePlayerActions: {
                 target: 'each',
@@ -151,12 +149,13 @@ export const eowyn = hero(
             taget: 'self',
             action: {
               modify: {
-                add: {
-                  prop: 'willpower',
+                description: '+1 [willpower] until the end of the phase',
+                bonus: {
+                  property: 'willpower',
                   amount: 1,
                 },
+                until: 'end_of_phase',
               },
-              until: 'end_of_phase',
             },
           },
         },
@@ -214,7 +213,7 @@ export const beravor = hero(
         },
         effect: {
           player: {
-            target: 'owner',
+            target: 'controller',
             action: {
               choosePlayerActions: {
                 title: 'Choose player to draw 2 cards',
@@ -253,7 +252,7 @@ export const glorfindel = hero(
         cost: { card: { taget: 'self', action: { payResources: 1 } } },
         effect: {
           player: {
-            target: 'owner',
+            target: 'controller',
             action: {
               chooseCardActions: {
                 title: 'Choose character to heal',

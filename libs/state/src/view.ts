@@ -1,38 +1,33 @@
-import { CardId, Mark, Phase, PrintedProps } from '@card-engine-nx/basic';
-import { ModifierState } from './modifier';
+import { CardId, Mark, PrintedProps } from '@card-engine-nx/basic';
 import {
-  Ability,
+  Modifier,
   Action,
   CardTarget,
-  Limit,
   NextStage,
-  PaymentConditions,
 } from './types';
 
 export type View = {
   cards: Record<CardId, CardView>;
-  actions: Array<{
-    card: CardId;
-    description: string;
-    action: Action;
-  }>;
+  actions: UserCardAction[];
 };
 
 export type UserCardAction = {
+  card: CardId;
   description: string;
   action: Action;
-  payment?: PaymentConditions;
-  limit?: Limit;
-  phase?: Phase;
+};
+
+export type AbilityView = {
+  printed: boolean;
+  applied: boolean;
+  ability: Modifier;
 };
 
 export type CardView = {
   id: CardId;
   printed: PrintedProps;
   props: PrintedProps;
-  abilities: Array<{ applied: boolean; ability: Ability }>;
-  modifiers: Array<{ applied: boolean } & ModifierState>;
-  actions: UserCardAction[];
+  abilities: Array<AbilityView>;
   setup?: Action[];
   attachesTo?: CardTarget;
   nextStage?: NextStage;

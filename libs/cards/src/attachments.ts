@@ -15,23 +15,21 @@ export const dwarvenAxe = attachment(
   {
     description:
       'Attached hero gains +1 ATT (+2 ATT instead if attached hero is a Dwarf.)',
-    modifier: {
-      target: {
-        hasAttachment: 'self',
-      },
-      add: {
-        prop: 'attack',
-        amount: {
-          if: {
-            cond: {
-              card: {
-                target: { hasAttachment: 'self' },
-                value: { hasTrait: 'dwarf' },
-              },
+    target: {
+      hasAttachment: 'self',
+    },
+    bonus: {
+      property: 'attack',
+      amount: {
+        if: {
+          cond: {
+            card: {
+              target: { hasAttachment: 'self' },
+              value: { hasTrait: 'dwarf' },
             },
-            true: 2,
-            false: 1,
           },
+          true: 2,
+          false: 1,
         },
       },
     },
@@ -52,14 +50,12 @@ export const citadelPlate = attachment(
   },
   {
     description: 'Attached hero gets +4 Hit Points.',
-    modifier: {
-      target: {
-        hasAttachment: 'self',
-      },
-      add: {
-        prop: 'hitPoints',
-        amount: 4,
-      },
+    target: {
+      hasAttachment: 'self',
+    },
+    bonus: {
+      property: 'hitPoints',
+      amount: 4,
     },
   }
 );
@@ -78,32 +74,30 @@ export const bladeOfGondolin = attachment(
   },
   {
     description: 'Attached hero gets +1 Attack when attacking an Orc.',
-    modifier: {
-      target: {
-        hasAttachment: 'self',
-      },
-      add: {
-        prop: 'attack',
-        amount: {
-          if: {
-            cond: {
-              and: [
-                {
-                  card: {
-                    target: { hasAttachment: 'self' },
-                    value: { hasMark: 'attacking' },
-                  },
+    target: {
+      hasAttachment: 'self',
+    },
+    bonus: {
+      property: 'attack',
+      amount: {
+        if: {
+          cond: {
+            and: [
+              {
+                card: {
+                  target: { hasAttachment: 'self' },
+                  value: { hasMark: 'attacking' },
                 },
-                {
-                  someCard: {
-                    and: [{ mark: 'defending' }, { trait: 'orc' }],
-                  },
+              },
+              {
+                someCard: {
+                  and: [{ mark: 'defending' }, { trait: 'orc' }],
                 },
-              ],
-            },
-            true: 1,
-            false: 0,
+              },
+            ],
           },
+          true: 1,
+          false: 0,
         },
       },
     },

@@ -7,3 +7,4 @@ export * from './eventFactories';
 export * from './utils';
 export * from './LotrLCGame';
 export * from './zone/target';
+export * from './resolution';

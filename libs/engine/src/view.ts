@@ -1,224 +1,14 @@
+import { State, View } from '@card-engine-nx/state';
+import { mapValues, values } from 'lodash';
 import {
-  Action,
-  UserCardAction,
-  CardView,
-  State,
-  View,
-} from '@card-engine-nx/state';
-import { isArray, mapValues, values } from 'lodash';
-import { applyModifier } from './card/modifier';
-import { applyAbility } from './card/ability';
+  applyAbility,
+  createAllyAction,
+  createAttachmentAction,
+} from './card/ability';
 import { createCardView } from './card/view';
-import { canExecute } from './resolution';
-import { sequence } from './utils/sequence';
 import { keys } from 'lodash/fp';
-import { CardId, Phase, PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
-
-function createEventAction(
-  card: CardView,
-  effect: UserCardAction,
-  self: CardId,
-  owner: PlayerId
-): Action[] {
-  const sphere = card.props.sphere;
-  const cost = card.props.cost;
-
-  if (!sphere || !cost) {
-    return [];
-  }
-
-  const payment: Action = {
-    player: {
-      target: owner,
-      action: { payResources: { ...effect.payment, amount: cost, sphere } },
-    },
-  };
-
-  const discard: Action = {
-    card: {
-      taget: self,
-      action: {
-        move: {
-          from: { owner, type: 'hand' },
-          to: { owner, type: 'discardPile' },
-          side: 'front',
-        },
-      },
-    },
-  };
-
-  return [
-    sequence(
-      { setCardVar: { name: 'self', value: self } },
-      { setPlayerVar: { name: 'owner', value: owner } },
-      sequence({ payment: { cost: payment, effect: effect.action } }, discard),
-      { setPlayerVar: { name: 'owner', value: undefined } },
-      { setCardVar: { name: 'self', value: undefined } }
-    ),
-  ];
-}
-
-function createPlayAllyAction(
-  card: CardView,
-  self: CardId,
-  owner: PlayerId
-): Action[] {
-  const sphere = card.props.sphere;
-  const cost = card.props.cost;
-
-  if (!sphere || !cost) {
-    return [];
-  }
-
-  const payment: Action = {
-    player: {
-      target: owner,
-      action: { payResources: { amount: cost, sphere } },
-    },
-  };
-
-  const moveToPlay: Action = {
-    card: {
-      taget: self,
-      action: {
-        move: {
-          from: { owner, type: 'hand' },
-          to: { owner, type: 'playerArea' },
-          side: 'front',
-        },
-      },
-    },
-  };
-
-  return [
-    sequence(
-      { setCardVar: { name: 'self', value: self } },
-      { setPlayerVar: { name: 'owner', value: owner } },
-      sequence({ payment: { cost: payment, effect: moveToPlay } }),
-      { setPlayerVar: { name: 'owner', value: undefined } },
-      { setCardVar: { name: 'self', value: undefined } }
-    ),
-  ];
-}
-
-function createPlayAttachmentAction(
-  card: CardView,
-  self: CardId,
-  owner: PlayerId
-): Action[] {
-  const sphere = card.props.sphere;
-  const cost = card.props.cost;
-
-  if (!sphere || !cost || !card.attachesTo) {
-    return [];
-  }
-
-  const payment: Action = {
-    player: {
-      target: owner,
-      action: { payResources: { amount: cost, sphere } },
-    },
-  };
-
-  const attachTo: Action = {
-    player: {
-      target: owner,
-      action: {
-        chooseCardActions: {
-          title: 'Choose target for attachment',
-          multi: false,
-          optional: false,
-          target: card.attachesTo,
-          action: {
-            attachCard: card.id,
-          },
-        },
-      },
-    },
-  };
-
-  const moveToPlay: Action = {
-    card: {
-      taget: self,
-      action: {
-        move: {
-          from: { owner, type: 'hand' },
-          to: { owner, type: 'playerArea' },
-          side: 'front',
-        },
-      },
-    },
-  };
-
-  return [
-    sequence(
-      { setCardVar: { name: 'self', value: self } },
-      { setPlayerVar: { name: 'owner', value: owner } },
-      sequence({
-        payment: { cost: payment, effect: sequence(attachTo, moveToPlay) },
-      }),
-      { setPlayerVar: { name: 'owner', value: undefined } },
-      { setCardVar: { name: 'self', value: undefined } }
-    ),
-  ];
-}
-
-export function createCardActions(
-  zone: PlayerZoneType,
-  card: CardView,
-  self: CardId,
-  owner: PlayerId,
-  phase: Phase
-): UserCardAction[] {
-  if (zone === 'hand' && card.props.type === 'event') {
-    return card.actions
-      .filter((a) => !a.phase || a.phase === phase)
-      .flatMap((effect) =>
-        createEventAction(card, effect, self, owner).map((action) => ({
-          description: effect.description,
-          action,
-        }))
-      );
-  }
-
-  if (zone === 'hand' && card.props.type === 'ally') {
-    return createPlayAllyAction(card, self, owner).map((action) => ({
-      description: `Play ally ${card.props.name}`,
-      action,
-    }));
-  }
-
-  if (zone === 'hand' && card.props.type === 'attachment') {
-    return createPlayAttachmentAction(card, self, owner).map((action) => ({
-      description: `Play attachment ${card.props.name}`,
-      action,
-    }));
-  }
-
-  if (zone === 'playerArea') {
-    return card.actions.map((action, index) => {
-      return {
-        description: action.description,
-        action: sequence(
-          { setCardVar: { name: 'self', value: self } },
-          { setPlayerVar: { name: 'owner', value: owner } },
-          {
-            useLimit: {
-              type: action.limit ?? 'none',
-              card: card.id,
-              index,
-            },
-          },
-          action.action,
-          { setPlayerVar: { name: 'owner', value: undefined } },
-          { setCardVar: { name: 'self', value: undefined } }
-        ),
-      };
-    });
-  }
-
-  return [];
-}
+import { GameZoneType, PlayerZoneType } from '@card-engine-nx/basic';
+import { canExecute } from './resolution';
 
 export function createView(state: State): View {
   const view: View = {
@@ -230,34 +20,37 @@ export function createView(state: State): View {
   while (true) {
     let allApplied = true;
 
-    for (const card of values(view.cards)) {
-      for (const ability of card.abilities.filter((a) => !a.applied)) {
-        allApplied = false;
-        applyAbility(ability.ability, card);
-        ability.applied = true;
-      }
-
-      for (const modifier of card.modifiers.filter((m) => !m.applied)) {
-        allApplied = false;
-        if (isArray(modifier.modifier)) {
-          for (const item of modifier.modifier) {
-            applyModifier(item, card, {
+    for (const player of values(state.players).filter((p) => !p.eliminated)) {
+      for (const zoneType of keys(player.zones) as PlayerZoneType[]) {
+        for (const cardId of player.zones[zoneType].cards) {
+          const card = view.cards[cardId];
+          for (const ability of card.abilities.filter((a) => !a.applied)) {
+            allApplied = false;
+            applyAbility(ability.ability, card, zoneType, {
               state,
               view,
               card: { self: card.id },
               player: {},
             });
+            ability.applied = true;
           }
-        } else {
-          applyModifier(modifier.modifier, card, {
+        }
+      }
+    }
+
+    for (const zoneType of keys(state.zones) as GameZoneType[]) {
+      for (const cardId of state.zones[zoneType].cards) {
+        const card = view.cards[cardId];
+        for (const ability of card.abilities.filter((a) => !a.applied)) {
+          allApplied = false;
+          applyAbility(ability.ability, card, zoneType, {
             state,
             view,
-            card: { self: card.id },
+            card: {},
             player: {},
           });
+          ability.applied = true;
         }
-
-        modifier.applied = true;
       }
     }
 
@@ -267,34 +60,52 @@ export function createView(state: State): View {
   }
 
   for (const player of values(state.players).filter((p) => !p.eliminated)) {
-    for (const zoneType of keys(player.zones) as PlayerZoneType[]) {
-      for (const cardId of player.zones[zoneType].cards) {
-        const card = view.cards[cardId];
-        const actions = createCardActions(
-          zoneType,
-          card,
-          card.id,
-          player.id,
-          state.phase
-        );
-        for (const action of actions) {
-          const allowed = canExecute(action.action, true, {
-            state,
-            view,
-            card: { self: card.id },
-            player: { owner: player.id },
-          });
-          if (allowed) {
-            view.actions.push({
-              card: card.id,
-              description: action.description,
-              action: action.action,
-            });
-          }
-        }
+    for (const cardId of player.zones.hand.cards) {
+      const card = view.cards[cardId];
+      if (card.props.type === 'ally' && card.props.sphere && card.props.cost) {
+        view.actions.push({
+          description: 'Play ally',
+          card: cardId,
+          action: createAllyAction(
+            card.props.sphere,
+            card.props.cost,
+            player.id,
+            cardId
+          ),
+        });
+      }
+
+      if (
+        card.props.type === 'attachment' &&
+        card.props.sphere &&
+        card.props.cost &&
+        card.attachesTo
+      ) {
+        view.actions.push({
+          description: 'Play ally',
+          card: cardId,
+          action: createAttachmentAction(
+            card.props.sphere,
+            card.props.cost,
+            card.attachesTo,
+            player.id,
+            cardId
+          ),
+        });
       }
     }
   }
+
+  view.actions = view.actions.filter((a) => {
+    const controller = state.cards[a.card].controller;
+    const enabled = canExecute(a.action, true, {
+      state: state,
+      view: view,
+      card: { self: a.card },
+      player: { controller },
+    });
+    return enabled;
+  });
 
   return view;
 }

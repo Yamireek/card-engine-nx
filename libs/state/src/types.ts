@@ -140,10 +140,14 @@ export type CardAction =
       setCardVar?: string;
     };
 
-export type Ability = {
+export type PropertyBonus = {
+  property: 'attack' | 'defense' | 'willpower' | 'hitPoints';
+  amount: NumberExpr;
+};
+
+export type Modifier = {
   description: string;
   implicit?: boolean;
-  modifier?: Modifier;
   phase?: Phase;
   action?: Action;
   setup?: Action;
@@ -151,6 +155,11 @@ export type Ability = {
   limit?: 'once_per_round';
   response?: ActionResponse;
   payment?: PaymentConditions;
+  bonus?: PropertyBonus;
+  target?: CardTarget;
+  disable?: Mark;
+  until?: Until;
+  setNextStage?: 'random';
 };
 
 export type PaymentConditions = {
@@ -162,16 +171,6 @@ export type NextStage = 'default' | 'random';
 export type ActionResponse = {
   event: 'receivedDamage';
   action: Action;
-};
-
-export type Modifier = {
-  add?: {
-    prop: 'attack' | 'defense' | 'willpower' | 'hitPoints';
-    amount: NumberExpr;
-  };
-  target?: CardTarget;
-  disable?: Mark;
-  setNextStage?: NextStage;
 };
 
 export type EventNumbers = { type: 'receivedDamage'; value: 'damage' };
@@ -265,6 +264,7 @@ export type PlayerTarget =
   | PlayerId[]
   | 'each'
   | 'owner'
+  | 'controller'
   | 'first'
   | 'next'
   | { and?: PlayerTarget[]; canExecute?: PlayerAction; controller?: CardId };
