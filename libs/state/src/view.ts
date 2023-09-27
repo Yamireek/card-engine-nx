@@ -18,9 +18,6 @@ export type UserCardAction = {
   card: CardId;
   description: string;
   action: Action;
-  payment?: PaymentConditions;
-  limit?: Limit;
-  phase?: Phase;
 };
 
 export type AbilityView = {
@@ -34,7 +31,6 @@ export type CardView = {
   printed: PrintedProps;
   props: PrintedProps;
   abilities: Array<AbilityView>;
-  actions: UserCardAction[];
   setup?: Action[];
   attachesTo?: CardTarget;
   nextStage?: NextStage;

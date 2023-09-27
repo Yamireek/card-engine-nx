@@ -26,6 +26,5 @@ export function createCardView(state: CardState): CardView {
     props: cloneDeep(printed),
     abilities: [...abilities, ...modifiers],
     setup: [],
-    actions: [],
-  };
+  }; 
 }

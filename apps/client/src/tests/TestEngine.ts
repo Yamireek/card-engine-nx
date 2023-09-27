@@ -38,16 +38,7 @@ export class TestEngine {
   }
 
   get actions() {
-    return this.view.actions.filter((a) => {
-      const controller = this.state.cards[a.card].controller;
-      const enabled = canExecute(a.action, true, {
-        state: this.state,
-        view: this.view,
-        card: { self: a.card },
-        player: { controller },
-      });
-      return enabled;
-    });
+    return this.view.actions;
   }
 
   do(action: Action) {

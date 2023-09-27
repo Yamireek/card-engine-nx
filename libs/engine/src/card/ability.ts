@@ -134,9 +134,6 @@ export function createCardActions(
             action: eventAction,
             card: self.id,
             description: ability.description,
-            limit: ability.limit,
-            payment: ability.payment,
-            phase,
           },
         ];
       }
@@ -162,9 +159,6 @@ export function createCardActions(
           { setPlayerVar: { name: 'controller', value: undefined } },
           { setCardVar: { name: 'self', value: undefined } }
         ),
-        limit: ability.limit,
-        payment: ability.payment,
-        phase: ability.phase,
       },
     ];
   }

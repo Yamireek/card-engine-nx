@@ -8,6 +8,7 @@ import {
 import { createCardView } from './card/view';
 import { keys } from 'lodash/fp';
 import { GameZoneType, Phase, PlayerZoneType } from '@card-engine-nx/basic';
+import { canExecute } from './resolution';
 
 export function createView(state: State): View {
   const view: View = {
@@ -94,6 +95,17 @@ export function createView(state: State): View {
       }
     }
   }
+
+  view.actions = view.actions.filter((a) => {
+    const controller = state.cards[a.card].controller;
+    const enabled = canExecute(a.action, true, {
+      state: state,
+      view: view,
+      card: { self: a.card },
+      player: { controller },
+    });
+    return enabled;
+  });
 
   return view;
 }
