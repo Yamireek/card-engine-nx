@@ -192,7 +192,7 @@ export const rainOfArrows = event(
       payment: {
         cost: {
           card: {
-            taget: {
+            target: {
               and: [
                 {
                   controller: 'controller',
@@ -229,6 +229,26 @@ export const standTogether = event(
     name: 'Stand Together',
     cost: 0,
     sphere: 'tactics',
+  },
+  {
+    description:
+      'Action: Choose a player. That player may declare any number of his eligible characters as defenders against each enemy attacking him this phase.',
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          choosePlayerActions: {
+            title: 'Choose player',
+            multi: false,
+            target: 'each',
+            optional: false,
+            action: {
+              modify: 'can_declate_multiple_defenders',
+            },
+          },
+        },
+      },
+    },
   }
   // TODO ability action
   // action({

@@ -138,7 +138,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     ctx.state.next.unshift({
       card: {
-        taget: card,
+        target: card,
         action: 'reveal',
       },
     });
@@ -160,7 +160,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.card) {
-    const ids = getTargetCards(action.card.taget, ctx);
+    const ids = getTargetCards(action.card.target, ctx);
     for (const id of ids) {
       const card = ctx.state.cards[id];
       if (card) {
@@ -217,7 +217,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     if (card) {
       ctx.state.next.unshift({
         card: {
-          taget: card.id,
+          target: card.id,
           action: {
             move: {
               from: 'encounterDeck',
@@ -296,7 +296,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       ctx.state.next = [
         {
           card: {
-            taget: { top: { game: 'questArea' } },
+            target: { top: { game: 'questArea' } },
             action: { placeProgress: action.placeProgress },
           },
         },
@@ -318,13 +318,13 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         ctx.state.next.unshift(
           {
             card: {
-              taget: activeLocation,
+              target: activeLocation,
               action: { placeProgress: progressLocation },
             },
           },
           {
             card: {
-              taget: { top: { game: 'questArea' } },
+              target: { top: { game: 'questArea' } },
               action: { placeProgress: progressQuest },
             },
           }
@@ -380,7 +380,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       if (defender.length === 1) {
         ctx.state.next.unshift({
           card: {
-            taget: defender.map((c) => c.id),
+            target: defender.map((c) => c.id),
             action: { dealDamage: damage },
           },
         });
@@ -420,7 +420,7 @@ export function beginScenario(
     },
     {
       card: {
-        taget: { top: { game: 'questDeck' } },
+        target: { top: { game: 'questDeck' } },
         action: {
           move: {
             from: 'questDeck',
@@ -436,7 +436,7 @@ export function beginScenario(
         action: {
           flip: 'back',
         },
-        taget: {
+        target: {
           zone: 'questArea',
         },
       },
@@ -450,7 +450,7 @@ export const phaseResource = sequence(
   { player: { target: 'each', action: { draw: 1 } } },
   {
     card: {
-      taget: { and: ['inAPlay', { type: 'hero' }] },
+      target: { and: ['inAPlay', { type: 'hero' }] },
       action: { generateResources: 2 },
     },
   },
@@ -527,7 +527,7 @@ export const phaseCombat = sequence(
 
 export const phaseRefresh: Action = sequence(
   { beginPhase: 'refresh' },
-  { card: { taget: 'each', action: 'ready' } },
+  { card: { target: 'each', action: 'ready' } },
   { player: { target: 'each', action: { incrementThreat: 1 } } },
   'passFirstPlayerToken',
   { playerActions: 'End refresh phase and round' },

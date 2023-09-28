@@ -145,3 +145,38 @@ it('Quick Strike', () => {
   );
   expect(enemy.token.damage).toBe(1);
 });
+
+it('Stand Together', () => {
+  const action =
+    'Action: Choose a player. That player may declare any number of his eligible characters as defenders against each enemy attacking him this phase.';
+
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.legolas,
+            resources: 1,
+          },
+          core.ally.gondorianSpearman,
+        ],
+        hand: [core.event.standTogether],
+        engaged: [core.enemy.ungoliantsSpawn],
+      },
+    ],
+  });
+
+  const hero = game.getCard('Legolas');
+  const enemy = game.getCard("Ungoliant's Spawn");
+  expect(game.actions.length).toBe(1);
+  game.chooseAction(action);
+  game.do({
+    card: {
+      target: enemy.id,
+      action: { resolveEnemyAttacking: '0' },
+    },
+  });
+  game.chooseOptions(['1', '2']);
+  game.chooseOption('1');
+  expect(hero.token.damage).toBe(3);
+});

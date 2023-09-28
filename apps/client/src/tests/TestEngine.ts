@@ -37,11 +37,11 @@ export class TestEngine {
   }
 
   get actions() {
-    return this.view.actions;
+    return this.view.actions.filter((a) => a.enabled);
   }
 
-  do(action: Action) {
-    this.state.next.unshift(action);
+  do(...action: Action[]) {
+    this.state.next.unshift(...action);
     advanceToChoiceState(
       this.state,
       consoleEvents,
@@ -82,6 +82,19 @@ export class TestEngine {
     }
     this.state.choice = undefined;
     this.do(option.action);
+  }
+
+  chooseOptions(titles: string[]) {
+    if (!this.state.choice || this.state.choice?.type === 'actions') {
+      throw new Error('no options');
+    }
+
+    const options = this.state.choice.options.filter((o) =>
+      titles.includes(o.title)
+    );
+
+    this.state.choice = undefined;
+    this.do(...options.map((o) => o.action));
   }
 
   getPlayer(playerId: PlayerId) {

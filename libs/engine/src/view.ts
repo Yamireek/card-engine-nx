@@ -9,10 +9,15 @@ import { createCardView } from './card/view';
 import { keys } from 'lodash/fp';
 import { GameZoneType, PlayerZoneType } from '@card-engine-nx/basic';
 import { canExecute } from './resolution';
+import { createPlayerView } from './player/view';
+import { applyPlayerModifier } from './player/modifier';
 
 export function createView(state: State): View {
   const view: View = {
     cards: mapValues(state.cards, (c) => createCardView(c)),
+    players: mapValues(state.players, (p) =>
+      p ? createPlayerView(p) : undefined
+    ),
     actions: [],
   };
 
@@ -21,6 +26,16 @@ export function createView(state: State): View {
     let allApplied = true;
 
     for (const player of values(state.players).filter((p) => !p.eliminated)) {
+      const playerView = view.players[player.id];
+      if (!playerView) {
+        continue;
+      }
+      for (const modifier of playerView.modifiers.filter((m) => !m.applied)) {
+        allApplied = false;
+        applyPlayerModifier(playerView, modifier.modifier);
+        modifier.applied = true;
+      }
+
       for (const zoneType of keys(player.zones) as PlayerZoneType[]) {
         for (const cardId of player.zones[zoneType].cards) {
           const card = view.cards[cardId];
@@ -96,7 +111,7 @@ export function createView(state: State): View {
     }
   }
 
-  view.actions = view.actions.filter((a) => {
+  view.actions = view.actions.map((a) => {
     const controller = state.cards[a.card].controller;
     const enabled = canExecute(a.action, true, {
       state: state,
@@ -104,7 +119,7 @@ export function createView(state: State): View {
       card: { self: a.card },
       player: { controller },
     });
-    return enabled;
+    return { ...a, enabled: enabled ? true : undefined };
   });
 
   return view;

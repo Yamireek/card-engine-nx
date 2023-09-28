@@ -190,7 +190,7 @@ export function executePlayerAction(
                 action: sequence(
                   {
                     card: {
-                      taget: e,
+                      target: e,
                       action: { resolvePlayerAttacking: player.id },
                     },
                   },
@@ -213,12 +213,14 @@ export function executePlayerAction(
   }
 
   if (action === 'declareDefender') {
+    const multiple = !!ctx.view.players[player.id]?.multipleDefenders;
+
     ctx.state.next.unshift({
       player: {
         target: player.id,
         action: {
           chooseCardActions: {
-            title: 'Declare defender',
+            title: !multiple ? 'Declare defender' : 'Declare defenders',
             target: {
               and: [
                 'character',
@@ -226,7 +228,7 @@ export function executePlayerAction(
                 { zone: { owner: player.id, type: 'playerArea' } },
               ],
             },
-            multi: false,
+            multi: multiple,
             optional: true,
             action: {
               sequence: ['exhaust', { mark: 'defending' }],
@@ -281,12 +283,33 @@ export function executePlayerAction(
         if (defending.length === 1) {
           ctx.state.next.unshift({
             card: {
-              taget: defending.map((c) => c.id),
+              target: defending.map((c) => c.id),
               action: { dealDamage: damage },
             },
           });
-        } else {
-          // TODO multiple defenders
+        }
+
+        if (defending.length === 0) {
+          // TODO undefended
+        }
+
+        if (defending.length > 1) {
+          ctx.state.next.unshift({
+            player: {
+              target: player.id,
+              action: {
+                chooseCardActions: {
+                  title: 'Choose character for damage',
+                  multi: false,
+                  optional: false,
+                  target: defending.map((c) => c.id),
+                  action: {
+                    dealDamage: damage,
+                  },
+                },
+              },
+            },
+          });
         }
       }
     }
@@ -296,7 +319,7 @@ export function executePlayerAction(
   if (action === 'eliminate') {
     player.eliminated = true;
     ctx.state.next.unshift({
-      card: { taget: { owner: player.id }, action: 'destroy' },
+      card: { target: { owner: player.id }, action: 'destroy' },
     });
     return;
   }
@@ -308,7 +331,7 @@ export function executePlayerAction(
           amount: action.draw,
           action: {
             card: {
-              taget: {
+              target: {
                 top: { player: { id: player.id, zone: 'library' } },
               },
               action: {
@@ -363,7 +386,7 @@ export function executePlayerAction(
         max: card.token.resources,
         action: {
           card: {
-            taget: t,
+            target: t,
             action: { payResources: 1 },
           },
         },
@@ -373,7 +396,7 @@ export function executePlayerAction(
     if (options.length === 1) {
       ctx.state.next.unshift({
         card: {
-          taget: options[0].cardId,
+          target: options[0].cardId,
           action: { payResources: action.payResources.amount },
         },
       });
@@ -386,7 +409,7 @@ export function executePlayerAction(
     ) {
       ctx.state.next.unshift({
         card: {
-          taget: options.map((o) => o.cardId),
+          target: options.map((o) => o.cardId),
           action: { payResources: 1 },
         },
       });
@@ -433,7 +456,7 @@ export function executePlayerAction(
         cardId: c,
         action: {
           card: {
-            taget: c,
+            target: c,
             action: cardAction,
           },
         },
@@ -557,7 +580,7 @@ export function executePlayerAction(
     ctx.state.next.unshift({
       card: {
         action: action.engaged,
-        taget: {
+        target: {
           zone: {
             owner: player.id,
             type: 'engaged',
@@ -565,6 +588,11 @@ export function executePlayerAction(
         },
       },
     });
+    return;
+  }
+
+  if (action.modify) {
+    player.modifiers.push(action.modify);
     return;
   }
 

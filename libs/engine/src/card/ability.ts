@@ -34,7 +34,7 @@ export function createAllyAction(
 
   const moveToPlay: Action = {
     card: {
-      taget: self,
+      target: self,
       action: {
         move: {
           from: { owner, type: 'hand' },
@@ -87,7 +87,7 @@ export function createAttachmentAction(
 
   const moveToPlay: Action = {
     card: {
-      taget: self,
+      target: self,
       action: {
         move: {
           from: { owner, type: 'hand' },
@@ -187,7 +187,7 @@ export function applyAbility(
     return;
   }
 
-  if (ability.setNextStage) {
+  if (ability.nextStage) {
     // TODO setNextStage
     //self.ability = ability.setNextStage;
     return;
@@ -257,7 +257,7 @@ export function createEventAction(
   const sphere = self.props.sphere;
   const cost = self.props.cost;
 
-  if (!sphere || !cost) {
+  if (sphere === undefined || cost === undefined) {
     return;
   }
 
@@ -270,7 +270,7 @@ export function createEventAction(
 
   const discard: Action = {
     card: {
-      taget: self.id,
+      target: self.id,
       action: {
         move: {
           from: { owner: controller, type: 'hand' },

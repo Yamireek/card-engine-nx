@@ -24,7 +24,7 @@ export function executeCardAction(
   if (action === 'travel') {
     ctx.state.next.unshift({
       card: {
-        taget: card.id,
+        target: card.id,
         action: {
           move: {
             from: 'stagingArea',
@@ -53,7 +53,7 @@ export function executeCardAction(
     card.tapped = false;
     ctx.state.next.unshift({
       card: {
-        taget: card.id,
+        target: card.id,
         action: {
           move: {
             to: 'discardPile',
@@ -72,7 +72,7 @@ export function executeCardAction(
     if (card.sideUp === 'back') {
       ctx.state.next.unshift({
         card: {
-          taget: card.id,
+          target: card.id,
           action: {
             sequence: [{ flip: 'front' }, 'reveal'],
           },
@@ -83,7 +83,7 @@ export function executeCardAction(
 
     ctx.state.next.unshift({
       card: {
-        taget: card.id,
+        target: card.id,
         action: {
           move: {
             from: 'encounterDeck',
@@ -100,7 +100,7 @@ export function executeCardAction(
   if (action.engagePlayer) {
     ctx.state.next.unshift({
       card: {
-        taget: card.id,
+        target: card.id,
         action: {
           move: {
             from: 'stagingArea',
@@ -175,7 +175,7 @@ export function executeCardAction(
     return;
   }
 
-  if (action.payResources) {
+  if (action.payResources !== undefined) {
     card.token.resources -= action.payResources;
     return;
   }
@@ -210,7 +210,7 @@ export function executeCardAction(
       sequence(
         {
           card: {
-            taget: card.id,
+            target: card.id,
             action: { mark: 'attacking' },
           },
         },
@@ -231,7 +231,7 @@ export function executeCardAction(
         { clearMarks: 'defending' },
         {
           card: {
-            taget: card.id,
+            target: card.id,
             action: { mark: 'attacked' },
           },
         }
@@ -243,7 +243,7 @@ export function executeCardAction(
   if (action.resolvePlayerAttacking) {
     const enemy = card.id;
     ctx.state.next.unshift(
-      { card: { taget: enemy, action: { mark: 'defending' } } },
+      { card: { target: enemy, action: { mark: 'defending' } } },
       { playerActions: 'Declare attackers' },
       {
         player: {
@@ -262,7 +262,7 @@ export function executeCardAction(
       },
       { clearMarks: 'attacking' },
       { clearMarks: 'defending' },
-      { card: { taget: enemy, action: { mark: 'attacked' } } }
+      { card: { target: enemy, action: { mark: 'attacked' } } }
     );
     return;
   }
@@ -274,7 +274,7 @@ export function executeCardAction(
 
   if (action.sequence) {
     const actions: Action[] = action.sequence.map((a) => ({
-      card: { taget: card.id, action: a },
+      card: { target: card.id, action: a },
     }));
 
     ctx.state.next.unshift(...actions);

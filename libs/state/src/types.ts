@@ -15,6 +15,7 @@ import {
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
 import { Event } from './state';
+import { PlayerModifier } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
@@ -35,7 +36,7 @@ export type Action =
   | 'revealEncounterCard'
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
-      card?: { action: CardAction; taget: CardTarget };
+      card?: { action: CardAction; target: CardTarget };
       sequence?: Action[];
       addPlayer?: PlayerDeck;
       setupScenario?: Scenario;
@@ -108,6 +109,7 @@ export type PlayerAction =
         optional: boolean;
       };
       engaged?: CardAction;
+      modify?: PlayerModifier;
     };
 
 export type CardAction =
@@ -159,7 +161,7 @@ export type Modifier = {
   target?: CardTarget;
   disable?: Mark;
   until?: Until;
-  setNextStage?: 'random';
+  nextStage?: 'random';
 };
 
 export type PaymentConditions = {

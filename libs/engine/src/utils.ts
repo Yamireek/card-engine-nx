@@ -130,7 +130,7 @@ export function advanceToChoiceState(
 
       // TODO json target
       if (destoryed.length > 0) {
-        state.next.unshift({ card: { taget: destoryed, action: 'destroy' } });
+        state.next.unshift({ card: { target: destoryed, action: 'destroy' } });
       }
 
       const exploredLocations = values(state.cards)
@@ -144,7 +144,7 @@ export function advanceToChoiceState(
       // TODO json target
       if (exploredLocations.length > 0) {
         state.next.unshift({
-          card: { taget: exploredLocations, action: 'destroy' },
+          card: { target: exploredLocations, action: 'destroy' },
         });
       }
 
@@ -159,7 +159,7 @@ export function advanceToChoiceState(
 
         const removedExplored: Action = {
           card: {
-            taget: exploredQuest,
+            target: exploredQuest,
             action: {
               move: {
                 from: 'questArea',
@@ -200,7 +200,7 @@ export function advanceToChoiceState(
         if (nextQuest.length === 1) {
           state.next.unshift(removedExplored, {
             card: {
-              taget: nextQuest,
+              target: nextQuest,
               action: {
                 sequence: [
                   {
@@ -220,7 +220,7 @@ export function advanceToChoiceState(
             const rnd = randomItem(nextQuest);
             state.next.unshift(removedExplored, {
               card: {
-                taget: rnd,
+                target: rnd,
                 action: {
                   sequence: [
                     {

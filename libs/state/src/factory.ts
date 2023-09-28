@@ -162,5 +162,6 @@ export function createPlayerState(playerId: PlayerId): PlayerState {
     flags: {},
     eliminated: false,
     limits: {},
+    modifiers: [],
   };
 }

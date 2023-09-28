@@ -1,6 +1,7 @@
 import { PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
 import { ZoneState } from './zone';
 import { Limit } from './types';
+import { PlayerModifier } from './view';
 
 export type PlayerState = {
   id: PlayerId;
@@ -12,4 +13,5 @@ export type PlayerState = {
   };
   flags: Record<string, boolean>;
   limits: Record<string, Limit>;
+  modifiers: PlayerModifier[];
 };

@@ -37,7 +37,7 @@ export const aForkInTheRoad = quest({
       {
         description:
           'Forced: When you defeat this stage, proceed to one of the 2 "A Chosen Path" stages, at random.',
-        setNextStage: 'random',
+        nextStage: 'random',
       },
     ],
   },

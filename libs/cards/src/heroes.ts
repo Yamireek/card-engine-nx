@@ -90,7 +90,7 @@ export const gloin = hero(
       event: 'receivedDamage',
       action: {
         card: {
-          taget: 'self',
+          target: 'self',
           action: {
             generateResources: {
               event: { type: 'receivedDamage', value: 'damage' },
@@ -146,7 +146,7 @@ export const eowyn = hero(
         },
         effect: {
           card: {
-            taget: 'self',
+            target: 'self',
             action: {
               modify: {
                 description: '+1 [willpower] until the end of the phase',
@@ -207,7 +207,7 @@ export const beravor = hero(
       payment: {
         cost: {
           card: {
-            taget: 'self',
+            target: 'self',
             action: 'exhaust',
           },
         },
@@ -249,7 +249,7 @@ export const glorfindel = hero(
     limit: 'once_per_round',
     action: {
       payment: {
-        cost: { card: { taget: 'self', action: { payResources: 1 } } },
+        cost: { card: { target: 'self', action: { payResources: 1 } } },
         effect: {
           player: {
             target: 'controller',
