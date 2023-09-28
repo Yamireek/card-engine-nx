@@ -7,6 +7,8 @@ import {
   Orientation,
   PrintedProps,
   Keywords,
+  PlayerZoneType,
+  GameZoneType,
 } from '@card-engine-nx/basic';
 import { Modifier } from './types';
 
@@ -43,6 +45,6 @@ export type CardState = {
     phase: Record<string, number>;
     round: Record<string, number>;
   };
-  modifiers: Modifier[];
   keywords: Keywords;
+  zone: PlayerZoneType | GameZoneType;
 };

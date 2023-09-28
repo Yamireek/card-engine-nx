@@ -47,6 +47,8 @@ it('Feint', () => {
     ],
   });
 
+  console.log(JSON.stringify(game.actions, null, 1));
+
   expect(game.actions.length).toBe(0);
   game.do({ beginPhase: 'combat' });
   expect(game.actions.length).toBe(1);
@@ -169,13 +171,13 @@ it('Stand Together', () => {
   const hero = game.getCard('Legolas');
   const enemy = game.getCard("Ungoliant's Spawn");
   expect(game.actions.length).toBe(1);
-  game.chooseAction(action);
+  game.chooseAction(action);  
   game.do({
     card: {
       target: enemy.id,
       action: { resolveEnemyAttacking: '0' },
     },
-  });
+  });  
   game.chooseOptions(['1', '2']);
   game.chooseOption('1');
   expect(hero.token.damage).toBe(3);

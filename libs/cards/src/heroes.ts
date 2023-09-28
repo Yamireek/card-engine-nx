@@ -124,7 +124,7 @@ export const eowyn = hero(
             action: {
               choosePlayerActions: {
                 target: 'each',
-                title: 'Choose player to discar card',
+                title: 'Choose player to discard card',
                 action: {
                   sequence: [
                     {

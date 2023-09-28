@@ -37,6 +37,7 @@ export function createState(initState?: SimpleState, program?: Action): State {
       player: {},
     },
     actionLimits: [],
+    modifiers: [],
   };
 
   if (initState) {
@@ -90,7 +91,8 @@ function addCard(
     state.nextId++,
     zoneType === 'library' || zoneType === 'encounterDeck' ? 'back' : 'front',
     'card' in definition ? definition.card : definition,
-    player
+    player,
+    zoneType
   );
 
   zone.cards.push(card.id);
@@ -103,7 +105,13 @@ function addCard(
     card.tapped = definition.exhausted ?? false;
     if (definition.attachments) {
       for (const a of definition.attachments) {
-        const attachment = createCardState(state.nextId++, 'front', a, player);
+        const attachment = createCardState(
+          state.nextId++,
+          'front',
+          a,
+          player,
+          zoneType
+        );
 
         zone.cards.push(attachment.id);
         state.cards[attachment.id] = attachment;
@@ -117,7 +125,8 @@ export function createCardState(
   id: CardId,
   side: Side,
   definition: CardDefinition,
-  owner: PlayerId | undefined
+  owner: PlayerId | undefined,
+  zone: GameZoneType | PlayerZoneType
 ): CardState {
   return {
     id,
@@ -142,8 +151,8 @@ export function createCardState(
       phase: {},
       round: {},
     },
-    modifiers: [],
     keywords: {},
+    zone,
   };
 }
 
@@ -162,6 +171,5 @@ export function createPlayerState(playerId: PlayerId): PlayerState {
     flags: {},
     eliminated: false,
     limits: {},
-    modifiers: [],
   };
 }

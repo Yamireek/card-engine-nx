@@ -1,10 +1,24 @@
-import { CardId, Mark, PlayerId, PrintedProps } from '@card-engine-nx/basic';
+import {
+  CardId,
+  GameZoneType,
+  Mark,
+  PlayerId,
+  PlayerZoneType,
+  PrintedProps,
+} from '@card-engine-nx/basic';
 import { Modifier, Action, CardTarget, NextStage, EventType } from './types';
+import { GameModifier } from './state';
 
 export type View = {
   cards: Record<CardId, CardView>;
   players: Partial<Record<PlayerId, PlayerView>>;
   actions: UserCardAction[];
+  modifiers: GameModifierState[];
+};
+
+export type GameModifierState = {
+  applied: boolean;
+  modifier: GameModifier;
 };
 
 export type UserCardAction = {
@@ -24,7 +38,7 @@ export type CardView = {
   id: CardId;
   printed: PrintedProps;
   props: PrintedProps;
-  abilities: Array<AbilityView>;
+  zone: PlayerZoneType | GameZoneType;
   setup?: Action[];
   attachesTo?: CardTarget;
   nextStage?: NextStage;
@@ -36,7 +50,6 @@ export type CardView = {
 
 export type PlayerView = {
   id: PlayerId;
-  modifiers: PlayerModifierView[];
   multipleDefenders?: boolean;
 };
 

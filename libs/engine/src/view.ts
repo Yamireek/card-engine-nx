@@ -11,6 +11,9 @@ import { GameZoneType, PlayerZoneType } from '@card-engine-nx/basic';
 import { canExecute } from './resolution';
 import { createPlayerView } from './player/view';
 import { applyPlayerModifier } from './player/modifier';
+import { getTargetCard, getTargetCards } from './card';
+import { cloneDeep } from 'lodash/fp';
+import { getTargetPlayers } from './player/target';
 
 export function createView(state: State): View {
   const view: View = {
@@ -19,54 +22,66 @@ export function createView(state: State): View {
       p ? createPlayerView(p) : undefined
     ),
     actions: [],
+    modifiers: [],
   };
+
+  view.modifiers = values(state.cards).flatMap((c) => {
+    const abilities = c.definition[c.sideUp].abilities;
+    return abilities.map((a) => ({
+      applied: false,
+      modifier: {
+        card: c.id,
+        modifier: cloneDeep(a),
+      },
+    }));
+  });
+
+  view.modifiers.push(
+    ...state.modifiers.map((m) => ({ applied: false, modifier: m }))
+  );
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
     let allApplied = true;
 
-    for (const player of values(state.players).filter((p) => !p.eliminated)) {
-      const playerView = view.players[player.id];
-      if (!playerView) {
-        continue;
-      }
-      for (const modifier of playerView.modifiers.filter((m) => !m.applied)) {
-        allApplied = false;
-        applyPlayerModifier(playerView, modifier.modifier);
-        modifier.applied = true;
+    for (const modifier of view.modifiers.filter((m) => !m.applied)) {
+      allApplied = false;
+
+      if ('card' in modifier.modifier) {
+        const targets = getTargetCards(modifier.modifier.card, {
+          state,
+          view,
+          card: {},
+          player: {},
+        });
+
+        for (const target of targets) {
+          applyAbility(modifier.modifier.modifier, view.cards[target], {
+            state,
+            view,
+            card: { self: target },
+            player: {},
+          });
+        }
       }
 
-      for (const zoneType of keys(player.zones) as PlayerZoneType[]) {
-        for (const cardId of player.zones[zoneType].cards) {
-          const card = view.cards[cardId];
-          for (const ability of card.abilities.filter((a) => !a.applied)) {
-            allApplied = false;
-            applyAbility(ability.ability, card, zoneType, {
-              state,
-              view,
-              card: { self: card.id },
-              player: {},
-            });
-            ability.applied = true;
+      if ('player' in modifier.modifier) {
+        const targets = getTargetPlayers(modifier.modifier.player, {
+          state,
+          view,
+          card: {},
+          player: {},
+        });
+
+        for (const target of targets) {
+          const player = view.players[target];
+          if (player) {
+            applyPlayerModifier(player, modifier.modifier.modifier);
           }
         }
       }
-    }
 
-    for (const zoneType of keys(state.zones) as GameZoneType[]) {
-      for (const cardId of state.zones[zoneType].cards) {
-        const card = view.cards[cardId];
-        for (const ability of card.abilities.filter((a) => !a.applied)) {
-          allApplied = false;
-          applyAbility(ability.ability, card, zoneType, {
-            state,
-            view,
-            card: {},
-            player: {},
-          });
-          ability.applied = true;
-        }
-      }
+      modifier.applied = true;
     }
 
     if (allApplied) {

@@ -13,5 +13,4 @@ export type PlayerState = {
   };
   flags: Record<string, boolean>;
   limits: Record<string, Limit>;
-  modifiers: PlayerModifier[];
 };

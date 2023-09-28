@@ -8,7 +8,8 @@ import {
 import { CardDefinition, CardState } from './card';
 import { PlayerState } from './player';
 import { ZoneState } from './zone';
-import { Action, Limit } from './types';
+import { Action, CardTarget, Limit, Modifier, PlayerTarget } from './types';
+import { PlayerModifier } from './view';
 
 export type Event =
   | 'none'
@@ -82,7 +83,18 @@ export type State = {
   };
   actionLimits: Array<{ type: Limit; card: CardId; index: number }>;
   event?: Event;
+  modifiers: GameModifier[];
 };
+
+export type GameModifier =
+  | {
+      card: CardTarget;
+      modifier: Modifier;
+    }
+  | {
+      player: PlayerTarget;
+      modifier: PlayerModifier;
+    };
 
 export type SimpleCardState =
   | CardDefinition

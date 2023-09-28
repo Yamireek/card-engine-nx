@@ -200,6 +200,8 @@ export function executeCardAction(
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);
     destinationZone.cards.push(card.id);
     card.sideUp = action.move.side;
+    card.zone =
+      typeof action.move.to === 'string' ? action.move.to : action.move.to.type;
 
     ctx.events.send(
       uiEvent.card_moved({
@@ -301,9 +303,11 @@ export function executeCardAction(
 
   if (action.modify) {
     if (isArray(action.modify)) {
-      card.modifiers.push(...action.modify);
+      for (const modifier of action.modify) {
+        ctx.state.modifiers.push({ card: card.id, modifier });
+      }
     } else {
-      card.modifiers.push(action.modify);
+      ctx.state.modifiers.push({ card: card.id, modifier: action.modify });
     }
     return;
   }

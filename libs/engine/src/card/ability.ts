@@ -110,14 +110,13 @@ export function createAttachmentAction(
 }
 
 export function createCardActions(
-  zone: PlayerZoneType | GameZoneType,
   ability: Modifier,
   action: Action,
   self: CardView,
   controller: PlayerId,
   phase: Phase
 ): UserCardAction[] {
-  if (zone === 'hand' && self.props.type === 'event') {
+  if (self.zone === 'hand' && self.props.type === 'event') {
     if (!ability.phase || ability.phase === phase) {
       const eventAction = createEventAction(
         self,
@@ -138,27 +137,29 @@ export function createCardActions(
     }
   }
 
-  if (zone === 'playerArea') {
-    return [
-      {
-        description: ability.description,
-        card: self.id,
-        action: sequence(
-          { setCardVar: { name: 'self', value: self.id } },
-          { setPlayerVar: { name: 'controller', value: controller } },
-          {
-            useLimit: {
-              type: ability.limit ?? 'none',
-              card: self.id,
-              index: 0, // TODO ability index
+  if (self.zone === 'playerArea') {
+    if (!ability.phase || ability.phase === phase) {
+      return [
+        {
+          description: ability.description,
+          card: self.id,
+          action: sequence(
+            { setCardVar: { name: 'self', value: self.id } },
+            { setPlayerVar: { name: 'controller', value: controller } },
+            {
+              useLimit: {
+                type: ability.limit ?? 'none',
+                card: self.id,
+                index: 0, // TODO ability index
+              },
             },
-          },
-          action,
-          { setPlayerVar: { name: 'controller', value: undefined } },
-          { setCardVar: { name: 'self', value: undefined } }
-        ),
-      },
-    ];
+            action,
+            { setPlayerVar: { name: 'controller', value: undefined } },
+            { setCardVar: { name: 'self', value: undefined } }
+          ),
+        },
+      ];
+    }
   }
 
   return [];
@@ -167,7 +168,6 @@ export function createCardActions(
 export function applyAbility(
   ability: Modifier,
   self: CardView,
-  zone: PlayerZoneType | GameZoneType,
   ctx: ViewContext
 ) {
   if (ability.bonus) {
@@ -214,7 +214,6 @@ export function applyAbility(
     const controller = ctx.state.cards[self.id].controller;
     if (controller) {
       const actions = createCardActions(
-        zone,
         ability,
         ability.action,
         self,

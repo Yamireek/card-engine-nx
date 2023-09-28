@@ -592,7 +592,10 @@ export function executePlayerAction(
   }
 
   if (action.modify) {
-    player.modifiers.push(action.modify);
+    ctx.state.modifiers.push({
+      player: player.id,
+      modifier: action.modify,
+    });
     return;
   }
 
