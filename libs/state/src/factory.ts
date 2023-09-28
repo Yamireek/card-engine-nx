@@ -37,6 +37,7 @@ export function createState(initState?: SimpleState, program?: Action): State {
       player: {},
     },
     actionLimits: [],
+    atEndOfPhase: [],
   };
 
   if (initState) {

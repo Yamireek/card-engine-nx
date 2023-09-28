@@ -52,7 +52,9 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'endPhase') {
     for (const card of values(ctx.state.cards)) {
       card.modifiers = card.modifiers.filter((m) => m.until !== 'end_of_phase');
-    }
+    }    
+    ctx.state.next.unshift(...ctx.state.atEndOfPhase);
+    ctx.state.atEndOfPhase = [];
     return;
   }
 
@@ -391,7 +393,12 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
-  throw new Error(`unknown  action: ${JSON.stringify(action)}`);
+  if (action.atEndOfPhase) {
+    ctx.state.atEndOfPhase.push(action.atEndOfPhase);
+    return;
+  }
+
+  throw new Error(`unknown action: ${JSON.stringify(action)}`);
 }
 
 export function beginScenario(

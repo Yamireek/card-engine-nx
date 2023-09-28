@@ -97,6 +97,37 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'shuffleToDeck') {
+    if (card.owner) {
+      ctx.state.next.unshift({
+        sequence: [
+          {
+            card: {
+              target: card.id,
+              action: {
+                move: {
+                  to: {
+                    owner: card.owner,
+                    type: 'library',
+                  },
+                  side: 'back',
+                },
+              },
+            },
+          },
+          {
+            player: {
+              target: card.owner,
+              action: 'shuffleLibrary',
+            },
+          },
+        ],
+      });
+    }
+
+    return;
+  }
+
   if (action.engagePlayer) {
     ctx.state.next.unshift({
       card: {

@@ -250,18 +250,6 @@ export const standTogether = event(
       },
     },
   }
-  // TODO ability action
-  // action({
-  //   description:
-  //     "Action: Choose a player. That player may declare any number of his eligible characters as defenders against each enemy attacking him this phase.",
-  //   effect: choosePlayerFor(
-  //     any(),
-  //     modifyPlayer({
-  //       modifier: canDeclareMultipleDefenders,
-  //       until: "end_of_phase",
-  //     })
-  //   ),
-  // })
 );
 
 export const swiftStrike = event(

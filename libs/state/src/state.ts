@@ -78,6 +78,7 @@ export type State = {
   };
   actionLimits: Array<{ type: Limit; card: CardId; index: number }>;
   event?: Event;
+  atEndOfPhase: Action[];
 };
 
 export type SimpleCardState =

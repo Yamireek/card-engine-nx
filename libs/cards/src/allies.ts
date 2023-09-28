@@ -27,7 +27,7 @@ export const gondorianSpearman = ally(
       sentinel: true,
     },
   }
-  // TODO ability  
+  // TODO ability
   // response((s) => s.declaredDefender, {
   //   description:
   //     "Response: After Gondorian Spearman is declared as a defender, deal 1 damage to the attacking enemy.",
@@ -50,20 +50,46 @@ export const beorn = ally(
     hitPoints: 6,
     traits: ['beorning', 'warrior'],
     sphere: 'tactics',
+  },
+  {
+    description:
+      'Action: Beorn gains +5 Attack until the end of the phase. At the end of the phase in which you trigger this effect, shuffle Beorn back into your deck. (Limit once per round.)',
+    limit: 'once_per_round',
+    action: {
+      sequence: [
+        {
+          card: {
+            target: 'self',
+            action: {
+              sequence: [
+                { setCardVar: 'beorn' },
+                {
+                  modify: {
+                    description: '+5 [attack] until end of phase',
+                    bonus: {
+                      property: 'attack',
+                      amount: 5,
+                    },
+                    until: 'end_of_phase',
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          atEndOfPhase: {
+            card: {
+              target: {
+                var: 'beorn',
+              },
+              action: 'shuffleToDeck',
+            },
+          },
+        },
+      ],
+    },
   }
-  // TODO ability action
-  // action({
-  //   description:
-  //     "Action: Beorn gains +5 Attack until the end of the phase. At the end of the phase in which you trigger this effect, shuffle Beorn back into your deck. (Limit once per round.)",
-  //   canRun: not(isFlagEqual("beorn_ability_used", value(true))),
-  //   action: (self) =>
-  //     sequence(
-  //       addEffect(increment("attack", 5, "end_of_phase").to(self)),
-  //       setFlag("beorn_ability_used", value(true)),
-  //       atEndOfPhase(moveToLibrary().card(self)),
-  //       atEndOfRound(setFlag("beorn_ability_used", value(false)))
-  //     ),
-  // })
 );
 
 export const horsebackArcher = ally({

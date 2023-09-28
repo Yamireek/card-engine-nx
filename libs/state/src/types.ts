@@ -67,6 +67,7 @@ export type Action =
         attackers: CardTarget;
         defender: CardTarget;
       };
+      atEndOfPhase?: Action;
     };
 
 export type PlayerAction =
@@ -119,6 +120,7 @@ export type CardAction =
   | 'exhaust'
   | 'destroy'
   | 'reveal'
+  | 'shuffleToDeck'
   | {
       dealDamage?: number;
       heal?: number | 'all';

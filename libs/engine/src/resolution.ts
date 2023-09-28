@@ -55,6 +55,10 @@ export function canExecute(
     if (action.resolveAttack) {
       return true;
     }
+
+    if (action.atEndOfPhase) {
+      return true;
+    }
   }
 
   throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
