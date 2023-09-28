@@ -52,9 +52,9 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'endPhase') {
     for (const card of values(ctx.state.cards)) {
       card.modifiers = card.modifiers.filter((m) => m.until !== 'end_of_phase');
-    }    
-    ctx.state.next.unshift(...ctx.state.atEndOfPhase);
-    ctx.state.atEndOfPhase = [];
+    }
+    ctx.state.next.unshift(...ctx.state.triggers.end_of_phase);
+    ctx.state.triggers.end_of_round = [];
     return;
   }
 
@@ -394,7 +394,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.atEndOfPhase) {
-    ctx.state.atEndOfPhase.push(action.atEndOfPhase);
+    ctx.state.triggers.end_of_phase.push(action.atEndOfPhase);
     return;
   }
 
