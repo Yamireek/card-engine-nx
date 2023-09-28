@@ -1,11 +1,11 @@
-import { CardState, CardAction, Action } from '@card-engine-nx/state';
+import { CardState, CardAction, Action, Event } from '@card-engine-nx/state';
 import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
 import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
 import { calculateNumberExpr } from '../expr';
-import { getTargetPlayers } from '../player/target';
 import { isArray } from 'lodash';
+import { processReponses } from './reponses';
 
 export function executeCardAction(
   action: CardAction,
@@ -43,6 +43,8 @@ export function executeCardAction(
   }
 
   if (action === 'destroy') {
+    const type = ctx.view.cards[card.id].props.type;
+
     card.token = { damage: 0, progress: 0, resources: 0 };
     card.mark = {
       attacked: false,
@@ -62,6 +64,11 @@ export function executeCardAction(
         },
       },
     });
+
+    if (type === 'hero' || type === 'ally') {
+      processReponses({ type: 'characterDestroyed', cardId: card.id }, ctx);
+    }
+
     return;
   }
 
@@ -157,41 +164,15 @@ export function executeCardAction(
   if (action.dealDamage) {
     const damage = action.dealDamage;
     card.token.damage += damage;
-    const reponses = ctx.view.cards[card.id].responses?.receivedDamage;
-    if (reponses) {
-      const controller = getTargetPlayers({ controller: card.id }, ctx);
-      ctx.state.next.unshift({
-        player: {
-          target: controller,
-          action: {
-            chooseActions: {
-              title: 'Choose responses for receiving damage',
-              actions: reponses.map((r) => ({
-                title: r.description,
-                cardId: card.id,
-                action: sequence(
-                  {
-                    setEvent: {
-                      type: 'receivedDamage',
-                      cardId: card.id,
-                      damage,
-                    },
-                  },
-                  { setCardVar: { name: 'self', value: card.id } },
-                  r.action,
-                  { setCardVar: { name: 'self', value: undefined } },
-                  {
-                    setEvent: 'none',
-                  }
-                ),
-              })),
-              optional: true,
-              multi: true,
-            },
-          },
-        },
-      });
-    }
+
+    const event: Event = {
+      type: 'receivedDamage',
+      cardId: card.id,
+      damage,
+    };
+
+    processReponses(event, ctx);
+
     return;
   }
 

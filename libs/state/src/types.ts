@@ -140,7 +140,6 @@ export type CardAction =
         side: Side;
       };
       modify?: Modifier | Modifier[];
-      until?: Until;
       setAsVar?: string;
     };
 
@@ -172,8 +171,10 @@ export type PaymentConditions = {
 
 export type NextStage = 'default' | 'random';
 
+export type EventType = 'receivedDamage' | 'characterDestroyed';
+
 export type ActionResponse = {
-  event: 'receivedDamage';
+  event: EventType;
   action: Action;
 };
 

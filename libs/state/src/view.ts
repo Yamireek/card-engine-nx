@@ -1,5 +1,5 @@
 import { CardId, Mark, PlayerId, PrintedProps } from '@card-engine-nx/basic';
-import { Modifier, Action, CardTarget, NextStage } from './types';
+import { Modifier, Action, CardTarget, NextStage, EventType } from './types';
 
 export type View = {
   cards: Record<CardId, CardView>;
@@ -28,9 +28,9 @@ export type CardView = {
   setup?: Action[];
   attachesTo?: CardTarget;
   nextStage?: NextStage;
-  responses?: {
-    receivedDamage?: Array<{ description: string; action: Action }>;
-  };
+  responses?: Partial<
+    Record<EventType, Array<{ description: string; action: Action }>>
+  >;
   disabled?: Partial<Record<Mark, boolean>>;
 };
 

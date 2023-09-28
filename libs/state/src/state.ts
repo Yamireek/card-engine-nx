@@ -16,6 +16,10 @@ export type Event =
       type: 'receivedDamage';
       cardId: CardId;
       damage: number;
+    }
+  | {
+      type: 'characterDestroyed';
+      cardId: CardId;
     };
 
 export type State = {

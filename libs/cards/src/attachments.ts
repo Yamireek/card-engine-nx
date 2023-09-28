@@ -102,6 +102,7 @@ export const bladeOfGondolin = attachment(
       },
     },
   }
+  // TODO ability
   // response({
   //   description:
   //     "Response: After attached hero attacks and destroys an enemy, place 1 progress token on the current quest.",
@@ -122,12 +123,22 @@ export const hornOfGondor = attachment(
   {
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
+  },
+  {
+    description:
+      "Response: After a character is destroyed, add 1 resource to attached hero's pool.",
+    response: {
+      event: 'characterDestroyed',
+      action: {
+        card: {
+          target: {
+            hasAttachment: 'self',
+          },
+          action: {
+            generateResources: 1,
+          },
+        },
+      },
+    },
   }
-  // TODO ability
-  // response({
-  //   description: "Response: After a character is destroyed, add 1 resource to attached hero's pool.",
-  //   event: destroyed(),
-  //   condition: (e, v) => isCharacter(e.cardId).eval(v),
-  //   action: () => bindAction(attached(self), addResources(1)),
-  // })
 );
