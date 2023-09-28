@@ -244,6 +244,7 @@ export const standTogether = event(
             optional: false,
             action: {
               modify: 'can_declate_multiple_defenders',
+              until: 'end_of_phase',
             },
           },
         },

@@ -82,6 +82,9 @@ it('Blade of Gondolin', () => {
 });
 
 it('Horn of Gondor', () => {
+  const response =
+    "Response: After a character is destroyed, add 1 resource to attached hero's pool.";
+
   const game = new TestEngine({
     players: [
       {
@@ -99,11 +102,7 @@ it('Horn of Gondor', () => {
   const legolas = game.getCard('Legolas');
   const spearman = game.getCard('Gondorian Spearman');
   expect(legolas.token.resources).toBe(0);
-  spearman.update("destroy");
-  console.log(game.state.players[0]?.zones);
-  console.log(game.state.choice);
-  game.chooseOption(
-    "Response: After a character is destroyed, add 1 resource to attached hero's pool."
-  );
+  spearman.update('destroy');
+  game.chooseOption(response);
   expect(legolas.token.resources).toBe(1);
 });

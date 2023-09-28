@@ -111,6 +111,7 @@ export type PlayerAction =
       };
       engaged?: CardAction;
       modify?: PlayerModifier;
+      until?: Until;
     };
 
 export type CardAction =

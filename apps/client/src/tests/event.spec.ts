@@ -3,6 +3,9 @@ import { TestEngine } from './TestEngine';
 import { it, expect } from 'vitest';
 
 it('Blade Mastery', () => {
+  const action =
+    'Action: Choose a character. Until the end of the phase, that character gains +1 Attack and +1 Defense.';
+
   const game = new TestEngine({
     players: [
       {
@@ -20,10 +23,7 @@ it('Blade Mastery', () => {
   const hero = game.getCard('Gimli');
   expect(hero.props.attack).toEqual(2);
   expect(hero.props.defense).toEqual(2);
-  console.log(game.actions);
-  game.chooseAction(
-    'Action: Choose a character. Until the end of the phase, that character gains +1 Attack and +1 Defense.'
-  );
+  game.chooseAction(action);
   expect(hero.props.attack).toEqual(3);
   expect(hero.props.defense).toEqual(3);
   game.do('endPhase');
@@ -32,6 +32,9 @@ it('Blade Mastery', () => {
 });
 
 it('Feint', () => {
+  const action =
+    'Combat Action: Choose an enemy engaged with a player. That enemy cannot attack that player this phase.';
+
   const game = new TestEngine({
     players: [
       {
@@ -47,14 +50,10 @@ it('Feint', () => {
     ],
   });
 
-  console.log(JSON.stringify(game.actions, null, 1));
-
   expect(game.actions.length).toBe(0);
   game.do({ beginPhase: 'combat' });
   expect(game.actions.length).toBe(1);
-  game.chooseAction(
-    'Combat Action: Choose an enemy engaged with a player. That enemy cannot attack that player this phase.'
-  );
+  game.chooseAction(action);
   game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
   expect(game.state.choice).toBeUndefined();
   game.do('endPhase');
@@ -63,6 +62,9 @@ it('Feint', () => {
 });
 
 it('Rain of Arrows', () => {
+  const action =
+    'Action: Exhaust a character you control with the ranged keyword to choose a player. Deal 1 damage to each enemy engaged with that player.';
+
   const game = new TestEngine({
     players: [
       {
@@ -81,14 +83,15 @@ it('Rain of Arrows', () => {
   const enemy1 = game.getCard('Dol Guldur Orcs');
   const enemy2 = game.getCard('King Spider');
   expect(game.actions.length).toBe(1);
-  game.chooseAction(
-    'Action: Exhaust a character you control with the ranged keyword to choose a player. Deal 1 damage to each enemy engaged with that player.'
-  );
+  game.chooseAction(action);
   expect(enemy1.state.token.damage).toBe(1);
   expect(enemy2.state.token.damage).toBe(1);
 });
 
 it('Thicket of Spears', () => {
+  const action =
+    "You must use resources from 3 different heroes' pools to pay for this card. Action: Choose a player. That player's engaged enemies cannot attack that player this phase.";
+
   const game = new TestEngine({
     players: [
       {
@@ -114,9 +117,7 @@ it('Thicket of Spears', () => {
 
   game.do({ beginPhase: 'combat' });
   expect(game.actions.length).toBe(1);
-  game.chooseAction(
-    "You must use resources from 3 different heroes' pools to pay for this card. Action: Choose a player. That player's engaged enemies cannot attack that player this phase."
-  );
+  game.chooseAction(action);
   game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
   expect(game.state.choice).toBeUndefined();
   game.do('endPhase');
@@ -125,6 +126,9 @@ it('Thicket of Spears', () => {
 });
 
 it('Quick Strike', () => {
+  const action =
+    'Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.';
+
   const game = new TestEngine({
     players: [
       {
@@ -142,9 +146,7 @@ it('Quick Strike', () => {
 
   const enemy = game.getCard('Forest Spider');
   expect(game.actions.length).toBe(1);
-  game.chooseAction(
-    'Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.'
-  );
+  game.chooseAction(action);
   expect(enemy.token.damage).toBe(1);
 });
 
@@ -171,14 +173,16 @@ it('Stand Together', () => {
   const hero = game.getCard('Legolas');
   const enemy = game.getCard("Ungoliant's Spawn");
   expect(game.actions.length).toBe(1);
-  game.chooseAction(action);  
+  game.chooseAction(action);
   game.do({
     card: {
       target: enemy.id,
       action: { resolveEnemyAttacking: '0' },
     },
-  });  
+  });
   game.chooseOptions(['1', '2']);
   game.chooseOption('1');
   expect(hero.token.damage).toBe(3);
+  game.do('endPhase');
+  expect(game.view.players[0]?.multipleDefenders).toBeUndefined();
 });

@@ -595,6 +595,7 @@ export function executePlayerAction(
     ctx.state.modifiers.push({
       player: player.id,
       modifier: action.modify,
+      until: action.until,
     });
     return;
   }

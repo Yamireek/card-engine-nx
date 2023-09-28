@@ -95,15 +95,10 @@ it('Éowyn', async () => {
   });
   const eowyn = game.getCard('Éowyn');
   expect(eowyn.props.willpower).toEqual(4);
-  console.log(game.view.actions);
   expect(game.actions.length).toEqual(1);
   game.chooseAction(action);
-  console.log(game.state.choice);
   game.chooseOption('0');
-  console.log(game.state.choice);
   game.chooseOption('3');
-  console.log(game.state.modifiers);
-  console.log(game.view.cards);
   expect(eowyn.props.willpower).toEqual(5);
   expect(game.actions.length).toEqual(1);
   game.chooseAction(action);

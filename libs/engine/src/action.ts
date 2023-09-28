@@ -50,14 +50,10 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'endPhase') {
-    ctx.state.modifiers = ctx.state.modifiers.filter((m) => {
-      if ('card' in m) {
-        return m.modifier.until !== 'end_of_phase';
-      } else {
-        return true;
-      }
-    });
-
+    ctx.state.modifiers = ctx.state.modifiers.filter(
+      (m) => m.until !== 'end_of_phase'
+    );
+    
     ctx.state.next.unshift(...ctx.state.triggers.end_of_phase);
     ctx.state.triggers.end_of_round = [];
     return;

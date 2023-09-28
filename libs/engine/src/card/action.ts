@@ -304,10 +304,18 @@ export function executeCardAction(
   if (action.modify) {
     if (isArray(action.modify)) {
       for (const modifier of action.modify) {
-        ctx.state.modifiers.push({ card: card.id, modifier });
+        ctx.state.modifiers.push({
+          card: card.id,
+          modifier,
+          until: modifier.until,
+        });
       }
     } else {
-      ctx.state.modifiers.push({ card: card.id, modifier: action.modify });
+      ctx.state.modifiers.push({
+        card: card.id,
+        modifier: action.modify,
+        until: action.modify.until,
+      });
     }
     return;
   }

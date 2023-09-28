@@ -8,7 +8,14 @@ import {
 import { CardDefinition, CardState } from './card';
 import { PlayerState } from './player';
 import { ZoneState } from './zone';
-import { Action, CardTarget, Limit, Modifier, PlayerTarget } from './types';
+import {
+  Action,
+  CardTarget,
+  Limit,
+  Modifier,
+  PlayerTarget,
+  Until,
+} from './types';
 import { PlayerModifier } from './view';
 
 export type Event =
@@ -90,10 +97,12 @@ export type GameModifier =
   | {
       card: CardTarget;
       modifier: Modifier;
+      until?: Until;
     }
   | {
       player: PlayerTarget;
       modifier: PlayerModifier;
+      until?: Until;
     };
 
 export type SimpleCardState =
