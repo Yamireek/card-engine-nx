@@ -208,7 +208,7 @@ export function canCardExecute(
       return true;
     }
 
-    if (action.setCardVar) {
+    if (action.setAsVar) {
       return true;
     }
   }

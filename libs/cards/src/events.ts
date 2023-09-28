@@ -128,7 +128,7 @@ export const quickStrike = event(
                   sequence: [
                     'exhaust',
                     {
-                      setCardVar: 'attacker',
+                      setAsVar: 'attacker',
                     },
                   ],
                 },
@@ -148,7 +148,7 @@ export const quickStrike = event(
                   type: 'enemy',
                 },
                 action: {
-                  setCardVar: 'defender',
+                  setAsVar: 'defender',
                 },
               },
             },

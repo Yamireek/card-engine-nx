@@ -141,7 +141,7 @@ export type CardAction =
       };
       modify?: Modifier | Modifier[];
       until?: Until;
-      setCardVar?: string;
+      setAsVar?: string;
     };
 
 export type PropertyBonus = {
@@ -236,6 +236,7 @@ export type CardTarget =
   | CardId
   | CardId[]
   | {
+      name?: string;
       owner?: PlayerId;
       and?: CardTarget[];
       not?: CardTarget;

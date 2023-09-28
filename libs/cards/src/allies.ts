@@ -61,19 +61,14 @@ export const beorn = ally(
           card: {
             target: 'self',
             action: {
-              sequence: [
-                { setCardVar: 'beorn' },
-                {
-                  modify: {
-                    description: '+5 [attack] until end of phase',
-                    bonus: {
-                      property: 'attack',
-                      amount: 5,
-                    },
-                    until: 'end_of_phase',
-                  },
+              modify: {
+                description: '+5 [attack] until end of phase',
+                bonus: {
+                  property: 'attack',
+                  amount: 5,
                 },
-              ],
+                until: 'end_of_phase',
+              },
             },
           },
         },
@@ -81,7 +76,7 @@ export const beorn = ally(
           atEndOfPhase: {
             card: {
               target: {
-                var: 'beorn',
+                and: ['inAPlay', { name: 'Beorn' }],
               },
               action: 'shuffleToDeck',
             },

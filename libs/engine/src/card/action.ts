@@ -327,8 +327,8 @@ export function executeCardAction(
     return;
   }
 
-  if (action.setCardVar) {
-    ctx.state.vars.card[action.setCardVar] = card.id;
+  if (action.setAsVar) {
+    ctx.state.vars.card[action.setAsVar] = card.id;
     return;
   }
 
