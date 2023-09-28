@@ -6,12 +6,10 @@ import {
   createAttachmentAction,
 } from './card/ability';
 import { createCardView } from './card/view';
-import { keys } from 'lodash/fp';
-import { GameZoneType, PlayerZoneType } from '@card-engine-nx/basic';
 import { canExecute } from './resolution';
 import { createPlayerView } from './player/view';
 import { applyPlayerModifier } from './player/modifier';
-import { getTargetCard, getTargetCards } from './card';
+import { getTargetCards } from './card';
 import { cloneDeep } from 'lodash/fp';
 import { getTargetPlayers } from './player/target';
 

@@ -9,10 +9,8 @@ import {
 import { ViewContext } from '../context';
 import {
   CardId,
-  GameZoneType,
   Phase,
   PlayerId,
-  PlayerZoneType,
   Sphere,
 } from '@card-engine-nx/basic';
 import { sequence } from '../utils/sequence';
@@ -170,6 +168,8 @@ export function applyAbility(
   self: CardView,
   ctx: ViewContext
 ) {
+  self.abilities.push(ability.description);
+
   if (ability.bonus) {
     const targets = ability.target
       ? getTargetCards(ability.target, ctx)

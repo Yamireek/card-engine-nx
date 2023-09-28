@@ -9,5 +9,6 @@ export function createCardView(state: CardState): CardView {
     props: cloneDeep(printed),
     setup: [],
     zone: state.zone,
+    abilities: [],
   };
 }

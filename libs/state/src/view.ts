@@ -46,6 +46,7 @@ export type CardView = {
     Record<EventType, Array<{ description: string; action: Action }>>
   >;
   disabled?: Partial<Record<Mark, boolean>>;
+  abilities: string[];
 };
 
 export type PlayerView = {
