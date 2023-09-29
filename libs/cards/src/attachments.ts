@@ -128,7 +128,15 @@ export const hornOfGondor = attachment(
     description:
       "Response: After a character is destroyed, add 1 resource to attached hero's pool.",
     response: {
-      event: 'characterDestroyed',
+      event: 'destroyed',
+      condition: {
+        card: {
+          target: 'event',
+          value: {
+            isType: 'character',
+          },
+        },
+      },
       action: {
         card: {
           target: {

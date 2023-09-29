@@ -53,7 +53,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     ctx.state.modifiers = ctx.state.modifiers.filter(
       (m) => m.until !== 'end_of_phase'
     );
-    
+
     ctx.state.next.unshift(...ctx.state.triggers.end_of_phase);
     ctx.state.triggers.end_of_round = [];
     return;
@@ -384,7 +384,12 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         ctx.state.next.unshift({
           card: {
             target: defender.map((c) => c.id),
-            action: { dealDamage: damage },
+            action: {
+              dealDamage: {
+                amount: damage,
+                attackers: attacking.map((a) => a.id),
+              },
+            },
           },
         });
       } else {

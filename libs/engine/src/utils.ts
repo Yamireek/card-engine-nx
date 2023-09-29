@@ -130,7 +130,9 @@ export function advanceToChoiceState(
 
       // TODO json target
       if (destoryed.length > 0) {
-        state.next.unshift({ card: { target: destoryed, action: 'destroy' } });
+        state.next.unshift({
+          card: { target: destoryed, action: 'destroy' },
+        });
       }
 
       const exploredLocations = values(state.cards)
@@ -144,7 +146,10 @@ export function advanceToChoiceState(
       // TODO json target
       if (exploredLocations.length > 0) {
         state.next.unshift({
-          card: { target: exploredLocations, action: 'destroy' },
+          card: {
+            target: exploredLocations,
+            action: 'destroy',
+          },
         });
       }
 

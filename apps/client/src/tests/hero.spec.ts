@@ -97,7 +97,7 @@ it('Éowyn', async () => {
       },
     ],
   });
-  
+
   const eowyn = game.getCard('Éowyn');
   expect(eowyn.props.willpower).toEqual(4);
   expect(game.actions.length).toEqual(1);
@@ -132,11 +132,34 @@ it('Thalin', async () => {
   expect(enemy.token.damage).toEqual(1);
 });
 
-// it("Lelogas placing progress", async () => {
-//   const game = new GameEngine({ choices: [0] });
-//   const legolas = game.addHero(hero.legolas);
-//   const enemy = game.addEnemy(dolGuldurOrcs);
-//   const location = game.addLocation(mountainsOfMirkwood);
-//   await game.execute(destroy(enemy.id, [legolas.id]));
-//   expect(location.get.progress).toEqual(2);
-// });
+it('Lelogas', async () => {
+  const response =
+    'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.';
+
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [core.hero.legolas],
+        engaged: [core.enemy.dolGuldurOrcs],
+      },
+    ],
+    activeLocation: [core.location.mountainsOfMirkwood],
+  });
+
+  const legolas = game.getCard('Legolas');
+  const location = game.getCard('Mountains of Mirkwood');
+  const enemy = game.getCard('Dol Guldur Orcs');
+  game.do({
+    card: {
+      target: enemy.id,
+      action: {
+        dealDamage: {
+          amount: 5,
+          attackers: [legolas.id],
+        },
+      },
+    },
+  });
+  game.chooseOption(response);
+  expect(location.token.progress).toEqual(2);
+});

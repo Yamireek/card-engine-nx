@@ -119,11 +119,12 @@ export type CardAction =
   | 'ready'
   | 'travel'
   | 'exhaust'
-  | 'destroy'
   | 'reveal'
   | 'shuffleToDeck'
+  | 'destroy'
   | {
-      dealDamage?: number;
+      destroy?: { attackers: CardId[] };
+      dealDamage?: number | { amount: number; attackers: CardId[] };
       heal?: number | 'all';
       generateResources?: NumberExpr;
       payResources?: number;
@@ -180,8 +181,6 @@ export type ActionResponse = {
   action: Action;
 };
 
-export type EventNumbers = { type: 'receivedDamage'; value: 'damage' };
-
 export type NumberExpr =
   | number
   | 'countOfPlayers'
@@ -200,10 +199,15 @@ export type NumberExpr =
       };
     };
 
+export type EventNumbers = { type: 'receivedDamage'; value: 'damage' }; // TODO remove type
+
+export type EventBool = { type: 'destroyed'; isAttacker: CardTarget }; // TODO remove type
+
 export type BoolExpr =
   | boolean
   | 'enemiesToEngage'
   | {
+      event?: EventBool;
       and?: BoolExpr[];
       phase?: Phase;
       someCard?: CardTarget;
@@ -228,7 +232,7 @@ export type CardBoolExpr =
   | {
       hasTrait?: Trait;
       hasMark?: Mark;
-      isType?: CardType;
+      isType?: CardType | 'character';
     };
 
 export type CardTarget =

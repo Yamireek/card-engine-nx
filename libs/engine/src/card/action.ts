@@ -42,39 +42,6 @@ export function executeCardAction(
     return;
   }
 
-  if (action === 'destroy') {
-    const type = ctx.view.cards[card.id].props.type;
-
-    card.token = { damage: 0, progress: 0, resources: 0 };
-    card.mark = {
-      attacked: false,
-      attacking: false,
-      defending: false,
-      questing: false,
-    };
-    card.tapped = false;
-
-    const owner = card.owner;
-
-    ctx.state.next.unshift({
-      card: {
-        target: card.id,
-        action: {
-          move: {
-            to: !owner ? 'discardPile' : { type: 'discardPile', owner },
-            side: 'front',
-          },
-        },
-      },
-    });
-
-    if (type === 'hero' || type === 'ally') {
-      processReponses({ type: 'characterDestroyed', card: card.id }, ctx);
-    }
-
-    return;
-  }
-
   if (action === 'reveal') {
     // TODO when revealed effects
 
@@ -141,6 +108,42 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'destroy' || action.destroy) {
+    card.token = { damage: 0, progress: 0, resources: 0 };
+    card.mark = {
+      attacked: false,
+      attacking: false,
+      defending: false,
+      questing: false,
+    };
+    card.tapped = false;
+
+    const owner = card.owner;
+
+    ctx.state.next.unshift({
+      card: {
+        target: card.id,
+        action: {
+          move: {
+            to: !owner ? 'discardPile' : { type: 'discardPile', owner },
+            side: 'front',
+          },
+        },
+      },
+    });
+
+    processReponses(
+      {
+        type: 'destroyed',
+        card: card.id,
+        attackers: action === 'destroy' ? [] : action.destroy?.attackers ?? [],
+      },
+      ctx
+    );
+
+    return;
+  }
+
   if (action.engagePlayer) {
     ctx.state.next.unshift({
       card: {
@@ -168,16 +171,36 @@ export function executeCardAction(
   }
 
   if (action.dealDamage) {
-    const damage = action.dealDamage;
-    card.token.damage += damage;
+    const data =
+      typeof action.dealDamage === 'number'
+        ? { amount: action.dealDamage, attackers: [] }
+        : action.dealDamage;
+
+    const amount = data.amount;
+
+    card.token.damage += amount;
 
     const event: Event = {
       type: 'receivedDamage',
       card: card.id,
-      damage,
+      damage: amount,
     };
 
     processReponses(event, ctx);
+
+    const hitpoints = ctx.view.cards[card.id].props.hitPoints;
+
+    if (hitpoints && card.token.damage >= hitpoints) {
+      executeCardAction(
+        {
+          destroy: {
+            attackers: data.attackers,
+          },
+        },
+        card,
+        ctx
+      );
+    }
 
     return;
   }

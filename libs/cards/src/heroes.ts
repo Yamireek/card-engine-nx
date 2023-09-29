@@ -40,15 +40,23 @@ export const legolas = hero(
     keywords: {
       ranged: true,
     },
+  },
+  {
+    description:
+      'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.',
+    response: {
+      event: 'destroyed',
+      condition: {
+        event: {
+          type: 'destroyed',
+          isAttacker: { name: 'Legolas' },
+        },
+      },
+      action: {
+        placeProgress: 2,
+      },
+    },
   }
-  // TODO ability
-  // response({
-  //   description:
-  //     'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.',
-  //   type: 'enemyDestroyed',
-  //   condition: 'IsAttacker',
-  //   action: placeProgress(2),
-  // })
 );
 
 export const thalin = hero(

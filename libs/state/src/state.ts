@@ -26,8 +26,9 @@ export type Event =
       damage: number;
     }
   | {
-      type: 'characterDestroyed';
+      type: 'destroyed';
       card: CardId;
+      attackers: CardId[];
     }
   | { type: 'declaredAsDefender'; card: CardId }
   | { type: 'enteredPlay'; card: CardId }
