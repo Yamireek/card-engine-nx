@@ -53,12 +53,15 @@ export function executeCardAction(
       questing: false,
     };
     card.tapped = false;
+
+    const owner = card.owner;
+
     ctx.state.next.unshift({
       card: {
         target: card.id,
         action: {
           move: {
-            to: 'discardPile',
+            to: !owner ? 'discardPile' : { type: 'discardPile', owner },
             side: 'front',
           },
         },

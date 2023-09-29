@@ -20,7 +20,6 @@ export function processReponses(
             title: 'Choose responses for event ' + event.type,
             actions: reponses.map((r) => ({
               title: r.description,
-              cardId: r.cardId,
               action: sequence(
                 {
                   setEvent: event,

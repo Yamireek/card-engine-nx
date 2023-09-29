@@ -6,6 +6,7 @@ import {
   DialogTitle,
   List,
   ListItemButton,
+  Typography,
 } from '@mui/material';
 import { useState } from 'react';
 
@@ -49,16 +50,26 @@ export const ChooseMultiDialog = <T extends unknown>(props: {
                 setSelected(filtered);
               }}
             >
-              <img
-                alt=""
-                src={o.image?.src}
-                style={{
-                  width: o.image?.width,
-                  height: o.image?.height,
-                  position: 'relative',
-                  opacity: selected.includes(o.id) ? 1 : 0.5,
-                }}
-              />
+              {o.image?.src ? (
+                <img
+                  alt=""
+                  src={o.image?.src}
+                  style={{
+                    width: o.image?.width,
+                    height: o.image?.height,
+                    position: 'relative',
+                    opacity: selected.includes(o.id) ? 1 : 0.5,
+                  }}
+                />
+              ) : (
+                <Typography
+                  style={{
+                    opacity: selected.includes(o.id) ? 1 : 0.5,
+                  }}
+                >
+                  {o.title}
+                </Typography>
+              )}
             </ListItemButton>
           ))}
         </List>
