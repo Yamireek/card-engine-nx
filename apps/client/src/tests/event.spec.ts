@@ -172,6 +172,7 @@ it('Stand Together', () => {
 
   const hero = game.getCard('Legolas');
   const enemy = game.getCard("Ungoliant's Spawn");
+  game.do({ beginPhase: 'combat' });
   expect(game.actions.length).toBe(1);
   game.chooseAction(action);
   game.do({

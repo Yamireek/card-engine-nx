@@ -45,12 +45,12 @@ export const bladeMastery = event(
             action: {
               modify: [
                 {
-                  description: "Has +1 [attack] until end of the phase",
+                  description: 'Has +1 [attack] until end of the phase',
                   bonus: { property: 'attack', amount: 1 },
                   until: 'end_of_phase',
                 },
                 {
-                  description: "Has +1 [defense] until end of the phase",
+                  description: 'Has +1 [defense] until end of the phase',
                   bonus: { property: 'defense', amount: 1 },
                   until: 'end_of_phase',
                 },
@@ -233,6 +233,7 @@ export const standTogether = event(
   {
     description:
       'Action: Choose a player. That player may declare any number of his eligible characters as defenders against each enemy attacking him this phase.',
+    phase: 'combat',
     action: {
       player: {
         target: 'controller',

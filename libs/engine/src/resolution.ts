@@ -139,6 +139,10 @@ export function canPlayerExecute(
     }
 
     if (action.modify) {
+      if (action.modify === 'can_declate_multiple_defenders') {
+        return player.zones.engaged.cards.length > 0;
+      }
+
       return true;
     }
 
