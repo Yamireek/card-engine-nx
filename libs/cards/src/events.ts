@@ -45,12 +45,12 @@ export const bladeMastery = event(
             action: {
               modify: [
                 {
-                  description: "Can't attack until end of phase",
+                  description: "Has +1 [attack] until end of the phase",
                   bonus: { property: 'attack', amount: 1 },
                   until: 'end_of_phase',
                 },
                 {
-                  description: "Can't attack until end of phase",
+                  description: "Has +1 [defense] until end of the phase",
                   bonus: { property: 'defense', amount: 1 },
                   until: 'end_of_phase',
                 },

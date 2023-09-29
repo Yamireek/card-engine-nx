@@ -23,7 +23,9 @@ export const LotrCard3d = (props: {
   const { texture } = useTextures();
   const { floatingCards: cards } = useFloatingCards();
 
-  const actions = view.actions.filter((a) => a.card === props.cardId);
+  const actions = view.actions.filter(
+    (a) => a.card === props.cardId && a.enabled === true
+  );
   const card = state.cards[props.cardId];
 
   const textures = {
