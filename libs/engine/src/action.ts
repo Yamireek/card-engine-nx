@@ -362,7 +362,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.setEvent) {
-    ctx.state.event = action.setEvent;
+    if (action.setEvent === 'none') {
+      ctx.state.event = undefined;
+    } else {
+      ctx.state.event = action.setEvent;
+    }
     return;
   }
 

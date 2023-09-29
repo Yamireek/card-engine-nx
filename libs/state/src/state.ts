@@ -19,7 +19,6 @@ import {
 import { PlayerModifier } from './view';
 
 export type Event =
-  | 'none'
   | {
       type: 'receivedDamage';
       card: CardId;
@@ -30,7 +29,7 @@ export type Event =
       card: CardId;
       attackers: CardId[];
     }
-  | { type: 'declaredAsDefender'; card: CardId }
+  | { type: 'declaredAsDefender'; card: CardId; attacker: CardId }
   | { type: 'enteredPlay'; card: CardId }
   | { type: 'revealed'; card: CardId };
 

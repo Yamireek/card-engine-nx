@@ -34,7 +34,7 @@ export function calculateNumberExpr(
   }
 
   if (expr.event) {
-    if (ctx.state.event === 'none' || !ctx.state.event) {
+    if (!ctx.state.event) {
       throw new Error('no active event');
     }
 

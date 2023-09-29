@@ -62,7 +62,7 @@ export type Action =
         card: CardId;
         index: number;
       };
-      setEvent?: Event;
+      setEvent?: Event | 'none';
       resolveAttack?: {
         attackers: CardTarget;
         defender: CardTarget;
@@ -123,6 +123,7 @@ export type CardAction =
   | 'shuffleToDeck'
   | 'destroy'
   | {
+      declareAsDefender?: { attacker: CardId };
       destroy?: { attackers: CardId[] };
       dealDamage?: number | { amount: number; attackers: CardId[] };
       heal?: number | 'all';
@@ -143,6 +144,7 @@ export type CardAction =
       };
       modify?: Modifier | Modifier[];
       setAsVar?: string;
+      responses?: Event;
     };
 
 export type PropertyBonus = {
@@ -263,6 +265,7 @@ export type CardTarget =
       hasAttachment?: CardTarget;
       keyword?: keyof Keywords;
       var?: string;
+      event?: 'attacking';
     };
 
 export type ZoneTarget = {

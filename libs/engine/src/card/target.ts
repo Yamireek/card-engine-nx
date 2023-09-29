@@ -76,7 +76,7 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target === 'event') {
-    if (ctx.state.event && ctx.state.event !== 'none') {
+    if (ctx.state.event) {
       return [ctx.state.event.card];
     } else {
       throw new Error('no event');
@@ -204,6 +204,14 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
     return values(ctx.view.cards)
       .filter((c) => c.props.name === name)
       .map((c) => c.id);
+  }
+
+  if (target.event === 'attacking') {
+    if (ctx.state.event?.type === 'declaredAsDefender') {
+      return [ctx.state.event.attacker];
+    } else {
+      throw new Error('missing event data');
+    }
   }
 
   throw new Error(`unknown card target: ${JSON.stringify(target)}`);

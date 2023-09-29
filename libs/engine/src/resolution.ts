@@ -170,6 +170,10 @@ export function canCardExecute(
 
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
+    if (action.declareAsDefender) {
+      return !card.tapped;
+    }
+
     if (action.payResources) {
       const card = ctx.state.cards[cardId];
       return card.token.resources >= action.payResources;

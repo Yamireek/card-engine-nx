@@ -1,5 +1,6 @@
 import {
   Action,
+  ActionResponse,
   CardTarget,
   CardView,
   Modifier,
@@ -7,12 +8,7 @@ import {
   UserCardAction,
 } from '@card-engine-nx/state';
 import { ViewContext } from '../context';
-import {
-  CardId,
-  Phase,
-  PlayerId,
-  Sphere,
-} from '@card-engine-nx/basic';
+import { CardId, Phase, PlayerId, Sphere } from '@card-engine-nx/basic';
 import { sequence } from '../utils/sequence';
 import { getTargetCards } from './target';
 import { calculateNumberExpr } from '../expr';
@@ -231,6 +227,8 @@ export function applyAbility(
   }
 
   if (ability.response) {
+    const controller = ctx.state.cards[self.id].controller;
+
     if (!self.responses) {
       self.responses = {};
     }
@@ -238,15 +236,75 @@ export function applyAbility(
       self.responses[ability.response.event] = [];
     }
 
-    self.responses[ability.response.event]?.push({
-      description: ability.description,
-      action: ability.response.action,
-    });
+    if (self.props.type === 'event') {
+      if (controller) {
+        const response = createEventResponse(
+          self,
+          ability.response,
+          controller
+        );
+
+        if (response) {
+          self.responses[ability.response.event]?.push({
+            description: ability.description,
+            action: response,
+          });
+        }
+      }
+    } else {
+      self.responses[ability.response.event]?.push({
+        description: ability.description,
+        action: ability.response.action,
+      });
+    }
+
     return;
   }
 
   throw new Error(`unknown ability: ${JSON.stringify(ability)}`);
 }
+
+export function createEventResponse(
+  self: CardView,
+  response: ActionResponse,
+  controller: PlayerId
+) {
+  const sphere = self.props.sphere;
+  const cost = self.props.cost;
+
+  if (sphere === undefined || cost === undefined) {
+    return;
+  }
+
+  const payment: Action = {
+    player: {
+      target: controller,
+      action: { payResources: { amount: cost, sphere } },
+    },
+  };
+
+  const discard: Action = {
+    card: {
+      target: self.id,
+      action: {
+        move: {
+          from: { owner: controller, type: 'hand' },
+          to: { owner: controller, type: 'discardPile' },
+          side: 'front',
+        },
+      },
+    },
+  };
+
+  return sequence(
+    { setCardVar: { name: 'self', value: self.id } },
+    { setPlayerVar: { name: 'controller', value: controller } },
+    sequence({ payment: { cost: payment, effect: response.action } }, discard),
+    { setPlayerVar: { name: 'controller', value: undefined } },
+    { setCardVar: { name: 'self', value: undefined } }
+  );
+}
+
 export function createEventAction(
   self: CardView,
   conditions: PaymentConditions | undefined,

@@ -144,6 +144,20 @@ export function executeCardAction(
     return;
   }
 
+  if (action.declareAsDefender) {
+    card.tapped = true;
+    card.mark.defending = true;
+    processReponses(
+      {
+        type: 'declaredAsDefender',
+        card: card.id,
+        attacker: action.declareAsDefender.attacker,
+      },
+      ctx
+    );
+    return;
+  }
+
   if (action.engagePlayer) {
     ctx.state.next.unshift({
       card: {

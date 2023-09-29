@@ -6,7 +6,7 @@ import {
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
-import { getTargetCards } from '../card';
+import { getTargetCard, getTargetCards } from '../card';
 import { max, sum } from 'lodash/fp';
 import { sequence } from '../utils/sequence';
 import { getTargetPlayers } from './target';
@@ -214,29 +214,35 @@ export function executePlayerAction(
 
   if (action === 'declareDefender') {
     const multiple = !!ctx.view.players[player.id]?.multipleDefenders;
+    const attacker = getTargetCard({ mark: 'attacking' }, ctx);
 
-    ctx.state.next.unshift({
-      player: {
-        target: player.id,
-        action: {
-          chooseCardActions: {
-            title: !multiple ? 'Declare defender' : 'Declare defenders',
-            target: {
-              and: [
-                'character',
-                'ready',
-                { zone: { owner: player.id, type: 'playerArea' } },
-              ],
-            },
-            multi: multiple,
-            optional: true,
-            action: {
-              sequence: ['exhaust', { mark: 'defending' }],
+    if (attacker) {
+      ctx.state.next.unshift({
+        player: {
+          target: player.id,
+          action: {
+            chooseCardActions: {
+              title: !multiple ? 'Declare defender' : 'Declare defenders',
+              target: {
+                and: [
+                  'character',
+                  'ready',
+                  { zone: { owner: player.id, type: 'playerArea' } },
+                ],
+              },
+              multi: multiple,
+              optional: true,
+              action: {
+                declareAsDefender: {
+                  attacker,
+                },
+              },
             },
           },
         },
-      },
-    });
+      });
+    }
+
     return;
   }
 

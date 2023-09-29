@@ -187,3 +187,29 @@ it('Stand Together', () => {
   game.do('endPhase');
   expect(game.view.players[0]?.multipleDefenders).toBeUndefined();
 });
+
+it('Swift Strike', () => {
+  const response =
+    'Response: After a character is declared as a defender, deal 2 damage to the attacking enemy.';
+
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.gimli,
+            resources: 1,
+          },
+        ],
+        hand: [core.event.swiftStrike],
+        engaged: [core.enemy.forestSpider],
+      },
+    ],
+  });
+
+  const enemy = game.getCard('Forest Spider');
+  game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
+  game.chooseOption('1');
+  game.chooseOption(response);
+  expect(enemy.token.damage).toBe(2);
+});
