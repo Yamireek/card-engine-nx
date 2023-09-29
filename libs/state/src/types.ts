@@ -172,10 +172,11 @@ export type PaymentConditions = {
 
 export type NextStage = 'default' | 'random';
 
-export type EventType = 'receivedDamage' | 'characterDestroyed';
+export type EventType = Exclude<Event, 'none'>['type'];
 
 export type ActionResponse = {
   event: EventType;
+  condition?: BoolExpr;
   action: Action;
 };
 
@@ -227,6 +228,7 @@ export type CardBoolExpr =
   | {
       hasTrait?: Trait;
       hasMark?: Mark;
+      isType?: CardType;
     };
 
 export type CardTarget =
@@ -235,6 +237,7 @@ export type CardTarget =
   | 'inAPlay'
   | 'character'
   | 'ready'
+  | 'event'
   | CardId
   | CardId[]
   | {

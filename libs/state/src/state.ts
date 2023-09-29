@@ -22,13 +22,16 @@ export type Event =
   | 'none'
   | {
       type: 'receivedDamage';
-      cardId: CardId;
+      card: CardId;
       damage: number;
     }
   | {
       type: 'characterDestroyed';
-      cardId: CardId;
-    };
+      card: CardId;
+    }
+  | { type: 'declaredAsDefender'; card: CardId }
+  | { type: 'enteredPlay'; card: CardId }
+  | { type: 'revealed'; card: CardId };
 
 export type State = {
   round: number;

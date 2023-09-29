@@ -50,6 +50,10 @@ export class TestEngine {
       (v) => v,
       (i) => i[0]
     );
+
+    if (this.state.choice) {
+      console.log(this.state.choice);
+    }
   }
 
   chooseAction(description: string) {

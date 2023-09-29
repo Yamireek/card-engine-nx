@@ -75,6 +75,14 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       .map((c) => c.id);
   }
 
+  if (target === 'event') {
+    if (ctx.state.event && ctx.state.event !== 'none') {
+      return [ctx.state.event.card];
+    } else {
+      throw new Error('no event');
+    }
+  }
+
   if (target.and) {
     const lists = target.and.map((t) => getTargetCards(t, ctx));
     return uniq(intersection(...lists));

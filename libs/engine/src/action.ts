@@ -135,7 +135,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     const card = getTargetCard({ top: { game: 'encounterDeck' } }, ctx);
 
     if (!card) {
-      // reshuffle encounter deck
+      // TODO reshuffle encounter deck
       return;
     }
 

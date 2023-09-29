@@ -61,15 +61,42 @@ export const thalin = hero(
     hitPoints: 4,
     traits: ['dwarf', 'warrior'],
     sphere: 'tactics',
+  },
+  {
+    description:
+      'While Thalin is committed to a quest, deal 1 damage to each enemy as it is revealed by the encounter deck.',
+    response: {
+      event: 'revealed',
+      condition: {
+        and: [
+          {
+            card: {
+              target: { name: 'Thalin' },
+              value: {
+                hasMark: 'questing',
+              },
+            },
+          },
+          {
+            card: {
+              target: 'event',
+              value: {
+                isType: 'enemy',
+              },
+            },
+          },
+        ],
+      },
+      action: {
+        card: {
+          target: 'event',
+          action: {
+            dealDamage: 1,
+          },
+        },
+      },
+    },
   }
-  // TODO ability
-  // response({
-  //   description:
-  //     'While Thalin is committed to a quest, deal 1 damage to each enemy as it is revealed by the encounter deck.',
-  //   type: 'cardReveladed',
-  //   condition: and(isQuesting('self'), isEnemy('revealed')),
-  //   action: targetCard('self').to(dealDamage(1)),
-  // })
 );
 
 export const gloin = hero(

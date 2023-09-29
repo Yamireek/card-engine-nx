@@ -69,14 +69,13 @@ export function executeCardAction(
     });
 
     if (type === 'hero' || type === 'ally') {
-      processReponses({ type: 'characterDestroyed', cardId: card.id }, ctx);
+      processReponses({ type: 'characterDestroyed', card: card.id }, ctx);
     }
 
     return;
   }
 
   if (action === 'reveal') {
-    const props = ctx.view.cards[card.id].props;
     // TODO when revealed effects
 
     if (card.sideUp === 'back') {
@@ -90,6 +89,10 @@ export function executeCardAction(
       });
       return;
     }
+
+    const props = ctx.view.cards[card.id].props;
+
+    processReponses({ type: 'revealed', card: card.id }, ctx);
 
     ctx.state.next.unshift({
       card: {
@@ -170,7 +173,7 @@ export function executeCardAction(
 
     const event: Event = {
       type: 'receivedDamage',
-      cardId: card.id,
+      card: card.id,
       damage,
     };
 

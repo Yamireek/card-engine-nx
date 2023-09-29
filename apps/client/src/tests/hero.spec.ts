@@ -6,6 +6,7 @@ it('Gimli', () => {
   const game = new TestEngine({
     players: [{ playerArea: [core.hero.gimli] }],
   });
+
   const gimli = game.getCard('Gimli');
   expect(gimli.props.attack).toEqual(2);
   gimli.update({ dealDamage: 1 });
@@ -21,6 +22,7 @@ it('Glorfindel', () => {
   const game = new TestEngine({
     players: [{ playerArea: [core.hero.glorfindel] }],
   });
+
   const glorfindel = game.getCard('Glorfindel');
   expect(game.actions.length).toEqual(0);
   glorfindel.update({ generateResources: 2 });
@@ -42,6 +44,7 @@ it('Gloin', () => {
   const game = new TestEngine({
     players: [{ playerArea: [core.hero.gloin] }],
   });
+
   const gloin = game.getCard('Glóin');
   expect(gloin.token.resources).toEqual(0);
   expect(gloin.responses?.receivedDamage?.length).toEqual(1);
@@ -65,6 +68,7 @@ it('Beravor', () => {
       },
     ],
   });
+
   const player = game.getPlayer('0');
   const beravor = game.getCard('Beravor');
   expect(player.hand.cards.length).toEqual(0);
@@ -93,6 +97,7 @@ it('Éowyn', async () => {
       },
     ],
   });
+  
   const eowyn = game.getCard('Éowyn');
   expect(eowyn.props.willpower).toEqual(4);
   expect(game.actions.length).toEqual(1);
@@ -110,6 +115,23 @@ it('Éowyn', async () => {
   expect(game.actions.length).toEqual(1);
 });
 
+it('Thalin', async () => {
+  const response =
+    'While Thalin is committed to a quest, deal 1 damage to each enemy as it is revealed by the encounter deck.';
+
+  const game = new TestEngine({
+    players: [{ playerArea: [core.hero.thalin] }],
+    encounterDeck: [core.enemy.dolGuldurOrcs],
+  });
+
+  const thalin = game.getCard('Thalin');
+  const enemy = game.getCard('Dol Guldur Orcs');
+  thalin.update({ mark: 'questing' });
+  game.do('revealEncounterCard');
+  game.chooseOption(response);
+  expect(enemy.token.damage).toEqual(1);
+});
+
 // it("Lelogas placing progress", async () => {
 //   const game = new GameEngine({ choices: [0] });
 //   const legolas = game.addHero(hero.legolas);
@@ -117,18 +139,4 @@ it('Éowyn', async () => {
 //   const location = game.addLocation(mountainsOfMirkwood);
 //   await game.execute(destroy(enemy.id, [legolas.id]));
 //   expect(location.get.progress).toEqual(2);
-// });
-
-// it("Thalin damaging enemies", async () => {
-//   const game = new GameEngine({ choices: [0] });
-//   const thalin = game.addHero(hero.thalin);
-//   await game.execute(startPhase("quest"));
-//   game.update((s) => {
-//     if (s.phase.type === "quest") {
-//       s.phase.comitted.push(thalin.id);
-//     }
-//   });
-//   const enemy = game.addEncounterCard(dolGuldurOrcs);
-//   await game.execute(revealEncounterCards(1));
-//   expect(enemy.get.damage).toEqual(1);
 // });
