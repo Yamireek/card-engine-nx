@@ -361,12 +361,49 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     }
   }
 
-  if (action.setEvent) {
-    if (action.setEvent === 'none') {
+  if (action.event) {
+    if (action.event === 'none') {
       ctx.state.event = undefined;
-    } else {
-      ctx.state.event = action.setEvent;
+      return;
     }
+
+    const event = action.event;
+
+    ctx.state.event = action.event;
+
+    const reponses = values(ctx.view.cards).flatMap(
+      (c) =>
+        c.responses?.[event.type]?.map((r) => ({ ...r, cardId: c.id })) ?? []
+    );
+
+    if (reponses.length > 0) {
+      ctx.state.next.unshift(
+        {
+          player: {
+            target: 'first',
+            action: {
+              chooseActions: {
+                title: 'Choose responses for event ' + event.type,
+                actions: reponses.map((r) => ({
+                  title: r.description,
+                  action: sequence(
+                    { setCardVar: { name: 'self', value: r.cardId } },
+                    r.action,
+                    { setCardVar: { name: 'self', value: undefined } }
+                  ),
+                })),
+                optional: true,
+                multi: true,
+              },
+            },
+          },
+        },
+        {
+          event: 'none',
+        }
+      );
+    }
+
     return;
   }
 

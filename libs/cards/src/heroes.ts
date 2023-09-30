@@ -49,7 +49,7 @@ export const legolas = hero(
       condition: {
         event: {
           type: 'destroyed',
-          isAttacker: { name: 'Legolas' },
+          isAttacker: { name: 'self' },
         },
       },
       action: {
@@ -79,7 +79,7 @@ export const thalin = hero(
         and: [
           {
             card: {
-              target: { name: 'Thalin' },
+              target: { name: 'self' },
               value: {
                 hasMark: 'questing',
               },

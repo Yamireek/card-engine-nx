@@ -62,7 +62,7 @@ export type Action =
         card: CardId;
         index: number;
       };
-      setEvent?: Event | 'none';
+      event?: Event | 'none';
       resolveAttack?: {
         attackers: CardTarget;
         defender: CardTarget;

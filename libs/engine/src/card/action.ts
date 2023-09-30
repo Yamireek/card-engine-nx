@@ -1,11 +1,10 @@
-import { CardState, CardAction, Action, Event } from '@card-engine-nx/state';
+import { CardState, CardAction, Action } from '@card-engine-nx/state';
 import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
 import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
 import { calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
-import { processReponses } from './reponses';
 
 export function executeCardAction(
   action: CardAction,
@@ -59,20 +58,21 @@ export function executeCardAction(
 
     const props = ctx.view.cards[card.id].props;
 
-    processReponses({ type: 'revealed', card: card.id }, ctx);
-
-    ctx.state.next.unshift({
-      card: {
-        target: card.id,
-        action: {
-          move: {
-            from: 'encounterDeck',
-            to: props.type === 'treachery' ? 'discardPile' : 'stagingArea',
-            side: 'front',
+    ctx.state.next.unshift(
+      { event: { type: 'revealed', card: card.id } },
+      {
+        card: {
+          target: card.id,
+          action: {
+            move: {
+              from: 'encounterDeck',
+              to: props.type === 'treachery' ? 'discardPile' : 'stagingArea',
+              side: 'front',
+            },
           },
         },
-      },
-    });
+      }
+    );
 
     return;
   }
@@ -120,25 +120,26 @@ export function executeCardAction(
 
     const owner = card.owner;
 
-    ctx.state.next.unshift({
-      card: {
-        target: card.id,
-        action: {
-          move: {
-            to: !owner ? 'discardPile' : { type: 'discardPile', owner },
-            side: 'front',
+    ctx.state.next.unshift(
+      {
+        card: {
+          target: card.id,
+          action: {
+            move: {
+              to: !owner ? 'discardPile' : { type: 'discardPile', owner },
+              side: 'front',
+            },
           },
         },
       },
-    });
-
-    processReponses(
       {
-        type: 'destroyed',
-        card: card.id,
-        attackers: action === 'destroy' ? [] : action.destroy?.attackers ?? [],
-      },
-      ctx
+        event: {
+          type: 'destroyed',
+          card: card.id,
+          attackers:
+            action === 'destroy' ? [] : action.destroy?.attackers ?? [],
+        },
+      }
     );
 
     return;
@@ -147,14 +148,13 @@ export function executeCardAction(
   if (action.declareAsDefender) {
     card.tapped = true;
     card.mark.defending = true;
-    processReponses(
-      {
+    ctx.state.next.unshift({
+      event: {
         type: 'declaredAsDefender',
         card: card.id,
         attacker: action.declareAsDefender.attacker,
       },
-      ctx
-    );
+    });
     return;
   }
 
@@ -194,14 +194,6 @@ export function executeCardAction(
 
     card.token.damage += amount;
 
-    const event: Event = {
-      type: 'receivedDamage',
-      card: card.id,
-      damage: amount,
-    };
-
-    processReponses(event, ctx);
-
     const hitpoints = ctx.view.cards[card.id].props.hitPoints;
 
     if (hitpoints && card.token.damage >= hitpoints) {
@@ -215,6 +207,14 @@ export function executeCardAction(
         ctx
       );
     }
+
+    ctx.state.next.unshift({
+      event: {
+        type: 'receivedDamage',
+        card: card.id,
+        damage: amount,
+      },
+    });
 
     return;
   }
