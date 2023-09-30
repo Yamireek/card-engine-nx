@@ -371,10 +371,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     ctx.state.event = action.event;
 
-    const reponses = values(ctx.view.cards).flatMap(
-      (c) =>
-        c.responses?.[event.type]?.map((r) => ({ ...r, cardId: c.id })) ?? []
-    );
+    const reponses = ctx.view.responses[event.type] ?? [];
 
     if (reponses.length > 0) {
       ctx.state.next.unshift(
@@ -387,7 +384,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
                 actions: reponses.map((r) => ({
                   title: r.description,
                   action: sequence(
-                    { setCardVar: { name: 'self', value: r.cardId } },
+                    { setCardVar: { name: 'self', value: r.card } },
                     r.action,
                     { setCardVar: { name: 'self', value: undefined } }
                   ),

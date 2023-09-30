@@ -21,6 +21,7 @@ export function createView(state: State): View {
     ),
     actions: [],
     modifiers: [],
+    responses: {},
   };
 
   view.modifiers = values(state.cards).flatMap((c) => {

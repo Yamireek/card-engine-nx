@@ -229,11 +229,8 @@ export function applyAbility(
   if (ability.response) {
     const controller = ctx.state.cards[self.id].controller;
 
-    if (!self.responses) {
-      self.responses = {};
-    }
-    if (!self.responses[ability.response.event]) {
-      self.responses[ability.response.event] = [];
+    if (!ctx.view.responses[ability.response.event]) {
+      ctx.view.responses[ability.response.event] = [];
     }
 
     if (self.props.type === 'event') {
@@ -245,14 +242,16 @@ export function applyAbility(
         );
 
         if (response) {
-          self.responses[ability.response.event]?.push({
+          ctx.view.responses[ability.response.event]?.push({
+            card: self.id,
             description: ability.description,
             action: response,
           });
         }
       }
     } else {
-      self.responses[ability.response.event]?.push({
+      ctx.view.responses[ability.response.event]?.push({
+        card: self.id,
         description: ability.description,
         action: ability.response.action,
       });

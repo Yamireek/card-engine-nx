@@ -150,11 +150,6 @@ export class CardProxy {
     return this._state.cards[this.id].token;
   }
 
-  get responses() {
-    const view = createView(this._state);
-    return view.cards[this.id].responses;
-  }
-
   get state() {
     return this._state.cards[this.id];
   }

@@ -14,6 +14,12 @@ export type View = {
   players: Partial<Record<PlayerId, PlayerView>>;
   actions: UserCardAction[];
   modifiers: GameModifierState[];
+  responses: Partial<
+    Record<
+      EventType,
+      Array<{ card: CardId; description: string; action: Action }>
+    >
+  >;
 };
 
 export type GameModifierState = {
@@ -42,9 +48,6 @@ export type CardView = {
   setup?: Action[];
   attachesTo?: CardTarget;
   nextStage?: NextStage;
-  responses?: Partial<
-    Record<EventType, Array<{ description: string; action: Action }>>
-  >;
   disabled?: Partial<Record<Mark, boolean>>;
   abilities: string[];
 };

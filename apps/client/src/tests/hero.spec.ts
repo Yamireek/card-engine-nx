@@ -47,7 +47,7 @@ it('Gloin', () => {
 
   const gloin = game.getCard('Glóin');
   expect(gloin.token.resources).toEqual(0);
-  expect(gloin.responses?.receivedDamage?.length).toEqual(1);
+  expect(game.view.responses.receivedDamage).toHaveLength(1);
   gloin.update({ dealDamage: 2 });
   expect(game.state.choice?.title).toBe(
     'Choose responses for event receivedDamage'
