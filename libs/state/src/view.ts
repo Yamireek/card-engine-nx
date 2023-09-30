@@ -12,6 +12,7 @@ import { GameModifier } from './state';
 export type View = {
   cards: Record<CardId, CardView>;
   players: Partial<Record<PlayerId, PlayerView>>;
+  setup: Action[];
   actions: UserCardAction[];
   modifiers: GameModifierState[];
   responses: Partial<
@@ -45,7 +46,6 @@ export type CardView = {
   printed: PrintedProps;
   props: PrintedProps;
   zone: PlayerZoneType | GameZoneType;
-  setup?: Action[];
   attachesTo?: CardTarget;
   nextStage?: NextStage;
   disabled?: Partial<Record<Mark, boolean>>;

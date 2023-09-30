@@ -27,7 +27,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'executeSetupActions') {
-    const actions = values(ctx.view.cards).flatMap((c) => c.setup ?? []);
+    const actions = ctx.view.setup;
     if (actions.length > 0) {
       ctx.state.next = [...actions, ...ctx.state.next];
     }

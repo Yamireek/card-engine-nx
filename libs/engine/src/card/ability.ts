@@ -199,10 +199,7 @@ export function applyAbility(
   }
 
   if (ability.setup) {
-    if (!self.setup) {
-      self.setup = [];
-    }
-    self.setup.push(ability.setup);
+    ctx.view.setup.push(ability.setup);
     return;
   }
 

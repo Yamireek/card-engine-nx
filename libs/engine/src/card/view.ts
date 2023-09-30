@@ -6,8 +6,7 @@ export function createCardView(state: CardState): CardView {
   return {
     id: state.id,
     printed,
-    props: cloneDeep(printed),
-    setup: [],
+    props: cloneDeep(printed),    
     zone: state.zone,
     abilities: [],
   };
