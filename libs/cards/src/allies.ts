@@ -26,17 +26,24 @@ export const gondorianSpearman = ally(
     keywords: {
       sentinel: true,
     },
+  },
+  {
+    description:
+      'Response: After Gondorian Spearman is declared as a defender, deal 1 damage to the attacking enemy.',
+    response: {
+      event: 'declaredAsDefender',
+      action: {
+        card: {
+          target: {
+            event: 'attacking',
+          },
+          action: {
+            dealDamage: 1,
+          },
+        },
+      },
+    },
   }
-  // TODO ability
-  // response((s) => s.declaredDefender, {
-  //   description:
-  //     "Response: After Gondorian Spearman is declared as a defender, deal 1 damage to the attacking enemy.",
-  //   condition: (event, self) => event.defender === self,
-  //   action: (event, self) =>
-  //     dealDamage({ damage: value(1), attackers: value([self]) }).card(
-  //       event.attacker
-  //     ),
-  // })
 );
 
 export const beorn = ally(

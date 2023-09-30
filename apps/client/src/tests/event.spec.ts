@@ -162,7 +162,7 @@ it('Stand Together', () => {
             card: core.hero.legolas,
             resources: 1,
           },
-          core.ally.gondorianSpearman,
+          core.ally.veteranAxehand,
         ],
         hand: [core.event.standTogether],
         engaged: [core.enemy.ungoliantsSpawn],

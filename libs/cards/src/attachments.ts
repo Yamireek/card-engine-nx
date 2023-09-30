@@ -101,15 +101,23 @@ export const bladeOfGondolin = attachment(
         },
       },
     },
+  },
+  {
+    description:
+      'Response: After attached hero attacks and destroys an enemy, place 1 progress token on the current quest.',
+    response: {
+      event: 'destroyed',
+      condition: {
+        event: {
+          type: 'destroyed',
+          isAttacker: { hasAttachment: 'self' },
+        },
+      },
+      action: {
+        placeProgress: 1,
+      },
+    },
   }
-  // TODO ability
-  // response({
-  //   description:
-  //     "Response: After attached hero attacks and destroys an enemy, place 1 progress token on the current quest.",
-  //   event: destroyed(),
-  //   condition: (e, v) => e.attackers.includes(attached(self).eval(v)),
-  //   action: () => placeProgress(1),
-  // })
 );
 
 export const hornOfGondor = attachment(

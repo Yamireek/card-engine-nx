@@ -56,7 +56,7 @@ it('Dwarwen axe - elf', () => {
   expect(legolas.props.attack).toEqual(4);
 });
 
-it('Blade of Gondolin', () => {
+it('Blade of Gondolin - bonus', () => {
   const game = new TestEngine({
     players: [
       {
@@ -79,6 +79,43 @@ it('Blade of Gondolin', () => {
   orc.update({ mark: 'defending' });
   bats.update({ mark: 'defending' });
   expect(legolas.props.attack).toEqual(4);
+});
+
+it('Blade of Gondolin - response', async () => {
+  const response =
+    'Response: After attached hero attacks and destroys an enemy, place 1 progress token on the current quest.';
+
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.gimli,
+            attachments: [core.attachment.bladeOfGondolin],
+          },
+        ],
+        engaged: [core.enemy.dolGuldurOrcs],
+      },
+    ],
+    activeLocation: [core.location.mountainsOfMirkwood],
+  });
+
+  const hero = game.getCard('Gimli');
+  const location = game.getCard('Mountains of Mirkwood');
+  const enemy = game.getCard('Dol Guldur Orcs');
+  game.do({
+    card: {
+      target: enemy.id,
+      action: {
+        dealDamage: {
+          amount: 5,
+          attackers: [hero.id],
+        },
+      },
+    },
+  });
+  game.chooseOption(response);
+  expect(location.token.progress).toEqual(1);
 });
 
 it('Horn of Gondor', () => {

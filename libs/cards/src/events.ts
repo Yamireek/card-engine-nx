@@ -277,13 +277,6 @@ export const swiftStrike = event(
       },
     },
   }
-  // TODO ability
-  // response({
-  //   description: "Response: After a character is declared as a defender, deal 2 damage to the attacking enemy.",
-  //   event: declaredAsDefender,
-  //   condition: (e, view) => isCharacter(e.defender).eval(view),
-  //   action: (e) => dealDamage(2)(e.attacker),
-  // })
 );
 
 export const thicketOfSpears = event(
