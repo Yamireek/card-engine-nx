@@ -1,5 +1,10 @@
-import { BoolExpr, CardBoolExpr, NumberExpr } from '@card-engine-nx/state';
-import { getTargetCards } from './card/target';
+import {
+  BoolExpr,
+  CardBoolExpr,
+  NumberExpr,
+  event,
+} from '@card-engine-nx/state';
+import { getTargetCard, getTargetCards } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
 import { ViewContext } from './context';
@@ -69,6 +74,8 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
     return expr;
   }
 
+  debugger;
+
   if (expr === 'enemiesToEngage') {
     // TODO use exprs
     const playerThreats = values(ctx.state.players).map((p) => p.thread);
@@ -118,6 +125,17 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
     return expr.and.every((e) => calculateBoolExpr(e, ctx));
   }
 
+  if (expr.event) {
+    if (expr.event.type === ctx.state.event?.type) {
+      if (expr.event.type === 'destroyed') {
+        const target = getTargetCards(expr.event.isAttacker, ctx);
+        return ctx.state.event.attackers.some((a) => target.includes(a));
+      }
+    }
+
+    throw new Error('incorrect event type');
+  }
+
   throw new Error(`unknown bool expression: ${JSON.stringify(expr)}`);
 }
 
@@ -138,6 +156,21 @@ export function calculateCardBoolExpr(
   if (expr.hasMark) {
     const mark = ctx.state.cards[cardId].mark;
     return mark[expr.hasMark];
+  }
+
+  if (expr.is) {
+    const target = getTargetCard(expr.is, ctx);
+    return target === cardId;
+  }
+
+  if (expr.isType) {
+    const type = ctx.view.cards[cardId].props.type;
+
+    if (expr.isType === 'character' && (type === 'ally' || type === 'hero')) {
+      return true;
+    } else {
+      return expr.isType === type;
+    }
   }
 
   throw new Error(`unknown card bool expression: ${JSON.stringify(expr)}`);

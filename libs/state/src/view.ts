@@ -6,7 +6,14 @@ import {
   PlayerZoneType,
   PrintedProps,
 } from '@card-engine-nx/basic';
-import { Modifier, Action, CardTarget, NextStage, EventType } from './types';
+import {
+  Modifier,
+  Action,
+  CardTarget,
+  NextStage,
+  EventType,
+  BoolExpr,
+} from './types';
 import { GameModifier } from './state';
 
 export type View = {
@@ -21,6 +28,7 @@ export type View = {
       Array<{
         card: CardId;
         description: string;
+        condition?: BoolExpr;
         action: Action;
         forced: boolean;
       }>

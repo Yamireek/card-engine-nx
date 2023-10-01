@@ -373,9 +373,27 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     const reponses = ctx.view.responses[event.type] ?? [];
 
-    const forced = reponses.filter((r) => r.forced);
+    const forced = reponses
+      .filter((r) => r.forced)
+      .filter(
+        (r) =>
+          !r.condition ||
+          calculateBoolExpr(r.condition, {
+            ...ctx,
+            card: { ...ctx.card, self: r.card },
+          })
+      );
 
-    const optional = reponses.filter((r) => !r.forced);
+    const optional = reponses
+      .filter((r) => !r.forced)
+      .filter(
+        (r) =>
+          !r.condition ||
+          calculateBoolExpr(r.condition, {
+            ...ctx,
+            card: { ...ctx.card, self: r.card },
+          })
+      );
 
     if (optional.length > 0) {
       ctx.state.next.unshift(

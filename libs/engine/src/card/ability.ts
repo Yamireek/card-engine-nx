@@ -232,6 +232,7 @@ export function applyAbility(
       card: self.id,
       description: ability.description,
       action: ability.forced.action,
+      condition: ability.forced.condition,
       forced: true,
     });
     return;
@@ -257,6 +258,7 @@ export function applyAbility(
             card: self.id,
             description: ability.description,
             action: response,
+            condition: ability.response.condition,
             forced: false,
           });
         }
@@ -266,6 +268,7 @@ export function applyAbility(
         card: self.id,
         description: ability.description,
         action: ability.response.action,
+        condition: ability.response.condition,
         forced: false,
       });
     }
