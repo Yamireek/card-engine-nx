@@ -5,7 +5,7 @@ import { LotrDeck3d } from './LotrDeck3d';
 import { LotrCardArea } from './LotrCardArea';
 
 const positions: Record<number, Vector3> = {
-  '1': [0, 0, 0],
+  '1': [0, 0.25, 0],
   '2': [0, 0, 0],
   '3': [0, 0, 0],
   '4': [0, 0, 0],
@@ -18,14 +18,14 @@ export const GameAreas = (props: { playerCount: number }) => {
 
   return (
     <group position={positions[playerCount]}>
-      <LotrDeck3d zone="encounterDeck" position={[0.35, 0.4, 0]} />
-      <LotrDeck3d zone="discardPile" position={[0.45, 0.4, 0]} />
+      <LotrDeck3d zone="encounterDeck" position={[0.39, -0.05, 0]} />
+      <LotrDeck3d zone="discardPile" position={[0.46, -0.05, 0]} />
 
       <LotrCardArea
         layout={{
           color: 'gold',
-          position: [0.2, 0.45],
-          size: { width: 0.2, height: 0.1 },
+          position: [0.2, -0.05],
+          size: { width: 0.1, height: 0.1 },
         }}
         cards={state.zones.questArea.cards}
         orientation="landscape"
@@ -33,20 +33,20 @@ export const GameAreas = (props: { playerCount: number }) => {
 
       <LotrCardArea
         layout={{
-          color: 'purple',
-          position: [-0.2, 0.4],
-          size: { width: 0.6, height: 0.2 },
+          color: 'green',
+          position: [0.3, -0.05],
+          size: { width: 0.1, height: 0.1 },
         }}
-        cards={state.zones.stagingArea.cards}
+        cards={state.zones.activeLocation.cards}
       />
 
       <LotrCardArea
         layout={{
-          color: 'green',
-          position: [0.2, 0.35],
-          size: { width: 0.2, height: 0.1 },
+          color: 'purple',
+          position: [-0.175, -0.05],
+          size: { width: 0.65, height: 0.1 },
         }}
-        cards={state.zones.activeLocation.cards}
+        cards={state.zones.stagingArea.cards}
       />
     </group>
   );

@@ -25,8 +25,8 @@ export const LotrCardArea = (props: {
   const maxAttachments = max(items.map((i) => i.attachments.length)) ?? 0;
 
   const itemSize = {
-    width: cardSize.width * 1.2,
-    height: cardSize.height * (1.2 + maxAttachments * 0.2),
+    width: cardSize.width * 1.1,
+    height: cardSize.height * (1.1 + maxAttachments * 0.2),
   };
 
   return (
@@ -42,8 +42,8 @@ export const LotrCardArea = (props: {
         const offsetMax = (fullHeight - cardHeight) / 2;
         const diff = (offsetMax - offsetMin) / p.item.attachments.length;
         const realItemSize = {
-          width: p.size.width / 1.2,
-          height: p.size.height / 1.2,
+          width: p.size.width / 1.1,
+          height: p.size.height / 1.1,
         };
 
         return (
