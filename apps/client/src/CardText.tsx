@@ -90,7 +90,7 @@ export const CardText = (props: {
         )}
         <tr>
           <td colSpan={2}>
-            <div
+            <span
               style={{
                 textAlign: 'center',
                 fontStyle: 'italic',
@@ -102,12 +102,16 @@ export const CardText = (props: {
                   return capitalizeFirst(t) + '.';
                 })
                 .join(' ')}
-            </div>
+            </span>
           </td>
         </tr>
-        {Object.keys(props.keywords).map((k) => (
-          <React.Fragment key={k}>{capitalizeFirst(k)}.</React.Fragment>
-        ))}
+        <tr>
+          <td>
+            {Object.keys(props.keywords).map((k) => (
+              <span key={k}>{capitalizeFirst(k)}.</span>
+            ))}
+          </td>
+        </tr>
         {props.abilities.map((a, i) => (
           <tr key={i}>
             <td colSpan={2}>{a}</td>
