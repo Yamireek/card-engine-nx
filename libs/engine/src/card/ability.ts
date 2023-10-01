@@ -298,6 +298,30 @@ export function applyAbility(
     return;
   }
 
+  if (ability.whenRevealed) {
+    self.whenRevealed.push(ability.whenRevealed);
+    return;
+  }
+
+  if (ability.conditional) {
+    if (ability.conditional.advance !== undefined) {
+      self.conditional.advance.push(ability.conditional.advance);
+      return;
+    }
+    if (ability.conditional.travel !== undefined) {
+      self.conditional.travel.push(ability.conditional.travel);
+      return;
+    }
+  }
+
+  if (ability.and) {
+    for (const item of ability.and) {
+      applyAbility({ ...item, description: ability.description }, self, ctx);
+    }
+
+    return;
+  }
+
   throw new Error(`unknown ability: ${JSON.stringify(ability)}`);
 }
 

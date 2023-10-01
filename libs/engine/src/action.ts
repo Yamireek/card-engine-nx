@@ -149,6 +149,14 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if (action === 'win') {
+    ctx.state.result = {
+      win: true,
+      score: 50, // TODO count
+    };
+    return;
+  }
+
   if (action.player) {
     const ids = getTargetPlayers(action.player.target, ctx);
     for (const id of ids) {

@@ -3,7 +3,7 @@ import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
 import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
-import { calculateNumberExpr } from '../expr';
+import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
 import { GameZoneType, PlayerZoneType, ZoneId } from '@card-engine-nx/basic';
 import { getTargetCards } from './target';
@@ -382,13 +382,18 @@ export function executeCardAction(
 
   if (action.placeProgress) {
     card.token.progress += action.placeProgress;
-    const props = ctx.view.cards[card.id].props;
-    if (props.type === 'quest') {
-      const qp = props.questPoints;
+    const cw = ctx.view.cards[card.id];
+    if (cw.props.type === 'quest') {
+      const qp = cw.props.questPoints;
       if (qp && card.token.progress >= qp) {
-        ctx.state.next.unshift({
-          card: { target: card.id, action: 'advance' },
-        });
+        const canAdvance =
+          cw.conditional.advance.length > 0
+            ? calculateBoolExpr({ and: cw.conditional.advance }, ctx)
+            : true;
+
+        if (canAdvance) {
+          executeCardAction('advance', card, ctx);
+        }
       }
     }
 

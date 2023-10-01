@@ -135,6 +135,10 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
     throw new Error('incorrect event type');
   }
 
+  if (expr.not) {
+    return !calculateBoolExpr(expr.not, ctx);
+  }
+
   throw new Error(`unknown bool expression: ${JSON.stringify(expr)}`);
 }
 
@@ -175,6 +179,10 @@ export function calculateCardBoolExpr(
     } else {
       return expr.isType === type;
     }
+  }
+
+  if (expr.name) {
+    return ctx.view.cards[cardId].props.name === expr.name;
   }
 
   throw new Error(`unknown card bool expression: ${JSON.stringify(expr)}`);

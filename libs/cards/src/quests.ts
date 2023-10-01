@@ -73,6 +73,61 @@ export const achosenPath1 = quest({
   b: {
     name: "Don't Leave the Path!",
     questPoints: 0,
+    abilities: [
+      {
+        description:
+          'When Revealed: Each player must search the encounter deck and discard pile for 1 Spider card of his choice, and add it to the staging area.',
+        whenRevealed: {
+          player: {
+            target: 'each',
+            action: {
+              chooseCardActions: {
+                title: 'Choose 1 Spider',
+                target: {
+                  and: [
+                    { zoneType: ['encounterDeck', 'discardPile'] },
+                    { trait: 'spider' },
+                  ],
+                },
+                action: {
+                  move: {
+                    to: 'stagingArea',
+                    side: 'front',
+                  },
+                },
+                multi: false,
+                optional: false,
+              },
+            },
+          },
+        },
+      },
+      {
+        description:
+          "The players must find and defeat Ungoliant's Spawn to win this game.",
+        and: [
+          {
+            conditional: {
+              advance: false,
+            },
+          },
+          {
+            forced: {
+              event: 'destroyed',
+              condition: {
+                card: {
+                  target: 'event',
+                  value: {
+                    name: "Ungoliant's Spawn",
+                  },
+                },
+              },
+              action: 'win',
+            },
+          },
+        ],
+      },
+    ],
   },
 });
 
@@ -84,5 +139,20 @@ export const achosenPath2 = quest({
   b: {
     name: "Beorn's Path",
     questPoints: 10,
+    abilities: [
+      {
+        description:
+          "Players cannot defeat this stage while Ungoliant's Spawn is in play. If players defeat this stage, they have won the game.",
+        conditional: {
+          advance: {
+            not: {
+              someCard: {
+                and: ['inAPlay', { name: "Ungoliant's Spawn" }],
+              },
+            },
+          },
+        },
+      },
+    ],
   },
 });

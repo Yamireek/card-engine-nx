@@ -18,6 +18,7 @@ import { uiEvent } from './eventFactories';
 import { UIEvents } from './uiEvents';
 import { createView } from './view';
 import { getTargetCards } from './card';
+import { calculateBoolExpr } from './expr';
 
 export function addPlayerCard(
   state: State,
@@ -141,9 +142,12 @@ export function advanceToChoiceState(
 
       const exploredLocations = values(state.cards)
         .filter((c) => {
-          const qp = view.cards[c.id].props.questPoints;
+          const props = view.cards[c.id].props;
+          const qp = props.questPoints;
           const progress = c.token.progress;
-          return qp !== undefined && progress >= qp;
+          return (
+            qp !== undefined && progress >= qp && props.type === 'location'
+          );
         })
         .map((c) => c.id);
 
@@ -164,12 +168,23 @@ export function advanceToChoiceState(
       });
 
       if (exploredQuest.length === 1) {
-        state.next.unshift({
-          card: {
-            target: exploredQuest,
-            action: 'advance',
-          },
-        });
+        const conditions = view.cards[exploredQuest[0]].conditional.advance;
+        const canAdvance =
+          conditions.length > 0
+            ? calculateBoolExpr(
+                { and: conditions },
+                { state, view, card: {}, player: {} }
+              )
+            : true;
+
+        if (canAdvance) {
+          state.next.unshift({
+            card: {
+              target: exploredQuest,
+              action: 'advance',
+            },
+          });
+        }
       }
 
       const eliminated = values(state.players)

@@ -34,6 +34,7 @@ export type Action =
   | 'chooseTravelDestination'
   | 'dealShadowCards'
   | 'revealEncounterCard'
+  | 'win'
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
       card?: { action: CardAction; target: CardTarget };
@@ -179,6 +180,12 @@ export type Modifier = {
   disable?: Mark;
   until?: Until;
   nextStage?: 'random';
+  whenRevealed?: Action;
+  conditional?: {
+    advance?: BoolExpr;
+    travel?: BoolExpr;
+  };
+  and?: Array<Omit<Modifier, 'description'>>;
 };
 
 export type PaymentConditions = {
@@ -223,6 +230,7 @@ export type BoolExpr =
   | {
       event?: EventBool;
       and?: BoolExpr[];
+      not?: BoolExpr;
       phase?: Phase;
       someCard?: CardTarget;
       card?: {
@@ -249,6 +257,7 @@ export type CardBoolExpr =
       hasMark?: Mark;
       isType?: CardType | 'character';
       is?: CardTarget;
+      name?: string;
     };
 
 export type CardTarget =
@@ -274,7 +283,10 @@ export type CardTarget =
       enabled?: Mark;
       trait?: Trait;
       zone?: ZoneId;
-      zoneType?: PlayerZoneType | GameZoneType;
+      zoneType?:
+        | PlayerZoneType
+        | GameZoneType
+        | Array<PlayerZoneType | GameZoneType>;
       sequence?: NumberExpr;
       hasAttachment?: CardTarget;
       keyword?: keyof Keywords;

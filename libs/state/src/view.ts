@@ -63,6 +63,11 @@ export type CardView = {
   nextStage?: NextStage;
   disabled?: Partial<Record<Mark, boolean>>;
   abilities: string[];
+  whenRevealed: Action[];
+  conditional: {
+    advance: BoolExpr[];
+    travel: BoolExpr[];
+  };
 };
 
 export type PlayerView = {
