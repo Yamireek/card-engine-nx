@@ -99,6 +99,10 @@ export function canPlayerExecute(
   }
 
   if (typeof action === 'string') {
+    if (action === 'resolvePlayerAttacks') {
+      return true;
+    }
+
     throw new Error(
       `not implemented: canPlayerExecute ${JSON.stringify(action)}`
     );
@@ -259,7 +263,11 @@ export function canCardExecute(
     if (action.generateResources) {
       return true;
     }
+
+    if (action.resolvePlayerAttacking) {
+      return true;
+    }
   }
 
-  throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
+  throw new Error(`not implemented: canCardExecute ${JSON.stringify(action)}`);
 }

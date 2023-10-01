@@ -76,9 +76,8 @@ export const ChooseDistributionDialog = <T extends unknown>(props: {
             const maxLimit = o.max ? amount >= o.max : undefined;
 
             return (
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div key={i} style={{ display: 'flex', flexDirection: 'column' }}>
                 <ListItemButton
-                  key={i}
                   style={{ flex: '0 0 auto' }}
                   onClick={(e) => {
                     if (!(maxLimit || maxTotalLimit)) {
