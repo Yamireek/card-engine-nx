@@ -1,4 +1,5 @@
 import {
+  Action,
   PlayerDeck,
   Scenario,
   State,
@@ -10,7 +11,7 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 import { UIEvents } from './uiEvents';
 import { addPlayerCard, advanceToChoiceState } from './utils';
 import { createView } from './view';
-import { beginScenario } from './action';
+import { beginScenario, executeAction } from './action';
 import { ActivePlayers } from 'boardgame.io/core';
 import { PlayerId, validPlayerId } from '@card-engine-nx/basic';
 import { sum } from 'lodash/fp';
@@ -61,6 +62,26 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
       random.Shuffle,
       getRandomItem(random.Number)
     );
+  };
+
+  const json: Move<State> = ({ G, random }, action: Action) => {
+    const choice = G.choice;
+    const next = G.next;
+
+    G.choice = undefined;
+    G.next = [action];
+
+    advanceToChoiceState(
+      G,
+      events,
+      false,
+      false,
+      random.Shuffle,
+      getRandomItem(random.Number)
+    );
+
+    G.choice = choice;
+    G.next = next;
   };
 
   const split: Move<State> = ({ G, random }, ...amounts: number[]) => {
@@ -145,7 +166,16 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     }
   };
 
-  return { skip, choose, split, action, selectDeck, selectScenario, load };
+  return {
+    skip,
+    choose,
+    split,
+    action,
+    selectDeck,
+    selectScenario,
+    load,
+    json,
+  };
 }
 
 export function LotrLCGame(events: UIEvents): Game<State> {

@@ -1,4 +1,10 @@
-import { PlayerDeck, Scenario, State, View } from '@card-engine-nx/state';
+import {
+  Action,
+  PlayerDeck,
+  Scenario,
+  State,
+  View,
+} from '@card-engine-nx/state';
 import { PlayerId } from '@card-engine-nx/basic';
 import { createContext, useContext } from 'react';
 
@@ -10,6 +16,7 @@ export type Moves = {
   selectScenario: (scenario: Scenario) => void;
   selectDeck: (deck: PlayerDeck) => void;
   load: (state: State) => void;
+  json: (action: Action) => void;
 };
 
 export const StateContext = createContext<{

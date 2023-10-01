@@ -4,7 +4,7 @@ import {
   getCardImageUrls,
   image,
 } from '@card-engine-nx/ui';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { StateContext } from './StateContext';
 import { UiEvent, UIEvents } from '@card-engine-nx/engine';
 import { values } from '@card-engine-nx/basic';
@@ -17,10 +17,20 @@ import { GameSceneLoader } from './GameScene';
 import { PlayerAreas } from './PlayerAreas';
 import { GameAreas } from './GameAreas';
 import { CardDetail } from './CardDetail';
-import { Icon, IconButton, Paper, Stack } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Icon,
+  IconButton,
+  Paper,
+  Stack,
+} from '@mui/material';
 import { sum } from 'lodash/fp';
 import { GameDialogs } from './GameDialogs';
 import { FloatingCardsProvider } from './FloatingCardsContext';
+import Editor from '@monaco-editor/react';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -51,6 +61,59 @@ function createRxUiEvents(): UIEvents {
 export const rxEvents = createRxUiEvents();
 
 const playerIds = ['0', '1', '2', '3'] as const;
+
+export const ActionEditorButton = () => {
+  const { moves } = useContext(StateContext);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(
+    JSON.stringify(
+      {
+        placeProgress: 10,
+      },
+      null,
+      1
+    )
+  );
+
+  return (
+    <>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogContent>
+          <Editor
+            height="30vh"
+            language="JSON"
+            value={value}
+            onChange={(v) => setValue(v ?? '')}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>close</Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+              moves.json(JSON.parse(value));
+            }}
+          >
+            Execute
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <IconButton
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        <Icon>code</Icon>
+      </IconButton>
+    </>
+  );
+};
 
 export const LotrLCGInfo = () => {
   const { state, view, playerId, moves } = useContext(StateContext);
@@ -134,7 +197,8 @@ export const LotrLCGInfo = () => {
             }}
           >
             <Icon>bug_report</Icon>
-          </IconButton>
+          </IconButton>{' '}
+          <ActionEditorButton />
         </Stack>
       </Paper>
     </div>
