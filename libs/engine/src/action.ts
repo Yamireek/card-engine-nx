@@ -45,7 +45,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         }
       }
     }
-    ctx.state.next.unshift(gameRound());
+    ctx.state.next.unshift({ event: { type: 'end_of_round' } }, gameRound());
     return;
   }
 
@@ -373,7 +373,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     const reponses = ctx.view.responses[event.type] ?? [];
 
-    if (reponses.length > 0) {
+    const forced = reponses.filter((r) => r.forced);
+
+    const optional = reponses.filter((r) => !r.forced);
+
+    if (optional.length > 0) {
       ctx.state.next.unshift(
         {
           player: {
@@ -398,6 +402,16 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         {
           event: 'none',
         }
+      );
+    }
+
+    if (forced.length > 0) {
+      ctx.state.next.unshift(
+        ...forced.map((r) =>
+          sequence({ setCardVar: { name: 'self', value: r.card } }, r.action, {
+            setCardVar: { name: 'self', value: undefined },
+          })
+        )
       );
     }
 

@@ -122,6 +122,7 @@ export type CardAction =
   | 'reveal'
   | 'shuffleToDeck'
   | 'destroy'
+  | 'discard'
   | {
       declareAsDefender?: { attacker: CardId };
       destroy?: { attackers: CardId[] };
@@ -160,7 +161,8 @@ export type Modifier = {
   setup?: Action;
   attachesTo?: CardTarget;
   limit?: 'once_per_round';
-  response?: ActionResponse;
+  response?: ResponseAction;
+  forced?: ResponseAction;
   payment?: PaymentConditions;
   bonus?: PropertyBonus;
   target?: CardTarget;
@@ -177,7 +179,7 @@ export type NextStage = 'default' | 'random';
 
 export type EventType = Exclude<Event, 'none'>['type'];
 
-export type ActionResponse = {
+export type ResponseAction = {
   event: EventType;
   condition?: BoolExpr;
   action: Action;
@@ -235,6 +237,7 @@ export type CardBoolExpr =
       hasTrait?: Trait;
       hasMark?: Mark;
       isType?: CardType | 'character';
+      is?: CardTarget;
     };
 
 export type CardTarget =

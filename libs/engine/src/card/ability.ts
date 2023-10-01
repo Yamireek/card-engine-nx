@@ -1,6 +1,6 @@
 import {
   Action,
-  ActionResponse,
+  ResponseAction,
   CardTarget,
   CardView,
   Modifier,
@@ -223,6 +223,20 @@ export function applyAbility(
     return;
   }
 
+  if (ability.forced) {
+    if (!ctx.view.responses[ability.forced.event]) {
+      ctx.view.responses[ability.forced.event] = [];
+    }
+
+    ctx.view.responses[ability.forced.event]?.push({
+      card: self.id,
+      description: ability.description,
+      action: ability.forced.action,
+      forced: true,
+    });
+    return;
+  }
+
   if (ability.response) {
     const controller = ctx.state.cards[self.id].controller;
 
@@ -243,6 +257,7 @@ export function applyAbility(
             card: self.id,
             description: ability.description,
             action: response,
+            forced: false,
           });
         }
       }
@@ -251,6 +266,7 @@ export function applyAbility(
         card: self.id,
         description: ability.description,
         action: ability.response.action,
+        forced: false,
       });
     }
 
@@ -262,7 +278,7 @@ export function applyAbility(
 
 export function createEventResponse(
   self: CardView,
-  response: ActionResponse,
+  response: ResponseAction,
   controller: PlayerId
 ) {
   const sphere = self.props.sphere;

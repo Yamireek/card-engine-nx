@@ -18,7 +18,12 @@ export type View = {
   responses: Partial<
     Record<
       EventType,
-      Array<{ card: CardId; description: string; action: Action }>
+      Array<{
+        card: CardId;
+        description: string;
+        action: Action;
+        forced: boolean;
+      }>
     >
   >;
 };

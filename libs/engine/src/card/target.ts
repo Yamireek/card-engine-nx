@@ -76,7 +76,7 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target === 'event') {
-    if (ctx.state.event) {
+    if (ctx.state.event && ctx.state.event.type !== 'end_of_round') {
       return [ctx.state.event.card];
     } else {
       throw new Error('no event');

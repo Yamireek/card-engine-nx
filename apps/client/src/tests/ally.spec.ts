@@ -44,3 +44,30 @@ it('Gondorian Spearman', () => {
   game.chooseOption(response);
   expect(enemy.token.damage).toBe(1);
 });
+
+it('Gandalf', () => {
+  const response =
+    'Response: After Gandalf enters play, (choose 1): draw 3 cards, deal 4 damage to 1 enemy in play, or reduce your threat by 5.';
+
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.gimli,
+            resources: 5,
+          },
+        ],
+        hand: [core.ally.gandalf],
+      },
+    ],
+  });
+
+  const gandalf = game.getCard('Gandalf');
+  game.chooseAction('Play ally');
+  game.chooseOption(response);
+  game.chooseOption('Reduce your threat by 5');
+  expect(game.state.players['0']?.thread).toBe(-5);
+  game.do('endRound');
+  expect(gandalf.state.zone).toBe("discardPile")
+});

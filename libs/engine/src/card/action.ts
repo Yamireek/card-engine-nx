@@ -5,6 +5,7 @@ import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
 import { calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
+import { GameZoneType, PlayerZoneType, ZoneId } from '@card-engine-nx/basic';
 
 export function executeCardAction(
   action: CardAction,
@@ -108,7 +109,8 @@ export function executeCardAction(
     return;
   }
 
-  if (action === 'destroy' || action.destroy) {
+  if (action === 'discard') {
+    card.tapped = false;
     card.token = { damage: 0, progress: 0, resources: 0 };
     card.mark = {
       attacked: false,
@@ -116,7 +118,32 @@ export function executeCardAction(
       defending: false,
       questing: false,
     };
+
+    const owner = card.owner;
+
+    ctx.state.next.unshift({
+      card: {
+        target: card.id,
+        action: {
+          move: {
+            to: !owner ? 'discardPile' : { type: 'discardPile', owner },
+            side: 'front',
+          },
+        },
+      },
+    });
+    return;
+  }
+
+  if (action === 'destroy' || action.destroy) {
     card.tapped = false;
+    card.token = { damage: 0, progress: 0, resources: 0 };
+    card.mark = {
+      attacked: false,
+      attacking: false,
+      defending: false,
+      questing: false,
+    };
 
     const owner = card.owner;
 
@@ -240,6 +267,9 @@ export function executeCardAction(
     const sourceZone = getZoneState(fromId, ctx.state);
     const destinationZone = getZoneState(action.move.to, ctx.state);
 
+    const sourceInGame = isInGame(fromId);
+    const destInGame = isInGame(action.move.to);
+
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);
     destinationZone.cards.push(card.id);
     card.sideUp = action.move.side;
@@ -254,6 +284,10 @@ export function executeCardAction(
         side: action.move.side,
       })
     );
+
+    if (!sourceInGame && destInGame) {
+      ctx.state.next.unshift({ event: { type: 'enteredPlay', card: card.id } });
+    }
     return;
   }
 
@@ -369,4 +403,19 @@ export function executeCardAction(
   }
 
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
+}
+
+export function isInGame(zone: ZoneId) {
+  const inGameZones: Array<GameZoneType | PlayerZoneType> = [
+    'activeLocation',
+    'stagingArea',
+    'playerArea',
+    'engaged',
+  ];
+
+  if (typeof zone === 'string') {
+    return inGameZones.includes(zone);
+  } else {
+    return inGameZones.includes(zone.type);
+  }
 }

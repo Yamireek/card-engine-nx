@@ -120,33 +120,89 @@ export const gandalf = ally(
     hitPoints: 5,
     traits: ['istari'],
     sphere: 'neutral',
+  },
+  {
+    description: 'At the end of the round, discard Gandalf from play.',
+    forced: {
+      event: 'end_of_round',
+      action: {
+        card: {
+          target: 'self',
+          action: 'discard',
+        },
+      },
+    },
+  },
+  {
+    description:
+      'Response: After Gandalf enters play, (choose 1): draw 3 cards, deal 4 damage to 1 enemy in play, or reduce your threat by 5.',
+    response: {
+      event: 'enteredPlay',
+      condition: {
+        card: {
+          target: 'event',
+          value: {
+            is: 'self',
+          },
+        },
+      },
+      action: {
+        player: {
+          target: 'controller',
+          action: {
+            chooseActions: {
+              title: 'Choose one',
+              multi: false,
+              optional: false,
+              actions: [
+                {
+                  title: 'Draw 3 cards',
+                  action: {
+                    player: {
+                      target: 'controller',
+                      action: {
+                        draw: 3,
+                      },
+                    },
+                  },
+                },
+                {
+                  title: 'Deal 4 damage to 1 enemy in play',
+                  action: {
+                    player: {
+                      target: 'controller',
+                      action: {
+                        chooseCardActions: {
+                          title: 'Choose enemy',
+                          target: {
+                            type: 'enemy',
+                          },
+                          action: {
+                            dealDamage: 4,
+                          },
+                          multi: false,
+                          optional: false,
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  title: 'Reduce your threat by 5',
+                  action: {
+                    player: {
+                      target: 'controller',
+                      action: {
+                        incrementThreat: -5,
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
   }
-  // TODO ability
-  // response((s) => s.enteredPlay, {
-  //   description:
-  //     "Response: After Gandalf enters play, (choose 1): draw 3 cards, deal 4 damage to 1 enemy in play, or reduce your threat by 5.",
-  //   condition: (event, self) => event.card === self,
-  //   action: (event, self, state) =>
-  //     chooseAction("Choose Gandalfs effect", [
-  //       {
-  //         title: "Draw 3 card",
-  //         action: draw(3).player(controllerOf(self).get(state)!),
-  //       },
-  //       {
-  //         title: "Deal 4 damage to 1 enemy in play",
-  //         action: chooseCardAction(
-  //           "Choose enemy",
-  //           isEnemy,
-  //           dealDamage({ damage: value(4), attackers: value([self]) }),
-  //           false
-  //         ),
-  //       },
-  //       {
-  //         title: "Reduce your threat by 5",
-  //         action: incrementThreat(value(-5)).player(
-  //           controllerOf(self).get(state)!
-  //         ),
-  //       },
-  //     ]),
-  // })
 );
