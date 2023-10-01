@@ -6,6 +6,7 @@ import { sequence } from '../utils/sequence';
 import { calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
 import { GameZoneType, PlayerZoneType, ZoneId } from '@card-engine-nx/basic';
+import { getTargetCards } from './target';
 
 export function executeCardAction(
   action: CardAction,
@@ -132,6 +133,94 @@ export function executeCardAction(
         },
       },
     });
+    return;
+  }
+
+  if (action === 'advance') {
+    const quest = ctx.view.cards[card.id];
+
+    card.token.progress = 0;
+
+    const removedExplored: Action = {
+      card: {
+        target: card.id,
+        action: {
+          move: {
+            from: 'questArea',
+            to: 'removed',
+            side: 'front',
+          },
+        },
+      },
+    };
+
+    const nextQuest = getTargetCards(
+      {
+        and: [
+          {
+            zone: 'questDeck',
+          },
+          {
+            sequence: {
+              plus: [{ card: { target: quest.id, value: 'sequence' } }, 1],
+            },
+          },
+        ],
+      },
+      ctx
+    );
+
+    if (nextQuest.length === 0) {
+      console.log('game won');
+      ctx.state.result = {
+        win: true,
+        score: 1,
+      };
+      return;
+    }
+
+    if (nextQuest.length === 1) {
+      ctx.state.next.unshift(removedExplored, {
+        card: {
+          target: nextQuest,
+          action: {
+            sequence: [
+              {
+                move: {
+                  from: 'questDeck',
+                  to: 'questArea',
+                  side: 'front',
+                },
+              },
+              { flip: 'back' },
+            ],
+          },
+        },
+      });
+    } else {
+      if (quest.nextStage === 'random') {
+        const rnd = nextQuest[0]; // TODO random
+        ctx.state.next.unshift(removedExplored, {
+          card: {
+            target: rnd,
+            action: {
+              sequence: [
+                {
+                  move: {
+                    from: 'questDeck',
+                    to: 'questArea',
+                    side: 'front',
+                  },
+                },
+                { flip: 'back' },
+              ],
+            },
+          },
+        });
+      } else {
+        throw new Error('found multiple stages');
+      }
+    }
     return;
   }
 
@@ -293,6 +382,16 @@ export function executeCardAction(
 
   if (action.placeProgress) {
     card.token.progress += action.placeProgress;
+    const props = ctx.view.cards[card.id].props;
+    if (props.type === 'quest') {
+      const qp = props.questPoints;
+      if (qp && card.token.progress >= qp) {
+        ctx.state.next.unshift({
+          card: { target: card.id, action: 'advance' },
+        });
+      }
+    }
+
     return;
   }
 

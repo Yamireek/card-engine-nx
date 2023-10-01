@@ -117,6 +117,10 @@ export function advanceToChoiceState(
     try {
       nextStep(crateExecutionContext(state, events, shuffle));
 
+      if (state.result) {
+        return;
+      }
+
       const view = createView(state);
       const destoryed = values(state.cards)
         .filter((c) => {
@@ -160,90 +164,12 @@ export function advanceToChoiceState(
       });
 
       if (exploredQuest.length === 1) {
-        const quest = view.cards[exploredQuest[0]];
-
-        const removedExplored: Action = {
+        state.next.unshift({
           card: {
             target: exploredQuest,
-            action: {
-              move: {
-                from: 'questArea',
-                to: 'removed',
-                side: 'front',
-              },
-            },
+            action: 'advance',
           },
-        };
-
-        const ctx: ViewContext = { state, view, card: {}, player: {} };
-
-        const nextQuest = getTargetCards(
-          {
-            and: [
-              {
-                zone: 'questDeck',
-              },
-              {
-                sequence: {
-                  plus: [{ card: { target: quest.id, value: 'sequence' } }, 1],
-                },
-              },
-            ],
-          },
-          ctx
-        );
-
-        if (nextQuest.length === 0) {
-          console.log('game won');
-          state.result = {
-            win: true,
-            score: 1,
-          };
-          return;
-        }
-
-        if (nextQuest.length === 1) {
-          state.next.unshift(removedExplored, {
-            card: {
-              target: nextQuest,
-              action: {
-                sequence: [
-                  {
-                    move: {
-                      from: 'questDeck',
-                      to: 'questArea',
-                      side: 'front',
-                    },
-                  },
-                  { flip: 'back' },
-                ],
-              },
-            },
-          });
-        } else {
-          if (quest.nextStage === 'random') {
-            const rnd = randomItem(nextQuest);
-            state.next.unshift(removedExplored, {
-              card: {
-                target: rnd,
-                action: {
-                  sequence: [
-                    {
-                      move: {
-                        from: 'questDeck',
-                        to: 'questArea',
-                        side: 'front',
-                      },
-                    },
-                    { flip: 'back' },
-                  ],
-                },
-              },
-            });
-          } else {
-            throw new Error('found multiple stages');
-          }
-        }
+        });
       }
 
       const eliminated = values(state.players)

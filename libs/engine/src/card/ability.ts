@@ -206,8 +206,7 @@ export function applyAbility(
   }
 
   if (ability.nextStage) {
-    // TODO setNextStage
-    //self.ability = ability.setNextStage;
+    self.nextStage = ability.nextStage;
     return;
   }
 

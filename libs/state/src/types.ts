@@ -26,7 +26,7 @@ export type Until = 'end_of_phase' | 'end_of_round';
 export type Action =
   | 'empty'
   | 'shuffleEncounterDeck'
-  | 'executeSetupActions'
+  | 'setup'
   | 'endRound'
   | 'endPhase'
   | 'passFirstPlayerToken'
@@ -132,6 +132,7 @@ export type CardAction =
   | 'shuffleToDeck'
   | 'destroy'
   | 'discard'
+  | 'advance'
   | {
       declareAsDefender?: { attacker: CardId };
       destroy?: { attackers: CardId[] };

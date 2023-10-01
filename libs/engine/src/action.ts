@@ -26,7 +26,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
-  if (action === 'executeSetupActions') {
+  if (action === 'setup') {
     const actions = ctx.view.setup;
     if (actions.length > 0) {
       ctx.state.next = [...actions, ...ctx.state.next];
@@ -524,7 +524,7 @@ export function beginScenario(
         },
       },
     },
-    'executeSetupActions',
+    'setup',
     {
       card: {
         action: {
