@@ -59,6 +59,10 @@ export function canExecute(
     if (action.atEndOfPhase) {
       return true;
     }
+
+    if (action.placeProgress) {
+      return true;
+    }
   }
 
   throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
@@ -143,6 +147,18 @@ export function canPlayerExecute(
         return player.zones.engaged.cards.length > 0;
       }
 
+      return true;
+    }
+
+    if (action.chooseActions) {
+      const actions = action.chooseActions.actions.filter((a) =>
+        canExecute(a.action, false, ctx)
+      );
+
+      return actions.length > 0;
+    }
+
+    if (action.incrementThreat) {
       return true;
     }
 

@@ -74,8 +74,6 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
     return expr;
   }
 
-  debugger;
-
   if (expr === 'enemiesToEngage') {
     // TODO use exprs
     const playerThreats = values(ctx.state.players).map((p) => p.thread);

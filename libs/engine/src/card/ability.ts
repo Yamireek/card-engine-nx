@@ -239,13 +239,12 @@ export function applyAbility(
   }
 
   if (ability.response) {
-    const controller = ctx.state.cards[self.id].controller;
-
     if (!ctx.view.responses[ability.response.event]) {
       ctx.view.responses[ability.response.event] = [];
     }
 
-    if (self.props.type === 'event') {
+    if (self.props.type === 'event' && self.zone === 'hand') {
+      const controller = ctx.state.cards[self.id].controller;
       if (controller) {
         const response = createEventResponse(
           self,
@@ -263,7 +262,9 @@ export function applyAbility(
           });
         }
       }
-    } else {
+    }
+
+    if (self.zone === 'playerArea') {
       ctx.view.responses[ability.response.event]?.push({
         card: self.id,
         description: ability.description,
