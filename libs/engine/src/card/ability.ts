@@ -13,7 +13,7 @@ import { sequence } from '../utils/sequence';
 import { getTargetCards } from './target';
 import { calculateNumberExpr } from '../expr';
 
-export function createAllyAction(
+export function createPlayAllyAction(
   sphere: Sphere,
   cost: number,
   owner: PlayerId,
@@ -54,7 +54,7 @@ export function createAllyAction(
   };
 }
 
-export function createAttachmentAction(
+export function createPlayAttachmentAction(
   sphere: Sphere,
   cost: number,
   attachesTo: CardTarget,

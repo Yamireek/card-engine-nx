@@ -9,7 +9,7 @@
     "build:all": "nx run-many -t build",
     "lint": "nx run-many -t lint --max-warnings=0",
     "storybook": "nx run ui:storybook",
-    "test": "npx vitest --coverage",
+    "test": "npx vitest",
     "test-ui": "npx vitest --coverage --ui",
     "postinstall": "patch-package"
   },
