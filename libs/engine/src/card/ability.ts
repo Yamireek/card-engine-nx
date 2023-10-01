@@ -76,7 +76,9 @@ export function createPlayAttachmentAction(
           title: 'Choose target for attachment',
           multi: false,
           optional: false,
-          target: attachesTo,
+          target: {
+            and: [attachesTo, 'inAPlay'],
+          },
           action: {
             attachCard: self,
           },

@@ -60,7 +60,6 @@ export function executeCardAction(
     const props = ctx.view.cards[card.id].props;
 
     ctx.state.next.unshift(
-      { event: { type: 'revealed', card: card.id } },
       {
         card: {
           target: card.id,
@@ -72,7 +71,8 @@ export function executeCardAction(
             },
           },
         },
-      }
+      },
+      { event: { type: 'revealed', card: card.id } }
     );
 
     return;

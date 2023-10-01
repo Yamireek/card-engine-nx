@@ -559,7 +559,7 @@ export function executePlayerAction(
           chooseCardActions: {
             title: 'Declare attackers',
             target: {
-              and: ['character', 'inAPlay', { owner: player.id }],
+              and: ['character', { controller: player.id }],
             },
             action: {
               sequence: [{ mark: 'attacking' }, 'exhaust'],

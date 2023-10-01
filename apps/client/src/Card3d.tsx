@@ -22,6 +22,7 @@ export type Card3dProps = React.PropsWithChildren<{
   hidden?: boolean;
   orientation?: Orientation;
   onClick?: () => void;
+  showId?: boolean;
 }>;
 
 export const cardSize: Dimensions3 = {
@@ -99,15 +100,17 @@ export const Card3d = (props: Card3dProps) => {
         )}
       </mesh>
       {!props.hidden && props.children}
-      <Text
-        position={[0, 0, 0.001]}
-        color="black"
-        outlineColor="white"
-        outlineWidth={0.0005}
-        fontSize={0.025}
-      >
-        {props.id}
-      </Text>
+      {props.showId && (
+        <Text
+          position={[0, 0, 0.001]}
+          color="black"
+          outlineColor="white"
+          outlineWidth={0.0005}
+          fontSize={0.025}
+        >
+          {props.id}
+        </Text>
+      )}
     </animated.group>
   );
 };

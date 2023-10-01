@@ -205,7 +205,7 @@ export function canCardExecute(
     }
 
     if (action === 'exhaust') {
-      return !card.tapped;
+      return !card.tapped && card.zone === 'playerArea';
     }
 
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
@@ -237,11 +237,15 @@ export function canCardExecute(
     }
 
     if (action.dealDamage) {
-      return true;
+      return (
+        card.zone === 'stagingArea' ||
+        card.zone === 'engaged' ||
+        card.zone === 'playerArea'
+      );
     }
 
     if (action.heal) {
-      return card.token.damage > 0;
+      return card.zone === 'playerArea' && card.token.damage > 0;
     }
 
     if (action.move) {

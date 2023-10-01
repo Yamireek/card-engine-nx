@@ -380,7 +380,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
             action: {
               chooseActions: {
                 title: 'Choose responses for event ' + event.type,
-                actions: reponses.map((r) => ({
+                actions: optional.map((r) => ({
                   title: r.description,
                   action: {
                     useCardVar: {
