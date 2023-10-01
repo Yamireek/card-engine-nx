@@ -293,3 +293,15 @@ export function single<T>(items: T[]): T {
     throw new Error('expecting 1 item');
   }
 }
+export function isInPlay(zone: PlayerZoneType | GameZoneType): boolean {
+  switch (zone) {
+    case 'activeLocation':
+    case 'engaged':
+    case 'playerArea':
+    case 'questArea':
+    case 'stagingArea':
+      return true;
+    default:
+      return false;
+  }
+}

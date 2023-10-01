@@ -10,6 +10,7 @@ import { sum } from 'lodash';
 import { ViewContext } from './context';
 import { max, min, values } from 'lodash/fp';
 import { CardId } from '@card-engine-nx/basic';
+import { isInPlay } from './utils';
 
 export function calculateNumberExpr(
   expr: NumberExpr,
@@ -144,6 +145,11 @@ export function calculateCardBoolExpr(
 ): boolean {
   if (typeof expr === 'boolean') {
     return expr;
+  }
+
+  if (expr === 'in_a_play') {
+    const zone = ctx.state.cards[cardId].zone;
+    return isInPlay(zone);
   }
 
   if (expr.hasTrait) {

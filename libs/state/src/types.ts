@@ -242,6 +242,7 @@ export type CardNumberExpr =
 
 export type CardBoolExpr =
   | boolean
+  | 'in_a_play'
   | {
       hasTrait?: Trait;
       hasMark?: Mark;

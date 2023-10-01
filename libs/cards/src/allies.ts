@@ -125,6 +125,12 @@ export const gandalf = ally(
     description: 'At the end of the round, discard Gandalf from play.',
     forced: {
       event: 'end_of_round',
+      condition: {
+        card: {
+          target: 'self',
+          value: 'in_a_play',
+        },
+      },
       action: {
         card: {
           target: 'self',
