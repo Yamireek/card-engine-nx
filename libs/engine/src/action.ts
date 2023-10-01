@@ -212,29 +212,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
-  if (action.addToStagingArea) {
-    const card = values(ctx.state.cards).find(
-      (c) => c.definition.front.name === action.addToStagingArea
-    );
-
-    if (card) {
-      ctx.state.next.unshift({
-        card: {
-          target: card.id,
-          action: {
-            move: {
-              from: 'encounterDeck',
-              to: 'stagingArea',
-              side: 'front',
-            },
-          },
-        },
-      });
-    }
-
-    return;
-  }
-
   if (action.beginPhase) {
     ctx.state.phase = action.beginPhase;
     return;

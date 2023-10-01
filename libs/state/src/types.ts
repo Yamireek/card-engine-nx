@@ -40,7 +40,6 @@ export type Action =
       sequence?: Action[];
       addPlayer?: PlayerDeck;
       setupScenario?: Scenario;
-      addToStagingArea?: string;
       beginPhase?: Phase;
       playerActions?: string;
       setCardVar?: { name: string; value: CardId | undefined };
@@ -279,6 +278,7 @@ export type CardTarget =
       keyword?: keyof Keywords;
       var?: string;
       event?: 'attacking';
+      take?: number;
     };
 
 export type ZoneTarget = {

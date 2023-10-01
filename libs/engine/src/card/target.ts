@@ -83,6 +83,11 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
     }
   }
 
+  if (target.take) {
+    const all = getTargetCards({ ...target, take: undefined }, ctx);
+    return all.slice(0, target.take);
+  }
+
   if (target.and) {
     const lists = target.and.map((t) => getTargetCards(t, ctx));
     return uniq(intersection(...lists));
@@ -201,8 +206,8 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
 
   if (target.name) {
     const name = target.name;
-    return values(ctx.view.cards)
-      .filter((c) => c.props.name === name)
+    return values(ctx.state.cards)
+      .filter((c) => c.definition.front.name === name)
       .map((c) => c.id);
   }
 
