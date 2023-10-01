@@ -198,7 +198,7 @@ it('Swift Strike', () => {
         playerArea: [
           {
             card: core.hero.gimli,
-            resources: 1,
+            resources: 2,
           },
         ],
         hand: [core.event.swiftStrike],

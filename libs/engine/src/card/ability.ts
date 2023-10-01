@@ -39,13 +39,19 @@ export function createAllyAction(
     },
   };
 
-  return sequence(
-    { setCardVar: { name: 'self', value: self } },
-    { setPlayerVar: { name: 'controller', value: owner } },
-    sequence({ payment: { cost: payment, effect: moveToPlay } }),
-    { setPlayerVar: { name: 'controller', value: undefined } },
-    { setCardVar: { name: 'self', value: undefined } }
-  );
+  return {
+    useCardVar: {
+      name: 'self',
+      value: self,
+      action: {
+        usePlayerVar: {
+          name: 'controller',
+          value: owner,
+          action: sequence({ payment: { cost: payment, effect: moveToPlay } }),
+        },
+      },
+    },
+  };
 }
 
 export function createAttachmentAction(
@@ -92,15 +98,21 @@ export function createAttachmentAction(
     },
   };
 
-  return sequence(
-    { setCardVar: { name: 'self', value: self } },
-    { setPlayerVar: { name: 'controller', value: owner } },
-    sequence({
-      payment: { cost: payment, effect: sequence(attachTo, moveToPlay) },
-    }),
-    { setPlayerVar: { name: 'controller', value: undefined } },
-    { setCardVar: { name: 'self', value: undefined } }
-  );
+  return {
+    useCardVar: {
+      name: 'self',
+      value: self,
+      action: {
+        usePlayerVar: {
+          name: 'controller',
+          value: owner,
+          action: sequence({
+            payment: { cost: payment, effect: sequence(attachTo, moveToPlay) },
+          }),
+        },
+      },
+    },
+  };
 }
 
 export function createCardActions(
@@ -137,20 +149,28 @@ export function createCardActions(
         {
           description: ability.description,
           card: self.id,
-          action: sequence(
-            { setCardVar: { name: 'self', value: self.id } },
-            { setPlayerVar: { name: 'controller', value: controller } },
-            {
-              useLimit: {
-                type: ability.limit ?? 'none',
-                card: self.id,
-                index: 0, // TODO ability index
+          action: {
+            useCardVar: {
+              name: 'self',
+              value: self.id,
+              action: {
+                usePlayerVar: {
+                  name: 'controller',
+                  value: controller,
+                  action: sequence(
+                    {
+                      useLimit: {
+                        type: ability.limit ?? 'none',
+                        card: self.id,
+                        index: 0, // TODO ability index
+                      },
+                    },
+                    action
+                  ),
+                },
               },
             },
-            action,
-            { setPlayerVar: { name: 'controller', value: undefined } },
-            { setCardVar: { name: 'self', value: undefined } }
-          ),
+          },
         },
       ];
     }
@@ -312,13 +332,22 @@ export function createEventResponse(
     },
   };
 
-  return sequence(
-    { setCardVar: { name: 'self', value: self.id } },
-    { setPlayerVar: { name: 'controller', value: controller } },
-    sequence({ payment: { cost: payment, effect: response.action } }, discard),
-    { setPlayerVar: { name: 'controller', value: undefined } },
-    { setCardVar: { name: 'self', value: undefined } }
-  );
+  return {
+    useCardVar: {
+      name: 'self',
+      value: self.id,
+      action: {
+        usePlayerVar: {
+          name: 'controller',
+          value: controller,
+          action: sequence(
+            { payment: { cost: payment, effect: response.action } },
+            discard
+          ),
+        },
+      },
+    },
+  };
 }
 
 export function createEventAction(
@@ -354,11 +383,20 @@ export function createEventAction(
     },
   };
 
-  return sequence(
-    { setCardVar: { name: 'self', value: self.id } },
-    { setPlayerVar: { name: 'controller', value: controller } },
-    sequence({ payment: { cost: payment, effect: action } }, discard),
-    { setPlayerVar: { name: 'controller', value: undefined } },
-    { setCardVar: { name: 'self', value: undefined } }
-  );
+  return {
+    useCardVar: {
+      name: 'self',
+      value: self.id,
+      action: {
+        usePlayerVar: {
+          name: 'controller',
+          value: controller,
+          action: sequence(
+            { payment: { cost: payment, effect: action } },
+            discard
+          ),
+        },
+      },
+    },
+  };
 }

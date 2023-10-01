@@ -405,11 +405,13 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
                 title: 'Choose responses for event ' + event.type,
                 actions: reponses.map((r) => ({
                   title: r.description,
-                  action: sequence(
-                    { setCardVar: { name: 'self', value: r.card } },
-                    r.action,
-                    { setCardVar: { name: 'self', value: undefined } }
-                  ),
+                  action: {
+                    useCardVar: {
+                      name: 'self',
+                      value: r.card,
+                      action: r.action,
+                    },
+                  },
                 })),
                 optional: true,
                 multi: true,
@@ -425,11 +427,13 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     if (forced.length > 0) {
       ctx.state.next.unshift(
-        ...forced.map((r) =>
-          sequence({ setCardVar: { name: 'self', value: r.card } }, r.action, {
-            setCardVar: { name: 'self', value: undefined },
-          })
-        )
+        ...forced.map((r) => ({
+          useCardVar: {
+            name: 'self',
+            value: r.card,
+            action: r.action,
+          },
+        }))
       );
     }
 
@@ -472,6 +476,36 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action.atEndOfPhase) {
     ctx.state.triggers.end_of_phase.push(action.atEndOfPhase);
     return;
+  }
+
+  if (action.useCardVar) {
+    return ctx.state.next.unshift(
+      {
+        setCardVar: {
+          name: action.useCardVar.name,
+          value: action.useCardVar.value,
+        },
+      },
+      action.useCardVar.action,
+      {
+        setCardVar: { name: action.useCardVar.name, value: undefined },
+      }
+    );
+  }
+
+  if (action.usePlayerVar) {
+    return ctx.state.next.unshift(
+      {
+        setPlayerVar: {
+          name: action.usePlayerVar.name,
+          value: action.usePlayerVar.value,
+        },
+      },
+      action.usePlayerVar.action,
+      {
+        setPlayerVar: { name: action.usePlayerVar.name, value: undefined },
+      }
+    );
   }
 
   throw new Error(`unknown action: ${JSON.stringify(action)}`);

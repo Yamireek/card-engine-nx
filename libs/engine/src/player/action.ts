@@ -10,6 +10,7 @@ import { getTargetCard, getTargetCards } from '../card';
 import { max, sum } from 'lodash/fp';
 import { sequence } from '../utils/sequence';
 import { getTargetPlayers } from './target';
+import { canExecute } from '../resolution';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -506,13 +507,17 @@ export function executePlayerAction(
   }
 
   if (action.chooseActions) {
+    const options = action.chooseActions.actions.filter((a) =>
+      canExecute(a.action, false, ctx)
+    );
+
     ctx.state.choice = {
       id: ctx.state.nextId++,
       player: player.id,
       title: action.chooseActions.title,
       type: action.chooseActions.multi ? 'multi' : 'single',
       optional: action.chooseActions.optional,
-      options: action.chooseActions.actions,
+      options,
     };
     return;
   }

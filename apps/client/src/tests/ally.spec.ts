@@ -65,8 +65,7 @@ it('Gandalf', () => {
 
   const gandalf = game.getCard('Gandalf');
   game.chooseAction('Play ally');
-  game.chooseOption(response);
-  game.chooseOption('Reduce your threat by 5');
+  game.chooseOption(response);  
   expect(game.state.players['0']?.thread).toBe(-5);
   game.do('endRound');
   expect(gandalf.state.zone).toBe("discardPile")

@@ -45,6 +45,16 @@ export type Action =
       playerActions?: string;
       setCardVar?: { name: string; value: CardId | undefined };
       setPlayerVar?: { name: string; value: PlayerId | undefined };
+      useCardVar?: {
+        name: string;
+        value: CardId;
+        action: Action;
+      };
+      usePlayerVar?: {
+        name: string;
+        value: PlayerId;
+        action: Action;
+      };
       clearMarks?: Mark;
       while?: { condition: BoolExpr; action: Action };
       repeat?: { amount: NumberExpr; action: Action };

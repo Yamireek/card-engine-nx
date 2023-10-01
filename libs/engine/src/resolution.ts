@@ -63,6 +63,26 @@ export function canExecute(
     if (action.placeProgress) {
       return true;
     }
+
+    if (action.useCardVar) {
+      return canExecute(action.useCardVar.action, payment, {
+        ...ctx,
+        card: {
+          ...ctx.card,
+          [action.useCardVar.name]: action.useCardVar.value,
+        },
+      });
+    }
+
+    if (action.usePlayerVar) {
+      return canExecute(action.usePlayerVar.action, payment, {
+        ...ctx,
+        player: {
+          ...ctx.player,
+          [action.usePlayerVar.name]: action.usePlayerVar.value,
+        },
+      });
+    }
   }
 
   throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
@@ -233,6 +253,10 @@ export function canCardExecute(
     }
 
     if (action.setAsVar) {
+      return true;
+    }
+
+    if (action.generateResources) {
       return true;
     }
   }
