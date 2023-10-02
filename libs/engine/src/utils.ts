@@ -19,6 +19,7 @@ import { UIEvents } from './uiEvents';
 import { createView } from './view';
 import { getTargetCards } from './card';
 import { calculateBoolExpr } from './expr';
+import { Random } from './utils/random';
 
 export function addPlayerCard(
   state: State,
@@ -59,13 +60,13 @@ export function nextStep(ctx: ExecutionContext) {
 export function crateExecutionContext(
   state: State,
   events: UIEvents,
-  shuffle: <T>(items: T[]) => T[]
+  random: Random
 ): ExecutionContext {
   let view: View | undefined = undefined;
   return {
     state,
     events,
-    shuffle,
+    random,
     card: {},
     player: {},
     get view() {
@@ -85,8 +86,7 @@ export function advanceToChoiceState(
   events: UIEvents,
   autoSkip: boolean,
   stopOnError: boolean,
-  shuffle: <T>(items: T[]) => T[],
-  randomItem: <T>(items: T[]) => T
+  random: Random
 ) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -116,7 +116,7 @@ export function advanceToChoiceState(
     }
 
     try {
-      nextStep(crateExecutionContext(state, events, shuffle));
+      nextStep(crateExecutionContext(state, events, random));
 
       if (state.result) {
         return;

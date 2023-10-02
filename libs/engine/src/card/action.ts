@@ -199,7 +199,7 @@ export function executeCardAction(
       });
     } else {
       if (quest.nextStage === 'random') {
-        const rnd = nextQuest[0]; // TODO random
+        const rnd = ctx.random.item(nextQuest);
         ctx.state.next.unshift(removedExplored, {
           card: {
             target: rnd,

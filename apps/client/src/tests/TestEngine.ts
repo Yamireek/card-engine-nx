@@ -12,7 +12,10 @@ import {
   crateExecutionContext,
   createView,
   executeCardAction,
+  randomJS,
 } from '@card-engine-nx/engine';
+
+const random = randomJS();
 
 export class TestEngine {
   state: State;
@@ -20,14 +23,7 @@ export class TestEngine {
   constructor(state: SimpleState) {
     this.state = createState(state);
 
-    advanceToChoiceState(
-      this.state,
-      consoleEvents,
-      true,
-      true,
-      (v) => v,
-      (i) => i[0]
-    );
+    advanceToChoiceState(this.state, consoleEvents, true, true, random);
     this.state.choice = undefined;
     this.state.next = [];
   }
@@ -42,14 +38,7 @@ export class TestEngine {
 
   do(...action: Action[]) {
     this.state.next.unshift(...action);
-    advanceToChoiceState(
-      this.state,
-      consoleEvents,
-      true,
-      true,
-      (v) => v,
-      (i) => i[0]
-    );
+    advanceToChoiceState(this.state, consoleEvents, true, true, random);
 
     if (this.state.choice) {
       console.log(this.state.choice);
@@ -129,16 +118,9 @@ export class CardProxy {
     executeCardAction(
       cardAction,
       this._state.cards[this.id],
-      crateExecutionContext(this._state, consoleEvents, (v) => v)
+      crateExecutionContext(this._state, consoleEvents, random)
     );
-    advanceToChoiceState(
-      this._state,
-      consoleEvents,
-      true,
-      true,
-      (v) => v,
-      (i) => i[0]
-    );
+    advanceToChoiceState(this._state, consoleEvents, true, true, random);
   }
 
   get props() {

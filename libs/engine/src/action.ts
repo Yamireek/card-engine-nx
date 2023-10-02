@@ -22,7 +22,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action === 'shuffleEncounterDeck') {
     const zone = ctx.state.zones.encounterDeck;
-    zone.cards = ctx.shuffle(zone.cards);
+    zone.cards = ctx.random.shuffle(zone.cards);
     return;
   }
 

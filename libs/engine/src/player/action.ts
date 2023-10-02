@@ -23,7 +23,7 @@ export function executePlayerAction(
 
   if (action === 'shuffleLibrary') {
     const zone = player.zones['library'];
-    zone.cards = ctx.shuffle(zone.cards);
+    zone.cards = ctx.random.shuffle(zone.cards);
     return;
   }
 

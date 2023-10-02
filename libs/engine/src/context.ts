@@ -1,6 +1,7 @@
 import { State, View } from '@card-engine-nx/state';
 import { UIEvents } from './uiEvents';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
+import { Random } from './utils/random';
 
 export type ExecutionContext = {
   state: State;
@@ -8,7 +9,7 @@ export type ExecutionContext = {
   events: UIEvents;
   card: Record<string, CardId>;
   player: Record<string, PlayerId>;
-  shuffle: <T>(items: T[]) => T[];
+  random: Random;
 };
 
 export type ViewContext = {
