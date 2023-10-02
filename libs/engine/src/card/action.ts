@@ -154,7 +154,7 @@ export function executeCardAction(
       },
     };
 
-    const nextQuest = getTargetCards(
+    const next = getTargetCards(
       {
         and: [
           {
@@ -170,7 +170,7 @@ export function executeCardAction(
       ctx
     );
 
-    if (nextQuest.length === 0) {
+    if (next.length === 0) {
       console.log('game won');
       ctx.state.result = {
         win: true,
@@ -179,30 +179,12 @@ export function executeCardAction(
       return;
     }
 
-    if (nextQuest.length === 1) {
-      ctx.state.next.unshift(removedExplored, {
-        card: {
-          target: nextQuest,
-          action: {
-            sequence: [
-              {
-                move: {
-                  from: 'questDeck',
-                  to: 'questArea',
-                  side: 'front',
-                },
-              },
-              { flip: 'back' },
-            ],
-          },
-        },
-      });
-    } else {
-      if (quest.nextStage === 'random') {
-        const rnd = ctx.random.item(nextQuest);
-        ctx.state.next.unshift(removedExplored, {
+    if (next.length === 1) {
+      ctx.state.next.unshift(
+        removedExplored,
+        {
           card: {
-            target: rnd,
+            target: next,
             action: {
               sequence: [
                 {
@@ -216,7 +198,43 @@ export function executeCardAction(
               ],
             },
           },
-        });
+        },
+        {
+          event: {
+            type: 'revealed',
+            card: next[0],
+          },
+        }
+      );
+    } else {
+      if (quest.nextStage === 'random') {
+        const rnd = ctx.random.item(next);
+        ctx.state.next.unshift(
+          removedExplored,
+          {
+            card: {
+              target: rnd,
+              action: {
+                sequence: [
+                  {
+                    move: {
+                      from: 'questDeck',
+                      to: 'questArea',
+                      side: 'front',
+                    },
+                  },
+                  { flip: 'back' },
+                ],
+              },
+            },
+          },
+          {
+            event: {
+              type: 'revealed',
+              card: rnd,
+            },
+          }
+        );
       } else {
         throw new Error('found multiple stages');
       }

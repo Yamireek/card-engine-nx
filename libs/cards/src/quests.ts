@@ -78,28 +78,49 @@ export const achosenPath1 = quest({
         description:
           'When Revealed: Each player must search the encounter deck and discard pile for 1 Spider card of his choice, and add it to the staging area.',
         whenRevealed: {
-          player: {
-            target: 'each',
-            action: {
-              chooseCardActions: {
-                title: 'Choose 1 Spider',
-                target: {
-                  and: [
-                    { zoneType: ['encounterDeck', 'discardPile'] },
-                    { trait: 'spider' },
-                  ],
-                },
+          sequence: [
+            {
+              card: {
+                target: { zoneType: 'encounterDeck' },
                 action: {
-                  move: {
-                    to: 'stagingArea',
-                    side: 'front',
-                  },
+                  flip: 'front',
                 },
-                multi: false,
-                optional: false,
               },
             },
-          },
+            {
+              player: {
+                target: 'each',
+                action: {
+                  chooseCardActions: {
+                    title: 'Choose 1 Spider',
+                    target: {
+                      and: [
+                        { zoneType: ['encounterDeck', 'discardPile'] },
+                        { trait: 'spider' },
+                      ],
+                    },
+                    action: {
+                      move: {
+                        to: 'stagingArea',
+                        side: 'front',
+                      },
+                    },
+                    multi: false,
+                    optional: false,
+                  },
+                },
+              },
+            },
+            {
+              card: {
+                target: { zoneType: 'encounterDeck' },
+                action: {
+                  flip: 'back',
+                },
+              },
+            },
+            'shuffleEncounterDeck',
+          ],
         },
       },
       {

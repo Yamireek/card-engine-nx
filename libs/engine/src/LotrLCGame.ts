@@ -53,7 +53,10 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
 
     advanceToChoiceState(G, events, false, false, randomBgIO(random));
 
-    G.choice = choice;
+    if (!G.choice) {
+      G.choice = choice;
+    }
+
     G.next = next;
   };
 

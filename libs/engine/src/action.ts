@@ -422,6 +422,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       );
     }
 
+    if (ctx.state.event.type === 'revealed') {
+      const card = ctx.view.cards[ctx.state.event.card];
+      ctx.state.next.unshift(...card.whenRevealed);
+    }
+
     return;
   }
 

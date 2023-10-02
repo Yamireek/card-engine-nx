@@ -167,11 +167,13 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target.zoneType) {
-    if (target.zoneType === 'engaged') {
-      return values(ctx.state.players)
-        .map((p) => p.zones.engaged)
-        .flatMap((z) => z.cards);
-    }
+    const zones = isArray(target.zoneType)
+      ? target.zoneType
+      : [target.zoneType];
+
+    return values(ctx.state.cards)
+      .filter((c) => zones.includes(c.zone))
+      .map((c) => c.id);
   }
 
   if (target.hasAttachment) {
