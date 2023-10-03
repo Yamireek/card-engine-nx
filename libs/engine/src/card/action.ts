@@ -44,8 +44,6 @@ export function executeCardAction(
   }
 
   if (action === 'reveal') {
-    // TODO when revealed effects
-
     if (card.sideUp === 'back') {
       ctx.state.next.unshift({
         card: {

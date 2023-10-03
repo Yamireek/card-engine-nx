@@ -31,5 +31,5 @@ export function calculateCardExpr(
     return ctx.state.cards[cardId].token[expr.tokens];
   }
 
-  throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);
+  throw new Error(`unknown card number expression: ${JSON.stringify(expr)}`);
 }

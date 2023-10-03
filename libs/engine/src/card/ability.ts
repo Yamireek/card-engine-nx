@@ -11,7 +11,8 @@ import { ViewContext } from '../context';
 import { CardId, Phase, PlayerId, Sphere } from '@card-engine-nx/basic';
 import { sequence } from '../utils/sequence';
 import { getTargetCards } from './target';
-import { calculateNumberExpr } from '../expr';
+import { calculateBoolExpr, calculateNumberExpr } from '../expr';
+import { merge } from 'lodash';
 
 export function createPlayAllyAction(
   sphere: Sphere,
@@ -319,6 +320,20 @@ export function applyAbility(
       applyAbility({ ...item, description: ability.description }, self, ctx);
     }
 
+    return;
+  }
+
+  if (ability.if) {
+    const condition = calculateBoolExpr(ability.if.condition, ctx);
+    if (condition) {
+      applyAbility(ability.if.modifier, self, ctx);
+    }
+    return;
+  }
+
+  if (ability.keywords) {
+    merge(self.props.keywords, ability.keywords);
+    // TODO number keywords
     return;
   }
 

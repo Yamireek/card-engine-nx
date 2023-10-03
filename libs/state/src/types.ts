@@ -160,7 +160,7 @@ export type CardAction =
     };
 
 export type PropertyBonus = {
-  property: 'attack' | 'defense' | 'willpower' | 'hitPoints';
+  property: 'attack' | 'defense' | 'willpower' | 'hitPoints' | 'threat';
   amount: NumberExpr;
 };
 
@@ -186,6 +186,11 @@ export type Modifier = {
     travel?: BoolExpr;
   };
   and?: Array<Omit<Modifier, 'description'>>;
+  if?: {
+    condition: BoolExpr;
+    modifier: Modifier;
+  };
+  keywords?: Keywords;
 };
 
 export type PaymentConditions = {
@@ -206,6 +211,9 @@ export type NumberExpr =
   | number
   | 'countOfPlayers'
   | {
+      count?: {
+        cards?: CardTarget;
+      };
       card?: {
         sum?: true;
         target: CardTarget;
@@ -233,6 +241,7 @@ export type BoolExpr =
       not?: BoolExpr;
       phase?: Phase;
       someCard?: CardTarget;
+      eq?: [NumberExpr, NumberExpr];
       card?: {
         target: CardTarget;
         value: CardBoolExpr;
@@ -267,6 +276,7 @@ export type CardTarget =
   | 'character'
   | 'ready'
   | 'event'
+  | 'exhausted'
   | CardId
   | CardId[]
   | {
@@ -274,7 +284,7 @@ export type CardTarget =
       owner?: PlayerId;
       and?: CardTarget[];
       not?: CardTarget;
-      type?: CardType;
+      type?: CardType | CardType[];
       top?: ZoneTarget;
       sphere?: Sphere | 'any';
       canExecute?: CardAction;

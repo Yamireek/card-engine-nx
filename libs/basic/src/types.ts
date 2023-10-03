@@ -10,6 +10,7 @@ export type ZoneId = GameZoneType | { owner: PlayerId; type: PlayerZoneType };
 export type Keywords = {
   ranged?: boolean;
   sentinel?: boolean;
+  surge?: boolean;
 };
 
 export function getZoneIdString(zoneId: ZoneId) {

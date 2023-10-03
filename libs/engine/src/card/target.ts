@@ -83,6 +83,12 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
     }
   }
 
+  if (target === 'exhausted') {
+    return values(ctx.state.cards)
+      .filter((c) => c.tapped)
+      .map((c) => c.id);
+  }
+
   if (target.take) {
     const all = getTargetCards({ ...target, take: undefined }, ctx);
     return all.slice(0, target.take);
@@ -108,9 +114,15 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target.type) {
-    return values(ctx.view.cards)
-      .filter((c) => target.type === c.props.type)
-      .map((s) => s.id);
+    if (isArray(target.type)) {
+      return values(ctx.view.cards)
+        .filter((c) => target.type?.includes(c.props.type))
+        .map((s) => s.id);
+    } else {
+      return values(ctx.view.cards)
+        .filter((c) => target.type === c.props.type)
+        .map((s) => s.id);
+    }
   }
 
   if (target.sequence) {

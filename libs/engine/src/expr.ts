@@ -67,6 +67,13 @@ export function calculateNumberExpr(
     }
   }
 
+  if (expr.count) {
+    if (expr.count.cards) {
+      const cards = getTargetCards(expr.count.cards, ctx);
+      return cards.length;
+    }
+  }
+
   throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);
 }
 
@@ -137,6 +144,12 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
 
   if (expr.not) {
     return !calculateBoolExpr(expr.not, ctx);
+  }
+
+  if (expr.eq) {
+    const a = calculateNumberExpr(expr.eq[0], ctx);
+    const b = calculateNumberExpr(expr.eq[1], ctx);
+    return a === b;
   }
 
   throw new Error(`unknown bool expression: ${JSON.stringify(expr)}`);
