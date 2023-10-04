@@ -13,6 +13,8 @@ import { sequence } from '../utils/sequence';
 import { getTargetCards } from './target';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { merge } from 'lodash';
+import { getTargetPlayers } from '../player/target';
+import { applyPlayerModifier } from '../player/modifier';
 
 export function createPlayAllyAction(
   sphere: Sphere,
@@ -337,6 +339,17 @@ export function applyAbility(
 
   if (ability.travel) {
     self.travel.push(ability.travel);
+    return;
+  }
+
+  if (ability.player) {
+    const players = getTargetPlayers(ability.player.target, ctx);
+    for (const playerId of players) {
+      const player = ctx.view.players[playerId];
+      if (player) {
+        applyPlayerModifier(player, ability.player.modifier);
+      }
+    }
     return;
   }
 

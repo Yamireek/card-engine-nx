@@ -341,6 +341,11 @@ export function executePlayerAction(
   }
 
   if (action.draw) {
+    const owner = ctx.view.players[player.id];
+    if (owner?.disableDraw) {
+      return;
+    }
+
     ctx.state.next = [
       {
         repeat: {

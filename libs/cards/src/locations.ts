@@ -217,10 +217,32 @@ export const necromancersPass = location(
   }
 );
 
-export const enchantedStream = location({
-  name: 'Enchanted Stream',
-  threat: 2,
-  questPoints: 2,
-  traits: ['forest'],
-  // TODO While Enchanted Stream is the active location, players cannot draw cards.
-});
+export const enchantedStream = location(
+  {
+    name: 'Enchanted Stream',
+    threat: 2,
+    questPoints: 2,
+    traits: ['forest'],
+  },
+  {
+    description:
+      'While Enchanted Stream is the active location, players cannot draw cards.',
+    if: {
+      condition: {
+        card: {
+          target: 'self',
+          value: {
+            zone: 'activeLocation',
+          },
+        },
+      },
+      modifier: {
+        description: 'Players cannot draw cards',
+        player: {
+          target: 'each',
+          modifier: 'disable_draw',
+        },
+      },
+    },
+  }
+);

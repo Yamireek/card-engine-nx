@@ -74,8 +74,9 @@ export type CardView = {
 export type PlayerView = {
   id: PlayerId;
   multipleDefenders?: boolean;
+  disableDraw?: boolean;
 };
 
 export type PlayerModifierView = { applied: boolean; modifier: PlayerModifier };
 
-export type PlayerModifier = 'can_declate_multiple_defenders';
+export type PlayerModifier = 'can_declate_multiple_defenders' | 'disable_draw';

@@ -148,7 +148,8 @@ export function canPlayerExecute(
     }
 
     if (action.draw) {
-      return player.zones.library.cards.length > 0;
+      const pv = ctx.view.players[player.id];
+      return player.zones.library.cards.length > 0 && !pv?.disableDraw;
     }
 
     if (action.discard) {
@@ -232,7 +233,12 @@ export function canCardExecute(
     }
 
     if (action === 'draw') {
-      return card.zone === 'library';
+      if (!card.owner) {
+        return false;
+      }
+
+      const owner = ctx.view.players[card.owner];
+      return card.zone === 'library' && !owner?.disableDraw;
     }
 
     throw new Error(

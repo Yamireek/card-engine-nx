@@ -203,5 +203,9 @@ export function calculateCardBoolExpr(
     return ctx.view.cards[cardId].props.name === expr.name;
   }
 
+  if (expr.zone) {
+    return ctx.state.cards[cardId].zone === expr.zone;
+  }
+
   throw new Error(`unknown card bool expression: ${JSON.stringify(expr)}`);
 }

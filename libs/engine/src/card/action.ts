@@ -252,6 +252,11 @@ export function executeCardAction(
       throw new Error("can't draw card without owner");
     }
 
+    const ow = ctx.view.players[owner];
+    if (ow?.disableDraw) {
+      return;
+    }
+
     ctx.state.next.unshift({
       card: {
         target: card.id,

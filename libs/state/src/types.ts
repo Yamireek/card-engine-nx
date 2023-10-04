@@ -188,6 +188,10 @@ export type Modifier = {
   payment?: PaymentConditions;
   bonus?: PropertyBonus;
   target?: CardTarget;
+  player?: {
+    target: PlayerTarget;
+    modifier: PlayerModifier;
+  };
   disable?: Mark;
   until?: Until;
   nextStage?: 'random';
@@ -280,6 +284,7 @@ export type CardBoolExpr =
       isType?: CardType | 'character';
       is?: CardTarget;
       name?: string;
+      zone?: GameZoneType | PlayerZoneType;
     };
 
 export type CardTarget =

@@ -9,5 +9,10 @@ export function applyPlayerModifier(
     return;
   }
 
+  if (modifier === 'disable_draw') {
+    player.disableDraw = true;
+    return;
+  }
+
   throw new Error(`unknown player modifier ${JSON.stringify(modifier)}`);
 }
