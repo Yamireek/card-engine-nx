@@ -163,7 +163,10 @@ export const eowyn = hero(
                 action: {
                   sequence: [
                     {
-                      discard: 1,
+                      discard: {
+                        amount: 1,
+                        target: 'choice',
+                      },
                     },
                     {
                       setLimit: {

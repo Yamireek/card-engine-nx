@@ -93,7 +93,10 @@ export type PlayerAction =
   | 'eliminate'
   | {
       draw?: number;
-      discard?: number;
+      discard?: {
+        amount: number;
+        target: 'choice' | 'random';
+      };
       setLimit?: { key: string; limit: Limit };
       sequence?: PlayerAction[];
       incrementThreat?: NumberExpr;

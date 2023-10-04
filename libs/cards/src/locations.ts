@@ -120,13 +120,29 @@ export const mountainsOfMirkwood = location({
   // TODO Response: After Mountains of Mirkwood leaves play as an explored location, each player may search the top 5 cards of his deck for 1 card and add it to his hand. Shuffle the rest of the searched cards back into their owners' decks.
 });
 
-export const necromancersPass = location({
-  name: "Necromancer's Pass",
-  threat: 3,
-  questPoints: 2,
-  traits: ['stronghold', 'dolGuldur'],
-  // TODO Travel: The first player must discard 2 cards from his hand at random to travel here.
-});
+export const necromancersPass = location(
+  {
+    name: "Necromancer's Pass",
+    threat: 3,
+    questPoints: 2,
+    traits: ['stronghold', 'dolGuldur'],
+  },
+  {
+    description:
+      'Travel: The first player must discard 2 cards from his hand at random to travel here.',
+    travel: {
+      player: {
+        target: 'first',
+        action: {
+          discard: {
+            amount: 2,
+            target: 'random',
+          },
+        },
+      },
+    },
+  }
+);
 
 export const enchantedStream = location({
   name: 'Enchanted Stream',

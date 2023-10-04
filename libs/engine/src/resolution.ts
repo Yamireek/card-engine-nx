@@ -148,7 +148,7 @@ export function canPlayerExecute(
     }
 
     if (action.discard) {
-      return player.zones.hand.cards.length >= action.discard;
+      return player.zones.hand.cards.length >= action.discard.amount;
     }
 
     if (action.sequence) {

@@ -3,6 +3,7 @@ import {
   PlayerAction,
   CardTarget,
   Action,
+  CardAction,
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
@@ -523,32 +524,50 @@ export function executePlayerAction(
   }
 
   if (action.discard) {
-    ctx.state.next.unshift({
-      repeat: {
-        amount: action.discard,
-        action: {
-          player: {
-            target: player.id,
-            action: {
-              chooseCardActions: {
-                title: 'Choose card to discard',
-                target: { zone: { owner: player.id, type: 'hand' } },
-                action: {
-                  move: {
-                    from: { owner: player.id, type: 'hand' },
-                    to: { owner: player.id, type: 'discardPile' },
-                    side: 'front',
-                  },
+    const target: CardTarget = { zone: { owner: player.id, type: 'hand' } };
+    const discard: CardAction = {
+      move: {
+        from: { owner: player.id, type: 'hand' },
+        to: { owner: player.id, type: 'discardPile' },
+        side: 'front',
+      },
+    };
+
+    if (action.discard.target === 'choice') {
+      ctx.state.next.unshift({
+        repeat: {
+          amount: action.discard.amount,
+          action: {
+            player: {
+              target: player.id,
+              action: {
+                chooseCardActions: {
+                  title: 'Choose card to discard',
+                  target,
+                  action: discard,
+                  multi: false,
+                  optional: false,
                 },
-                multi: false,
-                optional: false,
               },
             },
           },
         },
-      },
-    });
-    return;
+      });
+      return;
+    }
+
+    if (action.discard.target === 'random') {
+      const cards = getTargetCards(target, ctx);
+      const choosen = ctx.random.shuffle(cards).slice(0, action.discard.amount);
+      ctx.state.next.unshift({
+        card: {
+          target: choosen,
+          action: discard,
+        },
+      });
+
+      return;
+    }
   }
 
   if (action.declareAttackers) {
