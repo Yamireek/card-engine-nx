@@ -110,6 +110,11 @@ export function getTargetPlayers(
     }
   }
 
+  if (target === 'highestThreat') {
+    // TODO highestThreat
+    return ['0'];
+  }
+
   if (['0', '1', '2', '3'].includes(target)) {
     return [target];
   }

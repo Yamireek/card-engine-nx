@@ -191,6 +191,15 @@ export function applyAbility(
 ) {
   self.abilities.push(ability.description);
 
+  if (ability.target) {
+    const targets = getTargetCards(ability.target, ctx);
+    for (const id of targets) {
+      const card = ctx.view.cards[id];
+      applyAbility({ ...ability, target: undefined }, card, ctx);
+    }
+    return;
+  }
+
   if (ability.bonus) {
     const targets = ability.target
       ? getTargetCards(ability.target, ctx)
@@ -350,6 +359,11 @@ export function applyAbility(
         applyPlayerModifier(player, ability.player.modifier);
       }
     }
+    return;
+  }
+
+  if (ability.refreshCost) {
+    self.refreshCost.push(ability.refreshCost);
     return;
   }
 

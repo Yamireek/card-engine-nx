@@ -13,6 +13,8 @@ import {
   NextStage,
   EventType,
   BoolExpr,
+  PlayerAction,
+  CardAction,
 } from './types';
 import { GameModifier } from './state';
 
@@ -69,6 +71,7 @@ export type CardView = {
     advance: BoolExpr[];
     travel: BoolExpr[];
   };
+  refreshCost: CardAction[];
 };
 
 export type PlayerView = {

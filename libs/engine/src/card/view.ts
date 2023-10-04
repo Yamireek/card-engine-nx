@@ -15,5 +15,6 @@ export function createCardView(state: CardState): CardView {
       travel: [],
     },
     travel: [],
+    refreshCost: [],
   };
 }

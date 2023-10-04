@@ -130,11 +130,14 @@ export type PlayerAction =
         action: PlayerAction;
       };
       deck?: CardAction;
+      card?: {
+        target: CardTarget;
+        action: CardAction;
+      };
     };
 
 export type CardAction =
   | 'empty'
-  | 'ready'
   | 'travel'
   | 'exhaust'
   | 'reveal'
@@ -144,7 +147,9 @@ export type CardAction =
   | 'advance'
   | 'draw'
   | 'explore'
+  | 'ready'
   | {
+      ready?: 'refresh';
       declareAsDefender?: { attacker: CardId };
       destroy?: { attackers: CardId[] };
       dealDamage?: number | { amount: number; attackers: CardId[] };
@@ -159,7 +164,7 @@ export type CardAction =
       resolvePlayerAttacking?: PlayerId;
       mark?: Mark;
       clear?: Mark;
-      attachCard?: CardId;
+      attachCard?: CardTarget;
       move?: {
         from?: ZoneId;
         to: ZoneId;
@@ -207,6 +212,7 @@ export type Modifier = {
   };
   keywords?: Keywords;
   travel?: Action;
+  refreshCost?: CardAction;
 };
 
 export type PaymentConditions = {
@@ -340,6 +346,7 @@ export type PlayerTarget =
   | 'first'
   | 'next'
   | 'event'
+  | 'highestThreat'
   | {
       and?: PlayerTarget[];
       canExecute?: PlayerAction;

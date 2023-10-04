@@ -6,7 +6,7 @@ import { sequence } from '../utils/sequence';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
 import { GameZoneType, PlayerZoneType, ZoneId } from '@card-engine-nx/basic';
-import { getTargetCards } from './target';
+import { getTargetCard, getTargetCards } from './target';
 
 export function executeCardAction(
   action: CardAction,
@@ -340,6 +340,42 @@ export function executeCardAction(
     return;
   }
 
+  if (action.ready === 'refresh') {
+    const cv = ctx.view.cards[card.id];
+    const free = cv.refreshCost.length === 0;
+    if (free) {
+      ctx.state.next.unshift({ card: { target: card.id, action: 'ready' } });
+    } else {
+      if (card.controller) {
+        ctx.state.next.unshift({
+          player: {
+            target: card.controller,
+            action: {
+              chooseActions: {
+                title: 'Pay for refresh?',
+                actions: [
+                  {
+                    title: 'Yes',
+                    action: {
+                      card: {
+                        target: card.id,
+                        action: { sequence: [...cv.refreshCost, 'ready'] },
+                      },
+                    },
+                  },
+                ],
+                multi: false,
+                optional: true,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    return;
+  }
+
   if (action.declareAsDefender) {
     card.tapped = true;
     card.mark.defending = true;
@@ -572,8 +608,11 @@ export function executeCardAction(
   }
 
   if (action.attachCard) {
-    card.attachments.push(action.attachCard);
-    ctx.state.cards[action.attachCard].attachedTo = card.id;
+    const target = getTargetCard(action.attachCard, ctx);
+    if (target) {
+      card.attachments.push(target);
+      ctx.state.cards[target].attachedTo = card.id;
+    }
     return;
   }
 

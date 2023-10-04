@@ -14,8 +14,41 @@ export const eyesOfTheForest = treachery(
   }
 );
 
-export const caughtInAWeb = treachery({ name: 'Caught in a Web' });
-// TODO When Revealed: The player with the highest threat level attaches this card to one of his heroes. (Counts as a Condition attachment with the text: 'Attached hero does not ready during the refresh phase unless you pay 2 resources from that hero's pool.')
+export const caughtInAWeb = treachery(
+  { name: 'Caught in a Web' },
+  {
+    description:
+      "When Revealed: The player with the highest threat level attaches this card to one of his heroes. (Counts as a Condition attachment with the text: 'Attached hero does not ready during the refresh phase unless you pay 2 resources from that hero's pool.')",
+    whenRevealed: {
+      player: {
+        target: 'highestThreat',
+        action: {
+          chooseCardActions: {
+            title: 'Choose hero',
+            target: {
+              and: [{ type: 'hero', controller: 'highestThreat' }],
+            },
+            action: {
+              attachCard: 'event',
+            },
+            multi: false,
+            optional: false,
+          },
+        },
+      },
+    },
+  },
+  {
+    description:
+      "Attached hero does not ready during the refresh phase unless you pay 2 resources from that hero's pool.'",
+    target: {
+      hasAttachment: 'self',
+    },
+    refreshCost: {
+      payResources: 2,
+    },
+  }
+);
 
 export const drivenByShadow = treachery(
   { name: 'Driven by Shadow' },
