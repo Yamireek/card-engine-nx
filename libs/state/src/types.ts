@@ -235,6 +235,7 @@ export type NumberExpr =
         true: NumberExpr;
         false: NumberExpr;
       };
+      multiply?: [NumberExpr, NumberExpr];
     };
 
 export type EventNumbers = { type: 'receivedDamage'; value: 'damage' }; // TODO remove type

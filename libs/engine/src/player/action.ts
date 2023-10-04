@@ -4,6 +4,7 @@ import {
   CardTarget,
   Action,
   CardAction,
+  Event,
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
@@ -259,6 +260,13 @@ export function executePlayerAction(
 
     const attack = sum(attacking.map((a) => a.props.attack || 0));
     const defense = sum(defending.map((d) => d.props.defense || 0));
+
+    ctx.state.next.unshift(
+      ...attacking.map((a) => {
+        const event: Event = { type: 'attacked', card: a.id };
+        return { event };
+      })
+    );
 
     if (
       defending.length === 0 &&

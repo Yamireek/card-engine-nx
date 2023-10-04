@@ -155,18 +155,61 @@ export const dolGuldurOrcs = enemy(
   }
 );
 
-export const chieftanUfthak = enemy({
-  name: 'Chieftan Ufthak',
-  engagement: 35,
-  threat: 2,
-  attack: 3,
-  defense: 3,
-  hitPoints: 6,
-  victory: 4,
-  traits: ['dolGuldur', 'orc'],
-  // TODO Chieftain Ufthak get +2 Attack for each resource token on him.
-  // Forced: After Chieftain Ufthak attacks, place 1 resource token on him.
-});
+export const chieftanUfthak = enemy(
+  {
+    name: 'Chieftan Ufthak',
+    engagement: 35,
+    threat: 2,
+    attack: 3,
+    defense: 3,
+    hitPoints: 6,
+    victory: 4,
+    traits: ['dolGuldur', 'orc'],
+  },
+  {
+    description:
+      'Chieftain Ufthak get +2 Attack for each resource token on him.',
+    bonus: {
+      property: 'attack',
+      amount: {
+        multiply: [
+          2,
+          {
+            card: {
+              target: 'self',
+              value: {
+                tokens: 'resources',
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+  {
+    description:
+      'Forced: After Chieftain Ufthak attacks, place 1 resource token on him.',
+    forced: {
+      event: 'attacked',
+      condition: {
+        card: {
+          target: 'event',
+          value: {
+            is: 'self',
+          },
+        },
+      },
+      action: {
+        card: {
+          target: 'event',
+          action: {
+            generateResources: 1,
+          },
+        },
+      },
+    },
+  }
+);
 
 export const dolGuldurBeastmaster = enemy({
   name: 'Dol Guldur Beastmaster',

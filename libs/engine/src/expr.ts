@@ -8,7 +8,7 @@ import { getTargetCard, getTargetCards } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
 import { ViewContext } from './context';
-import { max, min, values } from 'lodash/fp';
+import { max, min, multiply, values } from 'lodash/fp';
 import { CardId } from '@card-engine-nx/basic';
 import { isInPlay } from './utils';
 
@@ -56,6 +56,11 @@ export function calculateNumberExpr(
   if (expr.plus) {
     const values = expr.plus.map((e) => calculateNumberExpr(e, ctx));
     return sum(values) ?? 0;
+  }
+
+  if (expr.multiply) {
+    const values = expr.multiply.map((e) => calculateNumberExpr(e, ctx));
+    return multiply(values[0], values[1]) ?? 0;
   }
 
   if (expr.if) {
