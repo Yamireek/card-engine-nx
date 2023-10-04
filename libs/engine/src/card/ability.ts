@@ -284,9 +284,7 @@ export function applyAbility(
           });
         }
       }
-    }
-
-    if (self.zone === 'playerArea' || self.zone === 'activeLocation') {
+    } else {
       ctx.view.responses[ability.response.event]?.push({
         card: self.id,
         description: ability.description,

@@ -111,14 +111,87 @@ export const forestGate = location(
   }
 );
 
-export const mountainsOfMirkwood = location({
-  name: 'Mountains of Mirkwood',
-  threat: 2,
-  questPoints: 3,
-  traits: ['forest', 'mountain'],
-  // TODO Travel: Reveal the top card of the encounter deck and add it to the staging area to travel here.
-  // TODO Response: After Mountains of Mirkwood leaves play as an explored location, each player may search the top 5 cards of his deck for 1 card and add it to his hand. Shuffle the rest of the searched cards back into their owners' decks.
-});
+export const mountainsOfMirkwood = location(
+  {
+    name: 'Mountains of Mirkwood',
+    threat: 2,
+    questPoints: 3,
+    traits: ['forest', 'mountain'],
+  },
+  {
+    description:
+      'Travel: Reveal the top card of the encounter deck and add it to the staging area to travel here.',
+    travel: {
+      card: {
+        target: {
+          top: {
+            game: 'encounterDeck',
+          },
+        },
+        action: 'reveal',
+      },
+    },
+  },
+  {
+    description:
+      "Response: After Mountains of Mirkwood leaves play as an explored location, each player may search the top 5 cards of his deck for 1 card and add it to his hand. Shuffle the rest of the searched cards back into their owners' decks.",
+    response: {
+      event: 'explored',
+      condition: {
+        card: {
+          target: 'event',
+          value: {
+            is: 'self',
+          },
+        },
+      },
+      action: {
+        player: {
+          target: 'each',
+          action: {
+            sequence: [
+              {
+                useVar: {
+                  name: 'choosing',
+                  action: {
+                    sequence: [
+                      {
+                        deck: { flip: 'front' },
+                      },
+                      {
+                        chooseCardActions: {
+                          title: 'Choose card to draw',
+                          target: {
+                            top: {
+                              amount: 5,
+                              zone: {
+                                player: {
+                                  id: { var: 'choosing' },
+                                  zone: 'library',
+                                },
+                              },
+                            },
+                          },
+                          action: 'draw',
+                          multi: false,
+                          optional: false,
+                        },
+                      },
+                      {
+                        deck: { flip: 'back' },
+                      },
+                    ],
+                  },
+                },
+              },
+              'shuffleLibrary',
+            ],
+          },
+        },
+      },
+    },
+  }
+);
 
 export const necromancersPass = location(
   {

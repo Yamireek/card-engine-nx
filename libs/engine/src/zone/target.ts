@@ -25,7 +25,7 @@ export function getZoneState(zoneId: ZoneId, state: State): ZoneState {
   throw new Error(`unknown zone target: ${JSON.stringify(zoneId)}`);
 }
 
-export function getTargetZone(
+export function getTargetZone( // TODO single/multi variants
   target: ZoneTarget,
   ctx: ViewContext
 ): ZoneState[] {

@@ -366,6 +366,13 @@ export function executePlayerAction(
     return;
   }
 
+  if (action.deck) {
+    ctx.state.next.unshift({
+      card: { target: player.zones.library.cards, action: action.deck },
+    });
+    return;
+  }
+
   if (action.incrementThreat) {
     const amount = calculateNumberExpr(action.incrementThreat, ctx);
     player.thread += amount;

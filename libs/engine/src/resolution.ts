@@ -103,6 +103,10 @@ export function canPlayerExecute(
       return true;
     }
 
+    if (action === 'shuffleLibrary') {
+      return true;
+    }
+
     throw new Error(
       `not implemented: canPlayerExecute ${JSON.stringify(action)}`
     );
@@ -193,6 +197,10 @@ export function canPlayerExecute(
       });
     }
 
+    if (action.deck) {
+      return player.zones.library.cards.length > 0;
+    }
+
     throw new Error(
       `not implemented: canPlayerExecute ${JSON.stringify(action)}`
     );
@@ -217,6 +225,14 @@ export function canCardExecute(
 
     if (action === 'ready') {
       return card.tapped;
+    }
+
+    if (action === 'reveal') {
+      return true;
+    }
+
+    if (action === 'draw') {
+      return card.zone === 'library';
     }
 
     throw new Error(

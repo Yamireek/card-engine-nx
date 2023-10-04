@@ -9,7 +9,7 @@ import { intersection, last, uniq } from 'lodash';
 import { ViewContext, cardIds } from '../context';
 import { getTargetZone, getZoneState } from '../zone/target';
 import { canCardExecute } from '../resolution';
-import { difference, isArray } from 'lodash/fp';
+import { difference, isArray, takeRight } from 'lodash/fp';
 import { calculateNumberExpr } from '../expr';
 import { getTargetPlayers } from '../player/target';
 
@@ -133,6 +133,16 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target.top) {
+    if ('amount' in target.top) {
+      const zones = getTargetZone(target.top.zone, ctx);
+      if (zones.length === 1) {
+        const cards = zones[0].cards;
+        return takeRight(5)(cards);
+      } else {
+        throw new Error('need only 1 zone when using amount');
+      }
+    }
+
     const zones = getTargetZone(target.top, ctx);
     return zones.flatMap((z) => last(z.cards) ?? []);
   }

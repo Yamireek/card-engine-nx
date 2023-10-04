@@ -129,6 +129,7 @@ export type PlayerAction =
         name: string;
         action: PlayerAction;
       };
+      deck?: CardAction;
     };
 
 export type CardAction =
@@ -141,6 +142,8 @@ export type CardAction =
   | 'destroy'
   | 'discard'
   | 'advance'
+  | 'draw'
+  | 'explore'
   | {
       declareAsDefender?: { attacker: CardId };
       destroy?: { attackers: CardId[] };
@@ -295,7 +298,7 @@ export type CardTarget =
       and?: CardTarget[];
       not?: CardTarget;
       type?: CardType | CardType[];
-      top?: ZoneTarget;
+      top?: ZoneTarget | { zone: ZoneTarget; amount: number };
       sphere?: Sphere | 'any';
       canExecute?: CardAction;
       controller?: PlayerTarget;

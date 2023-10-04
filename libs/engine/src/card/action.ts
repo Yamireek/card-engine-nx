@@ -245,6 +245,59 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'draw') {
+    const owner = card.owner;
+
+    if (!owner) {
+      throw new Error("can't draw card without owner");
+    }
+
+    ctx.state.next.unshift({
+      card: {
+        target: card.id,
+        action: {
+          move: {
+            to: { type: 'hand', owner },
+            side: 'front',
+          },
+        },
+      },
+    });
+    return;
+  }
+
+  if (action === 'explore') {
+    card.tapped = false;
+    card.token = { damage: 0, progress: 0, resources: 0 };
+    card.mark = {
+      attacked: false,
+      attacking: false,
+      defending: false,
+      questing: false,
+    };
+
+    ctx.state.next.unshift(
+      {
+        card: {
+          target: card.id,
+          action: {
+            move: {
+              to: 'discardPile',
+              side: 'front',
+            },
+          },
+        },
+      },
+      {
+        event: {
+          type: 'explored',
+          card: card.id,
+        },
+      }
+    );
+    return;
+  }
+
   if (action === 'destroy' || action.destroy) {
     card.tapped = false;
     card.token = { damage: 0, progress: 0, resources: 0 };
@@ -424,6 +477,13 @@ export function executeCardAction(
         if (canAdvance) {
           executeCardAction('advance', card, ctx);
         }
+      }
+    }
+
+    if (cw.props.type === 'location') {
+      const qp = cw.props.questPoints;
+      if (qp && card.token.progress >= qp) {
+        executeCardAction('explore', card, ctx);
       }
     }
 
