@@ -64,6 +64,7 @@ export type CardView = {
   disabled?: Partial<Record<Mark, boolean>>;
   abilities: string[];
   whenRevealed: Action[];
+  travel: Action[];
   conditional: {
     advance: BoolExpr[];
     travel: BoolExpr[];

@@ -14,6 +14,7 @@ import { sequence } from './utils/sequence';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
+import { canExecute } from './resolution';
 
 export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'empty') {
@@ -64,7 +65,15 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       and: [{ zone: 'stagingArea' }, { type: 'location' }],
     };
 
-    const locations = getTargetCards(target, ctx);
+    const locations = getTargetCards(target, ctx).filter((l) => {
+      const travelCost = ctx.view.cards[l].travel;
+      // TODO move to travel action
+      return (
+        travelCost.length === 0 ||
+        canExecute(sequence(...travelCost), true, ctx)
+      );
+    });
+
     if (locations.length > 0) {
       ctx.state.next.unshift({
         player: {

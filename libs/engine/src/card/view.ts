@@ -14,5 +14,6 @@ export function createCardView(state: CardState): CardView {
       advance: [],
       travel: [],
     },
+    travel: [],
   };
 }

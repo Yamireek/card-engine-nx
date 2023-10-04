@@ -74,7 +74,7 @@ export function getTargetPlayers(
     }
 
     if (target.var) {
-      const inVar = ctx.state.vars.player[target.var];
+      const inVar = ctx.player[target.var] ?? ctx.state.vars.player[target.var];
       if (inVar) {
         return [inVar];
       } else {

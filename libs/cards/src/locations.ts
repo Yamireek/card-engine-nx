@@ -1,12 +1,45 @@
 import { location } from '@card-engine-nx/state';
 
-export const greatForestWeb = location({
-  name: 'Great Forest Web',
-  threat: 2,
-  questPoints: 2,
-  traits: ['forest'],
-  // TODO Travel: Each player must exhaust 1 hero he controls to travel here.
-});
+export const greatForestWeb = location(
+  {
+    name: 'Great Forest Web',
+    threat: 2,
+    questPoints: 2,
+    traits: ['forest'],
+  },
+  {
+    description:
+      'Travel: Each player must exhaust 1 hero he controls to travel here.',
+    travel: {
+      player: {
+        target: 'each',
+        action: {
+          useVar: {
+            name: 'choosen',
+            action: {
+              chooseCardActions: {
+                title: 'Choose hero to exhaust',
+                target: {
+                  and: [
+                    { type: 'hero' },
+                    {
+                      controller: {
+                        var: 'choosen',
+                      },
+                    },
+                  ],
+                },
+                action: 'exhaust',
+                multi: false,
+                optional: false,
+              },
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
 export const oldForestRoad = location({
   name: 'Old Forest Road',

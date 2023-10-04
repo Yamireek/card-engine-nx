@@ -337,6 +337,11 @@ export function applyAbility(
     return;
   }
 
+  if (ability.travel) {
+    self.travel.push(ability.travel);
+    return;
+  }
+
   throw new Error(`unknown ability: ${JSON.stringify(ability)}`);
 }
 

@@ -196,6 +196,7 @@ export type Modifier = {
     modifier: Modifier;
   };
   keywords?: Keywords;
+  travel?: Action;
 };
 
 export type PaymentConditions = {
@@ -294,7 +295,7 @@ export type CardTarget =
       sphere?: Sphere | 'any';
       canExecute?: CardAction;
       controller?: PlayerTarget;
-      mark?: Mark;      
+      mark?: Mark;
       enabled?: Mark;
       trait?: Trait;
       zone?: ZoneId;

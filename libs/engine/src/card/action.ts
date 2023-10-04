@@ -23,7 +23,8 @@ export function executeCardAction(
   }
 
   if (action === 'travel') {
-    ctx.state.next.unshift({
+    const travelCost = ctx.view.cards[card.id].travel ?? [];
+    ctx.state.next.unshift(...travelCost, {
       card: {
         target: card.id,
         action: {

@@ -186,6 +186,13 @@ export function canPlayerExecute(
       return true;
     }
 
+    if (action.useVar) {
+      return canPlayerExecute(action.useVar.action, player.id, {
+        ...ctx,
+        player: { ...ctx.player, [action.useVar.name]: player.id },
+      });
+    }
+
     throw new Error(
       `not implemented: canPlayerExecute ${JSON.stringify(action)}`
     );
