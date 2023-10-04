@@ -45,17 +45,48 @@ export const kingSpider = enemy(
   }
 );
 
-export const forestSpider = enemy({
-  name: 'Forest Spider',
-  engagement: 25,
-  threat: 2,
-  attack: 2,
-  defense: 1,
-  hitPoints: 4,
-  traits: ['creature', 'spider'],
-  // TODO Forced: After Forest Spider engages a player, it gets +1 Attack until the end of the round.
-  // TODO Shadow: Defending player must choose and discard 1 attachment he controls.
-});
+export const forestSpider = enemy(
+  {
+    name: 'Forest Spider',
+    engagement: 25,
+    threat: 2,
+    attack: 2,
+    defense: 1,
+    hitPoints: 4,
+    traits: ['creature', 'spider'],
+    // TODO Shadow: Defending player must choose and discard 1 attachment he controls.
+  },
+  {
+    description:
+      'Forced: After Forest Spider engages a player, it gets +1 Attack until the end of the round.',
+    forced: {
+      event: 'engaged',
+      condition: {
+        card: {
+          target: 'event',
+          value: {
+            is: 'self',
+          },
+        },
+      },
+      action: {
+        card: {
+          target: 'self',
+          action: {
+            modify: {
+              description: '+1 [attack] until end of round',
+              bonus: {
+                amount: 1,
+                property: 'attack',
+              },
+              until: 'end_of_round',
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
 export const ungoliantsSpawn = enemy(
   {
@@ -193,15 +224,49 @@ export const blackForestBats = enemy(
   }
 );
 
-export const hummerhorns = enemy({
-  name: 'Hummerhorns',
-  engagement: 40,
-  threat: 1,
-  attack: 2,
-  defense: 0,
-  hitPoints: 3,
-  victory: 5,
-  traits: ['creature', 'insect'],
-  // TODO Forced: After Hummerhorns engages you, deal 5 damage to a single hero you control.
-  // TODO Shadow: Deal 1 damage to each character the defending player controls. (2 damage instead if this attack is undefended.)
-});
+export const hummerhorns = enemy(
+  {
+    name: 'Hummerhorns',
+    engagement: 40,
+    threat: 1,
+    attack: 2,
+    defense: 0,
+    hitPoints: 3,
+    victory: 5,
+    traits: ['creature', 'insect'],
+    // TODO Shadow: Deal 1 damage to each character the defending player controls. (2 damage instead if this attack is undefended.)
+  },
+  {
+    description:
+      'Forced: After Hummerhorns engages you, deal 5 damage to a single hero you control.',
+    forced: {
+      event: 'engaged',
+      condition: {
+        card: {
+          target: 'event',
+          value: {
+            is: 'self',
+          },
+        },
+      },
+      action: {
+        player: {
+          target: 'event',
+          action: {
+            chooseCardActions: {
+              title: 'Choose hero to deal 5 damage',
+              target: {
+                and: [{ type: 'hero' }, { controller: 'event' }],
+              },
+              action: {
+                dealDamage: 5,
+              },
+              multi: false,
+              optional: false,
+            },
+          },
+        },
+      },
+    },
+  }
+);

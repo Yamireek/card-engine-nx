@@ -296,18 +296,27 @@ export function executeCardAction(
   }
 
   if (action.engagePlayer) {
-    ctx.state.next.unshift({
-      card: {
-        target: card.id,
-        action: {
-          move: {
-            from: 'stagingArea',
-            to: { owner: action.engagePlayer, type: 'engaged' },
-            side: 'front',
+    ctx.state.next.unshift(
+      {
+        card: {
+          target: card.id,
+          action: {
+            move: {
+              from: 'stagingArea',
+              to: { owner: action.engagePlayer, type: 'engaged' },
+              side: 'front',
+            },
           },
         },
       },
-    });
+      {
+        event: {
+          type: 'engaged',
+          card: card.id,
+          player: action.engagePlayer,
+        },
+      }
+    );
     return;
   }
 

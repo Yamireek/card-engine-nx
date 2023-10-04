@@ -46,6 +46,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         }
       }
     }
+
+    ctx.state.modifiers = ctx.state.modifiers.filter(
+      (m) => m.until !== 'end_of_round'
+    );
+
     ctx.state.next.unshift({ event: { type: 'end_of_round' } }, gameRound());
     return;
   }

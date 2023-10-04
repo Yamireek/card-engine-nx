@@ -102,6 +102,14 @@ export function getTargetPlayers(
     }
   }
 
+  if (target === 'event') {
+    if (ctx.state.event && 'player' in ctx.state.event) {
+      return [ctx.state.event.player];
+    } else {
+      throw new Error('no player in event');
+    }
+  }
+
   if (['0', '1', '2', '3'].includes(target)) {
     return [target];
   }

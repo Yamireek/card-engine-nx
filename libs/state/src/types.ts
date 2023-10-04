@@ -330,6 +330,7 @@ export type PlayerTarget =
   | 'controller'
   | 'first'
   | 'next'
+  | 'event'
   | {
       and?: PlayerTarget[];
       canExecute?: PlayerAction;

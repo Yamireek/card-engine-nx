@@ -33,6 +33,7 @@ export type Event =
   | { type: 'enteredPlay'; card: CardId }
   | { type: 'revealed'; card: CardId }
   | { type: 'traveled'; card: CardId }
+  | { type: 'engaged'; card: CardId; player: PlayerId }
   | { type: 'end_of_round' };
 
 export type State = {
