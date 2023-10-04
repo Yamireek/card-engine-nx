@@ -236,6 +236,10 @@ export function canCardExecute(
       return !disabled;
     }
 
+    if (action.clear) {
+      return true;
+    }
+
     if (action.dealDamage) {
       return (
         card.zone === 'stagingArea' ||

@@ -73,6 +73,15 @@ export function getTargetPlayers(
       }
     }
 
+    if (target.var) {
+      const inVar = ctx.state.vars.player[target.var];
+      if (inVar) {
+        return [inVar];
+      } else {
+        throw new Error('player var not found');
+      }
+    }
+
     throw new Error(`unknown player target: ${JSON.stringify(target)}`);
   }
 

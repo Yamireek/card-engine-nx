@@ -122,6 +122,10 @@ export type PlayerAction =
       engaged?: CardAction;
       modify?: PlayerModifier;
       until?: Until;
+      useVar?: {
+        name: string;
+        action: PlayerAction;
+      };
     };
 
 export type CardAction =
@@ -148,6 +152,7 @@ export type CardAction =
       resolveEnemyAttacking?: PlayerId;
       resolvePlayerAttacking?: PlayerId;
       mark?: Mark;
+      clear?: Mark;
       attachCard?: CardId;
       move?: {
         from?: ZoneId;
@@ -289,7 +294,7 @@ export type CardTarget =
       sphere?: Sphere | 'any';
       canExecute?: CardAction;
       controller?: PlayerTarget;
-      mark?: Mark;
+      mark?: Mark;      
       enabled?: Mark;
       trait?: Trait;
       zone?: ZoneId;
@@ -321,6 +326,11 @@ export type PlayerTarget =
   | 'controller'
   | 'first'
   | 'next'
-  | { and?: PlayerTarget[]; canExecute?: PlayerAction; controller?: CardId };
+  | {
+      and?: PlayerTarget[];
+      canExecute?: PlayerAction;
+      controller?: CardId;
+      var?: string;
+    };
 
 export type Context = { selfCard?: CardId };

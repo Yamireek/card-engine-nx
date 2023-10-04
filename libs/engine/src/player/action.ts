@@ -611,5 +611,26 @@ export function executePlayerAction(
     return;
   }
 
+  if (action.useVar) {
+    ctx.state.next.unshift(
+      {
+        setPlayerVar: {
+          name: action.useVar.name,
+          value: player.id,
+        },
+      },
+      {
+        player: {
+          target: player.id,
+          action: action.useVar.action,
+        },
+      },
+      {
+        setPlayerVar: { name: action.useVar.name, value: undefined },
+      }
+    );
+    return;
+  }
+
   throw new Error(`unknown player action: ${JSON.stringify(action)}`);
 }

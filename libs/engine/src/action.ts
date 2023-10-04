@@ -471,7 +471,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.useCardVar) {
-    return ctx.state.next.unshift(
+    ctx.state.next.unshift(
       {
         setCardVar: {
           name: action.useCardVar.name,
@@ -483,6 +483,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         setCardVar: { name: action.useCardVar.name, value: undefined },
       }
     );
+    return;
   }
 
   if (action.usePlayerVar) {

@@ -522,6 +522,11 @@ export function executeCardAction(
     return;
   }
 
+  if (action.clear) {
+    card.mark[action.clear] = false;
+    return;
+  }
+
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
 }
 
