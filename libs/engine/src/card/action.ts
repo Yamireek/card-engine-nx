@@ -24,18 +24,22 @@ export function executeCardAction(
 
   if (action === 'travel') {
     const travelCost = ctx.view.cards[card.id].travel ?? [];
-    ctx.state.next.unshift(...travelCost, {
-      card: {
-        target: card.id,
-        action: {
-          move: {
-            from: 'stagingArea',
-            to: 'activeLocation',
-            side: 'front',
+    ctx.state.next.unshift(
+      ...travelCost,
+      {
+        card: {
+          target: card.id,
+          action: {
+            move: {
+              from: 'stagingArea',
+              to: 'activeLocation',
+              side: 'front',
+            },
           },
         },
       },
-    });
+      { event: { type: 'traveled', card: card.id } }
+    );
     return;
   }
 

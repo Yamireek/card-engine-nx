@@ -215,7 +215,13 @@ export function canCardExecute(
       return !card.tapped && card.zone === 'playerArea';
     }
 
-    throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
+    if (action === 'ready') {
+      return card.tapped;
+    }
+
+    throw new Error(
+      `not implemented: canCardExecute ${JSON.stringify(action)}`
+    );
   } else {
     if (action.declareAsDefender) {
       return !card.tapped;

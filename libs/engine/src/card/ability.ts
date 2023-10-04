@@ -286,7 +286,7 @@ export function applyAbility(
       }
     }
 
-    if (self.zone === 'playerArea') {
+    if (self.zone === 'playerArea' || self.zone === 'activeLocation') {
       ctx.view.responses[ability.response.event]?.push({
         card: self.id,
         description: ability.description,

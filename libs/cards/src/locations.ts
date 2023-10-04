@@ -41,21 +41,75 @@ export const greatForestWeb = location(
   }
 );
 
-export const oldForestRoad = location({
-  name: 'Old Forest Road',
-  threat: 1,
-  questPoints: 3,
-  traits: ['forest'],
-  // TODO Response: After you travel to Old Forest Road the first player may choose and ready 1 character he controls.
-});
+export const oldForestRoad = location(
+  {
+    name: 'Old Forest Road',
+    threat: 1,
+    questPoints: 3,
+    traits: ['forest'],
+  },
+  {
+    description:
+      'Response: After you travel to Old Forest Road the first player may choose and ready 1 character he controls.',
+    response: {
+      event: 'traveled',
+      condition: {
+        card: {
+          target: 'event',
+          value: {
+            is: 'self',
+          },
+        },
+      },
+      action: {
+        player: {
+          target: 'first',
+          action: {
+            chooseCardActions: {
+              title: 'Ready 1 character',
+              target: 'character',
+              action: 'ready',
+              multi: false,
+              optional: false,
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
-export const forestGate = location({
-  name: 'Forest Gate',
-  threat: 2,
-  questPoints: 4,
-  traits: ['forest'],
-  // TODO Response: After you travel to Forest Gate the first player may draw 2 cards.
-});
+export const forestGate = location(
+  {
+    name: 'Forest Gate',
+    threat: 2,
+    questPoints: 4,
+    traits: ['forest'],
+  },
+  {
+    description:
+      'Response: After you travel to Forest Gate the first player may draw 2 cards.',
+    response: {
+      event: 'traveled',
+      condition: {
+        card: {
+          target: 'event',
+          value: {
+            is: 'self',
+          },
+        },
+      },
+      action: {
+        player: {
+          target: 'first',
+          action: {
+            draw: 2,
+          },
+        },
+      },
+    },
+  }
+);
 
 export const mountainsOfMirkwood = location({
   name: 'Mountains of Mirkwood',

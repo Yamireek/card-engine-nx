@@ -32,6 +32,7 @@ export type Event =
   | { type: 'declaredAsDefender'; card: CardId; attacker: CardId }
   | { type: 'enteredPlay'; card: CardId }
   | { type: 'revealed'; card: CardId }
+  | { type: 'traveled'; card: CardId }
   | { type: 'end_of_round' };
 
 export type State = {
