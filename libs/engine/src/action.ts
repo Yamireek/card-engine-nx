@@ -661,7 +661,7 @@ export const phaseCombat = sequence(
 
 export const phaseRefresh: Action = sequence(
   { beginPhase: 'refresh' },
-  { card: { target: 'each', action: { ready: 'refresh' } } },
+  { card: { target: 'exhausted', action: { ready: 'refresh' } } },
   { player: { target: 'each', action: { incrementThreat: 1 } } },
   'passFirstPlayerToken',
   { playerActions: 'End refresh phase and round' },
