@@ -76,8 +76,9 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target === 'event') {
-    if (ctx.state.event && ctx.state.event.type !== 'end_of_round') {
-      return [ctx.state.event.card];
+    const event = last(ctx.state.event);
+    if (event && event.type !== 'end_of_round') {
+      return [event.card];
     } else {
       throw new Error('no event');
     }
@@ -236,8 +237,9 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target.event === 'attacking') {
-    if (ctx.state.event?.type === 'declaredAsDefender') {
-      return [ctx.state.event.attacker];
+    const event = last(ctx.state.event);
+    if (event?.type === 'declaredAsDefender') {
+      return [event.attacker];
     } else {
       throw new Error('missing event data');
     }

@@ -3,7 +3,11 @@ import { PlayerDeck } from '@card-engine-nx/state';
 
 export const coreTactics: PlayerDeck = {
   name: 'Core (Tactics)',
-  heroes: [core.hero.legolas, core.hero.thalin, core.hero.gimli],
+  heroes: [
+    //core.hero.legolas,
+    core.hero.thalin,
+    //core.hero.gimli
+  ],
   library: [
     core.ally.beorn,
     core.ally.gondorianSpearman,

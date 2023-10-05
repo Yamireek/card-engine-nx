@@ -97,7 +97,7 @@ export type State = {
     player: Record<string, PlayerId | undefined>;
   };
   actionLimits: Array<{ type: Limit; card: CardId; index: number }>;
-  event?: Event;
+  event?: Event[];
   modifiers: GameModifier[];
 };
 

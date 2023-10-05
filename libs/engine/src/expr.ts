@@ -8,7 +8,7 @@ import { getTargetCard, getTargetCards } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
 import { ViewContext } from './context';
-import { max, min, multiply, values } from 'lodash/fp';
+import { last, max, min, multiply, values } from 'lodash/fp';
 import { CardId } from '@card-engine-nx/basic';
 import { isInPlay } from './utils';
 
@@ -40,14 +40,16 @@ export function calculateNumberExpr(
   }
 
   if (expr.event) {
-    if (!ctx.state.event) {
+    const event = last(ctx.state.event);
+
+    if (!event) {
       throw new Error('no active event');
     }
 
-    if (expr.event.type === ctx.state.event.type) {
+    if (expr.event.type === event.type) {
       if (expr.event.type === 'receivedDamage') {
         if (expr.event.value === 'damage') {
-          return ctx.state.event.damage;
+          return event.damage;
         }
       }
     }
@@ -137,10 +139,11 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
   }
 
   if (expr.event) {
-    if (expr.event.type === ctx.state.event?.type) {
+    const event = last(ctx.state.event);
+    if (expr.event.type === event?.type) {
       if (expr.event.type === 'destroyed') {
         const target = getTargetCards(expr.event.isAttacker, ctx);
-        return ctx.state.event.attackers.some((a) => target.includes(a));
+        return event.attackers.some((a) => target.includes(a));
       }
     }
 

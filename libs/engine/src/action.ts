@@ -362,13 +362,19 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action.event) {
     if (action.event === 'none') {
-      ctx.state.event = undefined;
+      ctx.state.event?.pop();
       return;
     }
 
     const event = action.event;
 
-    ctx.state.event = action.event;
+    if (!ctx.state.event) {
+      ctx.state.event = [];
+    }
+
+    ctx.state.event.push(action.event);
+
+    ctx.state.next.unshift({ event: 'none' });
 
     const reponses = ctx.view.responses[event.type] ?? [];
 
@@ -395,33 +401,28 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       );
 
     if (optional.length > 0) {
-      ctx.state.next.unshift(
-        {
-          player: {
-            target: 'first',
-            action: {
-              chooseActions: {
-                title: 'Choose responses for event ' + event.type,
-                actions: optional.map((r) => ({
-                  title: r.description,
-                  action: {
-                    useCardVar: {
-                      name: 'self',
-                      value: r.card,
-                      action: r.action,
-                    },
+      ctx.state.next.unshift({
+        player: {
+          target: 'first',
+          action: {
+            chooseActions: {
+              title: 'Choose responses for event ' + event.type,
+              actions: optional.map((r) => ({
+                title: r.description,
+                action: {
+                  useCardVar: {
+                    name: 'self',
+                    value: r.card,
+                    action: r.action,
                   },
-                })),
-                optional: true,
-                multi: true,
-              },
+                },
+              })),
+              optional: true,
+              multi: true,
             },
           },
         },
-        {
-          event: 'none',
-        }
-      );
+      });
     }
 
     if (forced.length > 0) {
@@ -436,8 +437,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       );
     }
 
-    if (ctx.state.event.type === 'revealed') {
-      const card = ctx.view.cards[ctx.state.event.card];
+    if (action.event.type === 'revealed') {
+      const card = ctx.view.cards[action.event.card];
       ctx.state.next.unshift(...card.whenRevealed);
     }
 

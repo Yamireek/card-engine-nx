@@ -1,6 +1,6 @@
 import { PlayerId, values } from '@card-engine-nx/basic';
 import { PlayerTarget } from '@card-engine-nx/state';
-import { intersection, isArray, uniq } from 'lodash';
+import { intersection, isArray, last, uniq } from 'lodash';
 import { ViewContext } from '../context';
 import { canPlayerExecute } from '../resolution';
 
@@ -103,8 +103,9 @@ export function getTargetPlayers(
   }
 
   if (target === 'event') {
-    if (ctx.state.event && 'player' in ctx.state.event) {
-      return [ctx.state.event.player];
+    const event = last(ctx.state.event);
+    if (event && 'player' in event) {
+      return [event.player];
     } else {
       throw new Error('no player in event');
     }
