@@ -121,14 +121,15 @@ it('Thalin', async () => {
 
   const game = new TestEngine({
     players: [{ playerArea: [core.hero.thalin] }],
-    encounterDeck: [core.enemy.dolGuldurOrcs],
+    encounterDeck: [core.enemy.forestSpider],
   });
 
   const thalin = game.getCard('Thalin');
-  const enemy = game.getCard('Dol Guldur Orcs');
+  const enemy = game.getCard('Forest Spider');
   thalin.update({ mark: 'questing' });
   game.do('revealEncounterCard');
   game.chooseOption(response);
+  console.log(enemy.state);
   expect(enemy.token.damage).toEqual(1);
 });
 
