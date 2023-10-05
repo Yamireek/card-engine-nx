@@ -7,7 +7,7 @@ import {
 } from '@card-engine-nx/ui';
 import { useContext } from 'react';
 import { StateContext } from './StateContext';
-import { Dialog, DialogTitle } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 export const GameDialogs = () => {
   const { state, view, moves, playerId } = useContext(StateContext);
@@ -44,7 +44,32 @@ export const GameDialogs = () => {
   }
 
   if (state.choice.type === 'show') {
-    return <>TODO show</>;
+    return (
+      <Dialog
+        open
+        onClose={() => {
+          moves.skip();
+        }}
+      >
+        <DialogTitle>{state.choice.title}</DialogTitle>
+        <DialogContent>
+          <img
+            alt=""
+            src={getCardImageUrl(
+              view.cards[state.choice.cardId].props,
+              state.cards[state.choice.cardId].sideUp
+            )}
+            style={{
+              width: 430,
+              height: 600,
+            }}
+            onClick={() => {
+              moves.skip();
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    );
   }
 
   if (playerId && state.choice.player !== playerId) {

@@ -372,6 +372,15 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       ctx.state.event = [];
     }
 
+    if (event.type === 'revealed') {
+      ctx.state.choice = {
+        id: ctx.state.nextId++,
+        title: 'Revealed',
+        type: 'show',
+        cardId: event.card,
+      };
+    }
+
     ctx.state.event.push(action.event);
 
     ctx.state.next.unshift({ event: 'none' });
