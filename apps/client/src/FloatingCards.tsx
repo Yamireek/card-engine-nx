@@ -29,16 +29,13 @@ export const FloatingCards = () => {
         const targetDeckName = `deck-${getZoneIdString(e.destination)}`;
 
         if (deckMesh && !cardMesh) {
+          const position = deckMesh.getWorldPosition(deckMesh.position.clone());
           setCards((p) => [
             ...p,
             {
               id: e.cardId,
               name: `floating-card-${e.cardId}`,
-              position: [
-                deckMesh.position.x,
-                deckMesh.position.y,
-                deckMesh.position.z,
-              ],
+              position: [position.x, position.y, position.z],
               rotation: [0, Math.PI, 0],
               texture: {
                 front: texture[getCardImageUrl(card.definition.front, 'front')],
@@ -53,7 +50,7 @@ export const FloatingCards = () => {
                 c.id === e.cardId
                   ? {
                       ...c,
-                      position: [deckMesh.position.x, deckMesh.position.y, 0.1],
+                      position: [position.x, position.y, 0.1],
                     }
                   : { ...c }
               )
