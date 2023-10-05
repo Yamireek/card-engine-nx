@@ -32,6 +32,14 @@ export const gondorianSpearman = ally(
       'Response: After Gondorian Spearman is declared as a defender, deal 1 damage to the attacking enemy.',
     response: {
       event: 'declaredAsDefender',
+      condition: {
+        card: {
+          target: 'event',
+          value: {
+            is: 'self',
+          },
+        },
+      },
       action: {
         card: {
           target: {

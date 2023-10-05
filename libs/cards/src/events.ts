@@ -102,6 +102,7 @@ export const feint = event(
   }
 );
 
+// TODO custom action
 export const quickStrike = event(
   {
     name: 'Quick Strike',
