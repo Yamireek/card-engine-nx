@@ -1,6 +1,6 @@
-import { Modifier, Until } from './types';
+import { CardModifier, Until } from './types';
 
 export type ModifierState = {
-  modifier: Modifier | Modifier[];
+  modifier: CardModifier | CardModifier[];
   until?: Until;
 };

@@ -37,6 +37,10 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
       return INVALID_MOVE;
     }
 
+    if (G.choice.type === 'show') {
+      return INVALID_MOVE;
+    }
+
     const options = G.choice.options;
     const choices = choosen.map((index) => options[index]);
     G.choice = undefined;

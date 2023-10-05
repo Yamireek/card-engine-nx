@@ -1,9 +1,4 @@
-import {
-  BoolExpr,
-  CardBoolExpr,
-  NumberExpr,
-  event,
-} from '@card-engine-nx/state';
+import { BoolExpr, CardBoolExpr, NumberExpr } from '@card-engine-nx/state';
 import { getTargetCard, getTargetCards } from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';

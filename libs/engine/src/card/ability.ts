@@ -3,7 +3,7 @@ import {
   ResponseAction,
   CardTarget,
   CardView,
-  Modifier,
+  CardModifier,
   PaymentConditions,
   UserCardAction,
 } from '@card-engine-nx/state';
@@ -121,7 +121,7 @@ export function createPlayAttachmentAction(
 }
 
 export function createCardActions(
-  ability: Modifier,
+  ability: CardModifier,
   action: Action,
   self: CardView,
   controller: PlayerId,
@@ -185,7 +185,7 @@ export function createCardActions(
 }
 
 export function applyAbility(
-  ability: Modifier,
+  ability: CardModifier,
   self: CardView,
   ctx: ViewContext
 ) {

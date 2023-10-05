@@ -31,13 +31,13 @@ export function createState(initState?: SimpleState, program?: Action): State {
     triggers: { end_of_phase: [], end_of_round: [] },
     nextId: 1,
     cards: {},
-    effects: [],
     vars: {
       card: {},
       player: {},
     },
     actionLimits: [],
     modifiers: [],
+    event: [],
   };
 
   if (initState) {

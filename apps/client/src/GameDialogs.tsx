@@ -43,6 +43,10 @@ export const GameDialogs = () => {
     );
   }
 
+  if (state.choice.type === 'show') {
+    return <>TODO show</>;
+  }
+
   if (playerId && state.choice.player !== playerId) {
     return (
       <Dialog open>

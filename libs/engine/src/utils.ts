@@ -1,5 +1,4 @@
 import {
-  Action,
   CardDefinition,
   State,
   View,
@@ -13,11 +12,10 @@ import {
   values,
 } from '@card-engine-nx/basic';
 import { executeAction } from './action';
-import { ExecutionContext, ViewContext } from './context';
+import { ExecutionContext } from './context';
 import { uiEvent } from './eventFactories';
 import { UIEvents } from './uiEvents';
 import { createView } from './view';
-import { getTargetCards } from './card';
 import { calculateBoolExpr } from './expr';
 import { Random } from './utils/random';
 

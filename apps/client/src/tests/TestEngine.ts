@@ -59,7 +59,10 @@ export class TestEngine {
   }
 
   chooseOption(description: string) {
-    if (this.state.choice?.type === 'actions') {
+    if (
+      this.state.choice?.type === 'actions' ||
+      this.state.choice?.type === 'show'
+    ) {
       throw new Error('no options');
     }
 
@@ -78,7 +81,11 @@ export class TestEngine {
   }
 
   chooseOptions(titles: string[]) {
-    if (!this.state.choice || this.state.choice?.type === 'actions') {
+    if (
+      !this.state.choice ||
+      this.state.choice?.type === 'actions' ||
+      this.state.choice?.type === 'show'
+    ) {
       throw new Error('no options');
     }
 

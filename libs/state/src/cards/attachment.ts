@@ -1,10 +1,10 @@
 import { AttachmentProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
-import { Modifier } from '../types';
+import { CardModifier } from '../types';
 
 export function attachment(
   props: Omit<AttachmentProps, 'type'>,
-  ...abilities: Modifier[]
+  ...abilities: CardModifier[]
 ): CardDefinition {
   return {
     front: {

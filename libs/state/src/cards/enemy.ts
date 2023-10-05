@@ -1,10 +1,10 @@
 import { EnemyProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
-import { Modifier } from '../types';
+import { CardModifier } from '../types';
 
 export function enemy(
   props: Omit<EnemyProps, 'type'>,
-  ...abilities: Modifier[]
+  ...abilities: CardModifier[]
 ): CardDefinition {
   return {
     front: {

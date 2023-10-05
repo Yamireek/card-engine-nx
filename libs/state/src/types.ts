@@ -170,7 +170,7 @@ export type CardAction =
         to: ZoneId;
         side: Side;
       };
-      modify?: Modifier | Modifier[];
+      modify?: CardModifier | CardModifier[];
       setAsVar?: string;
       responses?: Event;
     };
@@ -180,7 +180,7 @@ export type PropertyBonus = {
   amount: NumberExpr;
 };
 
-export type Modifier = {
+export type CardModifier = {
   description: string;
   implicit?: boolean;
   phase?: Phase;
@@ -205,10 +205,10 @@ export type Modifier = {
     advance?: BoolExpr;
     travel?: BoolExpr;
   };
-  and?: Array<Omit<Modifier, 'description'>>;
+  and?: Array<Omit<CardModifier, 'description'>>;
   if?: {
     condition: BoolExpr;
-    modifier: Modifier;
+    modifier: CardModifier;
   };
   keywords?: Keywords;
   travel?: Action;

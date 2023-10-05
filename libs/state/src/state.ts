@@ -12,7 +12,7 @@ import {
   Action,
   CardTarget,
   Limit,
-  Modifier,
+  CardModifier,
   PlayerTarget,
   Until,
 } from './types';
@@ -42,7 +42,6 @@ export type State = {
   round: number;
   phase: Phase;
   firstPlayer: PlayerId;
-  effects: Array<{ description: string }>;
   players: Partial<Record<PlayerId, PlayerState>>;
   zones: Record<GameZoneType, ZoneState>;
   cards: Record<CardId, CardState>;
@@ -51,6 +50,12 @@ export type State = {
     end_of_round: Action[];
   };
   choice?:
+    | {
+        id: number;
+        title: string;
+        type: 'show';
+        cardId: CardId;
+      }
     | {
         id: number;
         title: string;
@@ -97,14 +102,14 @@ export type State = {
     player: Record<string, PlayerId | undefined>;
   };
   actionLimits: Array<{ type: Limit; card: CardId; index: number }>;
-  event?: Event[];
+  event: Event[];
   modifiers: GameModifier[];
 };
 
 export type GameModifier =
   | {
       card: CardTarget;
-      modifier: Modifier;
+      modifier: CardModifier;
       until?: Until;
     }
   | {

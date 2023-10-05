@@ -1,18 +1,18 @@
 import { CardDefinition } from '../card';
-import { Modifier } from '../types';
+import { CardModifier } from '../types';
 
 export type QuestDefinition =
   | {
       sequence: number;
       name?: never;
-      a: { name: string; abilities?: Modifier[] };
-      b: { name: string; questPoints: number; abilities?: Modifier[] };
+      a: { name: string; abilities?: CardModifier[] };
+      b: { name: string; questPoints: number; abilities?: CardModifier[] };
     }
   | {
       sequence: number;
       name: string;
-      a: { name?: never; abilities?: Modifier[] };
-      b: { name?: never; questPoints: number; abilities?: Modifier[] };
+      a: { name?: never; abilities?: CardModifier[] };
+      b: { name?: never; questPoints: number; abilities?: CardModifier[] };
     };
 
 export function quest(def: QuestDefinition): CardDefinition {

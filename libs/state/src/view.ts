@@ -7,13 +7,12 @@ import {
   PrintedProps,
 } from '@card-engine-nx/basic';
 import {
-  Modifier,
+  CardModifier,
   Action,
   CardTarget,
   NextStage,
   EventType,
   BoolExpr,
-  PlayerAction,
   CardAction,
 } from './types';
 import { GameModifier } from './state';
@@ -53,7 +52,7 @@ export type UserCardAction = {
 export type AbilityView = {
   printed: boolean;
   applied: boolean;
-  ability: Modifier;
+  ability: CardModifier;
 };
 
 export type CardView = {
