@@ -266,20 +266,20 @@ export function applyModifier(
   //   return;
   // }
 
-  // if (modifier.forced) {
-  //   if (!ctx.view.responses[modifier.forced.event]) {
-  //     ctx.view.responses[modifier.forced.event] = [];
-  //   }
+  if (modifier.forced) {
+    if (!ctx.view.responses[modifier.forced.event]) {
+      ctx.view.responses[modifier.forced.event] = [];
+    }
 
-  //   ctx.view.responses[modifier.forced.event]?.push({
-  //     card: self.id,
-  //     description: modifier.description,
-  //     action: modifier.forced.action,
-  //     condition: modifier.forced.condition,
-  //     forced: true,
-  //   });
-  //   return;
-  // }
+    ctx.view.responses[modifier.forced.event]?.push({
+      card: self.id,
+      description: modifier.description,
+      action: modifier.forced.action,
+      condition: modifier.forced.condition,
+      forced: true,
+    });
+    return;
+  }
 
   if (modifier.response) {
     if (!ctx.view.responses[modifier.response.event]) {
@@ -471,7 +471,7 @@ export function createModifiers(
   }
 
   if ('forced' in ability) {
-    if (zone === 'engaged') {
+    if (zone === 'engaged' || zone === 'playerArea') {
       return [
         {
           card: self,
