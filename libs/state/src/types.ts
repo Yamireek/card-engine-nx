@@ -245,6 +245,7 @@ export type CardModifier = {
   conditional?: {
     advance?: BoolExpr;
   };
+  attachesTo?: CardTarget;
 };
 
 export type PaymentConditions = {
@@ -333,6 +334,7 @@ export type CardTarget =
   | 'ready'
   | 'event'
   | 'exhausted'
+  | 'source'
   | CardId
   | CardId[]
   | {

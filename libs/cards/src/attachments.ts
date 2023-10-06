@@ -16,7 +16,7 @@ export const dwarvenAxe = attachment(
     description:
       'Attached hero gains +1 ATT (+2 ATT instead if attached hero is a Dwarf.)',
     target: {
-      hasAttachment: 'self',
+      hasAttachment: 'source',
     },
     bonus: {
       property: 'attack',
@@ -24,7 +24,7 @@ export const dwarvenAxe = attachment(
         if: {
           cond: {
             card: {
-              target: { hasAttachment: 'self' },
+              target: 'self',
               value: { hasTrait: 'dwarf' },
             },
           },
@@ -51,7 +51,7 @@ export const citadelPlate = attachment(
   {
     description: 'Attached hero gets +4 Hit Points.',
     target: {
-      hasAttachment: 'self',
+      hasAttachment: 'source',
     },
     bonus: {
       property: 'hitPoints',
@@ -75,7 +75,7 @@ export const bladeOfGondolin = attachment(
   {
     description: 'Attached hero gets +1 Attack when attacking an Orc.',
     target: {
-      hasAttachment: 'self',
+      hasAttachment: 'source',
     },
     bonus: {
       property: 'attack',
@@ -85,7 +85,7 @@ export const bladeOfGondolin = attachment(
             and: [
               {
                 card: {
-                  target: { hasAttachment: 'self' },
+                  target: 'self',
                   value: { hasMark: 'attacking' },
                 },
               },

@@ -108,6 +108,7 @@ export type State = {
 
 export type GameModifier =
   | {
+      source: CardId;
       card: CardTarget;
       modifier: CardModifier;
       until?: Until;

@@ -401,6 +401,7 @@ export function createModifiers(
     if (zone === 'playerArea') {
       return [
         {
+          source: self,
           card: ability.target ?? self,
           modifier: {
             description: ability.description,
@@ -417,6 +418,7 @@ export function createModifiers(
     if (zone === 'playerArea' && controller) {
       return [
         {
+          source: self,
           card: self,
           modifier: {
             description: ability.description,
@@ -458,6 +460,7 @@ export function createModifiers(
     if (zone === 'playerArea') {
       return [
         {
+          source: self,
           card: self,
           modifier: {
             description: ability.description,
@@ -474,6 +477,7 @@ export function createModifiers(
     if (zone === 'engaged' || zone === 'playerArea' || zone === 'questArea') {
       return [
         {
+          source: self,
           card: self,
           modifier: {
             description: ability.description,
@@ -490,6 +494,7 @@ export function createModifiers(
     if (zone === 'encounterDeck') {
       return [
         {
+          source: self,
           card: self,
           modifier: {
             description: ability.description,
@@ -506,6 +511,7 @@ export function createModifiers(
     if (zone === 'stagingArea') {
       return [
         {
+          source: self,
           card: self,
           modifier: {
             description: ability.description,
@@ -521,6 +527,7 @@ export function createModifiers(
   if ('setup' in ability) {
     return [
       {
+        source: self,
         card: self,
         modifier: { description: ability.description, setup: ability.setup },
       },
@@ -531,6 +538,7 @@ export function createModifiers(
     if (zone === 'questArea') {
       return [
         {
+          source: self,
           card: self,
           modifier: {
             description: ability.description,
@@ -545,6 +553,7 @@ export function createModifiers(
     if (zone === 'questArea') {
       return [
         {
+          source: self,
           card: self,
           modifier: {
             description: ability.description,
@@ -559,6 +568,23 @@ export function createModifiers(
     return ability.multi.flatMap((a) =>
       createModifiers(self, controller, a, phase, zone)
     );
+  }
+
+  if ('attachesTo' in ability) {
+    if (zone === 'hand') {
+      return [
+        {
+          source: self,
+          card: self,
+          modifier: {
+            description: ability.description,
+            attachesTo: ability.attachesTo,
+          },
+        },
+      ];
+    }
+
+    return [];
   }
 
   console.log(`unknown ability: ${JSON.stringify(ability, null, 1)}`);

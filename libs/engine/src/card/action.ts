@@ -620,6 +620,7 @@ export function executeCardAction(
     if (isArray(action.modify)) {
       for (const modifier of action.modify) {
         ctx.state.modifiers.push({
+          source: 0, // TODO fix
           card: card.id,
           modifier,
           until: modifier.until,
@@ -627,6 +628,7 @@ export function executeCardAction(
       }
     } else {
       ctx.state.modifiers.push({
+        source: 0, // TODO fix
         card: card.id,
         modifier: action.modify,
         until: action.modify.until,
