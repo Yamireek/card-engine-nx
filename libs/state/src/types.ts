@@ -218,7 +218,7 @@ export type Ability = { description: string } & (
       };
     }
   | {
-      multi: Array<Omit<Ability, 'description'>>;
+      multi: Array<Ability>;
     }
   | {
       conditional?: {
@@ -240,6 +240,11 @@ export type CardModifier = {
   action?: Action;
   whenRevealed?: Action;
   travel?: Action;
+  setup?: Action;
+  nextStage?: 'random';
+  conditional?: {
+    advance?: BoolExpr;
+  };
 };
 
 export type PaymentConditions = {

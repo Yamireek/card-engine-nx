@@ -368,8 +368,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     const event = action.event;
 
-    debugger;
-
     if (!ctx.state.event) {
       ctx.state.event = [];
     }

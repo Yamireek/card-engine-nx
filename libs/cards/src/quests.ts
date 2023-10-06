@@ -128,11 +128,13 @@ export const achosenPath1 = quest({
           "The players must find and defeat Ungoliant's Spawn to win this game.",
         multi: [
           {
+            description: '',
             conditional: {
               advance: false,
             },
           },
           {
+            description: '',
             forced: {
               event: 'destroyed',
               condition: {

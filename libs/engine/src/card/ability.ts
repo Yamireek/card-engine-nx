@@ -227,10 +227,10 @@ export function applyModifier(
     return;
   }
 
-  // if (modifier.nextStage) {
-  //   self.nextStage = modifier.nextStage;
-  //   return;
-  // }
+  if (modifier.nextStage) {
+    self.nextStage = modifier.nextStage;
+    return;
+  }
 
   // if (modifier.disable) {
   //   if (!self.disabled) {
@@ -241,10 +241,10 @@ export function applyModifier(
   //   return;
   // }
 
-  // if (modifier.setup) {
-  //   ctx.view.setup.push(modifier.setup);
-  //   return;
-  // }
+  if (modifier.setup) {
+    ctx.view.setup.push(modifier.setup);
+    return;
+  }
 
   // if (modifier.action) {
   //   const controller = ctx.state.cards[self.id].controller;
@@ -323,16 +323,16 @@ export function applyModifier(
     return;
   }
 
-  // if (modifier.conditional) {
-  //   if (modifier.conditional.advance !== undefined) {
-  //     self.conditional.advance.push(modifier.conditional.advance);
-  //     return;
-  //   }
-  //   if (modifier.conditional.travel !== undefined) {
-  //     self.conditional.travel.push(modifier.conditional.travel);
-  //     return;
-  //   }
-  // }
+  if (modifier.conditional) {
+    if (modifier.conditional.advance !== undefined) {
+      self.conditional.advance.push(modifier.conditional.advance);
+      return;
+    }
+    // if (modifier.conditional.travel !== undefined) {
+    //   self.conditional.travel.push(modifier.conditional.travel);
+    //   return;
+    // }
+  }
 
   // if (ability.and) {
   //   for (const item of ability.and) {
@@ -471,7 +471,7 @@ export function createModifiers(
   }
 
   if ('forced' in ability) {
-    if (zone === 'engaged' || zone === 'playerArea') {
+    if (zone === 'engaged' || zone === 'playerArea' || zone === 'questArea') {
       return [
         {
           card: self,
@@ -516,6 +516,49 @@ export function createModifiers(
     }
 
     return [];
+  }
+
+  if ('setup' in ability) {
+    return [
+      {
+        card: self,
+        modifier: { description: ability.description, setup: ability.setup },
+      },
+    ];
+  }
+
+  if ('nextStage' in ability) {
+    if (zone === 'questArea') {
+      return [
+        {
+          card: self,
+          modifier: {
+            description: ability.description,
+            nextStage: ability.nextStage,
+          },
+        },
+      ];
+    }
+  }
+
+  if ('conditional' in ability) {
+    if (zone === 'questArea') {
+      return [
+        {
+          card: self,
+          modifier: {
+            description: ability.description,
+            conditional: ability.conditional,
+          },
+        },
+      ];
+    }
+  }
+
+  if ('multi' in ability) {
+    return ability.multi.flatMap((a) =>
+      createModifiers(self, controller, a, phase, zone)
+    );
   }
 
   console.log(`unknown ability: ${JSON.stringify(ability, null, 1)}`);
