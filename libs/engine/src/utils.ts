@@ -88,6 +88,10 @@ export function advanceToChoiceState(
 ) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
+    if (state.choice?.type === 'show' && autoSkip) {
+      state.choice = undefined;
+    }
+
     if (state.choice) {
       if (
         state.choice.type === 'single' &&

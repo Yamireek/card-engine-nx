@@ -41,11 +41,14 @@ export const caughtInAWeb = treachery(
   {
     description:
       "Attached hero does not ready during the refresh phase unless you pay 2 resources from that hero's pool.'",
-    target: {
-      hasAttachment: 'self',
-    },
-    refreshCost: {
-      payResources: 2,
+    card: {
+      description: '',
+      target: {
+        hasAttachment: 'self',
+      },
+      refreshCost: {
+        payResources: 2,
+      },
     },
   }
 );

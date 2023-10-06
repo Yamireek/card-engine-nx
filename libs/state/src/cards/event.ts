@@ -1,10 +1,10 @@
 import { EventProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
-import { CardModifier } from '../types';
+import { Ability } from '../types';
 
 export function event(
   props: Omit<EventProps, 'type'>,
-  ...abilities: CardModifier[]
+  ...abilities: Ability[]
 ): CardDefinition {
   return {
     front: {

@@ -279,7 +279,8 @@ export function canCardExecute(
       return (
         card.zone === 'stagingArea' ||
         card.zone === 'engaged' ||
-        card.zone === 'playerArea'
+        card.zone === 'playerArea' ||
+        card.zone === 'encounterDeck'
       );
     }
 

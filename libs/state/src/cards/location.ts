@@ -1,10 +1,10 @@
 import { LocationProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
-import { CardModifier } from '../types';
+import { Ability } from '../types';
 
 export function location(
   props: Omit<LocationProps, 'type'>,
-  ...abilities: CardModifier[]
+  ...abilities: Ability[]
 ): CardDefinition {
   return {
     front: {

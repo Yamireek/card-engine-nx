@@ -1,7 +1,8 @@
 import { State, View } from '@card-engine-nx/state';
 import { mapValues, values } from 'lodash';
 import {
-  applyAbility,
+  applyModifier,
+  createModifiers,
   createPlayAllyAction,
   createPlayAttachmentAction,
 } from './card/ability';
@@ -10,7 +11,6 @@ import { canExecute } from './resolution';
 import { createPlayerView } from './player/view';
 import { applyPlayerModifier } from './player/modifier';
 import { getTargetCards } from './card';
-import { cloneDeep } from 'lodash/fp';
 import { getTargetPlayers } from './player/target';
 
 export function createView(state: State): View {
@@ -27,13 +27,11 @@ export function createView(state: State): View {
 
   view.modifiers = values(state.cards).flatMap((c) => {
     const abilities = c.definition[c.sideUp].abilities;
-    return abilities.map((a) => ({
-      applied: false,
-      modifier: {
-        card: c.id,
-        modifier: cloneDeep(a),
-      },
-    }));
+    return abilities
+      .flatMap((a) => 
+        createModifiers(c.id, c.controller, a, state.phase, c.zone)
+      )
+      .flatMap((modifier) => ({ applied: false, modifier }));
   });
 
   view.modifiers.push(
@@ -56,7 +54,7 @@ export function createView(state: State): View {
         });
 
         for (const target of targets) {
-          applyAbility(modifier.modifier.modifier, view.cards[target], {
+          applyModifier(modifier.modifier.modifier, view.cards[target], {
             state,
             view,
             card: { self: target },

@@ -6,9 +6,19 @@ import {
   CardModifier,
   PaymentConditions,
   UserCardAction,
+  Ability,
+  GameModifier,
+  View,
 } from '@card-engine-nx/state';
 import { ViewContext } from '../context';
-import { CardId, Phase, PlayerId, Sphere } from '@card-engine-nx/basic';
+import {
+  CardId,
+  GameZoneType,
+  Phase,
+  PlayerId,
+  Sphere,
+  ZoneType,
+} from '@card-engine-nx/basic';
 import { sequence } from '../utils/sequence';
 import { getTargetCards } from './target';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
@@ -127,153 +137,153 @@ export function createCardActions(
   controller: PlayerId,
   phase: Phase
 ): UserCardAction[] {
-  if (self.zone === 'hand' && self.props.type === 'event') {
-    if (!ability.phase || ability.phase === phase) {
-      const eventAction = createEventAction(
-        self,
-        ability.payment,
-        action,
-        controller
-      );
-
-      if (eventAction) {
-        return [
-          {
-            action: eventAction,
-            card: self.id,
-            description: ability.description,
-          },
-        ];
-      }
-    }
-  }
-
-  if (self.zone === 'playerArea') {
-    if (!ability.phase || ability.phase === phase) {
-      return [
-        {
-          description: ability.description,
-          card: self.id,
-          action: {
-            useCardVar: {
-              name: 'self',
-              value: self.id,
-              action: {
-                usePlayerVar: {
-                  name: 'controller',
-                  value: controller,
-                  action: sequence(
-                    {
-                      useLimit: {
-                        type: ability.limit ?? 'none',
-                        card: self.id,
-                        index: 0, // TODO ability index
-                      },
-                    },
-                    action
-                  ),
-                },
-              },
-            },
-          },
-        },
-      ];
-    }
-  }
-
   return [];
+
+  // if (self.zone === 'hand' && self.props.type === 'event') {
+  //   if (!ability.phase || ability.phase === phase) {
+  //     const eventAction = createEventAction(
+  //       self,
+  //       ability.payment,
+  //       action,
+  //       controller
+  //     );
+
+  //     if (eventAction) {
+  //       return [
+  //         {
+  //           action: eventAction,
+  //           card: self.id,
+  //           description: ability.description,
+  //         },
+  //       ];
+  //     }
+  //   }
+  // }
+
+  // if (self.zone === 'playerArea') {
+  //   if (!ability.phase || ability.phase === phase) {
+  //     return [
+  //       {
+  //         description: ability.description,
+  //         card: self.id,
+  //         action: {
+  //           useCardVar: {
+  //             name: 'self',
+  //             value: self.id,
+  //             action: {
+  //               usePlayerVar: {
+  //                 name: 'controller',
+  //                 value: controller,
+  //                 action: sequence(
+  //                   {
+  //                     useLimit: {
+  //                       type: ability.limit ?? 'none',
+  //                       card: self.id,
+  //                       index: 0, // TODO ability index
+  //                     },
+  //                   },
+  //                   action
+  //                 ),
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     ];
+  //   }
+  // }
+
+  // return [];
 }
 
-export function applyAbility(
-  ability: CardModifier,
+export function applyModifier(
+  modifier: CardModifier,
   self: CardView,
   ctx: ViewContext
 ) {
-  self.abilities.push(ability.description);
+  // if (ability.target) {
+  //   const targets = getTargetCards(ability.target, ctx);
+  //   for (const id of targets) {
+  //     const card = ctx.view.cards[id];
+  //     applyAbility({ ...ability, target: undefined }, card, ctx);
+  //   }
+  //   return;
+  // }
 
-  if (ability.target) {
-    const targets = getTargetCards(ability.target, ctx);
-    for (const id of targets) {
-      const card = ctx.view.cards[id];
-      applyAbility({ ...ability, target: undefined }, card, ctx);
-    }
-    return;
-  }
-
-  if (ability.bonus) {
-    const targets = ability.target
-      ? getTargetCards(ability.target, ctx)
+  if (modifier.bonus) {
+    const targets = modifier.target
+      ? getTargetCards(modifier.target, ctx)
       : getTargetCards(self.id, ctx);
 
     for (const id of targets) {
-      const amount = calculateNumberExpr(ability.bonus.amount, ctx);
+      const amount = calculateNumberExpr(modifier.bonus.amount, ctx);
       const card = ctx.view.cards[id];
-      const value = card.props[ability.bonus.property];
+      const value = card.props[modifier.bonus.property];
       if (value !== undefined && amount) {
-        card.props[ability.bonus.property] = value + amount;
+        card.props[modifier.bonus.property] = value + amount;
       }
     }
 
     return;
   }
 
-  if (ability.nextStage) {
-    self.nextStage = ability.nextStage;
-    return;
-  }
+  // if (modifier.nextStage) {
+  //   self.nextStage = modifier.nextStage;
+  //   return;
+  // }
 
-  if (ability.disable) {
-    if (!self.disabled) {
-      self.disabled = {};
-    }
+  // if (modifier.disable) {
+  //   if (!self.disabled) {
+  //     self.disabled = {};
+  //   }
 
-    self.disabled[ability.disable] = true;
-    return;
-  }
+  //   self.disabled[modifier.disable] = true;
+  //   return;
+  // }
 
-  if (ability.setup) {
-    ctx.view.setup.push(ability.setup);
-    return;
-  }
+  // if (modifier.setup) {
+  //   ctx.view.setup.push(modifier.setup);
+  //   return;
+  // }
 
-  if (ability.action) {
-    const controller = ctx.state.cards[self.id].controller;
-    if (controller) {
-      const actions = createCardActions(
-        ability,
-        ability.action,
-        self,
-        controller,
-        ctx.state.phase
-      );
-      ctx.view.actions.push(...actions);
-    }
-    return;
-  }
+  // if (modifier.action) {
+  //   const controller = ctx.state.cards[self.id].controller;
+  //   if (controller) {
+  //     const actions = createCardActions(
+  //       modifier,
+  //       modifier.action,
+  //       self,
+  //       controller,
+  //       ctx.state.phase
+  //     );
+  //     ctx.view.actions.push(...actions);
+  //   }
+  //   return;
+  // }
 
-  if (ability.attachesTo) {
-    self.attachesTo = ability.attachesTo;
-    return;
-  }
+  // if (modifier.attachesTo) {
+  //   self.attachesTo = modifier.attachesTo;
+  //   return;
+  // }
 
-  if (ability.forced) {
-    if (!ctx.view.responses[ability.forced.event]) {
-      ctx.view.responses[ability.forced.event] = [];
-    }
+  // if (modifier.forced) {
+  //   if (!ctx.view.responses[modifier.forced.event]) {
+  //     ctx.view.responses[modifier.forced.event] = [];
+  //   }
 
-    ctx.view.responses[ability.forced.event]?.push({
-      card: self.id,
-      description: ability.description,
-      action: ability.forced.action,
-      condition: ability.forced.condition,
-      forced: true,
-    });
-    return;
-  }
+  //   ctx.view.responses[modifier.forced.event]?.push({
+  //     card: self.id,
+  //     description: modifier.description,
+  //     action: modifier.forced.action,
+  //     condition: modifier.forced.condition,
+  //     forced: true,
+  //   });
+  //   return;
+  // }
 
-  if (ability.response) {
-    if (!ctx.view.responses[ability.response.event]) {
-      ctx.view.responses[ability.response.event] = [];
+  if (modifier.response) {
+    if (!ctx.view.responses[modifier.response.event]) {
+      ctx.view.responses[modifier.response.event] = [];
     }
 
     if (self.props.type === 'event' && self.zone === 'hand') {
@@ -281,26 +291,26 @@ export function applyAbility(
       if (controller) {
         const response = createEventResponse(
           self,
-          ability.response,
+          modifier.response,
           controller
         );
 
         if (response) {
-          ctx.view.responses[ability.response.event]?.push({
+          ctx.view.responses[modifier.response.event]?.push({
             card: self.id,
-            description: ability.description,
+            description: modifier.description,
             action: response,
-            condition: ability.response.condition,
+            condition: modifier.response.condition,
             forced: false,
           });
         }
       }
     } else {
-      ctx.view.responses[ability.response.event]?.push({
+      ctx.view.responses[modifier.response.event]?.push({
         card: self.id,
-        description: ability.description,
-        action: ability.response.action,
-        condition: ability.response.condition,
+        description: modifier.description,
+        action: modifier.response.action,
+        condition: modifier.response.condition,
         forced: false,
       });
     }
@@ -308,66 +318,209 @@ export function applyAbility(
     return;
   }
 
-  if (ability.whenRevealed) {
-    self.whenRevealed.push(ability.whenRevealed);
+  if (modifier.whenRevealed) {
+    self.whenRevealed.push(modifier.whenRevealed);
     return;
   }
 
-  if (ability.conditional) {
-    if (ability.conditional.advance !== undefined) {
-      self.conditional.advance.push(ability.conditional.advance);
-      return;
+  // if (modifier.conditional) {
+  //   if (modifier.conditional.advance !== undefined) {
+  //     self.conditional.advance.push(modifier.conditional.advance);
+  //     return;
+  //   }
+  //   if (modifier.conditional.travel !== undefined) {
+  //     self.conditional.travel.push(modifier.conditional.travel);
+  //     return;
+  //   }
+  // }
+
+  // if (ability.and) {
+  //   for (const item of ability.and) {
+  //     applyAbility({ ...item, description: ability.description }, self, ctx);
+  //   }
+
+  //   return;
+  // }
+
+  // if (ability.if) {
+  //   const condition = calculateBoolExpr(ability.if.condition, ctx);
+  //   if (condition) {
+  //     applyAbility(ability.if.modifier, self, ctx);
+  //   }
+  //   return;
+  // }
+
+  // if (modifier.keywords) {
+  //   merge(self.props.keywords, modifier.keywords);
+  //   // TODO number keywords
+  //   return;
+  // }
+
+  // if (modifier.travel) {
+  //   self.travel.push(modifier.travel);
+  //   return;
+  // }
+
+  // if (modifier.player) {
+  //   const players = getTargetPlayers(modifier.player.target, ctx);
+  //   for (const playerId of players) {
+  //     const player = ctx.view.players[playerId];
+  //     if (player) {
+  //       applyPlayerModifier(player, modifier.player.modifier);
+  //     }
+  //   }
+  //   return;
+  // }
+
+  // if (modifier.refreshCost) {
+  //   self.refreshCost.push(modifier.refreshCost);
+  //   return;
+  // }
+
+  if (modifier.action) {
+    ctx.view.actions.push({
+      card: self.id,
+      description: modifier.description,
+      action: modifier.action,
+    });
+    return;
+  }
+
+  console.log(`unknown modifier: ${JSON.stringify(modifier, null, 1)}`);
+  //throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);
+}
+
+export function createModifiers(
+  self: CardId,
+  controller: PlayerId | undefined,
+  ability: Ability,
+  phase: Phase,
+  zone: ZoneType
+): GameModifier[] {
+  if ('bonus' in ability) {
+    if (zone === 'playerArea') {
+      return [
+        {
+          card: ability.target ?? self,
+          modifier: {
+            description: ability.description,
+            bonus: ability.bonus,
+          },
+        },
+      ];
     }
-    if (ability.conditional.travel !== undefined) {
-      self.conditional.travel.push(ability.conditional.travel);
-      return;
+
+    return [];
+  }
+
+  if ('action' in ability) {
+    if (zone === 'playerArea' && controller) {
+      return [
+        {
+          card: self,
+          modifier: {
+            description: ability.description,
+            action: {
+              useCardVar: {
+                name: 'self',
+                value: self,
+                action: {
+                  usePlayerVar: {
+                    name: 'controller',
+                    value: controller,
+                    action: ability.limit
+                      ? {
+                          sequence: [
+                            {
+                              useLimit: {
+                                card: self,
+                                type: ability.limit,
+                                index: 0, // TODO index
+                              },
+                            },
+                            ability.action,
+                          ],
+                        }
+                      : ability.action,
+                  },
+                },
+              },
+            },
+          },
+        },
+      ];
     }
+
+    return [];
   }
 
-  if (ability.and) {
-    for (const item of ability.and) {
-      applyAbility({ ...item, description: ability.description }, self, ctx);
+  if ('response' in ability) {
+    if (zone === 'playerArea') {
+      return [
+        {
+          card: self,
+          modifier: {
+            description: ability.description,
+            response: ability.response,
+          },
+        },
+      ];
     }
 
-    return;
+    return [];
   }
 
-  if (ability.if) {
-    const condition = calculateBoolExpr(ability.if.condition, ctx);
-    if (condition) {
-      applyAbility(ability.if.modifier, self, ctx);
+  if ('forced' in ability) {
+    if (zone === 'engaged') {
+      return [
+        {
+          card: self,
+          modifier: {
+            description: ability.description,
+            forced: ability.forced,
+          },
+        },
+      ];
     }
-    return;
+
+    return [];
   }
 
-  if (ability.keywords) {
-    merge(self.props.keywords, ability.keywords);
-    // TODO number keywords
-    return;
-  }
-
-  if (ability.travel) {
-    self.travel.push(ability.travel);
-    return;
-  }
-
-  if (ability.player) {
-    const players = getTargetPlayers(ability.player.target, ctx);
-    for (const playerId of players) {
-      const player = ctx.view.players[playerId];
-      if (player) {
-        applyPlayerModifier(player, ability.player.modifier);
-      }
+  if ('whenRevealed' in ability) {
+    if (zone === 'encounterDeck') {
+      return [
+        {
+          card: self,
+          modifier: {
+            description: ability.description,
+            whenRevealed: ability.whenRevealed,
+          },
+        },
+      ];
     }
-    return;
+
+    return [];
   }
 
-  if (ability.refreshCost) {
-    self.refreshCost.push(ability.refreshCost);
-    return;
+  if ('travel' in ability) {
+    if (zone === 'stagingArea') {
+      return [
+        {
+          card: self,
+          modifier: {
+            description: ability.description,
+            travel: ability.travel,
+          },
+        },
+      ];
+    }
+
+    return [];
   }
 
-  throw new Error(`unknown ability: ${JSON.stringify(ability)}`);
+  console.log(`unknown ability: ${JSON.stringify(ability, null, 1)}`);
+
+  return [];
 }
 
 export function createEventResponse(

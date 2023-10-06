@@ -15,7 +15,7 @@ import {
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
 import { Event } from './state';
-import { PlayerModifier } from './view';
+import { PlayerModifier, UserCardAction } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
@@ -180,39 +180,66 @@ export type PropertyBonus = {
   amount: NumberExpr;
 };
 
+export type Ability = { description: string } & (
+  | {
+      whenRevealed: Action;
+    }
+  | {
+      action: Action;
+      payment?: PaymentConditions;
+      phase?: Phase;
+      limit?: 'once_per_round';
+    }
+  | {
+      card: CardModifier;
+      target?: CardTarget;
+    }
+  | {
+      bonus: PropertyBonus;
+      target?: CardTarget;
+    }
+  | {
+      player: PlayerModifier;
+      target: PlayerTarget;
+    }
+  | {
+      setup: Action;
+    }
+  | {
+      travel: Action;
+    }
+  | { response: ResponseAction }
+  | { forced: ResponseAction }
+  | { attachesTo: CardTarget }
+  | {
+      if: {
+        condition: BoolExpr;
+        modifier: Omit<Ability, 'description'>;
+      };
+    }
+  | {
+      multi: Array<Omit<Ability, 'description'>>;
+    }
+  | {
+      conditional?: {
+        advance?: BoolExpr;
+      };
+    }
+  | { nextStage: 'random' }
+);
+
 export type CardModifier = {
   description: string;
-  implicit?: boolean;
-  phase?: Phase;
-  action?: Action;
-  setup?: Action;
-  attachesTo?: CardTarget;
-  limit?: 'once_per_round';
+  bonus?: PropertyBonus;
+  target?: CardTarget; // TODO REMOVE
+  disable?: Mark;
+  until?: Until; // TODO REMOVE
+  refreshCost?: CardAction;
   response?: ResponseAction;
   forced?: ResponseAction;
-  payment?: PaymentConditions;
-  bonus?: PropertyBonus;
-  target?: CardTarget;
-  player?: {
-    target: PlayerTarget;
-    modifier: PlayerModifier;
-  };
-  disable?: Mark;
-  until?: Until;
-  nextStage?: 'random';
+  action?: Action;
   whenRevealed?: Action;
-  conditional?: {
-    advance?: BoolExpr;
-    travel?: BoolExpr;
-  };
-  and?: Array<Omit<CardModifier, 'description'>>;
-  if?: {
-    condition: BoolExpr;
-    modifier: CardModifier;
-  };
-  keywords?: Keywords;
   travel?: Action;
-  refreshCost?: CardAction;
 };
 
 export type PaymentConditions = {

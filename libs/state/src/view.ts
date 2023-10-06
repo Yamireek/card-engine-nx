@@ -15,7 +15,7 @@ import {
   BoolExpr,
   CardAction,
 } from './types';
-import { GameModifier } from './state';
+import { GameModifier, State } from './state';
 
 export type View = {
   cards: Record<CardId, CardView>;
@@ -82,3 +82,5 @@ export type PlayerView = {
 export type PlayerModifierView = { applied: boolean; modifier: PlayerModifier };
 
 export type PlayerModifier = 'can_declate_multiple_defenders' | 'disable_draw';
+
+export type StateView = State & View;

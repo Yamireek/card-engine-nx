@@ -44,6 +44,8 @@ export type PlayerZoneType =
   | 'playerArea'
   | 'engaged';
 
+export type ZoneType = GameZoneType | PlayerZoneType;
+
 export type Side = 'front' | 'back';
 
 export type Trait =
