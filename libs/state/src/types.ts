@@ -194,6 +194,7 @@ export type Ability = { description: string } & (
   | {
       card: CardModifier;
       target?: CardTarget;
+      condition?: BoolExpr;
     }
   | {
       bonus: PropertyBonus;
@@ -202,6 +203,7 @@ export type Ability = { description: string } & (
   | {
       player: PlayerModifier;
       target: PlayerTarget;
+      condition?: BoolExpr;
     }
   | {
       setup: Action;
@@ -212,12 +214,6 @@ export type Ability = { description: string } & (
   | { response: ResponseAction; cost?: CostModifier }
   | { forced: ResponseAction }
   | { attachesTo: CardTarget }
-  | {
-      if: {
-        condition: BoolExpr;
-        modifier: Omit<Ability, 'description'>;
-      };
-    }
   | {
       multi: Array<Ability>;
     }
@@ -248,6 +244,7 @@ export type CardModifier = {
   };
   attachesTo?: CardTarget;
   cost?: CostModifier;
+  keywords?: Keywords;
 };
 
 export type CostModifier = {

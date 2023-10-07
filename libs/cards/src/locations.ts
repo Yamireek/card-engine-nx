@@ -227,22 +227,15 @@ export const enchantedStream = location(
   {
     description:
       'While Enchanted Stream is the active location, players cannot draw cards.',
-    if: {
-      condition: {
-        card: {
-          target: 'self',
-          value: {
-            zone: 'activeLocation',
-          },
-        },
-      },
-      modifier: {
-        description: 'Players cannot draw cards',
-        player: {
-          target: 'each',
-          modifier: 'disable_draw',
+    condition: {
+      card: {
+        target: 'source',
+        value: {
+          zone: 'activeLocation',
         },
       },
     },
+    target: 'each',
+    player: 'disable_draw',
   }
 );

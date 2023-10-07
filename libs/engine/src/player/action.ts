@@ -643,6 +643,7 @@ export function executePlayerAction(
 
   if (action.modify) {
     ctx.state.modifiers.push({
+      source: 0, // TODO fix
       player: player.id,
       modifier: action.modify,
       until: action.until,

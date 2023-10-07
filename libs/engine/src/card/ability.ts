@@ -25,6 +25,7 @@ import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { merge } from 'lodash';
 import { getTargetPlayers } from '../player/target';
 import { applyPlayerModifier } from '../player/modifier';
+import { isInPlay } from '../utils';
 
 export function createPlayAllyAction(
   sphere: Sphere,
@@ -392,7 +393,6 @@ export function createModifiers(
           modifier: {
             description: ability.description,
             cost: ability.cost,
-
             action: {
               useCardVar: {
                 name: 'self',
@@ -666,6 +666,36 @@ export function createModifiers(
               },
             },
           },
+        },
+      ];
+    }
+
+    return [];
+  }
+
+  if ('player' in ability) {
+    if (isInPlay(zone)) {
+      return [
+        {
+          source: self,
+          player: ability.target,
+          modifier: ability.player,
+          condition: ability.condition,
+        },
+      ];
+    }
+
+    return [];
+  }
+
+  if ('card' in ability) {
+    if (isInPlay(zone)) {
+      return [
+        {
+          source: self,
+          card: ability.target ?? self,
+          modifier: ability.card,
+          condition: ability.condition,
         },
       ];
     }

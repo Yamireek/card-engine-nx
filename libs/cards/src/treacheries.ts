@@ -79,15 +79,13 @@ export const drivenByShadow = treachery(
   {
     description:
       'If there are no cards in the staging area, Driven by Shadow gains Surge.',
-    if: {
-      condition: {
-        eq: [0, { count: { cards: { zoneType: 'stagingArea' } } }],
-      },
-      modifier: {
-        description: 'Surge',
-        keywords: {
-          surge: true,
-        },
+    condition: {
+      eq: [0, { count: { cards: { zoneType: 'stagingArea' } } }],
+    },
+    card: {
+      description: 'Surge',
+      keywords: {
+        surge: true,
       },
     },
   }

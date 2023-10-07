@@ -15,6 +15,7 @@ import {
   CardModifier,
   PlayerTarget,
   Until,
+  BoolExpr,
 } from './types';
 import { PlayerModifier } from './view';
 
@@ -111,11 +112,14 @@ export type GameModifier =
       source: CardId;
       card: CardTarget;
       modifier: CardModifier;
+      condition?: BoolExpr;
       until?: Until;
     }
   | {
+      source: CardId;
       player: PlayerTarget;
       modifier: PlayerModifier;
+      condition?: BoolExpr;
       until?: Until;
     };
 

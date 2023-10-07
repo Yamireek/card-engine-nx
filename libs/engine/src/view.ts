@@ -12,6 +12,8 @@ import { createPlayerView } from './player/view';
 import { applyPlayerModifier } from './player/modifier';
 import { getTargetCards } from './card';
 import { getTargetPlayers } from './player/target';
+import { calculateBoolExpr } from './expr';
+import { ViewContext } from './context';
 
 export function createView(state: State): View {
   const view: View = {
@@ -56,27 +58,41 @@ export function createView(state: State): View {
         });
 
         for (const target of targets) {
-          applyModifier(modifier.modifier.modifier, view.cards[target], {
+          const ctx: ViewContext = {
             state,
             view,
             card: { self: target },
             player: {},
-          });
+          };
+          const condition = modifier.modifier.condition
+            ? calculateBoolExpr(modifier.modifier.condition, ctx)
+            : true;
+          if (condition) {
+            applyModifier(modifier.modifier.modifier, view.cards[target], ctx);
+          }
         }
       }
 
       if ('player' in modifier.modifier) {
-        const targets = getTargetPlayers(modifier.modifier.player, {
+        const ctx: ViewContext = {
           state,
           view,
-          card: {},
+          card: { source: modifier.modifier.source },
           player: {},
-        });
+        };
 
-        for (const target of targets) {
-          const player = view.players[target];
-          if (player) {
-            applyPlayerModifier(player, modifier.modifier.modifier);
+        const condition = modifier.modifier.condition
+          ? calculateBoolExpr(modifier.modifier.condition, ctx)
+          : true;
+
+        if (condition) {
+          const targets = getTargetPlayers(modifier.modifier.player, ctx);
+
+          for (const target of targets) {
+            const player = view.players[target];
+            if (player) {
+              applyPlayerModifier(player, modifier.modifier.modifier);
+            }
           }
         }
       }
