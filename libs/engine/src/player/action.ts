@@ -671,5 +671,15 @@ export function executePlayerAction(
     return;
   }
 
+  if (action.card) {
+    ctx.state.next.unshift({
+      card: {
+        target: action.card.target,
+        action: action.card.action,
+      },
+    });
+    return;
+  }
+
   throw new Error(`unknown player action: ${JSON.stringify(action)}`);
 }

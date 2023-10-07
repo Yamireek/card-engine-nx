@@ -631,6 +631,20 @@ export function executeCardAction(
     if (target) {
       card.attachments.push(target);
       ctx.state.cards[target].attachedTo = card.id;
+      ctx.state.next.unshift({
+        card: {
+          target,
+          action: {
+            move: {
+              side: 'front',
+              to: {
+                type: card.zone,
+                owner: card.owner,
+              } as any,
+            },
+          },
+        },
+      });
     }
     return;
   }

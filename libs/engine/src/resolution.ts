@@ -211,6 +211,19 @@ export function canPlayerExecute(
       return player.zones.library.cards.length > 0;
     }
 
+    if (action.card) {
+      return canExecute(
+        {
+          card: {
+            target: action.card.target,
+            action: action.card.action,
+          },
+        },
+        false,
+        ctx
+      );
+    }
+
     throw new Error(
       `not implemented: canPlayerExecute ${JSON.stringify(action)}`
     );

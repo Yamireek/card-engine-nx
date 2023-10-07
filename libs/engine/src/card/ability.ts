@@ -342,51 +342,11 @@ export function applyModifier(
   // }
 
   if (modifier.action) {
-    // const cs = ctx.state.cards[self.id];
-    // if (cs.zone === 'hand') {
-    //   if (!cs.controller) {
-    //     return;
-    //   }
-
-    //   ctx.view.actions.push({
-    //     card: self.id,
-    //     description: modifier.description,
-    //     action: {
-    //       useCardVar: {
-    //         name: 'self',
-    //         value: self.id,
-    //         action: {
-    //           usePlayerVar: {
-    //             name: 'controller',
-    //             value: cs.controller,
-    //             action: sequence(
-    //               {
-    //                 payment: {
-    //                   cost: {
-    //                     card: {
-    //                       target: self.id,
-    //                       action: 'payCost',
-    //                     },
-    //                   },
-    //                   effect: ability.action,
-    //                 },
-    //               },
-    //               {
-    //                 card: { target: self.id, action: 'discard' },
-    //               }
-    //             ),
-    //           },
-    //         },
-    //       },
-    //     },
-    //   });
-    // } else {
     ctx.view.actions.push({
       card: self.id,
       description: modifier.description,
       action: modifier.action,
     });
-    //}
 
     return;
   }
@@ -670,14 +630,41 @@ export function createModifiers(
   }
 
   if ('attachesTo' in ability) {
-    if (zone === 'hand') {
+    if (controller && phase === 'planning' && zone === 'hand') {
       return [
         {
           source: self,
           card: self,
           modifier: {
             description: ability.description,
-            attachesTo: ability.attachesTo,
+            action: {
+              player: {
+                target: controller,
+                action: {
+                  sequence: [
+                    {
+                      card: {
+                        target: self,
+                        action: {
+                          payCost: {},
+                        },
+                      },
+                    },
+                    {
+                      chooseCardActions: {
+                        title: 'Choose target for attachment',
+                        target: ability.attachesTo,
+                        optional: false,
+                        multi: false,
+                        action: {
+                          attachCard: self,
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
           },
         },
       ];
