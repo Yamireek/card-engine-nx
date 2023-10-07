@@ -172,6 +172,7 @@ export type CardAction =
         side: Side;
       };
       modify?: CardModifier | CardModifier[];
+      until?: Until;
       setAsVar?: string;
       responses?: Event;
     };
@@ -228,12 +229,14 @@ export type Ability = { description: string } & (
 export type CardModifier = {
   description: string;
   bonus?: PropertyBonus;
-  target?: CardTarget; // TODO REMOVE
   disable?: Mark;
-  until?: Until; // TODO REMOVE
   refreshCost?: CardAction;
-  response?: ResponseAction;
-  forced?: ResponseAction;
+  reaction?: {
+    event: EventType;
+    condition?: BoolExpr;
+    action: Action;
+    forced: boolean;
+  };
   action?: Action;
   whenRevealed?: Action;
   travel?: Action;

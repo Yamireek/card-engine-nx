@@ -47,14 +47,13 @@ export const bladeMastery = event(
                 {
                   description: 'Has +1 [attack] until end of the phase',
                   bonus: { property: 'attack', amount: 1 },
-                  until: 'end_of_phase',
                 },
                 {
                   description: 'Has +1 [defense] until end of the phase',
                   bonus: { property: 'defense', amount: 1 },
-                  until: 'end_of_phase',
                 },
               ],
+              until: 'end_of_phase',
             },
             multi: false,
             optional: false,
@@ -86,8 +85,8 @@ export const feint = event(
               modify: {
                 description: "Can't attack until end of phase",
                 disable: 'attacking',
-                until: 'end_of_phase',
               },
+              until: 'end_of_phase',
             },
             multi: false,
             optional: false,
@@ -307,8 +306,8 @@ export const thicketOfSpears = event(
                 modify: {
                   description: "Can't attack until end of phase",
                   disable: 'attacking',
-                  until: 'end_of_phase',
                 },
+                until: 'end_of_phase',
               },
             },
           },

@@ -203,27 +203,11 @@ export function applyModifier(
   self: CardView,
   ctx: ViewContext
 ) {
-  // if (ability.target) {
-  //   const targets = getTargetCards(ability.target, ctx);
-  //   for (const id of targets) {
-  //     const card = ctx.view.cards[id];
-  //     applyAbility({ ...ability, target: undefined }, card, ctx);
-  //   }
-  //   return;
-  // }
-
   if (modifier.bonus) {
-    const targets = modifier.target
-      ? getTargetCards(modifier.target, ctx)
-      : getTargetCards(self.id, ctx);
-
-    for (const id of targets) {
-      const amount = calculateNumberExpr(modifier.bonus.amount, ctx);
-      const card = ctx.view.cards[id];
-      const value = card.props[modifier.bonus.property];
-      if (value !== undefined && amount) {
-        card.props[modifier.bonus.property] = value + amount;
-      }
+    const amount = calculateNumberExpr(modifier.bonus.amount, ctx);
+    const value = self.props[modifier.bonus.property];
+    if (value !== undefined && amount) {
+      self.props[modifier.bonus.property] = value + amount;
     }
 
     return;
@@ -253,34 +237,18 @@ export function applyModifier(
   //   return;
   // }
 
-  if (modifier.forced) {
-    if (!ctx.view.responses[modifier.forced.event]) {
-      ctx.view.responses[modifier.forced.event] = [];
+  if (modifier.reaction) {
+    if (!ctx.view.responses[modifier.reaction.event]) {
+      ctx.view.responses[modifier.reaction.event] = [];
     }
 
-    ctx.view.responses[modifier.forced.event]?.push({
+    ctx.view.responses[modifier.reaction.event]?.push({
       card: self.id,
       description: modifier.description,
-      action: modifier.forced.action,
-      condition: modifier.forced.condition,
-      forced: true,
+      action: modifier.reaction.action,
+      condition: modifier.reaction.condition,
+      forced: modifier.reaction.forced,
     });
-    return;
-  }
-
-  if (modifier.response) {
-    if (!ctx.view.responses[modifier.response.event]) {
-      ctx.view.responses[modifier.response.event] = [];
-    }
-
-    ctx.view.responses[modifier.response.event]?.push({
-      card: self.id,
-      description: modifier.description,
-      action: modifier.response.action,
-      condition: modifier.response.condition,
-      forced: false,
-    });
-
     return;
   }
 
@@ -479,7 +447,8 @@ export function createModifiers(
           card: self,
           modifier: {
             description: ability.description,
-            response: {
+            reaction: {
+              forced: false,
               event: ability.response.event,
               condition: ability.response.condition,
               action: {
@@ -525,7 +494,7 @@ export function createModifiers(
           card: self,
           modifier: {
             description: ability.description,
-            response: ability.response,
+            reaction: { ...ability.response, forced: false },
           },
         },
       ];
@@ -542,7 +511,7 @@ export function createModifiers(
           card: self,
           modifier: {
             description: ability.description,
-            forced: ability.forced,
+            reaction: { ...ability.forced, forced: true },
           },
         },
       ];

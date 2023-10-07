@@ -656,7 +656,7 @@ export function executeCardAction(
           source: 0, // TODO fix
           card: card.id,
           modifier,
-          until: modifier.until,
+          until: action.until,
         });
       }
     } else {
@@ -664,7 +664,7 @@ export function executeCardAction(
         source: 0, // TODO fix
         card: card.id,
         modifier: action.modify,
-        until: action.modify.until,
+        until: action.until,
       });
     }
     return;
