@@ -24,6 +24,7 @@ export type Limit = 'none' | 'once_per_round';
 export type Until = 'end_of_phase' | 'end_of_round';
 
 export type Action =
+  | Action[]
   | 'empty'
   | 'shuffleEncounterDeck'
   | 'setup'
@@ -38,7 +39,6 @@ export type Action =
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
       card?: { action: CardAction; target: CardTarget };
-      sequence?: Action[];
       addPlayer?: PlayerDeck;
       setupScenario?: Scenario;
       beginPhase?: Phase;

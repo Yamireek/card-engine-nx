@@ -70,35 +70,33 @@ export const beorn = ally(
     description:
       'Action: Beorn gains +5 Attack until the end of the phase. At the end of the phase in which you trigger this effect, shuffle Beorn back into your deck. (Limit once per round.)',
     limit: 'once_per_round',
-    action: {
-      sequence: [
-        {
+    action: [
+      {
+        card: {
+          target: 'self',
+          action: {
+            modify: {
+              description: '+5 [attack] until end of phase',
+              bonus: {
+                property: 'attack',
+                amount: 5,
+              },
+            },
+            until: 'end_of_phase',
+          },
+        },
+      },
+      {
+        atEndOfPhase: {
           card: {
-            target: 'self',
-            action: {
-              modify: {
-                description: '+5 [attack] until end of phase',
-                bonus: {
-                  property: 'attack',
-                  amount: 5,
-                },
-              },
-              until: 'end_of_phase',
+            target: {
+              and: ['inAPlay', { name: 'Beorn' }],
             },
+            action: 'shuffleToDeck',
           },
         },
-        {
-          atEndOfPhase: {
-            card: {
-              target: {
-                and: ['inAPlay', { name: 'Beorn' }],
-              },
-              action: 'shuffleToDeck',
-            },
-          },
-        },
-      ],
-    },
+      },
+    ],
   }
 );
 

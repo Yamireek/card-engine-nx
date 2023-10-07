@@ -7,16 +7,20 @@ import {
 } from '@card-engine-nx/state';
 import { getTargetPlayer, getTargetPlayers } from './player/target';
 import { executePlayerAction } from './player/action';
-import { keys, reverse, sum } from 'lodash/fp';
+import { isArray, keys, reverse, sum } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard } from './utils';
-import { sequence } from './utils/sequence';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
 import { canExecute } from './resolution';
 
 export function executeAction(action: Action, ctx: ExecutionContext) {
+  if (isArray(action)) {
+    ctx.state.next.unshift(...action);
+    return;
+  }
+
   if (action === 'empty') {
     return;
   }
@@ -73,10 +77,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     const locations = getTargetCards(target, ctx).filter((l) => {
       const travelCost = ctx.view.cards[l].travel;
       // TODO move to travel action
-      return (
-        travelCost.length === 0 ||
-        canExecute(sequence(...travelCost), true, ctx)
-      );
+      return travelCost.length === 0 || canExecute(travelCost, true, ctx);
     });
 
     if (locations.length > 0) {
@@ -194,11 +195,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         throw new Error('card not found');
       }
     }
-    return;
-  }
-
-  if (action.sequence) {
-    ctx.state.next = [...action.sequence, ...ctx.state.next];
     return;
   }
 
@@ -466,9 +462,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         useCardVar: {
           name: 'self',
           value: card.id,
-          action: {
-            sequence: card.whenRevealed,
-          },
+          action: card.whenRevealed,
         },
       });
     }
@@ -554,7 +548,7 @@ export function beginScenario(
   scenario: Scenario,
   ...decks: PlayerDeck[]
 ): Action {
-  return sequence(
+  return [
     {
       setupScenario: scenario,
     },
@@ -597,11 +591,11 @@ export function beginScenario(
         },
       },
     },
-    gameRound()
-  );
+    gameRound(),
+  ];
 }
 
-export const phaseResource = sequence(
+export const phaseResource: Action = [
   { beginPhase: 'resource' },
   { player: { target: 'each', action: { draw: 1 } } },
   {
@@ -611,16 +605,16 @@ export const phaseResource = sequence(
     },
   },
   { playerActions: 'End resource phase' },
-  'endPhase'
-);
+  'endPhase',
+];
 
-export const phasePlanning = sequence(
+export const phasePlanning: Action = [
   { beginPhase: 'planning' },
   { playerActions: 'End planning phase' },
-  'endPhase'
-);
+  'endPhase',
+];
 
-export const phaseQuest = sequence(
+export const phaseQuest: Action = [
   { beginPhase: 'quest' },
   {
     player: {
@@ -634,17 +628,17 @@ export const phaseQuest = sequence(
   'resolveQuesting',
   { playerActions: 'End phase' },
   { clearMarks: 'questing' },
-  'endPhase'
-);
+  'endPhase',
+];
 
-export const phaseTravel = sequence(
+export const phaseTravel: Action = [
   { beginPhase: 'travel' },
   'chooseTravelDestination',
   { playerActions: 'End travel phase' },
-  'endPhase'
-);
+  'endPhase',
+];
 
-export const phaseEncounter = sequence(
+export const phaseEncounter: Action = [
   { beginPhase: 'encounter' },
   { player: { target: 'each', action: 'optionalEngagement' } },
   { playerActions: 'Engagement Checks' },
@@ -655,10 +649,10 @@ export const phaseEncounter = sequence(
     },
   },
   { playerActions: 'Next encounter phase' },
-  'endPhase'
-);
+  'endPhase',
+];
 
-export const phaseCombat = sequence(
+export const phaseCombat: Action = [
   { beginPhase: 'combat' },
   'dealShadowCards',
   { playerActions: 'Resolve enemy attacks' },
@@ -678,20 +672,20 @@ export const phaseCombat = sequence(
   },
   { clearMarks: 'attacked' },
   { playerActions: 'End combat phase' },
-  'endPhase'
-);
+  'endPhase',
+];
 
-export const phaseRefresh: Action = sequence(
+export const phaseRefresh: Action = [
   { beginPhase: 'refresh' },
   { card: { target: 'exhausted', action: { ready: 'refresh' } } },
   { player: { target: 'each', action: { incrementThreat: 1 } } },
   'passFirstPlayerToken',
   { playerActions: 'End refresh phase and round' },
-  'endPhase'
-);
+  'endPhase',
+];
 
 export function gameRound(): Action {
-  return sequence(
+  return [
     phaseResource,
     phasePlanning,
     phaseQuest,
@@ -699,6 +693,6 @@ export function gameRound(): Action {
     phaseEncounter,
     phaseCombat,
     phaseRefresh,
-    'endRound'
-  );
+    'endRound',
+  ];
 }

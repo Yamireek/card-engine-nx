@@ -15,7 +15,6 @@ import {
   Sphere,
   ZoneType,
 } from '@card-engine-nx/basic';
-import { sequence } from '../utils/sequence';
 import { isInPlay } from '../utils';
 
 export function createPlayAllyAction(
@@ -52,7 +51,7 @@ export function createPlayAllyAction(
         usePlayerVar: {
           name: 'controller',
           value: owner,
-          action: sequence({ payment: { cost: payment, effect: moveToPlay } }),
+          action: [{ payment: { cost: payment, effect: moveToPlay } }],
         },
       },
     },
@@ -113,9 +112,14 @@ export function createPlayAttachmentAction(
         usePlayerVar: {
           name: 'controller',
           value: owner,
-          action: sequence({
-            payment: { cost: payment, effect: sequence(attachTo, moveToPlay) },
-          }),
+          action: [
+            {
+              payment: {
+                cost: payment,
+                effect: [attachTo, moveToPlay],
+              },
+            },
+          ],
         },
       },
     },
@@ -168,7 +172,7 @@ export function createModifiers(
                     usePlayerVar: {
                       name: 'controller',
                       value: controller,
-                      action: sequence(
+                      action: [
                         {
                           payment: {
                             cost: {
@@ -184,8 +188,8 @@ export function createModifiers(
                         },
                         {
                           card: { target: self, action: 'discard' },
-                        }
-                      ),
+                        },
+                      ],
                     },
                   },
                 },
@@ -211,18 +215,16 @@ export function createModifiers(
                       name: 'controller',
                       value: controller,
                       action: ability.limit
-                        ? {
-                            sequence: [
-                              {
-                                useLimit: {
-                                  card: self,
-                                  type: ability.limit,
-                                  index: 0, // TODO index
-                                },
+                        ? [
+                            {
+                              useLimit: {
+                                card: self,
+                                type: ability.limit,
+                                index: 0, // TODO index
                               },
-                              ability.action,
-                            ],
-                          }
+                            },
+                            ability.action,
+                          ]
                         : ability.action,
                     },
                   },
@@ -256,7 +258,7 @@ export function createModifiers(
                       usePlayerVar: {
                         name: 'controller',
                         value: controller,
-                        action: sequence(
+                        action: [
                           {
                             payment: {
                               cost: {
@@ -272,8 +274,8 @@ export function createModifiers(
                           },
                           {
                             card: { target: self, action: 'discard' },
-                          }
-                        ),
+                          },
+                        ],
                       },
                     },
                   },
@@ -486,105 +488,4 @@ export function createModifiers(
     default:
       throw new Error(`unknown ability: ${JSON.stringify(ability, null, 1)}`);
   }
-}
-
-export function createEventResponse(
-  self: CardView,
-  response: ResponseAction,
-  controller: PlayerId
-) {
-  const sphere = self.props.sphere;
-  const cost = self.props.cost;
-
-  if (sphere === undefined || cost === undefined) {
-    return;
-  }
-
-  const payment: Action = {
-    player: {
-      target: controller,
-      action: { payResources: { amount: cost, sphere } },
-    },
-  };
-
-  const discard: Action = {
-    card: {
-      target: self.id,
-      action: {
-        move: {
-          from: { owner: controller, type: 'hand' },
-          to: { owner: controller, type: 'discardPile' },
-          side: 'front',
-        },
-      },
-    },
-  };
-
-  return {
-    useCardVar: {
-      name: 'self',
-      value: self.id,
-      action: {
-        usePlayerVar: {
-          name: 'controller',
-          value: controller,
-          action: sequence(
-            { payment: { cost: payment, effect: response.action } },
-            discard
-          ),
-        },
-      },
-    },
-  };
-}
-
-export function createEventAction(
-  self: CardView,
-  conditions: CostModifier | undefined,
-  action: Action,
-  controller: PlayerId
-): Action | undefined {
-  const sphere = self.props.sphere;
-  const cost = self.props.cost;
-
-  if (sphere === undefined || cost === undefined) {
-    return;
-  }
-
-  const payment: Action = {
-    player: {
-      target: controller,
-      action: { payResources: { ...conditions, amount: cost, sphere } },
-    },
-  };
-
-  const discard: Action = {
-    card: {
-      target: self.id,
-      action: {
-        move: {
-          from: { owner: controller, type: 'hand' },
-          to: { owner: controller, type: 'discardPile' },
-          side: 'front',
-        },
-      },
-    },
-  };
-
-  return {
-    useCardVar: {
-      name: 'self',
-      value: self.id,
-      action: {
-        usePlayerVar: {
-          name: 'controller',
-          value: controller,
-          action: sequence(
-            { payment: { cost: payment, effect: action } },
-            discard
-          ),
-        },
-      },
-    },
-  };
 }

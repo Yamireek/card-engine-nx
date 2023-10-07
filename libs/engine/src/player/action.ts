@@ -10,7 +10,6 @@ import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
 import { getTargetCard, getTargetCards } from '../card';
 import { max, sum } from 'lodash/fp';
-import { sequence } from '../utils/sequence';
 import { getTargetPlayers } from './target';
 import { canExecute } from '../resolution';
 
@@ -190,7 +189,7 @@ export function executePlayerAction(
               actions: enemies.map((e) => ({
                 title: e.toString(),
                 cardId: e,
-                action: sequence(
+                action: [
                   {
                     card: {
                       target: e,
@@ -202,8 +201,8 @@ export function executePlayerAction(
                       target: player.id,
                       action: 'resolvePlayerAttacks',
                     },
-                  }
-                ),
+                  },
+                ],
               })),
               optional: true,
             },

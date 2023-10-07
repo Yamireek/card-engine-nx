@@ -8,39 +8,37 @@ export const fliesAndSpiders = quest({
       {
         description:
           'Setup: Search the encounter deck for 1 copy of the Forest Spider and 1 copy of the Old Forest Road, and add them to the staging area. Then, shuffle the encounter deck.',
-        setup: {
-          sequence: [
-            {
-              card: {
-                target: {
-                  name: 'Forest Spider',
-                  take: 1,
-                },
-                action: {
-                  move: {
-                    to: 'stagingArea',
-                    side: 'front',
-                  },
+        setup: [
+          {
+            card: {
+              target: {
+                name: 'Forest Spider',
+                take: 1,
+              },
+              action: {
+                move: {
+                  to: 'stagingArea',
+                  side: 'front',
                 },
               },
             },
-            {
-              card: {
-                target: {
-                  name: 'Old Forest Road',
-                  take: 1,
-                },
-                action: {
-                  move: {
-                    to: 'stagingArea',
-                    side: 'front',
-                  },
+          },
+          {
+            card: {
+              target: {
+                name: 'Old Forest Road',
+                take: 1,
+              },
+              action: {
+                move: {
+                  to: 'stagingArea',
+                  side: 'front',
                 },
               },
             },
-            'shuffleEncounterDeck',
-          ],
-        },
+          },
+          'shuffleEncounterDeck',
+        ],
       },
     ],
   },
@@ -77,51 +75,49 @@ export const achosenPath1 = quest({
       {
         description:
           'When Revealed: Each player must search the encounter deck and discard pile for 1 Spider card of his choice, and add it to the staging area.',
-        whenRevealed: {
-          sequence: [
-            {
-              card: {
-                target: { zoneType: 'encounterDeck' },
-                action: {
-                  flip: 'front',
-                },
+        whenRevealed: [
+          {
+            card: {
+              target: { zoneType: 'encounterDeck' },
+              action: {
+                flip: 'front',
               },
             },
-            {
-              player: {
-                target: 'each',
-                action: {
-                  chooseCardActions: {
-                    title: 'Choose 1 Spider',
-                    target: {
-                      and: [
-                        { zoneType: ['encounterDeck', 'discardPile'] },
-                        { trait: 'spider' },
-                      ],
-                    },
-                    action: {
-                      move: {
-                        to: 'stagingArea',
-                        side: 'front',
-                      },
-                    },
-                    multi: false,
-                    optional: false,
+          },
+          {
+            player: {
+              target: 'each',
+              action: {
+                chooseCardActions: {
+                  title: 'Choose 1 Spider',
+                  target: {
+                    and: [
+                      { zoneType: ['encounterDeck', 'discardPile'] },
+                      { trait: 'spider' },
+                    ],
                   },
+                  action: {
+                    move: {
+                      to: 'stagingArea',
+                      side: 'front',
+                    },
+                  },
+                  multi: false,
+                  optional: false,
                 },
               },
             },
-            {
-              card: {
-                target: { zoneType: 'encounterDeck' },
-                action: {
-                  flip: 'back',
-                },
+          },
+          {
+            card: {
+              target: { zoneType: 'encounterDeck' },
+              action: {
+                flip: 'back',
               },
             },
-            'shuffleEncounterDeck',
-          ],
-        },
+          },
+          'shuffleEncounterDeck',
+        ],
       },
       {
         description:

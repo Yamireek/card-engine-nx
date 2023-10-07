@@ -2,7 +2,6 @@ import { CardState, CardAction, Action } from '@card-engine-nx/state';
 import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
 import { getCardZoneId, getZoneState } from '../zone/target';
-import { sequence } from '../utils/sequence';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
 import {
@@ -90,30 +89,28 @@ export function executeCardAction(
 
   if (action === 'shuffleToDeck') {
     if (card.owner) {
-      ctx.state.next.unshift({
-        sequence: [
-          {
-            card: {
-              target: card.id,
-              action: {
-                move: {
-                  to: {
-                    owner: card.owner,
-                    type: 'library',
-                  },
-                  side: 'back',
+      ctx.state.next.unshift(
+        {
+          card: {
+            target: card.id,
+            action: {
+              move: {
+                to: {
+                  owner: card.owner,
+                  type: 'library',
                 },
+                side: 'back',
               },
             },
           },
-          {
-            player: {
-              target: card.owner,
-              action: 'shuffleLibrary',
-            },
+        },
+        {
+          player: {
+            target: card.owner,
+            action: 'shuffleLibrary',
           },
-        ],
-      });
+        }
+      );
     }
 
     return;
@@ -563,35 +560,33 @@ export function executeCardAction(
 
   if (action.resolveEnemyAttacking) {
     ctx.state.next.unshift(
-      sequence(
-        {
-          card: {
-            target: card.id,
-            action: { mark: 'attacking' },
-          },
+      {
+        card: {
+          target: card.id,
+          action: { mark: 'attacking' },
         },
-        { playerActions: 'Declare defender' },
-        {
-          player: {
-            target: action.resolveEnemyAttacking,
-            action: 'declareDefender',
-          },
+      },
+      { playerActions: 'Declare defender' },
+      {
+        player: {
+          target: action.resolveEnemyAttacking,
+          action: 'declareDefender',
         },
-        {
-          player: {
-            target: action.resolveEnemyAttacking,
-            action: 'determineCombatDamage',
-          },
+      },
+      {
+        player: {
+          target: action.resolveEnemyAttacking,
+          action: 'determineCombatDamage',
         },
-        { clearMarks: 'attacking' },
-        { clearMarks: 'defending' },
-        {
-          card: {
-            target: card.id,
-            action: { mark: 'attacked' },
-          },
-        }
-      )
+      },
+      { clearMarks: 'attacking' },
+      { clearMarks: 'defending' },
+      {
+        card: {
+          target: card.id,
+          action: { mark: 'attacked' },
+        },
+      }
     );
     return;
   }

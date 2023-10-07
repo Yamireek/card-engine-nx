@@ -11,14 +11,17 @@ import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
 import { getTargetPlayers } from './player/target';
-import { merge } from 'lodash/fp';
-import { sequence } from './utils/sequence';
+import { isArray, merge } from 'lodash/fp';
 
 export function canExecute(
   action: Action,
   payment: boolean,
   ctx: ViewContext
 ): boolean {
+  if (isArray(action)) {
+    return action.every((a) => canExecute(a, payment, ctx));
+  }
+
   if (typeof action === 'string') {
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
@@ -32,10 +35,6 @@ export function canExecute(
       const cardAction = action.card;
       const cards = getTargetCards(cardAction.target, ctx);
       return cards.some((card) => canCardExecute(cardAction.action, card, ctx));
-    }
-
-    if (action.sequence) {
-      return action.sequence.every((a) => canExecute(a, payment, ctx));
     }
 
     if (action.setCardVar) {

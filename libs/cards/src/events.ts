@@ -111,71 +111,69 @@ export const quickStrike = event(
   {
     description:
       'Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.',
-    action: {
-      sequence: [
-        {
-          player: {
-            target: 'controller',
-            action: {
-              chooseCardActions: {
-                title: 'Choose character as attacker',
-                multi: false,
-                optional: false,
-                target: {
-                  and: [{ controller: 'controller' }, 'character'],
-                },
-                action: {
-                  sequence: [
-                    'exhaust',
-                    {
-                      setAsVar: 'attacker',
-                    },
-                  ],
-                },
+    action: [
+      {
+        player: {
+          target: 'controller',
+          action: {
+            chooseCardActions: {
+              title: 'Choose character as attacker',
+              multi: false,
+              optional: false,
+              target: {
+                and: [{ controller: 'controller' }, 'character'],
+              },
+              action: {
+                sequence: [
+                  'exhaust',
+                  {
+                    setAsVar: 'attacker',
+                  },
+                ],
               },
             },
           },
         },
-        {
-          player: {
-            target: 'controller',
-            action: {
-              chooseCardActions: {
-                title: 'Choose enemy to attack',
-                multi: false,
-                optional: false,
-                target: {
-                  type: 'enemy',
-                },
-                action: {
-                  setAsVar: 'defender',
-                },
+      },
+      {
+        player: {
+          target: 'controller',
+          action: {
+            chooseCardActions: {
+              title: 'Choose enemy to attack',
+              multi: false,
+              optional: false,
+              target: {
+                type: 'enemy',
+              },
+              action: {
+                setAsVar: 'defender',
               },
             },
           },
         },
-        {
-          resolveAttack: {
-            attackers: {
-              var: 'attacker',
-            },
-            defender: { var: 'defender' },
+      },
+      {
+        resolveAttack: {
+          attackers: {
+            var: 'attacker',
           },
+          defender: { var: 'defender' },
         },
-        {
-          setCardVar: {
-            name: 'attacker',
-            value: undefined,
-          },
+      },
+      {
+        setCardVar: {
+          name: 'attacker',
+          value: undefined,
         },
-        {
-          setCardVar: {
-            name: 'defender',
-            value: undefined,
-          },
+      },
+      {
+        setCardVar: {
+          name: 'defender',
+          value: undefined,
         },
-      ],
-    },
+      },
+    ],
   }
 );
 
