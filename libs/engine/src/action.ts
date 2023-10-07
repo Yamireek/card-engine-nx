@@ -389,6 +389,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     const forced = reponses
       .filter((r) => r.forced)
+      .filter((r) => ('card' in event ? r.card === event.card : true))
       .filter(
         (r) =>
           !r.condition ||
@@ -400,6 +401,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     const optional = reponses
       .filter((r) => !r.forced)
+      .filter((r) => ('card' in event ? r.card === event.card : true))
       .filter(
         (r) =>
           !r.condition ||
@@ -422,7 +424,13 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
                   useCardVar: {
                     name: 'self',
                     value: r.card,
-                    action: r.action,
+                    action: {
+                      useCardVar: {
+                        name: 'source',
+                        value: r.source,
+                        action: r.action,
+                      },
+                    },
                   },
                 },
               })),
@@ -440,7 +448,13 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           useCardVar: {
             name: 'self',
             value: r.card,
-            action: r.action,
+            action: {
+              useCardVar: {
+                name: 'source',
+                value: r.source,
+                action: r.action,
+              },
+            },
           },
         }))
       );

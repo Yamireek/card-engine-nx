@@ -135,16 +135,11 @@ export const achosenPath1 = quest({
           },
           {
             description: '',
+            target: {
+              name: "Ungoliant's Spawn",
+            },
             forced: {
               event: 'destroyed',
-              condition: {
-                card: {
-                  target: 'event',
-                  value: {
-                    name: "Ungoliant's Spawn",
-                  },
-                },
-              },
               action: 'win',
             },
           },

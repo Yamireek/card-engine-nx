@@ -91,11 +91,15 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target === 'source') {
-    const card = ctx.card['source'];
-    if (!card) {
-      throw new Error('no source card in ctx');
+    const inCtx = ctx.card['source'];
+    if (!inCtx) {
+      const inState = ctx.state.vars.card['source'];
+      if (inState) {
+        return [inState];
+      }
+      throw new Error('no source card in ctx or state');
     } else {
-      return [card];
+      return [inCtx];
     }
   }
 

@@ -44,14 +44,15 @@ export const legolas = hero(
   {
     description:
       'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.',
+    target: { type: 'enemy' },
+    condition: {
+      event: {
+        type: 'destroyed',
+        isAttacker: 'self',
+      },
+    },
     response: {
       event: 'destroyed',
-      condition: {
-        event: {
-          type: 'destroyed',
-          isAttacker: 'self',
-        },
-      },
       action: {
         placeProgress: 2,
       },
@@ -112,6 +113,7 @@ export const gloin = hero(
   {
     description:
       'After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered.',
+    target: 'source',
     response: {
       event: 'receivedDamage',
       action: {

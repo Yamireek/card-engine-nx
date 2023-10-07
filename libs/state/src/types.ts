@@ -212,8 +212,8 @@ export type Ability = { description: string } & (
   | {
       travel: Action;
     }
-  | { response: ResponseAction; cost?: CostModifier; target?: CardTarget }
-  | { forced: ResponseAction }
+  | { response: ResponseAction; target: CardTarget; cost?: CostModifier }
+  | { forced: ResponseAction; target: CardTarget }
   | { attachesTo: CardTarget }
   | {
       multi: Array<Ability>;

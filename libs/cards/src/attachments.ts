@@ -105,12 +105,17 @@ export const bladeOfGondolin = attachment(
   {
     description:
       'Response: After attached hero attacks and destroys an enemy, place 1 progress token on the current quest.',
+    target: {
+      type: 'enemy',
+    },
     response: {
       event: 'destroyed',
       condition: {
         event: {
           type: 'destroyed',
-          isAttacker: { hasAttachment: 'self' },
+          isAttacker: {
+            hasAttachment: 'source',
+          },
         },
       },
       action: {
@@ -135,6 +140,7 @@ export const hornOfGondor = attachment(
   {
     description:
       "Response: After a character is destroyed, add 1 resource to attached hero's pool.",
+    target: 'character',
     response: {
       event: 'destroyed',
       condition: {
@@ -148,7 +154,7 @@ export const hornOfGondor = attachment(
       action: {
         card: {
           target: {
-            hasAttachment: 'self',
+            hasAttachment: 'source',
           },
           action: {
             generateResources: 1,

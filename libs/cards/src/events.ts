@@ -263,6 +263,7 @@ export const swiftStrike = event(
   {
     description:
       'Response: After a character is declared as a defender, deal 2 damage to the attacking enemy.',
+    target: 'character',
     response: {
       event: 'declaredAsDefender',
       action: {

@@ -446,7 +446,7 @@ export function createModifiers(
       return [
         {
           source: self,
-          card: self,
+          card: ability.target ?? self,
           modifier: {
             description: ability.description,
             reaction: {
@@ -490,34 +490,16 @@ export function createModifiers(
     }
 
     if (zone === 'playerArea') {
-      if (ability.target) {
-        return [
-          {
-            source: self,
-            card: ability.target,
-            modifier: {
-              description: ability.description,
-              reaction: {
-                event: ability.response.event,
-                condition: ability.response.condition,
-                action: ability.response.action,
-                forced: false,
-              },
-            },
+      return [
+        {
+          source: self,
+          card: ability.target ?? self,
+          modifier: {
+            description: ability.description,
+            reaction: { ...ability.response, forced: false },
           },
-        ];
-      } else {
-        return [
-          {
-            source: self,
-            card: self,
-            modifier: {
-              description: ability.description,
-              reaction: { ...ability.response, forced: false },
-            },
-          },
-        ];
-      }
+        },
+      ];
     }
 
     return [];
@@ -528,7 +510,7 @@ export function createModifiers(
       return [
         {
           source: self,
-          card: self,
+          card: ability.target ?? self,
           modifier: {
             description: ability.description,
             reaction: { ...ability.forced, forced: true },
