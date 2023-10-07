@@ -1,8 +1,6 @@
 import {
   Action,
   CardAction,
-  CardState,
-  CardView,
   CostModifier,
   PlayerAction,
 } from '@card-engine-nx/state';
@@ -11,7 +9,7 @@ import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
 import { getTargetPlayers } from './player/target';
-import { isArray, merge } from 'lodash/fp';
+import { isArray } from 'lodash/fp';
 
 export function canExecute(
   action: Action,

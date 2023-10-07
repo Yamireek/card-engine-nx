@@ -1,6 +1,6 @@
 import { AttachmentProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
-import { Ability, CardModifier } from '../types';
+import { Ability } from '../types';
 
 export function attachment(
   props: Omit<AttachmentProps, 'type'>,

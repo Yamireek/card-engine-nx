@@ -640,6 +640,7 @@ export function executeCardAction(
               to: {
                 type: card.zone,
                 owner: card.owner,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               } as any,
             },
           },

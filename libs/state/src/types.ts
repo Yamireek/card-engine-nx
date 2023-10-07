@@ -15,7 +15,7 @@ import {
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
 import { Event } from './state';
-import { PlayerModifier, UserCardAction } from './view';
+import { PlayerModifier } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 

@@ -8,7 +8,6 @@ import { CardTarget } from '@card-engine-nx/state';
 import { intersection, last, uniq } from 'lodash';
 import { ViewContext, cardIds } from '../context';
 import { getTargetZone, getZoneState } from '../zone/target';
-import { canCardExecute } from '../resolution';
 import { difference, isArray, takeRight } from 'lodash/fp';
 import { calculateNumberExpr } from '../expr';
 import { getTargetPlayers } from '../player/target';
