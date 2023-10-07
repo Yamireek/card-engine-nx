@@ -7,6 +7,7 @@ import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
 import { GameZoneType, PlayerZoneType, ZoneId } from '@card-engine-nx/basic';
 import { getTargetCard, getTargetCards } from './target';
+import { createPayCostAction } from '../resolution';
 
 export function executeCardAction(
   action: CardAction,
@@ -300,6 +301,24 @@ export function executeCardAction(
         },
       }
     );
+    return;
+  }
+
+  if (action === 'payCost') {
+    const controller = card.controller;
+    if (!controller) {
+      return;
+    }
+
+    const payCostAction = createPayCostAction(card.id, ctx);
+    if (payCostAction) {
+      ctx.state.next.unshift({
+        player: {
+          target: controller,
+          action: payCostAction,
+        },
+      });
+    }
     return;
   }
 

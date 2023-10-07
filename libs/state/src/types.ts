@@ -148,6 +148,7 @@ export type CardAction =
   | 'draw'
   | 'explore'
   | 'ready'
+  | 'payCost'
   | {
       ready?: 'refresh';
       declareAsDefender?: { attacker: CardId };

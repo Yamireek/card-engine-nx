@@ -415,6 +415,46 @@ export function createModifiers(
   }
 
   if ('action' in ability) {
+    if (zone === 'hand' && controller) {
+      return [
+        {
+          source: self,
+          card: self,
+          modifier: {
+            description: ability.description,
+            action: {
+              useCardVar: {
+                name: 'self',
+                value: self,
+                action: {
+                  usePlayerVar: {
+                    name: 'controller',
+                    value: controller,
+                    action: sequence(
+                      {
+                        payment: {
+                          cost: {
+                            card: {
+                              target: self,
+                              action: 'payCost',
+                            },
+                          },
+                          effect: ability.action,
+                        },
+                      },
+                      {
+                        card: { target: self, action: 'discard' },
+                      }
+                    ),
+                  },
+                },
+              },
+            },
+          },
+        },
+      ];
+    }
+
     if (zone === 'playerArea' && controller) {
       return [
         {
@@ -457,6 +497,50 @@ export function createModifiers(
   }
 
   if ('response' in ability) {
+    if (zone === 'hand' && controller) {
+      return [
+        {
+          source: self,
+          card: self,
+          modifier: {
+            description: ability.description,
+            response: {
+              event: ability.response.event,
+              condition: ability.response.condition,
+              action: {
+                useCardVar: {
+                  name: 'self',
+                  value: self,
+                  action: {
+                    usePlayerVar: {
+                      name: 'controller',
+                      value: controller,
+                      action: sequence(
+                        {
+                          payment: {
+                            cost: {
+                              card: {
+                                target: self,
+                                action: 'payCost',
+                              },
+                            },
+                            effect: ability.response.action,
+                          },
+                        },
+                        {
+                          card: { target: self, action: 'discard' },
+                        }
+                      ),
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ];
+    }
+
     if (zone === 'playerArea') {
       return [
         {

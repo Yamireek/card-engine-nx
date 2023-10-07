@@ -1,9 +1,16 @@
-import { Action, CardAction, PlayerAction } from '@card-engine-nx/state';
+import {
+  Action,
+  CardAction,
+  CardState,
+  CardView,
+  PlayerAction,
+} from '@card-engine-nx/state';
 import { ViewContext } from './context';
 import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
 import { getTargetPlayers } from './player/target';
+import { merge } from 'lodash/fp';
 
 export function canExecute(
   action: Action,
@@ -241,6 +248,24 @@ export function canCardExecute(
       return card.zone === 'library' && !owner?.disableDraw;
     }
 
+    if (action === 'payCost') {
+      if (!card.controller) {
+        return false;
+      }
+
+      const payCostAction = createPayCostAction(cardId, ctx);
+
+      if (!payCostAction) {
+        return false;
+      }
+
+      return canPlayerExecute(payCostAction, card.controller, ctx);
+    }
+
+    if (action === 'discard') {
+      return true;
+    }
+
     throw new Error(
       `not implemented: canCardExecute ${JSON.stringify(action)}`
     );
@@ -314,4 +339,30 @@ export function canCardExecute(
   }
 
   throw new Error(`not implemented: canCardExecute ${JSON.stringify(action)}`);
+}
+
+export function createPayCostAction(
+  cardId: CardId,
+  ctx: ViewContext
+): PlayerAction | undefined {
+  const view = ctx.view.cards[cardId];
+  const state = ctx.state.cards[cardId];
+
+  if (state.zone !== 'hand' || !state.controller) {
+    return undefined;
+  }
+
+  const sphere = view.props.sphere;
+  const amount = view.props.cost;
+
+  if (!sphere || amount === undefined) {
+    return undefined;
+  }
+
+  return {
+    payResources: {
+      amount,
+      sphere,
+    },
+  };
 }
