@@ -81,6 +81,7 @@ export type Action =
     };
 
 export type PlayerAction =
+  | PlayerAction[]
   | 'empty'
   | 'shuffleLibrary'
   | 'resolveEnemyAttacks'
@@ -98,7 +99,6 @@ export type PlayerAction =
         target: 'choice' | 'random';
       };
       setLimit?: { key: string; limit: Limit };
-      sequence?: PlayerAction[];
       incrementThreat?: NumberExpr;
       payResources?: { amount: number; sphere: Sphere; heroes?: number };
       declareAttackers?: CardId;
@@ -137,6 +137,7 @@ export type PlayerAction =
     };
 
 export type CardAction =
+  | CardAction[]
   | 'empty'
   | 'travel'
   | 'exhaust'
@@ -157,7 +158,6 @@ export type CardAction =
       heal?: number | 'all';
       generateResources?: NumberExpr;
       payResources?: number;
-      sequence?: CardAction[];
       placeProgress?: number;
       flip?: Side;
       engagePlayer?: PlayerId;

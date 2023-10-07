@@ -424,29 +424,27 @@ export function createModifiers(
               action: {
                 player: {
                   target: controller,
-                  action: {
-                    sequence: [
-                      {
-                        card: {
-                          target: self,
-                          action: {
-                            payCost: {},
-                          },
+                  action: [
+                    {
+                      card: {
+                        target: self,
+                        action: {
+                          payCost: {},
                         },
                       },
-                      {
-                        chooseCardActions: {
-                          title: 'Choose target for attachment',
-                          target: ability.attachesTo,
-                          optional: false,
-                          multi: false,
-                          action: {
-                            attachCard: self,
-                          },
+                    },
+                    {
+                      chooseCardActions: {
+                        title: 'Choose target for attachment',
+                        target: ability.attachesTo,
+                        optional: false,
+                        multi: false,
+                        action: {
+                          attachCard: self,
                         },
                       },
-                    ],
-                  },
+                    },
+                  ],
                 },
               },
             },

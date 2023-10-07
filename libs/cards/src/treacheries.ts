@@ -22,43 +22,39 @@ export const caughtInAWeb = treachery(
     whenRevealed: {
       player: {
         target: 'highestThreat',
-        action: {
-          sequence: [
-            {
-              card: {
-                target: 'self',
-                action: {
-                  modify: [
-                    { description: '', type: 'attachment' },
-                    { description: '', trait: 'condition' },
-                  ],
-                },
+        action: [
+          {
+            card: {
+              target: 'self',
+              action: {
+                modify: [
+                  { description: '', type: 'attachment' },
+                  { description: '', trait: 'condition' },
+                ],
               },
             },
-            {
-              chooseCardActions: {
-                title: 'Choose hero',
-                target: {
-                  and: [{ type: 'hero', controller: 'highestThreat' }],
-                },
-                action: {
-                  sequence: [
-                    { attachCard: 'self' },
-                    {
-                      modify: {
-                        description:
-                          'Pay 2 resources to ready durimg refresh phase',
-                        refreshCost: { payResources: 2 },
-                      },
-                    },
-                  ],
-                },
-                multi: false,
-                optional: false,
+          },
+          {
+            chooseCardActions: {
+              title: 'Choose hero',
+              target: {
+                and: [{ type: 'hero', controller: 'highestThreat' }],
               },
+              action: [
+                { attachCard: 'self' },
+                {
+                  modify: {
+                    description:
+                      'Pay 2 resources to ready durimg refresh phase',
+                    refreshCost: { payResources: 2 },
+                  },
+                },
+              ],
+              multi: false,
+              optional: false,
             },
-          ],
-        },
+          },
+        ],
       },
     },
   }

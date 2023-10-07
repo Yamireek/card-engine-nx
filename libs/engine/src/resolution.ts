@@ -101,6 +101,10 @@ export function canPlayerExecute(
   playerId: PlayerId,
   ctx: ViewContext
 ): boolean {
+  if (isArray(action)) {
+    return action.every((a) => canPlayerExecute(a, playerId, ctx));
+  }
+
   const player = ctx.state.players[playerId];
   if (!player || player.eliminated) {
     return false;
@@ -162,10 +166,6 @@ export function canPlayerExecute(
 
     if (action.discard) {
       return player.zones.hand.cards.length >= action.discard.amount;
-    }
-
-    if (action.sequence) {
-      return action.sequence.every((a) => canPlayerExecute(a, playerId, ctx));
     }
 
     if (action.setLimit) {
@@ -234,6 +234,10 @@ export function canCardExecute(
   cardId: CardId,
   ctx: ViewContext
 ): boolean {
+  if (isArray(action)) {
+    return action.every((a) => canCardExecute(a, cardId, ctx));
+  }
+
   const card = ctx.state.cards[cardId];
 
   if (typeof action === 'string') {
@@ -285,10 +289,6 @@ export function canCardExecute(
 
     if (action.resolveEnemyAttacking) {
       return true;
-    }
-
-    if (action.sequence) {
-      return action.sequence.every((a) => canCardExecute(a, cardId, ctx));
     }
 
     if (action.mark) {

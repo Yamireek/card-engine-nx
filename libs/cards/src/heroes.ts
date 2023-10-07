@@ -153,22 +153,20 @@ export const eowyn = hero(
               choosePlayerActions: {
                 target: 'each',
                 title: 'Choose player to discard card',
-                action: {
-                  sequence: [
-                    {
-                      discard: {
-                        amount: 1,
-                        target: 'choice',
-                      },
+                action: [
+                  {
+                    discard: {
+                      amount: 1,
+                      target: 'choice',
                     },
-                    {
-                      setLimit: {
-                        key: 'eowyn_action',
-                        limit: 'once_per_round',
-                      },
+                  },
+                  {
+                    setLimit: {
+                      key: 'eowyn_action',
+                      limit: 'once_per_round',
                     },
-                  ],
-                },
+                  },
+                ],
                 multi: false,
                 optional: false,
               },

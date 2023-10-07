@@ -134,45 +134,41 @@ export const mountainsOfMirkwood = location(
       action: {
         player: {
           target: 'each',
-          action: {
-            sequence: [
-              {
-                useVar: {
-                  name: 'choosing',
-                  action: {
-                    sequence: [
-                      {
-                        deck: { flip: 'front' },
-                      },
-                      {
-                        chooseCardActions: {
-                          title: 'Choose card to draw',
-                          target: {
-                            top: {
-                              amount: 5,
-                              zone: {
-                                player: {
-                                  id: { var: 'choosing' },
-                                  zone: 'library',
-                                },
-                              },
+          action: [
+            {
+              useVar: {
+                name: 'choosing',
+                action: [
+                  {
+                    deck: { flip: 'front' },
+                  },
+                  {
+                    chooseCardActions: {
+                      title: 'Choose card to draw',
+                      target: {
+                        top: {
+                          amount: 5,
+                          zone: {
+                            player: {
+                              id: { var: 'choosing' },
+                              zone: 'library',
                             },
                           },
-                          action: 'draw',
-                          multi: false,
-                          optional: false,
                         },
                       },
-                      {
-                        deck: { flip: 'back' },
-                      },
-                    ],
+                      action: 'draw',
+                      multi: false,
+                      optional: false,
+                    },
                   },
-                },
+                  {
+                    deck: { flip: 'back' },
+                  },
+                ],
               },
-              'shuffleLibrary',
-            ],
-          },
+            },
+            'shuffleLibrary',
+          ],
         },
       },
     },

@@ -123,14 +123,12 @@ export const quickStrike = event(
               target: {
                 and: [{ controller: 'controller' }, 'character'],
               },
-              action: {
-                sequence: [
-                  'exhaust',
-                  {
-                    setAsVar: 'attacker',
-                  },
-                ],
-              },
+              action: [
+                'exhaust',
+                {
+                  setAsVar: 'attacker',
+                },
+              ],
             },
           },
         },

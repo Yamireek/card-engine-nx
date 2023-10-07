@@ -18,6 +18,15 @@ export function executeCardAction(
   card: CardState,
   ctx: ExecutionContext
 ) {
+  if (isArray(action)) {
+    const actions: Action[] = action.map((a) => ({
+      card: { target: card.id, action: a },
+    }));
+
+    ctx.state.next.unshift(...actions);
+    return;
+  }
+
   if (action === 'empty') {
     return;
   }
@@ -58,9 +67,7 @@ export function executeCardAction(
       ctx.state.next.unshift({
         card: {
           target: card.id,
-          action: {
-            sequence: [{ flip: 'front' }, 'reveal'],
-          },
+          action: [{ flip: 'front' }, 'reveal'],
         },
       });
       return;
@@ -191,18 +198,16 @@ export function executeCardAction(
         {
           card: {
             target: next,
-            action: {
-              sequence: [
-                {
-                  move: {
-                    from: 'questDeck',
-                    to: 'questArea',
-                    side: 'front',
-                  },
+            action: [
+              {
+                move: {
+                  from: 'questDeck',
+                  to: 'questArea',
+                  side: 'front',
                 },
-                { flip: 'back' },
-              ],
-            },
+              },
+              { flip: 'back' },
+            ],
           },
         },
         {
@@ -220,18 +225,16 @@ export function executeCardAction(
           {
             card: {
               target: rnd,
-              action: {
-                sequence: [
-                  {
-                    move: {
-                      from: 'questDeck',
-                      to: 'questArea',
-                      side: 'front',
-                    },
+              action: [
+                {
+                  move: {
+                    from: 'questDeck',
+                    to: 'questArea',
+                    side: 'front',
                   },
-                  { flip: 'back' },
-                ],
-              },
+                },
+                { flip: 'back' },
+              ],
             },
           },
           {
@@ -380,7 +383,7 @@ export function executeCardAction(
                     action: {
                       card: {
                         target: card.id,
-                        action: { sequence: [...cv.refreshCost, 'ready'] },
+                        action: [...cv.refreshCost, 'ready'],
                       },
                     },
                   },
@@ -620,15 +623,6 @@ export function executeCardAction(
 
   if (action.mark) {
     card.mark[action.mark] = true;
-    return;
-  }
-
-  if (action.sequence) {
-    const actions: Action[] = action.sequence.map((a) => ({
-      card: { target: card.id, action: a },
-    }));
-
-    ctx.state.next.unshift(...actions);
     return;
   }
 

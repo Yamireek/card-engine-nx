@@ -9,7 +9,7 @@ import {
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
 import { getTargetCard, getTargetCards } from '../card';
-import { max, sum } from 'lodash/fp';
+import { isArray, max, sum } from 'lodash/fp';
 import { getTargetPlayers } from './target';
 import { canExecute } from '../resolution';
 
@@ -18,6 +18,15 @@ export function executePlayerAction(
   player: PlayerState,
   ctx: ExecutionContext
 ) {
+  if (isArray(action)) {
+    const actions: Action[] = action.map((a) => ({
+      player: { target: player.id, action: a },
+    }));
+
+    ctx.state.next.unshift(...actions);
+    return;
+  }
+
   if (action === 'empty') {
     return;
   }
@@ -39,14 +48,12 @@ export function executePlayerAction(
               multi: true,
               optional: true,
               target: { and: ['character', { controller: player.id }] },
-              action: {
-                sequence: [
-                  'exhaust',
-                  {
-                    mark: 'questing',
-                  },
-                ],
-              },
+              action: [
+                'exhaust',
+                {
+                  mark: 'questing',
+                },
+              ],
             },
           },
         },
@@ -603,24 +610,13 @@ export function executePlayerAction(
             target: {
               and: ['character', { controller: player.id }],
             },
-            action: {
-              sequence: [{ mark: 'attacking' }, 'exhaust'],
-            },
+            action: [{ mark: 'attacking' }, 'exhaust'],
             multi: true,
             optional: true,
           },
         },
       },
     });
-    return;
-  }
-
-  if (action.sequence) {
-    const actions: Action[] = action.sequence.map((a) => ({
-      player: { target: player.id, action: a },
-    }));
-
-    ctx.state.next.unshift(...actions);
     return;
   }
 
