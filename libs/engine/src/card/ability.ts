@@ -284,7 +284,7 @@ export function createModifiers(
         ];
       }
 
-      if (zone === 'playerArea') {
+      if (isInPlay(zone)) {
         return [
           {
             source: self,

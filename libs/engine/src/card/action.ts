@@ -289,6 +289,12 @@ export function executeCardAction(
 
     ctx.state.next.unshift(
       {
+        event: {
+          type: 'explored',
+          card: card.id,
+        },
+      },
+      {
         card: {
           target: card.id,
           action: {
@@ -297,12 +303,6 @@ export function executeCardAction(
               side: 'front',
             },
           },
-        },
-      },
-      {
-        event: {
-          type: 'explored',
-          card: card.id,
         },
       }
     );

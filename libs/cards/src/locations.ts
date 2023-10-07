@@ -51,16 +51,9 @@ export const oldForestRoad = location(
   {
     description:
       'Response: After you travel to Old Forest Road the first player may choose and ready 1 character he controls.',
+    target: 'source',
     response: {
       event: 'traveled',
-      condition: {
-        card: {
-          target: 'event',
-          value: {
-            is: 'self',
-          },
-        },
-      },
       action: {
         player: {
           target: 'first',
@@ -135,16 +128,9 @@ export const mountainsOfMirkwood = location(
   {
     description:
       "Response: After Mountains of Mirkwood leaves play as an explored location, each player may search the top 5 cards of his deck for 1 card and add it to his hand. Shuffle the rest of the searched cards back into their owners' decks.",
+    target: 'source',
     response: {
       event: 'explored',
-      condition: {
-        card: {
-          target: 'event',
-          value: {
-            is: 'self',
-          },
-        },
-      },
       action: {
         player: {
           target: 'each',

@@ -90,6 +90,10 @@ export function applyModifier(
       self.props.traits.push(modifier.trait);
       return;
 
+    case !!modifier.travel:
+      self.travel.push(modifier.travel);
+      return;
+
     default:
       throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);
   }

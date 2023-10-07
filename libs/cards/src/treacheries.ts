@@ -46,7 +46,8 @@ export const caughtInAWeb = treachery(
                     { attachCard: 'self' },
                     {
                       modify: {
-                        description: '',
+                        description:
+                          'Pay 2 resources to ready durimg refresh phase',
                         refreshCost: { payResources: 2 },
                       },
                     },

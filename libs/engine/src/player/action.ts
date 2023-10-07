@@ -471,6 +471,10 @@ export function executePlayerAction(
       ctx
     );
 
+    if (cardIds.length === 0) {
+      return;
+    }
+
     const cardAction = action.chooseCardActions.action;
 
     ctx.state.choice = {
