@@ -132,72 +132,6 @@ export function createPlayAttachmentAction(
   };
 }
 
-export function createCardActions(
-  ability: CardModifier,
-  action: Action,
-  self: CardView,
-  controller: PlayerId,
-  phase: Phase
-): UserCardAction[] {
-  return [];
-
-  // if (self.zone === 'hand' && self.props.type === 'event') {
-  //   if (!ability.phase || ability.phase === phase) {
-  //     const eventAction = createEventAction(
-  //       self,
-  //       ability.payment,
-  //       action,
-  //       controller
-  //     );
-
-  //     if (eventAction) {
-  //       return [
-  //         {
-  //           action: eventAction,
-  //           card: self.id,
-  //           description: ability.description,
-  //         },
-  //       ];
-  //     }
-  //   }
-  // }
-
-  // if (self.zone === 'playerArea') {
-  //   if (!ability.phase || ability.phase === phase) {
-  //     return [
-  //       {
-  //         description: ability.description,
-  //         card: self.id,
-  //         action: {
-  //           useCardVar: {
-  //             name: 'self',
-  //             value: self.id,
-  //             action: {
-  //               usePlayerVar: {
-  //                 name: 'controller',
-  //                 value: controller,
-  //                 action: sequence(
-  //                   {
-  //                     useLimit: {
-  //                       type: ability.limit ?? 'none',
-  //                       card: self.id,
-  //                       index: 0, // TODO ability index
-  //                     },
-  //                   },
-  //                   action
-  //                 ),
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     ];
-  //   }
-  // }
-
-  // return [];
-}
-
 export function applyModifier(
   modifier: CardModifier,
   self: CardView,
@@ -233,11 +167,6 @@ export function applyModifier(
     return;
   }
 
-  // if (modifier.attachesTo) {
-  //   self.attachesTo = modifier.attachesTo;
-  //   return;
-  // }
-
   if (modifier.reaction) {
     if (!ctx.view.responses[modifier.reaction.event]) {
       ctx.view.responses[modifier.reaction.event] = [];
@@ -264,54 +193,7 @@ export function applyModifier(
       self.conditional.advance.push(modifier.conditional.advance);
       return;
     }
-    // if (modifier.conditional.travel !== undefined) {
-    //   self.conditional.travel.push(modifier.conditional.travel);
-    //   return;
-    // }
   }
-
-  // if (ability.and) {
-  //   for (const item of ability.and) {
-  //     applyAbility({ ...item, description: ability.description }, self, ctx);
-  //   }
-
-  //   return;
-  // }
-
-  // if (ability.if) {
-  //   const condition = calculateBoolExpr(ability.if.condition, ctx);
-  //   if (condition) {
-  //     applyAbility(ability.if.modifier, self, ctx);
-  //   }
-  //   return;
-  // }
-
-  // if (modifier.keywords) {
-  //   merge(self.props.keywords, modifier.keywords);
-  //   // TODO number keywords
-  //   return;
-  // }
-
-  // if (modifier.travel) {
-  //   self.travel.push(modifier.travel);
-  //   return;
-  // }
-
-  // if (modifier.player) {
-  //   const players = getTargetPlayers(modifier.player.target, ctx);
-  //   for (const playerId of players) {
-  //     const player = ctx.view.players[playerId];
-  //     if (player) {
-  //       applyPlayerModifier(player, modifier.player.modifier);
-  //     }
-  //   }
-  //   return;
-  // }
-
-  // if (modifier.refreshCost) {
-  //   self.refreshCost.push(modifier.refreshCost);
-  //   return;
-  // }
 
   if (modifier.action) {
     ctx.view.actions.push({
@@ -323,8 +205,7 @@ export function applyModifier(
     return;
   }
 
-  console.log(`unknown modifier: ${JSON.stringify(modifier, null, 1)}`);
-  //throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);
+  throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);
 }
 
 export function createModifiers(
@@ -685,9 +566,7 @@ export function createModifiers(
     return [];
   }
 
-  console.log(`unknown ability: ${JSON.stringify(ability, null, 1)}`);
-
-  return [];
+  throw new Error(`unknown ability: ${JSON.stringify(ability, null, 1)}`);
 }
 
 export function createEventResponse(
