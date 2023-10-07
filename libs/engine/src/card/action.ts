@@ -304,24 +304,6 @@ export function executeCardAction(
     return;
   }
 
-  if (action === 'payCost') {
-    const controller = card.controller;
-    if (!controller) {
-      return;
-    }
-
-    const payCostAction = createPayCostAction(card.id, ctx);
-    if (payCostAction) {
-      ctx.state.next.unshift({
-        player: {
-          target: controller,
-          action: payCostAction,
-        },
-      });
-    }
-    return;
-  }
-
   if (action === 'destroy' || action.destroy) {
     card.tapped = false;
     card.token = { damage: 0, progress: 0, resources: 0 };
@@ -356,6 +338,24 @@ export function executeCardAction(
       }
     );
 
+    return;
+  }
+
+  if (action.payCost) {
+    const controller = card.controller;
+    if (!controller) {
+      return;
+    }
+
+    const payCostAction = createPayCostAction(card.id, action.payCost, ctx);
+    if (payCostAction) {
+      ctx.state.next.unshift({
+        player: {
+          target: controller,
+          action: payCostAction,
+        },
+      });
+    }
     return;
   }
 

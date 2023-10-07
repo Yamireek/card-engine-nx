@@ -4,7 +4,7 @@ import {
   CardTarget,
   CardView,
   CardModifier,
-  PaymentConditions,
+  CostModifier,
   UserCardAction,
   Ability,
   GameModifier,
@@ -232,34 +232,19 @@ export function applyModifier(
     return;
   }
 
-  // if (modifier.disable) {
-  //   if (!self.disabled) {
-  //     self.disabled = {};
-  //   }
+  if (modifier.disable) {
+    if (!self.disabled) {
+      self.disabled = {};
+    }
 
-  //   self.disabled[modifier.disable] = true;
-  //   return;
-  // }
+    self.disabled[modifier.disable] = true;
+    return;
+  }
 
   if (modifier.setup) {
     ctx.view.setup.push(modifier.setup);
     return;
   }
-
-  // if (modifier.action) {
-  //   const controller = ctx.state.cards[self.id].controller;
-  //   if (controller) {
-  //     const actions = createCardActions(
-  //       modifier,
-  //       modifier.action,
-  //       self,
-  //       controller,
-  //       ctx.state.phase
-  //     );
-  //     ctx.view.actions.push(...actions);
-  //   }
-  //   return;
-  // }
 
   // if (modifier.attachesTo) {
   //   self.attachesTo = modifier.attachesTo;
@@ -286,34 +271,13 @@ export function applyModifier(
       ctx.view.responses[modifier.response.event] = [];
     }
 
-    if (self.props.type === 'event' && self.zone === 'hand') {
-      const controller = ctx.state.cards[self.id].controller;
-      if (controller) {
-        const response = createEventResponse(
-          self,
-          modifier.response,
-          controller
-        );
-
-        if (response) {
-          ctx.view.responses[modifier.response.event]?.push({
-            card: self.id,
-            description: modifier.description,
-            action: response,
-            condition: modifier.response.condition,
-            forced: false,
-          });
-        }
-      }
-    } else {
-      ctx.view.responses[modifier.response.event]?.push({
-        card: self.id,
-        description: modifier.description,
-        action: modifier.response.action,
-        condition: modifier.response.condition,
-        forced: false,
-      });
-    }
+    ctx.view.responses[modifier.response.event]?.push({
+      card: self.id,
+      description: modifier.description,
+      action: modifier.response.action,
+      condition: modifier.response.condition,
+      forced: false,
+    });
 
     return;
   }
@@ -378,11 +342,52 @@ export function applyModifier(
   // }
 
   if (modifier.action) {
+    // const cs = ctx.state.cards[self.id];
+    // if (cs.zone === 'hand') {
+    //   if (!cs.controller) {
+    //     return;
+    //   }
+
+    //   ctx.view.actions.push({
+    //     card: self.id,
+    //     description: modifier.description,
+    //     action: {
+    //       useCardVar: {
+    //         name: 'self',
+    //         value: self.id,
+    //         action: {
+    //           usePlayerVar: {
+    //             name: 'controller',
+    //             value: cs.controller,
+    //             action: sequence(
+    //               {
+    //                 payment: {
+    //                   cost: {
+    //                     card: {
+    //                       target: self.id,
+    //                       action: 'payCost',
+    //                     },
+    //                   },
+    //                   effect: ability.action,
+    //                 },
+    //               },
+    //               {
+    //                 card: { target: self.id, action: 'discard' },
+    //               }
+    //             ),
+    //           },
+    //         },
+    //       },
+    //     },
+    //   });
+    // } else {
     ctx.view.actions.push({
       card: self.id,
       description: modifier.description,
       action: modifier.action,
     });
+    //}
+
     return;
   }
 
@@ -415,6 +420,10 @@ export function createModifiers(
   }
 
   if ('action' in ability) {
+    if (ability.phase && ability.phase !== phase) {
+      return [];
+    }
+
     if (zone === 'hand' && controller) {
       return [
         {
@@ -422,6 +431,8 @@ export function createModifiers(
           card: self,
           modifier: {
             description: ability.description,
+            cost: ability.cost,
+
             action: {
               useCardVar: {
                 name: 'self',
@@ -436,7 +447,9 @@ export function createModifiers(
                           cost: {
                             card: {
                               target: self,
-                              action: 'payCost',
+                              action: {
+                                payCost: ability.cost ?? {},
+                              },
                             },
                           },
                           effect: ability.action,
@@ -521,7 +534,9 @@ export function createModifiers(
                             cost: {
                               card: {
                                 target: self,
-                                action: 'payCost',
+                                action: {
+                                  payCost: ability.cost ?? {},
+                                },
                               },
                             },
                             effect: ability.response.action,
@@ -728,7 +743,7 @@ export function createEventResponse(
 
 export function createEventAction(
   self: CardView,
-  conditions: PaymentConditions | undefined,
+  conditions: CostModifier | undefined,
   action: Action,
   controller: PlayerId
 ): Action | undefined {

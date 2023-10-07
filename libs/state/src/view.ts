@@ -14,6 +14,7 @@ import {
   EventType,
   BoolExpr,
   CardAction,
+  CostModifier,
 } from './types';
 import { GameModifier, State } from './state';
 
@@ -71,6 +72,7 @@ export type CardView = {
     travel: BoolExpr[];
   };
   refreshCost: CardAction[];
+  cost?: CostModifier;
 };
 
 export type PlayerView = {

@@ -3,6 +3,7 @@ import {
   CardAction,
   CardState,
   CardView,
+  CostModifier,
   PlayerAction,
 } from '@card-engine-nx/state';
 import { ViewContext } from './context';
@@ -11,6 +12,7 @@ import { sumBy } from 'lodash';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
 import { getTargetPlayers } from './player/target';
 import { merge } from 'lodash/fp';
+import { sequence } from './utils/sequence';
 
 export function canExecute(
   action: Action,
@@ -248,20 +250,6 @@ export function canCardExecute(
       return card.zone === 'library' && !owner?.disableDraw;
     }
 
-    if (action === 'payCost') {
-      if (!card.controller) {
-        return false;
-      }
-
-      const payCostAction = createPayCostAction(cardId, ctx);
-
-      if (!payCostAction) {
-        return false;
-      }
-
-      return canPlayerExecute(payCostAction, card.controller, ctx);
-    }
-
     if (action === 'discard') {
       return true;
     }
@@ -336,6 +324,20 @@ export function canCardExecute(
     if (action.resolvePlayerAttacking) {
       return true;
     }
+
+    if (action.payCost) {
+      if (!card.controller) {
+        return false;
+      }
+
+      const payCostAction = createPayCostAction(cardId, action.payCost, ctx);
+
+      if (!payCostAction) {
+        return false;
+      }
+
+      return canPlayerExecute(payCostAction, card.controller, ctx);
+    }
   }
 
   throw new Error(`not implemented: canCardExecute ${JSON.stringify(action)}`);
@@ -343,6 +345,7 @@ export function canCardExecute(
 
 export function createPayCostAction(
   cardId: CardId,
+  modifiers: CostModifier,
   ctx: ViewContext
 ): PlayerAction | undefined {
   const view = ctx.view.cards[cardId];
@@ -363,6 +366,7 @@ export function createPayCostAction(
     payResources: {
       amount,
       sphere,
+      ...modifiers,
     },
   };
 }

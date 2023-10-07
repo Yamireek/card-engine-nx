@@ -148,8 +148,8 @@ export type CardAction =
   | 'draw'
   | 'explore'
   | 'ready'
-  | 'payCost'
   | {
+      payCost?: CostModifier;
       ready?: 'refresh';
       declareAsDefender?: { attacker: CardId };
       destroy?: { attackers: CardId[] };
@@ -187,7 +187,7 @@ export type Ability = { description: string } & (
     }
   | {
       action: Action;
-      payment?: PaymentConditions;
+      cost?: CostModifier;
       phase?: Phase;
       limit?: 'once_per_round';
     }
@@ -209,7 +209,7 @@ export type Ability = { description: string } & (
   | {
       travel: Action;
     }
-  | { response: ResponseAction }
+  | { response: ResponseAction; cost?: CostModifier }
   | { forced: ResponseAction }
   | { attachesTo: CardTarget }
   | {
@@ -247,9 +247,10 @@ export type CardModifier = {
     advance?: BoolExpr;
   };
   attachesTo?: CardTarget;
+  cost?: CostModifier;
 };
 
-export type PaymentConditions = {
+export type CostModifier = {
   heroes?: number;
 };
 
