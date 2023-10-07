@@ -14,8 +14,9 @@ import {
   EventType,
   BoolExpr,
   CardAction,
+  CostModifier,
 } from './types';
-import { GameModifier } from './state';
+import { GameModifier, State } from './state';
 
 export type View = {
   cards: Record<CardId, CardView>;
@@ -27,6 +28,7 @@ export type View = {
     Record<
       EventType,
       Array<{
+        source: CardId;
         card: CardId;
         description: string;
         condition?: BoolExpr;
@@ -63,7 +65,7 @@ export type CardView = {
   attachesTo?: CardTarget;
   nextStage?: NextStage;
   disabled?: Partial<Record<Mark, boolean>>;
-  abilities: string[];
+  effects: string[];
   whenRevealed: Action[];
   travel: Action[];
   conditional: {
@@ -71,6 +73,7 @@ export type CardView = {
     travel: BoolExpr[];
   };
   refreshCost: CardAction[];
+  cost?: CostModifier;
 };
 
 export type PlayerView = {
@@ -82,3 +85,5 @@ export type PlayerView = {
 export type PlayerModifierView = { applied: boolean; modifier: PlayerModifier };
 
 export type PlayerModifier = 'can_declate_multiple_defenders' | 'disable_draw';
+
+export type StateView = State & View;

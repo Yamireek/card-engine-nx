@@ -471,6 +471,10 @@ export function executePlayerAction(
       ctx
     );
 
+    if (cardIds.length === 0) {
+      return;
+    }
+
     const cardAction = action.chooseCardActions.action;
 
     ctx.state.choice = {
@@ -643,6 +647,7 @@ export function executePlayerAction(
 
   if (action.modify) {
     ctx.state.modifiers.push({
+      source: 0, // TODO fix
       player: player.id,
       modifier: action.modify,
       until: action.until,
@@ -668,6 +673,16 @@ export function executePlayerAction(
         setPlayerVar: { name: action.useVar.name, value: undefined },
       }
     );
+    return;
+  }
+
+  if (action.card) {
+    ctx.state.next.unshift({
+      card: {
+        target: action.card.target,
+        action: action.card.action,
+      },
+    });
     return;
   }
 

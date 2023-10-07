@@ -47,14 +47,13 @@ export const bladeMastery = event(
                 {
                   description: 'Has +1 [attack] until end of the phase',
                   bonus: { property: 'attack', amount: 1 },
-                  until: 'end_of_phase',
                 },
                 {
                   description: 'Has +1 [defense] until end of the phase',
                   bonus: { property: 'defense', amount: 1 },
-                  until: 'end_of_phase',
                 },
               ],
+              until: 'end_of_phase',
             },
             multi: false,
             optional: false,
@@ -86,8 +85,8 @@ export const feint = event(
               modify: {
                 description: "Can't attack until end of phase",
                 disable: 'attacking',
-                until: 'end_of_phase',
               },
+              until: 'end_of_phase',
             },
             multi: false,
             optional: false,
@@ -264,6 +263,7 @@ export const swiftStrike = event(
   {
     description:
       'Response: After a character is declared as a defender, deal 2 damage to the attacking enemy.',
+    target: 'character',
     response: {
       event: 'declaredAsDefender',
       action: {
@@ -289,7 +289,7 @@ export const thicketOfSpears = event(
   {
     description:
       "You must use resources from 3 different heroes' pools to pay for this card. Action: Choose a player. That player's engaged enemies cannot attack that player this phase.",
-    payment: {
+    cost: {
       heroes: 3,
     },
     phase: 'combat',
@@ -307,8 +307,8 @@ export const thicketOfSpears = event(
                 modify: {
                   description: "Can't attack until end of phase",
                   disable: 'attacking',
-                  until: 'end_of_phase',
                 },
+                until: 'end_of_phase',
               },
             },
           },

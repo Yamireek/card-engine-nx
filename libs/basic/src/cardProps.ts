@@ -9,7 +9,7 @@ export type PrintedProps = {
   attack?: number;
   defense?: number;
   hitPoints?: number;
-  traits?: Trait[];
+  traits: Trait[];
   sphere?: Sphere;
   sequence?: number;
   questPoints?: number;

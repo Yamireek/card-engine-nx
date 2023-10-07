@@ -3,18 +3,20 @@ import {
   ResponseAction,
   CardTarget,
   CardView,
-  CardModifier,
-  PaymentConditions,
-  UserCardAction,
+  CostModifier,
+  Ability,
+  GameModifier,
 } from '@card-engine-nx/state';
-import { ViewContext } from '../context';
-import { CardId, Phase, PlayerId, Sphere } from '@card-engine-nx/basic';
+import {
+  CardId,
+  CardType,
+  Phase,
+  PlayerId,
+  Sphere,
+  ZoneType,
+} from '@card-engine-nx/basic';
 import { sequence } from '../utils/sequence';
-import { getTargetCards } from './target';
-import { calculateBoolExpr, calculateNumberExpr } from '../expr';
-import { merge } from 'lodash';
-import { getTargetPlayers } from '../player/target';
-import { applyPlayerModifier } from '../player/modifier';
+import { isInPlay } from '../utils';
 
 export function createPlayAllyAction(
   sphere: Sphere,
@@ -120,254 +122,370 @@ export function createPlayAttachmentAction(
   };
 }
 
-export function createCardActions(
-  ability: CardModifier,
-  action: Action,
-  self: CardView,
-  controller: PlayerId,
-  phase: Phase
-): UserCardAction[] {
-  if (self.zone === 'hand' && self.props.type === 'event') {
-    if (!ability.phase || ability.phase === phase) {
-      const eventAction = createEventAction(
-        self,
-        ability.payment,
-        action,
-        controller
-      );
-
-      if (eventAction) {
+export function createModifiers(
+  self: CardId,
+  controller: PlayerId | undefined,
+  ability: Ability,
+  phase: Phase,
+  zone: ZoneType,
+  type: CardType
+): GameModifier[] {
+  switch (true) {
+    case 'bonus' in ability:
+      if (isInPlay(zone)) {
         return [
           {
-            action: eventAction,
-            card: self.id,
-            description: ability.description,
+            source: self,
+            card: ability.target ?? self,
+            modifier: {
+              description: ability.description,
+              bonus: ability.bonus,
+            },
           },
         ];
       }
-    }
-  }
 
-  if (self.zone === 'playerArea') {
-    if (!ability.phase || ability.phase === phase) {
-      return [
-        {
-          description: ability.description,
-          card: self.id,
-          action: {
-            useCardVar: {
-              name: 'self',
-              value: self.id,
+      return [];
+
+    case 'action' in ability: {
+      if (ability.phase && ability.phase !== phase) {
+        return [];
+      }
+
+      if (zone === 'hand' && type === 'event' && controller) {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              cost: ability.cost,
               action: {
-                usePlayerVar: {
-                  name: 'controller',
-                  value: controller,
-                  action: sequence(
-                    {
-                      useLimit: {
-                        type: ability.limit ?? 'none',
-                        card: self.id,
-                        index: 0, // TODO ability index
-                      },
+                useCardVar: {
+                  name: 'self',
+                  value: self,
+                  action: {
+                    usePlayerVar: {
+                      name: 'controller',
+                      value: controller,
+                      action: sequence(
+                        {
+                          payment: {
+                            cost: {
+                              card: {
+                                target: self,
+                                action: {
+                                  payCost: ability.cost ?? {},
+                                },
+                              },
+                            },
+                            effect: ability.action,
+                          },
+                        },
+                        {
+                          card: { target: self, action: 'discard' },
+                        }
+                      ),
                     },
-                    action
-                  ),
+                  },
                 },
               },
             },
           },
-        },
-      ];
-    }
-  }
-
-  return [];
-}
-
-export function applyAbility(
-  ability: CardModifier,
-  self: CardView,
-  ctx: ViewContext
-) {
-  self.abilities.push(ability.description);
-
-  if (ability.target) {
-    const targets = getTargetCards(ability.target, ctx);
-    for (const id of targets) {
-      const card = ctx.view.cards[id];
-      applyAbility({ ...ability, target: undefined }, card, ctx);
-    }
-    return;
-  }
-
-  if (ability.bonus) {
-    const targets = ability.target
-      ? getTargetCards(ability.target, ctx)
-      : getTargetCards(self.id, ctx);
-
-    for (const id of targets) {
-      const amount = calculateNumberExpr(ability.bonus.amount, ctx);
-      const card = ctx.view.cards[id];
-      const value = card.props[ability.bonus.property];
-      if (value !== undefined && amount) {
-        card.props[ability.bonus.property] = value + amount;
+        ];
       }
+
+      if (zone === 'playerArea' && controller) {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              action: {
+                useCardVar: {
+                  name: 'self',
+                  value: self,
+                  action: {
+                    usePlayerVar: {
+                      name: 'controller',
+                      value: controller,
+                      action: ability.limit
+                        ? {
+                            sequence: [
+                              {
+                                useLimit: {
+                                  card: self,
+                                  type: ability.limit,
+                                  index: 0, // TODO index
+                                },
+                              },
+                              ability.action,
+                            ],
+                          }
+                        : ability.action,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ];
+      }
+
+      return [];
     }
 
-    return;
-  }
+    case 'response' in ability: {
+      if (zone === 'hand' && type === 'event' && controller) {
+        return [
+          {
+            source: self,
+            card: ability.target ?? self,
+            modifier: {
+              description: ability.description,
+              reaction: {
+                forced: false,
+                event: ability.response.event,
+                condition: ability.response.condition,
+                action: {
+                  useCardVar: {
+                    name: 'self',
+                    value: self,
+                    action: {
+                      usePlayerVar: {
+                        name: 'controller',
+                        value: controller,
+                        action: sequence(
+                          {
+                            payment: {
+                              cost: {
+                                card: {
+                                  target: self,
+                                  action: {
+                                    payCost: ability.cost ?? {},
+                                  },
+                                },
+                              },
+                              effect: ability.response.action,
+                            },
+                          },
+                          {
+                            card: { target: self, action: 'discard' },
+                          }
+                        ),
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ];
+      }
 
-  if (ability.nextStage) {
-    self.nextStage = ability.nextStage;
-    return;
-  }
+      if (isInPlay(zone)) {
+        return [
+          {
+            source: self,
+            card: ability.target ?? self,
+            modifier: {
+              description: ability.description,
+              reaction: { ...ability.response, forced: false },
+            },
+          },
+        ];
+      }
 
-  if (ability.disable) {
-    if (!self.disabled) {
-      self.disabled = {};
+      return [];
     }
 
-    self.disabled[ability.disable] = true;
-    return;
-  }
+    case 'forced' in ability:
+      if (isInPlay(zone)) {
+        return [
+          {
+            source: self,
+            card: ability.target ?? self,
+            modifier: {
+              description: ability.description,
+              reaction: { ...ability.forced, forced: true },
+            },
+          },
+        ];
+      }
 
-  if (ability.setup) {
-    ctx.view.setup.push(ability.setup);
-    return;
-  }
+      return [];
 
-  if (ability.action) {
-    const controller = ctx.state.cards[self.id].controller;
-    if (controller) {
-      const actions = createCardActions(
-        ability,
-        ability.action,
-        self,
-        controller,
-        ctx.state.phase
+    case 'whenRevealed' in ability: {
+      if (zone === 'encounterDeck') {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              whenRevealed: ability.whenRevealed,
+            },
+          },
+        ];
+      }
+
+      return [];
+    }
+
+    case 'travel' in ability: {
+      if (zone === 'stagingArea') {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              travel: ability.travel,
+            },
+          },
+        ];
+      }
+
+      return [];
+    }
+
+    case 'setup' in ability: {
+      if (phase === 'setup') {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              setup: ability.setup,
+            },
+          },
+        ];
+      }
+
+      return [];
+    }
+
+    case 'nextStage' in ability: {
+      if (zone === 'questArea') {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              nextStage: ability.nextStage,
+            },
+          },
+        ];
+      }
+
+      return [];
+    }
+
+    case 'conditional' in ability: {
+      if (zone === 'questArea') {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              conditional: ability.conditional,
+            },
+          },
+        ];
+      }
+
+      return [];
+    }
+
+    case 'multi' in ability:
+      return ability.multi.flatMap((a) =>
+        createModifiers(self, controller, a, phase, zone, type)
       );
-      ctx.view.actions.push(...actions);
-    }
-    return;
-  }
 
-  if (ability.attachesTo) {
-    self.attachesTo = ability.attachesTo;
-    return;
-  }
-
-  if (ability.forced) {
-    if (!ctx.view.responses[ability.forced.event]) {
-      ctx.view.responses[ability.forced.event] = [];
-    }
-
-    ctx.view.responses[ability.forced.event]?.push({
-      card: self.id,
-      description: ability.description,
-      action: ability.forced.action,
-      condition: ability.forced.condition,
-      forced: true,
-    });
-    return;
-  }
-
-  if (ability.response) {
-    if (!ctx.view.responses[ability.response.event]) {
-      ctx.view.responses[ability.response.event] = [];
-    }
-
-    if (self.props.type === 'event' && self.zone === 'hand') {
-      const controller = ctx.state.cards[self.id].controller;
-      if (controller) {
-        const response = createEventResponse(
-          self,
-          ability.response,
-          controller
-        );
-
-        if (response) {
-          ctx.view.responses[ability.response.event]?.push({
-            card: self.id,
-            description: ability.description,
-            action: response,
-            condition: ability.response.condition,
-            forced: false,
-          });
-        }
+    case 'attachesTo' in ability: {
+      if (
+        controller &&
+        phase === 'planning' &&
+        zone === 'hand' &&
+        type === 'attachment'
+      ) {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              action: {
+                player: {
+                  target: controller,
+                  action: {
+                    sequence: [
+                      {
+                        card: {
+                          target: self,
+                          action: {
+                            payCost: {},
+                          },
+                        },
+                      },
+                      {
+                        chooseCardActions: {
+                          title: 'Choose target for attachment',
+                          target: ability.attachesTo,
+                          optional: false,
+                          multi: false,
+                          action: {
+                            attachCard: self,
+                          },
+                        },
+                      },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        ];
       }
-    } else {
-      ctx.view.responses[ability.response.event]?.push({
-        card: self.id,
-        description: ability.description,
-        action: ability.response.action,
-        condition: ability.response.condition,
-        forced: false,
-      });
+
+      return [];
     }
 
-    return;
-  }
-
-  if (ability.whenRevealed) {
-    self.whenRevealed.push(ability.whenRevealed);
-    return;
-  }
-
-  if (ability.conditional) {
-    if (ability.conditional.advance !== undefined) {
-      self.conditional.advance.push(ability.conditional.advance);
-      return;
-    }
-    if (ability.conditional.travel !== undefined) {
-      self.conditional.travel.push(ability.conditional.travel);
-      return;
-    }
-  }
-
-  if (ability.and) {
-    for (const item of ability.and) {
-      applyAbility({ ...item, description: ability.description }, self, ctx);
-    }
-
-    return;
-  }
-
-  if (ability.if) {
-    const condition = calculateBoolExpr(ability.if.condition, ctx);
-    if (condition) {
-      applyAbility(ability.if.modifier, self, ctx);
-    }
-    return;
-  }
-
-  if (ability.keywords) {
-    merge(self.props.keywords, ability.keywords);
-    // TODO number keywords
-    return;
-  }
-
-  if (ability.travel) {
-    self.travel.push(ability.travel);
-    return;
-  }
-
-  if (ability.player) {
-    const players = getTargetPlayers(ability.player.target, ctx);
-    for (const playerId of players) {
-      const player = ctx.view.players[playerId];
-      if (player) {
-        applyPlayerModifier(player, ability.player.modifier);
+    case 'player' in ability: {
+      if (isInPlay(zone)) {
+        return [
+          {
+            source: self,
+            player: ability.target,
+            modifier: ability.player,
+            condition: ability.condition,
+          },
+        ];
       }
+
+      return [];
     }
-    return;
-  }
 
-  if (ability.refreshCost) {
-    self.refreshCost.push(ability.refreshCost);
-    return;
-  }
+    case 'card' in ability:
+      if (isInPlay(zone)) {
+        return [
+          {
+            source: self,
+            card: ability.target ?? self,
+            modifier: ability.card,
+            condition: ability.condition,
+          },
+        ];
+      }
 
-  throw new Error(`unknown ability: ${JSON.stringify(ability)}`);
+      return [];
+    default:
+      throw new Error(`unknown ability: ${JSON.stringify(ability, null, 1)}`);
+  }
 }
 
 export function createEventResponse(
@@ -422,7 +540,7 @@ export function createEventResponse(
 
 export function createEventAction(
   self: CardView,
-  conditions: PaymentConditions | undefined,
+  conditions: CostModifier | undefined,
   action: Action,
   controller: PlayerId
 ): Action | undefined {

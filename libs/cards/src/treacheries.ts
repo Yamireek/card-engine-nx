@@ -23,29 +23,43 @@ export const caughtInAWeb = treachery(
       player: {
         target: 'highestThreat',
         action: {
-          chooseCardActions: {
-            title: 'Choose hero',
-            target: {
-              and: [{ type: 'hero', controller: 'highestThreat' }],
+          sequence: [
+            {
+              card: {
+                target: 'self',
+                action: {
+                  modify: [
+                    { description: '', type: 'attachment' },
+                    { description: '', trait: 'condition' },
+                  ],
+                },
+              },
             },
-            action: {
-              attachCard: 'event',
+            {
+              chooseCardActions: {
+                title: 'Choose hero',
+                target: {
+                  and: [{ type: 'hero', controller: 'highestThreat' }],
+                },
+                action: {
+                  sequence: [
+                    { attachCard: 'self' },
+                    {
+                      modify: {
+                        description:
+                          'Pay 2 resources to ready durimg refresh phase',
+                        refreshCost: { payResources: 2 },
+                      },
+                    },
+                  ],
+                },
+                multi: false,
+                optional: false,
+              },
             },
-            multi: false,
-            optional: false,
-          },
+          ],
         },
       },
-    },
-  },
-  {
-    description:
-      "Attached hero does not ready during the refresh phase unless you pay 2 resources from that hero's pool.'",
-    target: {
-      hasAttachment: 'self',
-    },
-    refreshCost: {
-      payResources: 2,
     },
   }
 );
@@ -67,8 +81,8 @@ export const drivenByShadow = treachery(
               amount: 1,
               property: 'threat',
             },
-            until: 'end_of_phase',
           },
+          until: 'end_of_phase',
         },
       },
     },
@@ -76,15 +90,13 @@ export const drivenByShadow = treachery(
   {
     description:
       'If there are no cards in the staging area, Driven by Shadow gains Surge.',
-    if: {
-      condition: {
-        eq: [0, { count: { cards: { zoneType: 'stagingArea' } } }],
-      },
-      modifier: {
-        description: 'Surge',
-        keywords: {
-          surge: true,
-        },
+    condition: {
+      eq: [0, { count: { cards: { zoneType: 'stagingArea' } } }],
+    },
+    card: {
+      description: 'Surge',
+      keywords: {
+        surge: true,
       },
     },
   }

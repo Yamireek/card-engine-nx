@@ -1,10 +1,10 @@
 import { AllyProps } from '@card-engine-nx/basic';
 import { CardDefinition } from '../card';
-import { CardModifier } from '../types';
+import { Ability } from '../types';
 
 export function ally(
   props: Omit<AllyProps, 'type'>,
-  ...abilities: CardModifier[]
+  ...abilities: Ability[]
 ): CardDefinition {
   return {
     front: {
@@ -14,7 +14,8 @@ export function ally(
     },
     back: {
       type: 'player_back',
-      abilities: abilities,
+      abilities: [],
+      traits: [],
     },
     orientation: 'portrait',
   };

@@ -15,7 +15,7 @@ import {
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
 import { Event } from './state';
-import { PlayerModifier } from './view';
+import { PlayerModifier, UserCardAction } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
@@ -149,6 +149,7 @@ export type CardAction =
   | 'explore'
   | 'ready'
   | {
+      payCost?: CostModifier;
       ready?: 'refresh';
       declareAsDefender?: { attacker: CardId };
       destroy?: { attackers: CardId[] };
@@ -171,6 +172,7 @@ export type CardAction =
         side: Side;
       };
       modify?: CardModifier | CardModifier[];
+      until?: Until;
       setAsVar?: string;
       responses?: Event;
     };
@@ -180,42 +182,76 @@ export type PropertyBonus = {
   amount: NumberExpr;
 };
 
+export type Ability = { description: string } & (
+  | {
+      whenRevealed: Action;
+    }
+  | {
+      action: Action;
+      cost?: CostModifier;
+      phase?: Phase;
+      limit?: 'once_per_round';
+    }
+  | {
+      card: CardModifier;
+      target?: CardTarget;
+      condition?: BoolExpr;
+    }
+  | {
+      bonus: PropertyBonus;
+      target?: CardTarget;
+    }
+  | {
+      player: PlayerModifier;
+      target: PlayerTarget;
+      condition?: BoolExpr;
+    }
+  | {
+      setup: Action;
+    }
+  | {
+      travel: Action;
+    }
+  | { response: ResponseAction; target: CardTarget; cost?: CostModifier }
+  | { forced: ResponseAction; target: CardTarget }
+  | { attachesTo: CardTarget }
+  | {
+      multi: Array<Ability>;
+    }
+  | {
+      conditional?: {
+        advance?: BoolExpr;
+      };
+    }
+  | { nextStage: 'random' }
+);
+
 export type CardModifier = {
   description: string;
-  implicit?: boolean;
-  phase?: Phase;
-  action?: Action;
-  setup?: Action;
-  attachesTo?: CardTarget;
-  limit?: 'once_per_round';
-  response?: ResponseAction;
-  forced?: ResponseAction;
-  payment?: PaymentConditions;
   bonus?: PropertyBonus;
-  target?: CardTarget;
-  player?: {
-    target: PlayerTarget;
-    modifier: PlayerModifier;
-  };
   disable?: Mark;
-  until?: Until;
-  nextStage?: 'random';
+  refreshCost?: CardAction;
+  reaction?: {
+    event: EventType;
+    condition?: BoolExpr;
+    action: Action;
+    forced: boolean;
+  };
+  action?: Action;
   whenRevealed?: Action;
+  travel?: Action;
+  setup?: Action;
+  nextStage?: 'random';
   conditional?: {
     advance?: BoolExpr;
-    travel?: BoolExpr;
   };
-  and?: Array<Omit<CardModifier, 'description'>>;
-  if?: {
-    condition: BoolExpr;
-    modifier: CardModifier;
-  };
+  cost?: CostModifier;
   keywords?: Keywords;
-  travel?: Action;
-  refreshCost?: CardAction;
+  type?: CardType;
+  trait?: Trait;
 };
 
-export type PaymentConditions = {
+export type CostModifier = {
   heroes?: number;
 };
 
@@ -301,6 +337,7 @@ export type CardTarget =
   | 'ready'
   | 'event'
   | 'exhausted'
+  | 'source'
   | CardId
   | CardId[]
   | {

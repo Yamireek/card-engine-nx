@@ -16,7 +16,7 @@ export const dwarvenAxe = attachment(
     description:
       'Attached hero gains +1 ATT (+2 ATT instead if attached hero is a Dwarf.)',
     target: {
-      hasAttachment: 'self',
+      hasAttachment: 'source',
     },
     bonus: {
       property: 'attack',
@@ -24,7 +24,7 @@ export const dwarvenAxe = attachment(
         if: {
           cond: {
             card: {
-              target: { hasAttachment: 'self' },
+              target: 'self',
               value: { hasTrait: 'dwarf' },
             },
           },
@@ -51,7 +51,7 @@ export const citadelPlate = attachment(
   {
     description: 'Attached hero gets +4 Hit Points.',
     target: {
-      hasAttachment: 'self',
+      hasAttachment: 'source',
     },
     bonus: {
       property: 'hitPoints',
@@ -75,7 +75,7 @@ export const bladeOfGondolin = attachment(
   {
     description: 'Attached hero gets +1 Attack when attacking an Orc.',
     target: {
-      hasAttachment: 'self',
+      hasAttachment: 'source',
     },
     bonus: {
       property: 'attack',
@@ -85,7 +85,7 @@ export const bladeOfGondolin = attachment(
             and: [
               {
                 card: {
-                  target: { hasAttachment: 'self' },
+                  target: 'self',
                   value: { hasMark: 'attacking' },
                 },
               },
@@ -105,12 +105,17 @@ export const bladeOfGondolin = attachment(
   {
     description:
       'Response: After attached hero attacks and destroys an enemy, place 1 progress token on the current quest.',
+    target: {
+      type: 'enemy',
+    },
     response: {
       event: 'destroyed',
       condition: {
         event: {
           type: 'destroyed',
-          isAttacker: { hasAttachment: 'self' },
+          isAttacker: {
+            hasAttachment: 'source',
+          },
         },
       },
       action: {
@@ -135,6 +140,7 @@ export const hornOfGondor = attachment(
   {
     description:
       "Response: After a character is destroyed, add 1 resource to attached hero's pool.",
+    target: 'character',
     response: {
       event: 'destroyed',
       condition: {
@@ -148,7 +154,7 @@ export const hornOfGondor = attachment(
       action: {
         card: {
           target: {
-            hasAttachment: 'self',
+            hasAttachment: 'source',
           },
           action: {
             generateResources: 1,

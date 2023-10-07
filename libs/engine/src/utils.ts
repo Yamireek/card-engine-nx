@@ -78,35 +78,63 @@ export function crateExecutionContext(
   };
 }
 
+export function chooseOnlyOption(
+  state: State,
+  skip: { show: boolean; actions: boolean }
+) {
+  const choice = state.choice;
+
+  if (!choice) {
+    return;
+  }
+
+  if (choice.type === 'show') {
+    if (skip.show) {
+      state.choice = undefined;
+    }
+  }
+
+  if (choice.type === 'single') {
+    if (choice.optional && choice.options.length === 0) {
+      state.choice = undefined;
+    }
+
+    if (!choice.optional && choice.options.length === 1) {
+      state.next.unshift(...choice.options.map((o) => o.action));
+      state.choice = undefined;
+    }
+  }
+
+  if (choice.type === 'multi') {
+    if (choice.options.length === 0) {
+      state.choice = undefined;
+    }
+  }
+
+  if (choice.type === 'actions') {
+    if (skip.actions) {
+      const actions = createView(state).actions.filter((a) => a.enabled);
+      if (actions.length === 0) {
+        state.choice = undefined;
+      }
+    }
+  }
+}
+
 // TODO less params
 export function advanceToChoiceState(
   state: State,
   events: UIEvents,
-  autoSkip: boolean,
+  skip: { show: boolean; actions: boolean },
   stopOnError: boolean,
   random: Random
 ) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
+    chooseOnlyOption(state, skip);
+
     if (state.choice) {
-      if (
-        state.choice.type === 'single' &&
-        ((!state.choice.optional && state.choice.options.length === 1) ||
-          (state.choice.optional && state.choice.options.length === 0))
-      ) {
-        if (state.choice.options.length > 0) {
-          state.next.unshift(state.choice.options[0].action);
-        }
-        state.choice = undefined;
-      } else if (
-        autoSkip &&
-        state.choice.type === 'actions' &&
-        createView(state).actions.length === 0
-      ) {
-        state.choice = undefined;
-      } else {
-        return state;
-      }
+      return;
     }
 
     if (state.next.length === 0) {

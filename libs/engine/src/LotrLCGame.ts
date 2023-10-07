@@ -18,10 +18,12 @@ import { sum } from 'lodash/fp';
 import { PowerSet } from 'js-combinatorics';
 import { randomBgIO } from './utils/random';
 
+const skipOptions = { actions: false, show: false };
+
 function createMoves(events: UIEvents): Record<string, Move<State>> {
   const skip: Move<State> = ({ G, random }) => {
     G.choice = undefined;
-    advanceToChoiceState(G, events, true, false, randomBgIO(random));
+    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
   };
 
   const load: Move<State> = (_, state: State) => {
@@ -45,7 +47,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     const choices = choosen.map((index) => options[index]);
     G.choice = undefined;
     G.next.unshift(...choices.map((c) => c.action));
-    advanceToChoiceState(G, events, false, false, randomBgIO(random));
+    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
   };
 
   const json: Move<State> = ({ G, random }, action: Action) => {
@@ -55,7 +57,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     G.choice = undefined;
     G.next = [action];
 
-    advanceToChoiceState(G, events, false, false, randomBgIO(random));
+    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
 
     if (!G.choice) {
       G.choice = choice;
@@ -88,7 +90,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
         }
       })
     );
-    advanceToChoiceState(G, events, false, false, randomBgIO(random));
+    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
   };
 
   const action: Move<State> = ({ G, random }, index: number) => {
@@ -102,12 +104,12 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     G.choice = undefined;
     G.next.unshift({ playerActions: title });
     G.next.unshift(action.action);
-    advanceToChoiceState(G, events, false, false, randomBgIO(random));
+    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
   };
 
   const selectScenario: Move<State> = ({ G, random }, scenario: Scenario) => {
     G.next.unshift(beginScenario(scenario));
-    advanceToChoiceState(G, events, false, false, randomBgIO(random));
+    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
   };
 
   const selectDeck: Move<State> = ({ G, playerID }, deck: PlayerDeck) => {

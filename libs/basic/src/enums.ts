@@ -44,6 +44,8 @@ export type PlayerZoneType =
   | 'playerArea'
   | 'engaged';
 
+export type ZoneType = GameZoneType | PlayerZoneType;
+
 export type Side = 'front' | 'back';
 
 export type Trait =
@@ -72,7 +74,8 @@ export type Trait =
   | 'weapon'
   | 'item'
   | 'armor'
-  | 'istari';
+  | 'istari'
+  | 'condition';
 
 export type Sphere = 'tactics' | 'spirit' | 'lore' | 'leadership' | 'neutral';
 

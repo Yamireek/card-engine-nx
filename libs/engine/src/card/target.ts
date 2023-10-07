@@ -90,6 +90,19 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       .map((c) => c.id);
   }
 
+  if (target === 'source') {
+    const inCtx = ctx.card['source'];
+    if (!inCtx) {
+      const inState = ctx.state.vars.card['source'];
+      if (inState) {
+        return [inState];
+      }
+      throw new Error('no source card in ctx or state');
+    } else {
+      return [inCtx];
+    }
+  }
+
   if (target.take) {
     const all = getTargetCards({ ...target, take: undefined }, ctx);
     return all.slice(0, target.take);

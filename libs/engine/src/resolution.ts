@@ -1,9 +1,18 @@
-import { Action, CardAction, PlayerAction } from '@card-engine-nx/state';
+import {
+  Action,
+  CardAction,
+  CardState,
+  CardView,
+  CostModifier,
+  PlayerAction,
+} from '@card-engine-nx/state';
 import { ViewContext } from './context';
 import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
 import { getTargetPlayers } from './player/target';
+import { merge } from 'lodash/fp';
+import { sequence } from './utils/sequence';
 
 export function canExecute(
   action: Action,
@@ -202,6 +211,19 @@ export function canPlayerExecute(
       return player.zones.library.cards.length > 0;
     }
 
+    if (action.card) {
+      return canExecute(
+        {
+          card: {
+            target: action.card.target,
+            action: action.card.action,
+          },
+        },
+        false,
+        ctx
+      );
+    }
+
     throw new Error(
       `not implemented: canPlayerExecute ${JSON.stringify(action)}`
     );
@@ -239,6 +261,10 @@ export function canCardExecute(
 
       const owner = ctx.view.players[card.owner];
       return card.zone === 'library' && !owner?.disableDraw;
+    }
+
+    if (action === 'discard') {
+      return true;
     }
 
     throw new Error(
@@ -279,7 +305,8 @@ export function canCardExecute(
       return (
         card.zone === 'stagingArea' ||
         card.zone === 'engaged' ||
-        card.zone === 'playerArea'
+        card.zone === 'playerArea' ||
+        card.zone === 'encounterDeck'
       );
     }
 
@@ -310,7 +337,49 @@ export function canCardExecute(
     if (action.resolvePlayerAttacking) {
       return true;
     }
+
+    if (action.payCost) {
+      if (!card.controller) {
+        return false;
+      }
+
+      const payCostAction = createPayCostAction(cardId, action.payCost, ctx);
+
+      if (!payCostAction) {
+        return false;
+      }
+
+      return canPlayerExecute(payCostAction, card.controller, ctx);
+    }
   }
 
   throw new Error(`not implemented: canCardExecute ${JSON.stringify(action)}`);
+}
+
+export function createPayCostAction(
+  cardId: CardId,
+  modifiers: CostModifier,
+  ctx: ViewContext
+): PlayerAction | undefined {
+  const view = ctx.view.cards[cardId];
+  const state = ctx.state.cards[cardId];
+
+  if (state.zone !== 'hand' || !state.controller) {
+    return undefined;
+  }
+
+  const sphere = view.props.sphere;
+  const amount = view.props.cost;
+
+  if (!sphere || amount === undefined) {
+    return undefined;
+  }
+
+  return {
+    payResources: {
+      amount,
+      sphere,
+      ...modifiers,
+    },
+  };
 }

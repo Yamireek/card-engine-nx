@@ -126,23 +126,20 @@ export const achosenPath1 = quest({
       {
         description:
           "The players must find and defeat Ungoliant's Spawn to win this game.",
-        and: [
+        multi: [
           {
+            description: '',
             conditional: {
               advance: false,
             },
           },
           {
+            description: '',
+            target: {
+              name: "Ungoliant's Spawn",
+            },
             forced: {
               event: 'destroyed',
-              condition: {
-                card: {
-                  target: 'event',
-                  value: {
-                    name: "Ungoliant's Spawn",
-                  },
-                },
-              },
               action: 'win',
             },
           },

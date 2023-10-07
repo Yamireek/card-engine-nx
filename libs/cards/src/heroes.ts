@@ -44,14 +44,15 @@ export const legolas = hero(
   {
     description:
       'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.',
+    target: { type: 'enemy' },
+    condition: {
+      event: {
+        type: 'destroyed',
+        isAttacker: 'self',
+      },
+    },
     response: {
       event: 'destroyed',
-      condition: {
-        event: {
-          type: 'destroyed',
-          isAttacker: 'self',
-        },
-      },
       action: {
         placeProgress: 2,
       },
@@ -73,31 +74,22 @@ export const thalin = hero(
   {
     description:
       'While Thalin is committed to a quest, deal 1 damage to each enemy as it is revealed by the encounter deck.',
+    target: {
+      and: [{ type: 'enemy' }, { zoneType: 'encounterDeck' }],
+    },
     response: {
       event: 'revealed',
       condition: {
-        and: [
-          {
-            card: {
-              target: 'self',
-              value: {
-                hasMark: 'questing',
-              },
-            },
+        card: {
+          target: 'source',
+          value: {
+            hasMark: 'questing',
           },
-          {
-            card: {
-              target: 'event',
-              value: {
-                isType: 'enemy',
-              },
-            },
-          },
-        ],
+        },
       },
       action: {
         card: {
-          target: 'event',
+          target: 'self',
           action: {
             dealDamage: 1,
           },
@@ -121,6 +113,7 @@ export const gloin = hero(
   {
     description:
       'After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered.',
+    target: 'source',
     response: {
       event: 'receivedDamage',
       action: {
@@ -192,38 +185,14 @@ export const eowyn = hero(
                   property: 'willpower',
                   amount: 1,
                 },
-                until: 'end_of_phase',
               },
+              until: 'end_of_phase',
             },
           },
         },
       },
     },
   }
-  // action({
-  //   description:
-  //     'Discard 1 card from your hand to give Éowyn +1 [willpower] until the end of the phase. This effect may be triggered by each player once each round.',
-  //   caster: 'any',
-  //   cost: () =>
-  //     choosePlayer({
-  //       action: (player) =>
-  //         sequence(
-  //           targetPlayer(player).to(
-  //             sequence(setFlag('eowyn_used'), discard(1))
-  //           ),
-  //           atEndOfRound(targetPlayer(player).to(clearFlag('eowyn_used')))
-  //         ),
-  //       label: 'Choose player to discard 1 card',
-  //     }),
-  //   effect: (caster, self) =>
-  //     targetCard(self).to(
-  //       modify({
-  //         description: "Éowyn's +1 [willpower]",
-  //         modifier: addWillpower(1),
-  //         until: 'end_of_phase',
-  //       })
-  //     ),
-  // })
 );
 
 export const beravor = hero(

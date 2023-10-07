@@ -10,7 +10,7 @@ import {
   PlayerZoneType,
   GameZoneType,
 } from '@card-engine-nx/basic';
-import { CardModifier } from './types';
+import { Ability } from './types';
 
 export type PlayerDeck = {
   name: string;
@@ -25,8 +25,8 @@ export type Scenario = {
 };
 
 export type CardDefinition = {
-  front: PrintedProps & { abilities: CardModifier[] };
-  back: PrintedProps & { abilities: CardModifier[] };
+  front: PrintedProps & { abilities: Ability[] };
+  back: PrintedProps & { abilities: Ability[] };
   orientation: Orientation;
 };
 

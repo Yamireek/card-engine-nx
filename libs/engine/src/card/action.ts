@@ -5,8 +5,14 @@ import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
-import { GameZoneType, PlayerZoneType, ZoneId } from '@card-engine-nx/basic';
+import {
+  GameZoneType,
+  PlayerZoneType,
+  ZoneId,
+  getZoneType,
+} from '@card-engine-nx/basic';
 import { getTargetCard, getTargetCards } from './target';
+import { createPayCostAction } from '../resolution';
 
 export function executeCardAction(
   action: CardAction,
@@ -64,6 +70,7 @@ export function executeCardAction(
     const props = ctx.view.cards[card.id].props;
 
     ctx.state.next.unshift(
+      { event: { type: 'revealed', card: card.id } },
       {
         card: {
           target: card.id,
@@ -75,8 +82,7 @@ export function executeCardAction(
             },
           },
         },
-      },
-      { event: { type: 'revealed', card: card.id } }
+      }
     );
 
     return;
@@ -283,6 +289,12 @@ export function executeCardAction(
 
     ctx.state.next.unshift(
       {
+        event: {
+          type: 'explored',
+          card: card.id,
+        },
+      },
+      {
         card: {
           target: card.id,
           action: {
@@ -291,12 +303,6 @@ export function executeCardAction(
               side: 'front',
             },
           },
-        },
-      },
-      {
-        event: {
-          type: 'explored',
-          card: card.id,
         },
       }
     );
@@ -337,6 +343,24 @@ export function executeCardAction(
       }
     );
 
+    return;
+  }
+
+  if (action.payCost) {
+    const controller = card.controller;
+    if (!controller) {
+      return;
+    }
+
+    const payCostAction = createPayCostAction(card.id, action.payCost, ctx);
+    if (payCostAction) {
+      ctx.state.next.unshift({
+        player: {
+          target: controller,
+          action: payCostAction,
+        },
+      });
+    }
     return;
   }
 
@@ -476,6 +500,12 @@ export function executeCardAction(
   }
 
   if (action.move) {
+    if (action.move.from) {
+      if (card.zone !== getZoneType(action.move.from)) {
+        return;
+      }
+    }
+
     const fromId = action.move.from ?? getCardZoneId(card.id, ctx.state);
     const sourceZone = getZoneState(fromId, ctx.state);
     const destinationZone = getZoneState(action.move.to, ctx.state);
@@ -612,6 +642,20 @@ export function executeCardAction(
     if (target) {
       card.attachments.push(target);
       ctx.state.cards[target].attachedTo = card.id;
+      ctx.state.next.unshift({
+        card: {
+          target,
+          action: {
+            move: {
+              side: 'front',
+              to: {
+                type: card.zone,
+                owner: card.owner,
+              } as any,
+            },
+          },
+        },
+      });
     }
     return;
   }
@@ -620,16 +664,18 @@ export function executeCardAction(
     if (isArray(action.modify)) {
       for (const modifier of action.modify) {
         ctx.state.modifiers.push({
+          source: 0, // TODO fix
           card: card.id,
           modifier,
-          until: modifier.until,
+          until: action.until,
         });
       }
     } else {
       ctx.state.modifiers.push({
+        source: 0, // TODO fix
         card: card.id,
         modifier: action.modify,
-        until: action.modify.until,
+        until: action.until,
       });
     }
     return;

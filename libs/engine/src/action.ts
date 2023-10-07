@@ -389,23 +389,25 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     const forced = reponses
       .filter((r) => r.forced)
+      .filter((r) => ('card' in event ? r.card === event.card : true))
       .filter(
         (r) =>
           !r.condition ||
           calculateBoolExpr(r.condition, {
             ...ctx,
-            card: { ...ctx.card, self: r.card },
+            card: { ...ctx.card, self: r.card, source: r.source },
           })
       );
 
     const optional = reponses
       .filter((r) => !r.forced)
+      .filter((r) => ('card' in event ? r.card === event.card : true))
       .filter(
         (r) =>
           !r.condition ||
           calculateBoolExpr(r.condition, {
             ...ctx,
-            card: { ...ctx.card, self: r.card },
+            card: { ...ctx.card, self: r.card, source: r.source },
           })
       );
 
@@ -422,7 +424,13 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
                   useCardVar: {
                     name: 'self',
                     value: r.card,
-                    action: r.action,
+                    action: {
+                      useCardVar: {
+                        name: 'source',
+                        value: r.source,
+                        action: r.action,
+                      },
+                    },
                   },
                 },
               })),
@@ -440,7 +448,13 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           useCardVar: {
             name: 'self',
             value: r.card,
-            action: r.action,
+            action: {
+              useCardVar: {
+                name: 'source',
+                value: r.source,
+                action: r.action,
+              },
+            },
           },
         }))
       );
@@ -448,7 +462,15 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     if (action.event.type === 'revealed') {
       const card = ctx.view.cards[action.event.card];
-      ctx.state.next.unshift(...card.whenRevealed);
+      ctx.state.next.unshift({
+        useCardVar: {
+          name: 'self',
+          value: card.id,
+          action: {
+            sequence: card.whenRevealed,
+          },
+        },
+      });
     }
 
     // TODO surge

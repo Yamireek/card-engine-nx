@@ -23,7 +23,13 @@ export class TestEngine {
   constructor(state: SimpleState) {
     this.state = createState(state);
 
-    advanceToChoiceState(this.state, consoleEvents, true, true, random);
+    advanceToChoiceState(
+      this.state,
+      consoleEvents,
+      { actions: true, show: true },
+      true,
+      random
+    );
     this.state.choice = undefined;
     this.state.next = [];
   }
@@ -38,7 +44,13 @@ export class TestEngine {
 
   do(...action: Action[]) {
     this.state.next.unshift(...action);
-    advanceToChoiceState(this.state, consoleEvents, true, true, random);
+    advanceToChoiceState(
+      this.state,
+      consoleEvents,
+      { actions: true, show: true },
+      true,
+      random
+    );
 
     if (this.state.choice) {
       console.log(this.state.choice);
@@ -127,7 +139,13 @@ export class CardProxy {
       this._state.cards[this.id],
       crateExecutionContext(this._state, consoleEvents, random)
     );
-    advanceToChoiceState(this._state, consoleEvents, true, true, random);
+    advanceToChoiceState(
+      this._state,
+      consoleEvents,
+      { actions: true, show: true },
+      true,
+      random
+    );
   }
 
   get props() {
