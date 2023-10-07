@@ -462,7 +462,15 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     if (action.event.type === 'revealed') {
       const card = ctx.view.cards[action.event.card];
-      ctx.state.next.unshift(...card.whenRevealed);
+      ctx.state.next.unshift({
+        useCardVar: {
+          name: 'self',
+          value: card.id,
+          action: {
+            sequence: card.whenRevealed,
+          },
+        },
+      });
     }
 
     // TODO surge

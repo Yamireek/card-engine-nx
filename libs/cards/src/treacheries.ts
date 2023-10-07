@@ -23,31 +23,41 @@ export const caughtInAWeb = treachery(
       player: {
         target: 'highestThreat',
         action: {
-          chooseCardActions: {
-            title: 'Choose hero',
-            target: {
-              and: [{ type: 'hero', controller: 'highestThreat' }],
+          sequence: [
+            {
+              card: {
+                target: 'self',
+                action: {
+                  modify: [
+                    { description: '', type: 'attachment' },
+                    { description: '', trait: 'condition' },
+                  ],
+                },
+              },
             },
-            action: {
-              attachCard: 'event',
+            {
+              chooseCardActions: {
+                title: 'Choose hero',
+                target: {
+                  and: [{ type: 'hero', controller: 'highestThreat' }],
+                },
+                action: {
+                  sequence: [
+                    { attachCard: 'self' },
+                    {
+                      modify: {
+                        description: '',
+                        refreshCost: { payResources: 2 },
+                      },
+                    },
+                  ],
+                },
+                multi: false,
+                optional: false,
+              },
             },
-            multi: false,
-            optional: false,
-          },
+          ],
         },
-      },
-    },
-  },
-  {
-    description:
-      "Attached hero does not ready during the refresh phase unless you pay 2 resources from that hero's pool.'",
-    target: {
-      hasAttachment: 'source',
-    },
-    card: {
-      description: '',
-      refreshCost: {
-        payResources: 2,
       },
     },
   }

@@ -5,7 +5,12 @@ import { getCardZoneId, getZoneState } from '../zone/target';
 import { sequence } from '../utils/sequence';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
-import { GameZoneType, PlayerZoneType, ZoneId } from '@card-engine-nx/basic';
+import {
+  GameZoneType,
+  PlayerZoneType,
+  ZoneId,
+  getZoneType,
+} from '@card-engine-nx/basic';
 import { getTargetCard, getTargetCards } from './target';
 import { createPayCostAction } from '../resolution';
 
@@ -495,6 +500,12 @@ export function executeCardAction(
   }
 
   if (action.move) {
+    if (action.move.from) {
+      if (card.zone !== getZoneType(action.move.from)) {
+        return;
+      }
+    }
+
     const fromId = action.move.from ?? getCardZoneId(card.id, ctx.state);
     const sourceZone = getZoneState(fromId, ctx.state);
     const destinationZone = getZoneState(action.move.to, ctx.state);

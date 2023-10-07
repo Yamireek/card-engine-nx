@@ -25,6 +25,7 @@ export function quest(def: QuestDefinition): CardDefinition {
       sequence: def.sequence,
       type: 'quest',
       abilities: def.a.abilities ?? [],
+      traits: [],
     },
     back: {
       name: nameB,
@@ -32,6 +33,7 @@ export function quest(def: QuestDefinition): CardDefinition {
       type: 'quest',
       questPoints: def.b.questPoints,
       abilities: def.b.abilities ?? [],
+      traits: [],
     },
     orientation: 'landscape',
   };

@@ -11,10 +11,12 @@ export function event(
       ...props,
       abilities,
       type: 'event',
+      traits: [],
     },
     back: {
       type: 'player_back',
       abilities: [],
+      traits: [],
     },
     orientation: 'portrait',
   };

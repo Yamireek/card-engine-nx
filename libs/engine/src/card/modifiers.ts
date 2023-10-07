@@ -68,6 +68,18 @@ export function applyModifier(
       });
       return;
 
+    case !!modifier.refreshCost:
+      self.refreshCost.push(modifier.refreshCost);
+      return;
+
+    case !!modifier.type:
+      self.props.type = modifier.type;
+      return;
+
+    case !!modifier.trait:
+      self.props.traits.push(modifier.trait);
+      return;
+
     default:
       throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);
   }

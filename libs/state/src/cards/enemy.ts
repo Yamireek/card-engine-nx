@@ -15,6 +15,7 @@ export function enemy(
     back: {
       type: 'encounter_back',
       abilities: [],
+      traits: [],
     },
     orientation: 'portrait',
   };

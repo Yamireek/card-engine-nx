@@ -16,6 +16,7 @@ export function hero(
     back: {
       type: 'player_back',
       abilities: [],
+      traits: [],
     },
     orientation: 'portrait',
   };

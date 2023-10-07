@@ -245,9 +245,10 @@ export type CardModifier = {
   conditional?: {
     advance?: BoolExpr;
   };
-  attachesTo?: CardTarget;
   cost?: CostModifier;
   keywords?: Keywords;
+  type?: CardType;
+  trait?: Trait;
 };
 
 export type CostModifier = {
