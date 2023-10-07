@@ -65,7 +65,7 @@ export type CardView = {
   attachesTo?: CardTarget;
   nextStage?: NextStage;
   disabled?: Partial<Record<Mark, boolean>>;
-  abilities: string[];
+  effects: string[];
   whenRevealed: Action[];
   travel: Action[];
   conditional: {

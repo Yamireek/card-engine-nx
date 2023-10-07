@@ -9,6 +9,8 @@ export function applyModifier(
   source: CardId,
   ctx: ViewContext
 ) {
+  self.effects.push(modifier.description);
+
   switch (true) {
     case !!modifier.bonus: {
       const amount = calculateNumberExpr(modifier.bonus.amount, ctx);

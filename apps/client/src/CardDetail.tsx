@@ -37,7 +37,7 @@ export const CardDetail = () => {
     <CardText
       title={`${name} (${card.state.id}) [${exhaused}${unique}]`}
       sphere={card.view.props.sphere}
-      abilities={card.view.abilities}
+      abilities={card.view.effects}
       attachments={[]}
       traits={card.view.props.traits ?? []}
       properties={cardProperties.map((p) => ({

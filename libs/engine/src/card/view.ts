@@ -8,7 +8,7 @@ export function createCardView(state: CardState): CardView {
     printed,
     props: cloneDeep(printed),
     zone: state.zone,
-    abilities: [],
+    effects: [],
     whenRevealed: [],
     conditional: {
       advance: [],
