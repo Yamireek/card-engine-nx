@@ -9,7 +9,15 @@ export function applyModifier(
   source: CardId,
   ctx: ViewContext
 ) {
-  self.effects.push(modifier.description);
+  if (source !== self.id && source !== 0) {
+    self.effects.push(
+      `[${ctx.view.cards[source].props.name}] ${modifier.description}`
+    );
+  }
+
+  if (source === 0) {
+    self.effects.push(modifier.description);
+  }
 
   switch (true) {
     case !!modifier.bonus: {
