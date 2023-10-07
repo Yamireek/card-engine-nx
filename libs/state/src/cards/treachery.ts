@@ -14,7 +14,7 @@ export function treachery(
     },
     back: {
       type: 'encounter_back',
-      abilities,
+      abilities: [],
     },
     orientation: 'portrait',
   };

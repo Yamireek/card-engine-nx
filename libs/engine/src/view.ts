@@ -31,7 +31,14 @@ export function createView(state: State): View {
     const abilities = c.definition[c.sideUp].abilities;
     return abilities
       .flatMap((a) =>
-        createModifiers(c.id, c.controller, a, state.phase, c.zone)
+        createModifiers(
+          c.id,
+          c.controller,
+          a,
+          state.phase,
+          c.zone,
+          c.definition.front.type
+        )
       )
       .flatMap((modifier) => ({ applied: false, modifier }));
   });

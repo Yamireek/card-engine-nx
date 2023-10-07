@@ -14,7 +14,7 @@ export function event(
     },
     back: {
       type: 'player_back',
-      abilities,
+      abilities: [],
     },
     orientation: 'portrait',
   };

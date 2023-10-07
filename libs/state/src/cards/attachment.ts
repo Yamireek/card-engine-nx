@@ -14,7 +14,7 @@ export function attachment(
     },
     back: {
       type: 'player_back',
-      abilities,
+      abilities: [],
     },
     orientation: 'portrait',
   };

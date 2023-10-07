@@ -14,7 +14,7 @@ export function ally(
     },
     back: {
       type: 'player_back',
-      abilities: abilities,
+      abilities: [],
     },
     orientation: 'portrait',
   };

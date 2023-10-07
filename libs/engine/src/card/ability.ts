@@ -13,6 +13,7 @@ import {
 import { ViewContext } from '../context';
 import {
   CardId,
+  CardType,
   GameZoneType,
   Phase,
   PlayerId,
@@ -361,10 +362,11 @@ export function createModifiers(
   controller: PlayerId | undefined,
   ability: Ability,
   phase: Phase,
-  zone: ZoneType
+  zone: ZoneType,
+  type: CardType
 ): GameModifier[] {
   if ('bonus' in ability) {
-    if (zone === 'playerArea') {
+    if (isInPlay(zone)) {
       return [
         {
           source: self,
@@ -385,7 +387,7 @@ export function createModifiers(
       return [];
     }
 
-    if (zone === 'hand' && controller) {
+    if (zone === 'hand' && type === 'event' && controller) {
       return [
         {
           source: self,
@@ -470,7 +472,7 @@ export function createModifiers(
   }
 
   if ('response' in ability) {
-    if (zone === 'hand' && controller) {
+    if (zone === 'hand' && type === 'event' && controller) {
       return [
         {
           source: self,
@@ -533,7 +535,7 @@ export function createModifiers(
   }
 
   if ('forced' in ability) {
-    if (zone === 'engaged' || zone === 'playerArea' || zone === 'questArea') {
+    if (isInPlay(zone)) {
       return [
         {
           source: self,
@@ -584,13 +586,17 @@ export function createModifiers(
   }
 
   if ('setup' in ability) {
-    return [
-      {
-        source: self,
-        card: self,
-        modifier: { description: ability.description, setup: ability.setup },
-      },
-    ];
+    if (phase === 'setup') {
+      return [
+        {
+          source: self,
+          card: self,
+          modifier: { description: ability.description, setup: ability.setup },
+        },
+      ];
+    }
+
+    return [];
   }
 
   if ('nextStage' in ability) {
@@ -625,12 +631,17 @@ export function createModifiers(
 
   if ('multi' in ability) {
     return ability.multi.flatMap((a) =>
-      createModifiers(self, controller, a, phase, zone)
+      createModifiers(self, controller, a, phase, zone, type)
     );
   }
 
   if ('attachesTo' in ability) {
-    if (controller && phase === 'planning' && zone === 'hand') {
+    if (
+      controller &&
+      phase === 'planning' &&
+      zone === 'hand' &&
+      type === 'attachment'
+    ) {
       return [
         {
           source: self,
