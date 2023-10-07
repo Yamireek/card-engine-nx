@@ -171,11 +171,6 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       .map((s) => s.id);
   }
 
-  if (target.canExecute) {
-    const action = target.canExecute;
-    return cardIds(ctx).filter((id) => canCardExecute(action, id, ctx));
-  }
-
   if (target.controller) {
     const targets = getTargetPlayers(target.controller, ctx);
     return targets.flatMap(

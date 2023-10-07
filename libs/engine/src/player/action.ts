@@ -11,7 +11,7 @@ import { ExecutionContext } from '../context';
 import { getTargetCard, getTargetCards } from '../card';
 import { isArray, max, sum } from 'lodash/fp';
 import { getTargetPlayers } from './target';
-import { canExecute } from '../resolution';
+import { canCardExecute, canExecute, canPlayerExecute } from '../resolution';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -465,23 +465,11 @@ export function executePlayerAction(
   }
 
   if (action.chooseCardActions) {
-    const cardIds = getTargetCards(
-      {
-        and: [
-          action.chooseCardActions.target,
-          {
-            canExecute: action.chooseCardActions.action,
-          },
-        ],
-      },
-      ctx
-    );
-
+    const cardIds = getTargetCards(action.chooseCardActions.target, ctx);
+    const cardAction = action.chooseCardActions.action;
     if (cardIds.length === 0) {
       return;
     }
-
-    const cardAction = action.chooseCardActions.action;
 
     ctx.state.choice = {
       id: ctx.state.nextId++,
@@ -489,34 +477,29 @@ export function executePlayerAction(
       title: action.chooseCardActions.title,
       type: action.chooseCardActions.multi ? 'multi' : 'single',
       optional: action.chooseCardActions.optional,
-      options: cardIds.map((c) => ({
-        title: c.toString(),
-        cardId: c,
-        action: {
-          card: {
-            target: c,
-            action: cardAction,
+      options: cardIds
+        .filter((id) => canCardExecute(cardAction, id, ctx))
+        .map((c) => ({
+          title: c.toString(),
+          cardId: c,
+          action: {
+            card: {
+              target: c,
+              action: cardAction,
+            },
           },
-        },
-      })),
+        })),
     };
     return;
   }
 
   if (action.choosePlayerActions) {
-    const playerIds = getTargetPlayers(
-      {
-        and: [
-          action.choosePlayerActions.target,
-          {
-            canExecute: action.choosePlayerActions.action,
-          },
-        ],
-      },
-      ctx
-    );
-
+    const playerIds = getTargetPlayers(action.choosePlayerActions.target, ctx);
     const playerAction = action.choosePlayerActions.action;
+
+    if (playerIds.length == 0) {
+      return;
+    }
 
     ctx.state.choice = {
       id: ctx.state.nextId++,
@@ -524,15 +507,17 @@ export function executePlayerAction(
       title: action.choosePlayerActions.title,
       type: action.choosePlayerActions.multi ? 'multi' : 'single',
       optional: action.choosePlayerActions.optional,
-      options: playerIds.map((c) => ({
-        title: c.toString(),
-        action: {
-          player: {
-            target: c,
-            action: playerAction,
+      options: playerIds
+        .filter((p) => canPlayerExecute(playerAction, p, ctx))
+        .map((c) => ({
+          title: c.toString(),
+          action: {
+            player: {
+              target: c,
+              action: playerAction,
+            },
           },
-        },
-      })),
+        })),
     };
     return;
   }

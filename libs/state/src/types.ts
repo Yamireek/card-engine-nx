@@ -347,8 +347,7 @@ export type CardTarget =
       not?: CardTarget;
       type?: CardType | CardType[];
       top?: ZoneTarget | { zone: ZoneTarget; amount: number };
-      sphere?: Sphere | 'any';
-      canExecute?: CardAction;
+      sphere?: Sphere | 'any';      
       controller?: PlayerTarget;
       mark?: Mark;
       enabled?: Mark;
@@ -386,7 +385,6 @@ export type PlayerTarget =
   | 'highestThreat'
   | {
       and?: PlayerTarget[];
-      canExecute?: PlayerAction;
       controller?: CardId;
       var?: string;
     };

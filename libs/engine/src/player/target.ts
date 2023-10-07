@@ -57,13 +57,6 @@ export function getTargetPlayers(
       return uniq(intersection(...lists));
     }
 
-    if (target.canExecute) {
-      const action = target.canExecute;
-      return values(ctx.state.players)
-        .filter((p) => canPlayerExecute(action, p.id, ctx))
-        .map((p) => p.id);
-    }
-
     if (target.controller) {
       const card = ctx.state.cards[target.controller];
       if (card.controller) {
