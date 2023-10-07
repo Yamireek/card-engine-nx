@@ -28,6 +28,7 @@ export type View = {
     Record<
       EventType,
       Array<{
+        source: CardId;
         card: CardId;
         description: string;
         condition?: BoolExpr;

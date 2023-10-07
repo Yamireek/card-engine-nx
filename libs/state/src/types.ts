@@ -212,7 +212,7 @@ export type Ability = { description: string } & (
   | {
       travel: Action;
     }
-  | { response: ResponseAction; cost?: CostModifier }
+  | { response: ResponseAction; cost?: CostModifier; target?: CardTarget }
   | { forced: ResponseAction }
   | { attachesTo: CardTarget }
   | {

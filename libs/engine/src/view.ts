@@ -75,7 +75,12 @@ export function createView(state: State): View {
             ? calculateBoolExpr(modifier.modifier.condition, ctx)
             : true;
           if (condition) {
-            applyModifier(modifier.modifier.modifier, view.cards[target], ctx);
+            applyModifier(
+              modifier.modifier.modifier,
+              view.cards[target],
+              modifier.modifier.source,
+              ctx
+            );
           }
         }
       }

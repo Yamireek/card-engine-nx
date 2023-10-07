@@ -33,7 +33,7 @@ it('Glorfindel', () => {
   expect(glorfindel.token.resources).toEqual(1);
   expect(glorfindel.token.damage).toEqual(1);
   console.log(game.actions);
-  console.log(game.state.cards[1])
+  console.log(game.state.cards[1]);
   expect(game.actions.length).toEqual(0);
   game.do('endRound');
   expect(game.actions.length).toEqual(1);

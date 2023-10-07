@@ -394,7 +394,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           !r.condition ||
           calculateBoolExpr(r.condition, {
             ...ctx,
-            card: { ...ctx.card, self: r.card },
+            card: { ...ctx.card, self: r.card, source: r.source },
           })
       );
 
@@ -405,7 +405,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           !r.condition ||
           calculateBoolExpr(r.condition, {
             ...ctx,
-            card: { ...ctx.card, self: r.card },
+            card: { ...ctx.card, self: r.card, source: r.source },
           })
       );
 

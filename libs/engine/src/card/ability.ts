@@ -201,6 +201,7 @@ export function createCardActions(
 export function applyModifier(
   modifier: CardModifier,
   self: CardView,
+  source: CardId,
   ctx: ViewContext
 ) {
   if (modifier.bonus) {
@@ -243,6 +244,7 @@ export function applyModifier(
     }
 
     ctx.view.responses[modifier.reaction.event]?.push({
+      source: source,
       card: self.id,
       description: modifier.description,
       action: modifier.reaction.action,
@@ -488,16 +490,34 @@ export function createModifiers(
     }
 
     if (zone === 'playerArea') {
-      return [
-        {
-          source: self,
-          card: self,
-          modifier: {
-            description: ability.description,
-            reaction: { ...ability.response, forced: false },
+      if (ability.target) {
+        return [
+          {
+            source: self,
+            card: ability.target,
+            modifier: {
+              description: ability.description,
+              reaction: {
+                event: ability.response.event,
+                condition: ability.response.condition,
+                action: ability.response.action,
+                forced: false,
+              },
+            },
           },
-        },
-      ];
+        ];
+      } else {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              reaction: { ...ability.response, forced: false },
+            },
+          },
+        ];
+      }
     }
 
     return [];

@@ -73,31 +73,22 @@ export const thalin = hero(
   {
     description:
       'While Thalin is committed to a quest, deal 1 damage to each enemy as it is revealed by the encounter deck.',
+    target: {
+      and: [{ type: 'enemy' }, { zoneType: 'encounterDeck' }],
+    },
     response: {
       event: 'revealed',
       condition: {
-        and: [
-          {
-            card: {
-              target: 'self',
-              value: {
-                hasMark: 'questing',
-              },
-            },
+        card: {
+          target: 'source',
+          value: {
+            hasMark: 'questing',
           },
-          {
-            card: {
-              target: 'event',
-              value: {
-                isType: 'enemy',
-              },
-            },
-          },
-        ],
+        },
       },
       action: {
         card: {
-          target: 'event',
+          target: 'self',
           action: {
             dealDamage: 1,
           },
