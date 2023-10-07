@@ -1,11 +1,11 @@
 import { State, View } from '@card-engine-nx/state';
 import { mapValues, values } from 'lodash';
 import {
-  applyModifier,
   createModifiers,
   createPlayAllyAction,
   createPlayAttachmentAction,
 } from './card/ability';
+import { applyModifier } from './card/modifiers';
 import { createCardView } from './card/view';
 import { canExecute } from './resolution';
 import { createPlayerView } from './player/view';
