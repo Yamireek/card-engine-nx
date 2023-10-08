@@ -75,7 +75,8 @@ export type Trait =
   | 'item'
   | 'armor'
   | 'istari'
-  | 'condition';
+  | 'condition'
+  | 'steward';
 
 export type Sphere = 'tactics' | 'spirit' | 'lore' | 'leadership' | 'neutral';
 

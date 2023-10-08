@@ -7,6 +7,9 @@ import { DetailProvider } from './DetailContext';
 import { GameDisplay } from './GameDisplay';
 import { ChooseSingleDialog } from '@card-engine-nx/ui';
 import { Dialog } from '@mui/material';
+import { coreLeadership } from './decks/coreLeadership';
+import { coreSpirit } from './decks/coreSpirit';
+import { coreLore } from './decks/coreLore';
 
 export const GameSetup = () => {
   const { state, moves, playerId } = useContext(StateContext);
@@ -30,8 +33,20 @@ export const GameSetup = () => {
           title="Choose deck"
           choices={[
             {
+              title: 'Core Leadership',
+              action: () => moves.selectDeck(coreLeadership),
+            },
+            {
               title: 'Core Tactics',
               action: () => moves.selectDeck(coreTactics),
+            },
+            {
+              title: 'Core Spirit',
+              action: () => moves.selectDeck(coreSpirit),
+            },
+            {
+              title: 'Core Lore',
+              action: () => moves.selectDeck(coreLore),
             },
           ]}
           skippable={false}

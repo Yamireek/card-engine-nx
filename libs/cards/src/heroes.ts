@@ -273,3 +273,68 @@ export const glorfindel = hero(
     },
   }
 );
+
+export const aragorn = hero({
+  name: 'Aragorn',
+  threatCost: 12,
+  willpower: 2,
+  attack: 3,
+  defense: 2,
+  hitPoints: 5,
+  traits: ['dúnedain', 'noble', 'ranger'],
+  keywords: {
+    sentinel: true,
+  },
+  sphere: 'leadership',
+});
+// TODO Response: After Aragorn commits to a quest, spend 1 resource from his resource pool to ready him.
+
+export const theodred = hero({
+  name: 'Théodred',
+  threatCost: 8,
+  willpower: 1,
+  attack: 2,
+  defense: 1,
+  hitPoints: 4,
+  traits: ['noble', 'rohan', 'warrior'],
+  keywords: {},
+  sphere: 'leadership',
+});
+// TODO Response: Response: After Théodred commits to a quest, choose a hero committed to that quest. Add 1 resource to that hero's resource pool.
+
+export const eleanor = hero({
+  name: 'Eleanor',
+  threatCost: 7,
+  willpower: 1,
+  attack: 1,
+  defense: 2,
+  hitPoints: 3,
+  traits: ['gondor', 'noble'],
+  sphere: 'spirit',
+});
+// TODO Response: Exhaust Eleanor to cancel the "when revealed" effects of a treachery card just revealed by the encounter deck. Then, discard that card, and replace it with the next card from the encounter deck.
+
+export const dunhere = hero({
+  name: 'Dúnhere',
+  threatCost: 8,
+  willpower: 1,
+  attack: 2,
+  defense: 1,
+  hitPoints: 4,
+  traits: ['rohan', 'warrior'],
+  sphere: 'spirit',
+});
+// TODO Dúnhere can target enemies in the staging area when he attacks alone. When doing so, he gets +1 Attack.
+
+export const denethor = hero({
+  name: 'Denethor',
+  threatCost: 8,
+  willpower: 1,
+  attack: 1,
+  defense: 3,
+  hitPoints: 3,
+  traits: ['gondor', 'noble', 'steward'],
+  sphere: 'lore',
+});
+// TODO Action: Exhaust Denethor to look at the top card of the encounter deck. You may move that card to the bottom of the deck.
+
