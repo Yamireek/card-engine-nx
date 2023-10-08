@@ -165,94 +165,170 @@ export const hornOfGondor = attachment(
   }
 );
 
-export const stowardOfGondor = attachment({
-  name: 'Steward of Gondor',
-  unique: true,
-  cost: 2,
-  traits: ['gondor', 'title'],
-  sphere: 'leadership',
-});
-// TODO Attach to a hero.
-// TODO Attached hero gains the Gondor trait.
-// TODO Action: Exhaust Steward of Gondor to add 2 resources to attached hero's resource pool.
+export const stewardOfGondor = attachment(
+  {
+    name: 'Steward of Gondor',
+    unique: true,
+    cost: 2,
+    traits: ['gondor', 'title'],
+    sphere: 'leadership',
+  },
+  {
+    description: 'Attach to a hero.',
+    attachesTo: { type: 'hero' },
+  },
+  {
+    description: 'Attached hero gains the Gondor trait.',
+    target: {
+      hasAttachment: 'source',
+    },
+    card: {
+      description: 'Gains Gondor trait',
+      trait: 'gondor',
+    },
+  },
+  {
+    description:
+      "Action: Exhaust Steward of Gondor to add 2 resources to attached hero's resource pool.",
+    action: {
+      payment: {
+        cost: {
+          card: {
+            target: 'self',
+            action: 'exhaust',
+          },
+        },
+        effect: {
+          card: {
+            target: { hasAttachment: 'self' },
+            action: {
+              generateResources: 2,
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
-export const celebriansStore = attachment({
-  name: "Celebrían's Stone",
-  unique: true,
-  cost: 2,
-  traits: ['artifact', 'item'],
-  sphere: 'leadership',
-});
-// TODO Attach to a hero. Restricted.
+export const celebriansStore = attachment(
+  {
+    name: "Celebrían's Stone",
+    unique: true,
+    cost: 2,
+    traits: ['artifact', 'item'],
+    sphere: 'leadership',
+  },
+  {
+    description: 'Attach to a hero.',
+    attachesTo: { type: 'hero' },
+  }
+);
 // TODO Attached hero gains +2 [willpower].
 // TODO If attached hero is Aragorn, he also gains a [spirit] resource icon.
 
-export const theFavorOfTheLady = attachment({
-  name: 'The Favor of the Lady',
-  unique: false,
-  cost: 2,
-  traits: ['condition'],
-  sphere: 'spirit',
-});
-// TODO Attach to a hero.
+export const theFavorOfTheLady = attachment(
+  {
+    name: 'The Favor of the Lady',
+    unique: false,
+    cost: 2,
+    traits: ['condition'],
+    sphere: 'spirit',
+  },
+  {
+    description: 'Attach to a hero.',
+    attachesTo: { type: 'hero' },
+  }
+);
 // TODO Attached hero gains +1 [willpower].
 
-export const powerInTheEarth = attachment({
-  name: 'Power in the Earth',
-  unique: false,
-  cost: 1,
-  traits: ['condition'],
-  sphere: 'spirit',
-});
-// TODO Attach to a location.
+export const powerInTheEarth = attachment(
+  {
+    name: 'Power in the Earth',
+    unique: false,
+    cost: 1,
+    traits: ['condition'],
+    sphere: 'spirit',
+  },
+  {
+    description: 'Attach to a location.',
+    attachesTo: { type: 'location' },
+  }
+);
 // TODO Attached location gets -1 [threat].
 
-export const unexpectedCourage = attachment({
-  name: 'Unexpected Courage',
-  unique: false,
-  cost: 2,
-  traits: ['condition'],
-  sphere: 'spirit',
-});
-// TODO Attach to a hero.
+export const unexpectedCourage = attachment(
+  {
+    name: 'Unexpected Courage',
+    unique: false,
+    cost: 2,
+    traits: ['condition'],
+    sphere: 'spirit',
+  },
+  {
+    description: 'Attach to a hero.',
+    attachesTo: { type: 'hero' },
+  }
+);
 // TODO Action: Exhaust Unexpected Courage to ready attached hero.
 
-export const forestSnare = attachment({
-  name: 'Forest Snare',
-  unique: false,
-  cost: 3,
-  traits: ['item', 'trap'],
-  sphere: 'lore',
-});
-// TODO Attach to an enemy engaged with a player.
+export const forestSnare = attachment(
+  {
+    name: 'Forest Snare',
+    unique: false,
+    cost: 3,
+    traits: ['item', 'trap'],
+    sphere: 'lore',
+  },
+  {
+    description: 'Attach to an enemy engaged with a player.',
+    attachesTo: { and: [{ type: 'enemy' }, { zoneType: 'engaged' }] },
+  }
+);
 // TODO Attached enemy cannot attack.
 
-export const protectorOfLorien = attachment({
-  name: 'Protector of Lórien',
-  unique: false,
-  cost: 1,
-  traits: ['title'],
-  sphere: 'lore',
-});
-// TODO Attach to a hero.
+export const protectorOfLorien = attachment(
+  {
+    name: 'Protector of Lórien',
+    unique: false,
+    cost: 1,
+    traits: ['title'],
+    sphere: 'lore',
+  },
+  {
+    description: 'Attach to a hero.',
+    attachesTo: { type: 'hero' },
+  }
+);
 // TODO Action: Discard a card from your hand to give attached hero +1 [defense] or +1 [willpower] until the end of the phase. Limit 3 times per phase.
 
-export const darkKnowledge = attachment({
-  name: 'Dark Knowledge',
-  unique: false,
-  cost: 1,
-  traits: ['condition'],
-  sphere: 'lore',
-});
-// TODO Attach to a hero. Attached hero gets -1 [willpower]
+export const darkKnowledge = attachment(
+  {
+    name: 'Dark Knowledge',
+    unique: false,
+    cost: 1,
+    traits: ['condition'],
+    sphere: 'lore',
+  },
+  {
+    description: 'Attach to a hero.',
+    attachesTo: { type: 'hero' },
+  }
+);
+// TODO Attached hero gets -1 [willpower]
 // TODO Response: Exhaust Dark Knowledge to look at 1 shadow card that was just dealt to an enemy attacking you.
 
-export const selfPreservation = attachment({
-  name: 'Self Preservation',
-  unique: false,
-  cost: 3,
-  traits: ['skill'],
-  sphere: 'lore',
-});
-// TODO Attach to a character.
+export const selfPreservation = attachment(
+  {
+    name: 'Self Preservation',
+    unique: false,
+    cost: 3,
+    traits: ['skill'],
+    sphere: 'lore',
+  },
+  {
+    description: 'Attach to a character.',
+    attachesTo: 'character',
+  }
+);
 // TODO Action: Exhaust Self Preservation to heal 2 points of damage from attached character.

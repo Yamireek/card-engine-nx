@@ -68,7 +68,7 @@ export function createView(state: State): View {
           const ctx: ViewContext = {
             state,
             view,
-            card: { self: target },
+            card: { self: target, source: modifier.modifier.source },
             player: {},
           };
           const condition = modifier.modifier.condition
