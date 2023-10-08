@@ -141,9 +141,7 @@ export const quickStrike = event(
               title: 'Choose enemy to attack',
               multi: false,
               optional: false,
-              target: {
-                type: 'enemy',
-              },
+              target: { zoneType: 'engaged' },
               action: {
                 setAsVar: 'defender',
               },

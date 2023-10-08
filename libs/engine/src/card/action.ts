@@ -534,7 +534,11 @@ export function executeCardAction(
     return;
   }
 
-  if (action.placeProgress) {
+  if (action.placeProgress !== undefined) {
+    if (action.placeProgress === 0) {
+      return;
+    }
+
     card.token.progress += action.placeProgress;
     const cw = ctx.view.cards[card.id];
     if (cw.props.type === 'quest') {
@@ -640,7 +644,7 @@ export function executeCardAction(
               to: {
                 type: card.zone,
                 owner: card.owner,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
               } as any,
             },
           },
