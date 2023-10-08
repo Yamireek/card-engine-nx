@@ -17,11 +17,11 @@ export function getCardImageUrl(props: PrintedProps, side: Side): string {
     const name = props.name ?? '';
     return `./images/cards/01-core/${props.sequence}${
       side === 'front' ? 'A' : 'B'
-    } - ${name.replace("'", '_')}.jpg`;
+    } - ${name}.jpg`;
   }
 
   const name = props.name || props.type;
-  return `./images/cards/01-core/${name.replace("'", '_')}.jpg`;
+  return `./images/cards/01-core/${name}.jpg`;
 }
 
 export function getCardImageUrls(card: CardDefinition): CardImageUrls {
