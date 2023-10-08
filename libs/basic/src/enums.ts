@@ -78,7 +78,11 @@ export type Trait =
   | 'condition'
   | 'steward'
   | 'trap'
-  | 'skill';
+  | 'skill'
+  | 'scout'
+  | 'hobbit'
+  | 'craftsman'
+  | 'minstrel';
 
 export type Sphere = 'tactics' | 'spirit' | 'lore' | 'leadership' | 'neutral';
 

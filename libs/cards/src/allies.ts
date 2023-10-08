@@ -218,3 +218,199 @@ export const gandalf = ally(
     },
   }
 );
+
+export const guardOfTheCitadel = ally({
+  name: 'Guard of the Citadel',
+  cost: 2,
+  willpower: 1,
+  attack: 1,
+  defense: 0,
+  hitPoints: 2,
+  traits: ['gondor', 'warrior'],
+  sphere: 'leadership',
+  unique: false,
+});
+
+export const faramir = ally({
+  name: 'Faramir',
+  cost: 4,
+  willpower: 2,
+  attack: 1,
+  defense: 2,
+  hitPoints: 3,
+  traits: ['gondor', 'noble', 'ranger'],
+  sphere: 'leadership',
+  unique: true,
+});
+// TODO Action: Exhaust Faramir to choose a player. Each character controlled by that player gets +1 Willpower until the end of the phase.
+
+export const sonOfArnor = ally({
+  name: 'Son of Arnor',
+  cost: 3,
+  willpower: 0,
+  attack: 2,
+  defense: 0,
+  hitPoints: 2,
+  traits: ['dúnedain'],
+  sphere: 'leadership',
+  unique: false,
+});
+// TODO Response: After Son of Arnor enters play, choose an enemy card in the staging area or currently engaged with another player. Engage that enemy.
+
+export const snowbournScout = ally({
+  name: 'Snowbourn Scout',
+  cost: 1,
+  willpower: 0,
+  attack: 0,
+  defense: 1,
+  hitPoints: 1,
+  traits: ['rohan', 'scout'],
+  sphere: 'leadership',
+  unique: false,
+});
+// TODO Response: After Snowbourn Scout enters play, choose a location. Place 1 progress token on that location.
+
+export const silverlodeArcher = ally({
+  name: 'Silverlode Archer',
+  cost: 3,
+  willpower: 1,
+  attack: 2,
+  defense: 0,
+  hitPoints: 1,
+  traits: ['archer', 'silvan'],
+  sphere: 'leadership',
+  unique: false,
+  keywords: {
+    ranged: true,
+  },
+});
+
+export const longbeardOrcSlayer = ally({
+  name: 'Longbeard Orc Slayer',
+  cost: 4,
+  willpower: 0,
+  attack: 2,
+  defense: 1,
+  hitPoints: 3,
+  traits: ['dwarf', 'warrior'],
+  sphere: 'leadership',
+  unique: false,
+});
+// TODO Response: After Longbeard Orc Slayer enters play, deal 1 damage to each Orc enemy in play.
+
+export const brokIronfist = ally({
+  name: 'Brok Ironfist',
+  cost: 6,
+  willpower: 2,
+  attack: 2,
+  defense: 1,
+  hitPoints: 4,
+  traits: ['dwarf', 'warrior'],
+  sphere: 'leadership',
+  unique: true,
+});
+// TODO Response:After a Dwarf hero you control leaves play, put Brok Ironfist into play from your hand.
+
+export const wanderingTook = ally({
+  name: 'Wandering Took',
+  cost: 2,
+  willpower: 1,
+  attack: 1,
+  defense: 1,
+  hitPoints: 2,
+  traits: ['hobbit'],
+  sphere: 'spirit',
+  unique: false,
+});
+// TODO Action: Reduce your threat by 3 to give control of Wandering Took to another player. Raise that player's threat by 3. (Limit once per round.)
+
+export const lorienGuide = ally({
+  name: 'Lórien Guide',
+  cost: 3,
+  willpower: 1,
+  attack: 1,
+  defense: 0,
+  hitPoints: 2,
+  traits: ['silvan', 'scout'],
+  sphere: 'spirit',
+  unique: false,
+});
+// TODO Response: After Lórien Guide commits to a quest, place 1 progress token on the active location.
+
+export const northernTracker = ally({
+  name: 'Northern Tracker',
+  cost: 4,
+  willpower: 1,
+  attack: 2,
+  defense: 2,
+  hitPoints: 3,
+  traits: ['dúnedain', 'ranger'],
+  sphere: 'spirit',
+  unique: false,
+});
+// TODO Response: After Northern Tracker commits to a quest, place 1 progress token on each location in the staging area.
+
+export const daughterOfTheNimrodel = ally({
+  name: 'Daughter of the Nimrodel',
+  cost: 3,
+  willpower: 1,
+  attack: 0,
+  defense: 0,
+  hitPoints: 1,
+  traits: ['silvan'],
+  sphere: 'lore',
+  unique: false,
+});
+// TODO Action: Exhaust Daughter of the Nimrodel to heal up to 2 damage on any 1 hero.
+
+export const ereborHammersmith = ally({
+  name: 'Erebor Hammersmith',
+  cost: 2,
+  willpower: 1,
+  attack: 1,
+  defense: 1,
+  hitPoints: 3,
+  traits: ['dwarf', 'craftsman'],
+  sphere: 'lore',
+  unique: false,
+});
+// TODO Response: After you play Erebor Hammersmith, return the topmost attachment in any player's discard pile to his hand.
+
+export const henamarthRiversong = ally({
+  name: 'Henamarth Riversong',
+  cost: 1,
+  willpower: 1,
+  attack: 1,
+  defense: 0,
+  hitPoints: 1,
+  traits: ['silvan'],
+  sphere: 'lore',
+  unique: true,
+});
+// TODO Action: Exhaust Henamarth Riversong to look at the top card of the encounter deck.
+
+export const minerOfTheIronHills = ally({
+  name: 'Miner of the Iron Hills',
+  cost: 2,
+  willpower: 0,
+  attack: 1,
+  defense: 1,
+  hitPoints: 2,
+  traits: ['dwarf'],
+  sphere: 'lore',
+  unique: false,
+});
+// TODO Response: After Miner of the Iron Hills enters play, choose and discard 1 Condition attachment from play.
+
+export const gleowine = ally({
+  name: 'Gléowine',
+  cost: 2,
+  willpower: 1,
+  attack: 0,
+  defense: 0,
+  hitPoints: 2,
+  traits: ['minstrel', 'rohan'],
+  sphere: 'lore',
+  unique: true,
+});
+// TODO Action: Exhaust Gléowine to choose a player. That player draws 1 card.
