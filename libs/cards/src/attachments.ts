@@ -222,9 +222,18 @@ export const celebriansStore = attachment(
   {
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
+  },
+  {
+    description: 'Attached hero gains +2 [willpower].',
+    target: {
+      hasAttachment: 'source',
+    },
+    bonus: {
+      property: 'willpower',
+      amount: 2,
+    },
   }
 );
-// TODO Attached hero gains +2 [willpower].
 // TODO If attached hero is Aragorn, he also gains a [spirit] resource icon.
 
 export const theFavorOfTheLady = attachment(
@@ -238,9 +247,18 @@ export const theFavorOfTheLady = attachment(
   {
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
+  },
+  {
+    description: 'Attached hero gains +1 [willpower].',
+    target: {
+      hasAttachment: 'source',
+    },
+    bonus: {
+      property: 'willpower',
+      amount: 1,
+    },
   }
 );
-// TODO Attached hero gains +1 [willpower].
 
 export const powerInTheEarth = attachment(
   {
@@ -253,9 +271,18 @@ export const powerInTheEarth = attachment(
   {
     description: 'Attach to a location.',
     attachesTo: { type: 'location' },
+  },
+  {
+    description: 'Attached location gets -1 [threat]',
+    target: {
+      hasAttachment: 'source',
+    },
+    bonus: {
+      property: 'threat',
+      amount: -1,
+    },
   }
 );
-// TODO Attached location gets -1 [threat].
 
 export const unexpectedCourage = attachment(
   {
@@ -268,9 +295,24 @@ export const unexpectedCourage = attachment(
   {
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
+  },
+  {
+    description: 'Action: Exhaust Unexpected Courage to ready attached hero.',
+    action: {
+      payment: {
+        cost: {
+          card: { target: 'self', action: 'exhaust' },
+        },
+        effect: {
+          card: {
+            target: { hasAttachment: 'self' },
+            action: 'ready',
+          },
+        },
+      },
+    },
   }
 );
-// TODO Action: Exhaust Unexpected Courage to ready attached hero.
 
 export const forestSnare = attachment(
   {
@@ -281,11 +323,20 @@ export const forestSnare = attachment(
     sphere: 'lore',
   },
   {
-    description: 'Attach to an enemy engaged with a player.',
+    description: 'Attach to an enemy engaged with a player.', // TODO fix attachment zone
     attachesTo: { and: [{ type: 'enemy' }, { zoneType: 'engaged' }] },
+  },
+  {
+    description: 'Attached enemy cannot attack.',
+    target: {
+      hasAttachment: 'source',
+    },
+    card: {
+      description: 'Cannot attack',
+      disable: 'attacking',
+    },
   }
 );
-// TODO Attached enemy cannot attack.
 
 export const protectorOfLorien = attachment(
   {
@@ -298,9 +349,82 @@ export const protectorOfLorien = attachment(
   {
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
+  },
+  {
+    description:
+      'Action: Discard a card from your hand to give attached hero +1 [defense] or +1 [willpower] until the end of the phase. Limit 3 times per phase.',
+    limit: 'once_per_round', // TODO 3 times per phase
+    action: {
+      payment: {
+        cost: {
+          player: {
+            target: 'controller',
+            action: {
+              discard: {
+                target: 'choice',
+                amount: 1,
+              },
+            },
+          },
+        },
+        effect: {
+          player: {
+            target: 'controller',
+            action: {
+              chooseActions: {
+                title: 'Choose bonus',
+                multi: false,
+                optional: false,
+                actions: [
+                  {
+                    title: '+1 [defense]',
+                    action: {
+                      card: {
+                        target: {
+                          hasAttachment: 'self',
+                        },
+                        action: {
+                          modify: {
+                            description: '+1 [defense] until end of phase',
+                            bonus: {
+                              amount: 1,
+                              property: 'defense',
+                            },
+                          },
+                          until: 'end_of_phase',
+                        },
+                      },
+                    },
+                  },
+                  {
+                    title: '+1 [willpower]',
+                    action: {
+                      card: {
+                        target: {
+                          hasAttachment: 'self',
+                        },
+                        action: {
+                          modify: {
+                            description: '+1 [willpower] until end of phase',
+                            bonus: {
+                              amount: 1,
+                              property: 'willpower',
+                            },
+                          },
+                          until: 'end_of_phase',
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    },
   }
 );
-// TODO Action: Discard a card from your hand to give attached hero +1 [defense] or +1 [willpower] until the end of the phase. Limit 3 times per phase.
 
 export const darkKnowledge = attachment(
   {
@@ -313,9 +437,18 @@ export const darkKnowledge = attachment(
   {
     description: 'Attach to a hero.',
     attachesTo: { type: 'hero' },
+  },
+  {
+    description: 'Attached hero gets -1 [willpower]',
+    target: {
+      hasAttachment: 'source',
+    },
+    bonus: {
+      amount: -1,
+      property: 'willpower',
+    },
   }
 );
-// TODO Attached hero gets -1 [willpower]
 // TODO Response: Exhaust Dark Knowledge to look at 1 shadow card that was just dealt to an enemy attacking you.
 
 export const selfPreservation = attachment(
@@ -329,6 +462,22 @@ export const selfPreservation = attachment(
   {
     description: 'Attach to a character.',
     attachesTo: 'character',
+  },
+  {
+    description:
+      'Action: Exhaust Self Preservation to heal 2 points of damage from attached character.',
+    action: {
+      payment: {
+        cost: {
+          card: { target: 'self', action: 'exhaust' },
+        },
+        effect: {
+          card: {
+            target: { hasAttachment: 'self' },
+            action: { heal: 2 },
+          },
+        },
+      },
+    },
   }
 );
-// TODO Action: Exhaust Self Preservation to heal 2 points of damage from attached character.

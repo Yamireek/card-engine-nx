@@ -500,6 +500,8 @@ export function executeCardAction(
   }
 
   if (action.move) {
+    // TODO move also attachments
+    // TODO remove tokens/marks here
     if (action.move.from) {
       if (card.zone !== getZoneType(action.move.from)) {
         return;
@@ -641,11 +643,13 @@ export function executeCardAction(
           action: {
             move: {
               side: 'front',
-              to: {
-                type: card.zone,
-                owner: card.owner,
+              to: card.owner
+                ? {
+                    type: card.zone,
+                    owner: card.owner,
+                  }
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              } as any,
+                : (card.zone as any),
             },
           },
         },
