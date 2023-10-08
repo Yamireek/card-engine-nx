@@ -45,14 +45,14 @@ export const legolas = hero(
     description:
       'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.',
     target: { type: 'enemy' },
-    condition: {
-      event: {
-        type: 'destroyed',
-        isAttacker: 'self',
-      },
-    },
     response: {
       event: 'destroyed',
+      condition: {
+        event: {
+          type: 'destroyed',
+          isAttacker: 'source',
+        },
+      },
       action: {
         placeProgress: 2,
       },
