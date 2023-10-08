@@ -311,3 +311,143 @@ export const thicketOfSpears = event(
     },
   }
 );
+
+export const everVigilant = event({
+  name: 'Ever Vigilant',
+  cost: 1,
+  sphere: 'leadership',
+});
+// TODO Action: Choose and ready 1 ally card.
+
+export const commonCause = event({
+  name: 'Common Cause',
+  cost: 0,
+  sphere: 'leadership',
+});
+// TODO Action: Exhaust 1 hero you control to choose and ready a different hero.
+
+export const forGondor = event({
+  name: 'For Gondor!',
+  cost: 2,
+  sphere: 'leadership',
+});
+// TODO Action: Until the end of the phase, all characters get +1 [attack]. All Gondor characters also get +1 [defense] until the end of the phase.
+
+export const sneakAttack = event({
+  name: 'Sneak Attack',
+  cost: 1,
+  sphere: 'leadership',
+});
+// TODO Action: Put 1 ally card into play from your hand. At the end of the phase, if that ally is still in play, return it to your hand.
+
+export const valiantSacrifice = event({
+  name: 'Valiant Sacrifice',
+  cost: 1,
+  sphere: 'leadership',
+});
+// TODO Response: After an ally card leaves play, that card's controller draws 2 cards.
+
+export const grimResolve = event({
+  name: 'Grim Resolve',
+  cost: 5,
+  sphere: 'leadership',
+});
+// TODO Action: Ready all character cards in play.
+
+export const theGaladhrimsGreeting = event({
+  name: "The Galadhrim's Greeting",
+  cost: 3,
+  sphere: 'spirit',
+});
+// TODO Action: Reduce one player's threat by 6, or reduce each player's threat by 2.
+
+export const strengthOfWill = event({
+  name: 'Strength of Will',
+  cost: 0,
+  sphere: 'spirit',
+});
+// TODO Response: After you travel to a location, exhaust a [spirit] character to place 2 progress tokens on that location.
+
+export const hastyStroke = event({
+  name: 'Hasty Stroke',
+  cost: 1,
+  sphere: 'spirit',
+});
+// TODO Response: Cancel a shadow effect just triggered during combat.
+
+export const willOfTheWest = event({
+  name: 'Will of the West',
+  cost: 1,
+  sphere: 'spirit',
+});
+// TODO Action: Choose a player. Shuffle that player's discard pile back into his deck. Remove Will of the West from the game.
+
+export const aTestOfWill = event({
+  name: 'A Test of Will',
+  cost: 1,
+  sphere: 'spirit',
+});
+// TODO Response: Cancel the “when revealed” effects of a card that was just revealed from the encounter deck.
+
+export const standAndFight = event({
+  name: 'Stand and Fight',
+  cost: 0, // TODO X cost,
+  sphere: 'spirit',
+});
+// TODO Action: Choose an ally with a printed cost of X in any player's discard pile. Put that ally into play under your control. (The chosen ally can belong to any sphere of influence.)
+
+export const aLightInIheDark = event({
+  name: 'A Light in the Dark',
+  cost: 2,
+  sphere: 'spirit',
+});
+// TODO Action: Choose an enemy engaged with a player. Return that enemy to the staging area.
+
+export const dwarvenTomb = event({
+  name: 'Dwarven Tomb',
+  cost: 1,
+  sphere: 'spirit',
+});
+// TODO Action: Return 1 [spirit] card from your discard pile to your hand.
+
+export const fortuneOrFate = event({
+  name: 'Fortune or Fate',
+  cost: 5,
+  sphere: 'spirit',
+});
+// TODO Action: Choose a hero in any player's discard pile. Put that card into play, under its owner's control.
+
+export const loriensWealth = event({
+  name: "Lórien's Wealth",
+  cost: 3,
+  sphere: 'lore',
+});
+// TODO Action: Choose a player. That player draws 3 cards.
+
+export const radagastsCunning = event({
+  name: "Radagast's Cunning",
+  cost: 1,
+  sphere: 'lore',
+});
+// TODO Quest Action: Choose an enemy in the staging area. Until the end of the phase, that enemy does not contribute its [threat].
+
+export const secretPaths = event({
+  name: 'Secret Paths',
+  cost: 1,
+  sphere: 'lore',
+});
+// TODO Quest Action: Choose a location in the staging area. Until the end of the phase, that location does not contribute its [threat].
+
+export const gandalfsSearch = event({
+  name: "Gandalf's Search",
+  cost: 0, // TODO X cost
+  sphere: 'lore',
+});
+// TODO Action: Look at the top X cards of any player's deck, add 1 of those cards to its owner's hand, and return the rest to the top of the deck in any order.
+
+export const beornsHospitality = event({
+  name: "Beorn's Hospitality",
+  cost: 5,
+  sphere: 'lore',
+});
+// TODO Action: Choose a player. Heal all damage on each hero controlled by that player.
