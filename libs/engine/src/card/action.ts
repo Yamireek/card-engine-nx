@@ -1,9 +1,4 @@
-import {
-  CardState,
-  CardAction,
-  Action,
-  StackEffect,
-} from '@card-engine-nx/state';
+import { CardState, CardAction, Action } from '@card-engine-nx/state';
 import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
 import { getCardZoneId, getZoneState } from '../zone/target';
@@ -13,7 +8,6 @@ import {
   GameZoneType,
   PlayerZoneType,
   ZoneId,
-  getZoneType,
   zonesEqual,
 } from '@card-engine-nx/basic';
 import { getTargetCard, getTargetCards } from './target';
@@ -375,7 +369,7 @@ export function executeCardAction(
                 target: 'first',
                 action: {
                   chooseActions: {
-                    title: 'Choose responses for WhenRevealed action',
+                    title: `Choose responses for: ${action.whenRevealed.description}`,
                     actions: optional.map((r) => ({
                       title: r.description,
                       action: {
@@ -404,8 +398,8 @@ export function executeCardAction(
     ctx.state.next.unshift(
       {
         stackPush: {
+          description: action.whenRevealed.description,
           whenRevealed: action.whenRevealed.action,
-          cardId: card.id,
         },
       },
       ...reponsesAction,

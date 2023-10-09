@@ -40,9 +40,9 @@ export type Event =
   | { type: 'explored'; card: CardId }
   | { type: 'whenRevealed' };
 
-export type StackEffect = null | {
+export type PendingEffect = {
+  description: string;
   whenRevealed: Action;
-  cardId: CardId;
   canceled?: true;
 };
 
@@ -99,7 +99,7 @@ export type State = {
           max: number;
         }>;
       };
-  stack: StackEffect[];
+  stack: PendingEffect[];
   next: Action[];
   result?: {
     win: boolean;

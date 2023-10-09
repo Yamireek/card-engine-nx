@@ -14,7 +14,7 @@ import {
   ZoneId,
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
-import { Event, StackEffect } from './state';
+import { Event, PendingEffect } from './state';
 import { PlayerModifier } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
@@ -79,7 +79,7 @@ export type Action =
         defender: CardTarget;
       };
       atEndOfPhase?: Action;
-      stackPush?: StackEffect;
+      stackPush?: PendingEffect;
       cancel?: 'when.revealed';
     };
 
@@ -179,8 +179,8 @@ export type CardAction =
       setAsVar?: string;
       responses?: Event;
       whenRevealed?: {
+        description: string;
         action: Action;
-        skipResonses: boolean;
       };
     };
 

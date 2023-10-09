@@ -65,7 +65,10 @@ export function applyModifier(
       return;
 
     case !!modifier.whenRevealed: {
-      self.whenRevealed.push(modifier.whenRevealed);
+      self.whenRevealed.push({
+        description: modifier.description,
+        action: modifier.whenRevealed,
+      });
       return;
     }
 

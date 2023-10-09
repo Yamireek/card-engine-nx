@@ -67,7 +67,7 @@ export type CardView = {
   nextStage?: NextStage;
   disabled?: Partial<Record<Mark, boolean>>;
   effects: string[];
-  whenRevealed: Action[];
+  whenRevealed: Array<{ description: string; action: Action }>;
   travel: Action[];
   conditional: {
     advance: BoolExpr[];
