@@ -36,29 +36,24 @@ export const bladeMastery = event(
   },
   {
     description:
-      'Action: Choose a character. Until the end of the phase, that character gains +1 Attack and +1 Defense.',
+      'Action: Choose a character. Until the end of the phase, that character gains +1 [attack] and +1 [defense].',
     action: {
       player: {
         target: 'controller',
         action: {
           chooseCardActions: {
+            title: 'Choose character for +1 Attack and +1 Defense.',
+            target: 'character',
             action: {
-              modify: [
-                {
-                  description: 'Has +1 [attack] until end of the phase',
-                  bonus: { property: 'attack', amount: 1 },
-                },
-                {
-                  description: 'Has +1 [defense] until end of the phase',
-                  bonus: { property: 'defense', amount: 1 },
-                },
-              ],
+              modify: {
+                description:
+                  'Has +1 [attack] and +1 [defense] until end of the phase',
+                increment: { attack: 1, defense: 1 },
+              },
               until: 'end_of_phase',
             },
             multi: false,
             optional: false,
-            target: 'character',
-            title: 'Choose character for +1 Attack and +1 Defense.',
           },
         },
       },

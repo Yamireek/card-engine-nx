@@ -77,9 +77,8 @@ export const beorn = ally(
           action: {
             modify: {
               description: '+5 [attack] until end of phase',
-              bonus: {
-                property: 'attack',
-                amount: 5,
+              increment: {
+                attack: 5,
               },
             },
             until: 'end_of_phase',

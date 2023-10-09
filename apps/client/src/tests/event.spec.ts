@@ -4,7 +4,7 @@ import { it, expect } from 'vitest';
 
 it('Blade Mastery', () => {
   const action =
-    'Action: Choose a character. Until the end of the phase, that character gains +1 Attack and +1 Defense.';
+    'Action: Choose a character. Until the end of the phase, that character gains +1 [attack] and +1 [defense].';
 
   const game = new TestEngine({
     players: [

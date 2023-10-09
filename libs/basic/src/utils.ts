@@ -9,6 +9,15 @@ export function values<TK extends string | number, TI>(
   return Object.values(records) as TI[];
 }
 
+export function keys<TK extends string | number, TI>(
+  records?: Partial<Record<TK, TI>>
+): TK[] {
+  if (!records) {
+    return [];
+  }
+  return Object.keys(records) as TK[];
+}
+
 export function validPlayerId(id?: number | string | null): PlayerId {
   if (id === undefined || id === null) {
     throw new Error('invalid playerId');

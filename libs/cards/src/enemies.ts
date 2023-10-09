@@ -75,9 +75,8 @@ export const forestSpider = enemy(
           action: {
             modify: {
               description: '+1 [attack] until end of round',
-              bonus: {
-                amount: 1,
-                property: 'attack',
+              increment: {
+                attack: 1,
               },
             },
             until: 'end_of_round',
@@ -110,9 +109,8 @@ export const ungoliantsSpawn = enemy(
         action: {
           modify: {
             description: '-1 [willpower] until end of phase',
-            bonus: {
-              property: 'willpower',
-              amount: -1,
+            increment: {
+              willpower: -1,
             },
           },
           until: 'end_of_phase',
@@ -169,9 +167,8 @@ export const chieftanUfthak = enemy(
   {
     description:
       'Chieftain Ufthak get +2 Attack for each resource token on him.',
-    bonus: {
-      property: 'attack',
-      amount: {
+    increment: {
+      attack: {
         multiply: [
           2,
           {

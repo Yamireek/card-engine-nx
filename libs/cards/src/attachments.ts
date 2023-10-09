@@ -18,9 +18,8 @@ export const dwarvenAxe = attachment(
     target: {
       hasAttachment: 'source',
     },
-    bonus: {
-      property: 'attack',
-      amount: {
+    increment: {
+      attack: {
         if: {
           cond: {
             card: {
@@ -53,9 +52,8 @@ export const citadelPlate = attachment(
     target: {
       hasAttachment: 'source',
     },
-    bonus: {
-      property: 'hitPoints',
-      amount: 4,
+    increment: {
+      hitPoints: 4,
     },
   }
 );
@@ -77,9 +75,8 @@ export const bladeOfGondolin = attachment(
     target: {
       hasAttachment: 'source',
     },
-    bonus: {
-      property: 'attack',
-      amount: {
+    increment: {
+      attack: {
         if: {
           cond: {
             and: [
@@ -228,9 +225,8 @@ export const celebriansStore = attachment(
     target: {
       hasAttachment: 'source',
     },
-    bonus: {
-      property: 'willpower',
-      amount: 2,
+    increment: {
+      willpower: 2,
     },
   }
 );
@@ -253,9 +249,8 @@ export const theFavorOfTheLady = attachment(
     target: {
       hasAttachment: 'source',
     },
-    bonus: {
-      property: 'willpower',
-      amount: 1,
+    increment: {
+      willpower: 1,
     },
   }
 );
@@ -277,9 +272,8 @@ export const powerInTheEarth = attachment(
     target: {
       hasAttachment: 'source',
     },
-    bonus: {
-      property: 'threat',
-      amount: -1,
+    increment: {
+      threat: -1,
     },
   }
 );
@@ -386,9 +380,8 @@ export const protectorOfLorien = attachment(
                         action: {
                           modify: {
                             description: '+1 [defense] until end of phase',
-                            bonus: {
-                              amount: 1,
-                              property: 'defense',
+                            increment: {
+                              defense: 1,
                             },
                           },
                           until: 'end_of_phase',
@@ -406,9 +399,8 @@ export const protectorOfLorien = attachment(
                         action: {
                           modify: {
                             description: '+1 [willpower] until end of phase',
-                            bonus: {
-                              amount: 1,
-                              property: 'willpower',
+                            increment: {
+                              willpower: 1,
                             },
                           },
                           until: 'end_of_phase',
@@ -443,9 +435,8 @@ export const darkKnowledge = attachment(
     target: {
       hasAttachment: 'source',
     },
-    bonus: {
-      amount: -1,
-      property: 'willpower',
+    increment: {
+      willpower: -1,
     },
   }
 );

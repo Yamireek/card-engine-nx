@@ -1,6 +1,6 @@
 import { CardView, CardModifier } from '@card-engine-nx/state';
 import { ViewContext } from '../context';
-import { CardId } from '@card-engine-nx/basic';
+import { CardId, keys } from '@card-engine-nx/basic';
 import { calculateNumberExpr } from '../expr';
 
 export function applyModifier(
@@ -20,11 +20,16 @@ export function applyModifier(
   }
 
   switch (true) {
-    case !!modifier.bonus: {
-      const amount = calculateNumberExpr(modifier.bonus.amount, ctx);
-      const value = self.props[modifier.bonus.property];
-      if (value !== undefined && amount) {
-        self.props[modifier.bonus.property] = value + amount;
+    case !!modifier.increment: {
+      for (const property of keys(modifier.increment)) {
+        const expr = modifier.increment[property];
+        if (expr) {
+          const amount = calculateNumberExpr(expr, ctx);
+          const value = self.props[property];
+          if (value !== undefined && amount) {
+            self.props[property] = value + amount;
+          }
+        }
       }
       return;
     }

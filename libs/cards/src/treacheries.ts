@@ -73,9 +73,8 @@ export const drivenByShadow = treachery(
         action: {
           modify: {
             description: '+1 [thread] until the end of the phase',
-            bonus: {
-              amount: 1,
-              property: 'threat',
+            increment: {
+              threat: 1,
             },
           },
           until: 'end_of_phase',

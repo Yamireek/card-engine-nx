@@ -13,9 +13,8 @@ export const gimli = hero(
   },
   {
     description: 'Gimli gets +1 [attack] for each damage token on him.',
-    bonus: {
-      property: 'attack',
-      amount: {
+    increment: {
+      attack: {
         card: {
           target: 'self',
           value: {
@@ -179,9 +178,8 @@ export const eowyn = hero(
             action: {
               modify: {
                 description: '+1 [willpower] until the end of the phase',
-                bonus: {
-                  property: 'willpower',
-                  amount: 1,
+                increment: {
+                  willpower: 1,
                 },
               },
               until: 'end_of_phase',

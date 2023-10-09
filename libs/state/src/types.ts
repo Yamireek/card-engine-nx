@@ -184,10 +184,12 @@ export type CardAction =
       };
     };
 
-export type PropertyBonus = {
-  property: 'attack' | 'defense' | 'willpower' | 'hitPoints' | 'threat';
-  amount: NumberExpr;
-};
+export type PropertyIncrement = Partial<
+  Record<
+    'attack' | 'defense' | 'willpower' | 'hitPoints' | 'threat',
+    NumberExpr
+  >
+>;
 
 export type Ability = { description: string } & (
   | {
@@ -205,7 +207,7 @@ export type Ability = { description: string } & (
       condition?: BoolExpr;
     }
   | {
-      bonus: PropertyBonus;
+      increment: PropertyIncrement;
       target?: CardTarget;
     }
   | {
@@ -235,7 +237,7 @@ export type Ability = { description: string } & (
 
 export type CardModifier = {
   description: string;
-  bonus?: PropertyBonus;
+  increment?: PropertyIncrement;
   disable?: Mark;
   refreshCost?: CardAction;
   reaction?: {

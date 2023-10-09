@@ -132,7 +132,7 @@ export function createModifiers(
   type: CardType
 ): GameModifier[] {
   switch (true) {
-    case 'bonus' in ability:
+    case 'increment' in ability:
       if (isInPlay(zone)) {
         return [
           {
@@ -140,7 +140,7 @@ export function createModifiers(
             card: ability.target ?? self,
             modifier: {
               description: ability.description,
-              bonus: ability.bonus,
+              increment: ability.increment,
             },
           },
         ];
