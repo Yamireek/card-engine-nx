@@ -51,7 +51,7 @@ export const oldForestRoad = location(
   {
     description:
       'Response: After you travel to Old Forest Road the first player may choose and ready 1 character he controls.',
-    target: 'source',
+    target: 'self',
     response: {
       event: 'traveled',
       action: {
@@ -128,7 +128,7 @@ export const mountainsOfMirkwood = location(
   {
     description:
       "Response: After Mountains of Mirkwood leaves play as an explored location, each player may search the top 5 cards of his deck for 1 card and add it to his hand. Shuffle the rest of the searched cards back into their owners' decks.",
-    target: 'source',
+    target: 'self',
     response: {
       event: 'explored',
       action: {
@@ -211,7 +211,7 @@ export const enchantedStream = location(
       'While Enchanted Stream is the active location, players cannot draw cards.',
     condition: {
       card: {
-        target: 'source',
+        target: 'self',
         value: {
           zone: 'activeLocation',
         },

@@ -346,7 +346,7 @@ export type CardTarget =
   | 'ready'
   | 'event'
   | 'exhausted'
-  | 'source'
+  | 'target'
   | CardId
   | CardId[]
   | {

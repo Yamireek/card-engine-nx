@@ -49,7 +49,7 @@ export const legolas = hero(
       condition: {
         event: {
           type: 'destroyed',
-          isAttacker: 'source',
+          isAttacker: 'self',
         },
       },
       action: {
@@ -80,7 +80,7 @@ export const thalin = hero(
       event: 'revealed',
       condition: {
         card: {
-          target: 'source',
+          target: 'self',
           value: {
             hasMark: 'questing',
           },
@@ -88,7 +88,7 @@ export const thalin = hero(
       },
       action: {
         card: {
-          target: 'self',
+          target: 'target',
           action: {
             dealDamage: 1,
           },
@@ -112,7 +112,6 @@ export const gloin = hero(
   {
     description:
       'After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered.',
-    target: 'source',
     response: {
       event: 'receivedDamage',
       action: {
@@ -322,14 +321,14 @@ export const eleanor = hero(
       action: [
         {
           card: {
-            target: 'source',
+            target: 'self',
             action: 'exhaust',
           },
         },
         { cancel: 'when.revealed' },
         {
           card: {
-            target: 'self',
+            target: 'target',
             action: 'discard',
           },
         },

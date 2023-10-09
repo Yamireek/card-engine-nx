@@ -16,14 +16,14 @@ export const dwarvenAxe = attachment(
     description:
       'Attached hero gains +1 ATT (+2 ATT instead if attached hero is a Dwarf.)',
     target: {
-      hasAttachment: 'source',
+      hasAttachment: 'self',
     },
     increment: {
       attack: {
         if: {
           cond: {
             card: {
-              target: 'self',
+              target: 'target',
               value: { hasTrait: 'dwarf' },
             },
           },
@@ -50,7 +50,7 @@ export const citadelPlate = attachment(
   {
     description: 'Attached hero gets +4 Hit Points.',
     target: {
-      hasAttachment: 'source',
+      hasAttachment: 'self',
     },
     increment: {
       hitPoints: 4,
@@ -73,7 +73,7 @@ export const bladeOfGondolin = attachment(
   {
     description: 'Attached hero gets +1 Attack when attacking an Orc.',
     target: {
-      hasAttachment: 'source',
+      hasAttachment: 'self',
     },
     increment: {
       attack: {
@@ -82,7 +82,7 @@ export const bladeOfGondolin = attachment(
             and: [
               {
                 card: {
-                  target: 'self',
+                  target: 'target',
                   value: { hasMark: 'attacking' },
                 },
               },
@@ -111,7 +111,7 @@ export const bladeOfGondolin = attachment(
         event: {
           type: 'destroyed',
           isAttacker: {
-            hasAttachment: 'source',
+            hasAttachment: 'self',
           },
         },
       },
@@ -151,7 +151,7 @@ export const hornOfGondor = attachment(
       action: {
         card: {
           target: {
-            hasAttachment: 'source',
+            hasAttachment: 'self',
           },
           action: {
             generateResources: 1,
@@ -177,7 +177,7 @@ export const stewardOfGondor = attachment(
   {
     description: 'Attached hero gains the Gondor trait.',
     target: {
-      hasAttachment: 'source',
+      hasAttachment: 'self',
     },
     card: {
       description: 'Gains Gondor trait',
@@ -223,7 +223,7 @@ export const celebriansStore = attachment(
   {
     description: 'Attached hero gains +2 [willpower].',
     target: {
-      hasAttachment: 'source',
+      hasAttachment: 'self',
     },
     increment: {
       willpower: 2,
@@ -247,7 +247,7 @@ export const theFavorOfTheLady = attachment(
   {
     description: 'Attached hero gains +1 [willpower].',
     target: {
-      hasAttachment: 'source',
+      hasAttachment: 'self',
     },
     increment: {
       willpower: 1,
@@ -270,7 +270,7 @@ export const powerInTheEarth = attachment(
   {
     description: 'Attached location gets -1 [threat]',
     target: {
-      hasAttachment: 'source',
+      hasAttachment: 'self',
     },
     increment: {
       threat: -1,
@@ -323,7 +323,7 @@ export const forestSnare = attachment(
   {
     description: 'Attached enemy cannot attack.',
     target: {
-      hasAttachment: 'source',
+      hasAttachment: 'self',
     },
     card: {
       description: 'Cannot attack',
@@ -433,7 +433,7 @@ export const darkKnowledge = attachment(
   {
     description: 'Attached hero gets -1 [willpower]',
     target: {
-      hasAttachment: 'source',
+      hasAttachment: 'self',
     },
     increment: {
       willpower: -1,

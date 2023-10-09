@@ -94,14 +94,14 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       .map((c) => c.id);
   }
 
-  if (target === 'source') {
-    const inCtx = ctx.card['source'];
+  if (target === 'target') {
+    const inCtx = ctx.card['target'];
     if (!inCtx) {
-      const inState = ctx.state.vars.card['source'];
+      const inState = ctx.state.vars.card['target'];
       if (inState) {
         return [inState];
       }
-      throw new Error('no source card in ctx or state');
+      throw new Error('no target card in ctx or state');
     } else {
       return [inCtx];
     }

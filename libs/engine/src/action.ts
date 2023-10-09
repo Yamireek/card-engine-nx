@@ -418,7 +418,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           !r.condition ||
           calculateBoolExpr(r.condition, {
             ...ctx,
-            card: { ...ctx.card, self: r.card, source: r.source },
+            card: { ...ctx.card, target: r.card, self: r.source },
           })
       );
 
@@ -430,7 +430,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           !r.condition ||
           calculateBoolExpr(r.condition, {
             ...ctx,
-            card: { ...ctx.card, self: r.card, source: r.source },
+            card: { ...ctx.card, target: r.card, self: r.source },
           })
       );
 
@@ -445,11 +445,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
                 title: r.description,
                 action: {
                   useCardVar: {
-                    name: 'self',
+                    name: 'target',
                     value: r.card,
                     action: {
                       useCardVar: {
-                        name: 'source',
+                        name: 'self',
                         value: r.source,
                         action: r.action,
                       },
@@ -473,7 +473,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
             value: r.card,
             action: {
               useCardVar: {
-                name: 'source',
+                name: 'self',
                 value: r.source,
                 action: r.action,
               },
