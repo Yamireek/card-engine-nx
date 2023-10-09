@@ -7,7 +7,7 @@ import {
 } from '@card-engine-nx/state';
 import { getTargetPlayer, getTargetPlayers } from './player/target';
 import { executePlayerAction } from './player/action';
-import { isArray, keys, reverse, sum } from 'lodash/fp';
+import { isArray, keys, last, reverse, sum } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard } from './utils';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
@@ -169,6 +169,33 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       win: true,
       score: 50, // TODO count
     };
+    return;
+  }
+
+  if (action === 'stackPop') {
+    const effect = ctx.state.stack.pop();
+    if (effect) {
+      if (effect.whenRevealed && !effect.canceled) {
+        ctx.state.next.unshift(effect.whenRevealed);
+      }
+    }
+    return;
+  }
+
+  if (action.stackPush) {
+    ctx.state.stack.push(action.stackPush);
+    return;
+  }
+
+  if (action.cancel) {
+    const effect = last(ctx.state.stack);
+    if (!effect) {
+      throw new Error('no effect to cancel');
+    }
+
+    if (effect.whenRevealed) {
+      effect.canceled = true;
+    }
     return;
   }
 
@@ -458,13 +485,19 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
     if (action.event.type === 'revealed') {
       const card = ctx.view.cards[action.event.card];
-      ctx.state.next.unshift({
-        useCardVar: {
-          name: 'self',
-          value: card.id,
-          action: card.whenRevealed,
-        },
-      });
+      if (card.whenRevealed.length > 0) {
+        ctx.state.next.unshift({
+          card: {
+            target: action.event.card,
+            action: {
+              whenRevealed: {
+                action: card.whenRevealed,
+                skipResonses: false,
+              },
+            },
+          },
+        });
+      }
     }
 
     // TODO surge

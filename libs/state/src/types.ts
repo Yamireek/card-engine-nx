@@ -14,7 +14,7 @@ import {
   ZoneId,
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
-import { Event } from './state';
+import { Event, StackEffect } from './state';
 import { PlayerModifier } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
@@ -36,6 +36,7 @@ export type Action =
   | 'dealShadowCards'
   | 'revealEncounterCard'
   | 'win'
+  | 'stackPop'
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
       card?: { action: CardAction; target: CardTarget };
@@ -78,6 +79,8 @@ export type Action =
         defender: CardTarget;
       };
       atEndOfPhase?: Action;
+      stackPush?: StackEffect;
+      cancel?: 'when.revealed';
     };
 
 export type PlayerAction =
@@ -175,6 +178,10 @@ export type CardAction =
       until?: Until;
       setAsVar?: string;
       responses?: Event;
+      whenRevealed?: {
+        action: Action;
+        skipResonses: boolean;
+      };
     };
 
 export type PropertyBonus = {
@@ -347,7 +354,7 @@ export type CardTarget =
       not?: CardTarget;
       type?: CardType | CardType[];
       top?: ZoneTarget | { zone: ZoneTarget; amount: number };
-      sphere?: Sphere | 'any';      
+      sphere?: Sphere | 'any';
       controller?: PlayerTarget;
       mark?: Mark;
       enabled?: Mark;

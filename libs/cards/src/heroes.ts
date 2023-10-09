@@ -302,17 +302,44 @@ export const theodred = hero({
 });
 // TODO Response: Response: After Théodred commits to a quest, choose a hero committed to that quest. Add 1 resource to that hero's resource pool.
 
-export const eleanor = hero({
-  name: 'Eleanor',
-  threatCost: 7,
-  willpower: 1,
-  attack: 1,
-  defense: 2,
-  hitPoints: 3,
-  traits: ['gondor', 'noble'],
-  sphere: 'spirit',
-});
-// TODO Response: Exhaust Eleanor to cancel the "when revealed" effects of a treachery card just revealed by the encounter deck. Then, discard that card, and replace it with the next card from the encounter deck.
+export const eleanor = hero(
+  {
+    name: 'Eleanor',
+    threatCost: 7,
+    willpower: 1,
+    attack: 1,
+    defense: 2,
+    hitPoints: 3,
+    traits: ['gondor', 'noble'],
+    sphere: 'spirit',
+  },
+  {
+    description:
+      'Response: Exhaust Eleanor to cancel the "when revealed" effects of a treachery card just revealed by the encounter deck. Then, discard that card, and replace it with the next card from the encounter deck.',
+    target: {
+      and: [{ type: 'treachery' }, { zoneType: 'encounterDeck' }],
+    },
+    response: {
+      event: 'whenRevealed',
+      action: [
+        {
+          card: {
+            target: 'source',
+            action: 'exhaust',
+          },
+        },
+        { cancel: 'when.revealed' },
+        {
+          card: {
+            target: 'self',
+            action: 'discard',
+          },
+        },
+        'revealEncounterCard',
+      ],
+    },
+  }
+);
 
 export const dunhere = hero({
   name: 'Dúnhere',
@@ -337,4 +364,3 @@ export const denethor = hero({
   sphere: 'lore',
 });
 // TODO Action: Exhaust Denethor to look at the top card of the encounter deck. You may move that card to the bottom of the deck.
-

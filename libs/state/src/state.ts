@@ -37,7 +37,14 @@ export type Event =
   | { type: 'engaged'; card: CardId; player: PlayerId }
   | { type: 'end_of_round' }
   | { type: 'attacked'; card: CardId }
-  | { type: 'explored'; card: CardId };
+  | { type: 'explored'; card: CardId }
+  | { type: 'whenRevealed' };
+
+export type StackEffect = null | {
+  whenRevealed: Action;
+  cardId: CardId;
+  canceled?: true;
+};
 
 export type State = {
   round: number;
@@ -92,6 +99,7 @@ export type State = {
           max: number;
         }>;
       };
+  stack: StackEffect[];
   next: Action[];
   result?: {
     win: boolean;

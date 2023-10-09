@@ -22,6 +22,10 @@ export function canExecute(
   }
 
   if (typeof action === 'string') {
+    if (action === 'revealEncounterCard') {
+      return true;
+    }
+
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
     if (action.player) {
@@ -89,6 +93,10 @@ export function canExecute(
           [action.usePlayerVar.name]: action.usePlayerVar.value,
         },
       });
+    }
+
+    if (action.cancel) {
+      return ctx.state.stack.length > 0;
     }
   }
 
@@ -255,6 +263,10 @@ export function canCardExecute(
     }
 
     if (zone === 'hand' && action === 'discard') {
+      return true;
+    }
+
+    if (zone === 'encounterDeck' && action === 'discard') {
       return true;
     }
 

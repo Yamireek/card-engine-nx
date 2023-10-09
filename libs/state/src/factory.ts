@@ -4,19 +4,19 @@ import {
   PlayerId,
   PlayerZoneType,
   Side,
-} from '@card-engine-nx/basic';
-import { SimpleCardState, SimpleState, State } from './state';
-import { Action } from './types';
-import { PlayerState } from './player';
-import { CardDefinition, CardState } from './card';
-import { ZoneState } from './zone';
+} from "@card-engine-nx/basic";
+import { SimpleCardState, SimpleState, State } from "./state";
+import { Action } from "./types";
+import { PlayerState } from "./player";
+import { CardDefinition, CardState } from "./card";
+import { ZoneState } from "./zone";
 
 export function createState(initState?: SimpleState, program?: Action): State {
   const state: State = {
     round: 1,
-    phase: 'setup',
+    phase: "setup",
     players: {},
-    firstPlayer: '0',
+    firstPlayer: "0",
     zones: {
       activeLocation: { cards: [] },
       discardPile: { cards: [] },
@@ -38,6 +38,7 @@ export function createState(initState?: SimpleState, program?: Action): State {
     actionLimits: [],
     modifiers: [],
     event: [],
+    stack: [],
   };
 
   if (initState) {
@@ -60,7 +61,7 @@ export function createState(initState?: SimpleState, program?: Action): State {
     }
 
     for (const key of Object.keys(initState)) {
-      if (key === 'players') {
+      if (key === "players") {
         continue;
       }
 
@@ -89,8 +90,8 @@ function addCard(
 ) {
   const card = createCardState(
     state.nextId++,
-    zoneType === 'library' || zoneType === 'encounterDeck' ? 'back' : 'front',
-    'card' in definition ? definition.card : definition,
+    zoneType === "library" || zoneType === "encounterDeck" ? "back" : "front",
+    "card" in definition ? definition.card : definition,
     player,
     zoneType
   );
@@ -98,7 +99,7 @@ function addCard(
   zone.cards.push(card.id);
   state.cards[card.id] = card;
 
-  if ('card' in definition) {
+  if ("card" in definition) {
     card.token.resources = definition.resources ?? 0;
     card.token.damage = definition.damage ?? 0;
     card.token.progress = definition.progress ?? 0;
@@ -107,7 +108,7 @@ function addCard(
       for (const a of definition.attachments) {
         const attachment = createCardState(
           state.nextId++,
-          'front',
+          "front",
           a,
           player,
           zoneType

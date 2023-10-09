@@ -1,6 +1,6 @@
-import { core } from '@card-engine-nx/cards';
-import { TestEngine } from './TestEngine';
-import { it, expect } from 'vitest';
+import { core } from "@card-engine-nx/cards";
+import { TestEngine } from "./TestEngine";
+import { it, expect } from "vitest";
 
 it('Gimli', () => {
   const game = new TestEngine({
@@ -165,4 +165,22 @@ it('Lelogas', async () => {
   });
   game.chooseOption(response);
   expect(location.token.progress).toEqual(2);
+});
+
+it("Eleanor", async () => {
+  const response =
+    'Response: Exhaust Eleanor to cancel the "when revealed" effects of a treachery card just revealed by the encounter deck. Then, discard that card, and replace it with the next card from the encounter deck.';
+
+  const game = new TestEngine({
+    players: [
+      { playerArea: [core.hero.eleanor], hand: [core.event.forGondor] },
+    ],
+    encounterDeck: [core.treachery.eyesOfTheForest],
+  });
+
+  const hero = game.getCard("Eleanor");
+  game.do("revealEncounterCard");
+  game.chooseOption(response);
+  expect(hero.state.tapped).toBeTruthy();
+  expect(game.state.players[0]?.zones.hand.cards).toHaveLength(1);
 });
