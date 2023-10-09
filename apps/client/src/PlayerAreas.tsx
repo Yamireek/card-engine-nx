@@ -41,11 +41,11 @@ export const PlayerAreas = (props: { player: PlayerId }) => {
       rotation={[0, 0, rotations[playerCount][props.player] ?? 0]}
     >
       <LotrDeck3d
-        zone={{ owner: props.player, type: 'library' }}
+        zone={{ player: props.player, type: 'library' }}
         position={[0.39, -0.45, 0]}
       />
       <LotrDeck3d
-        zone={{ owner: props.player, type: 'discardPile' }}
+        zone={{ player: props.player, type: 'discardPile' }}
         position={[0.46, -0.45, 0]}
       />
       <LotrCardArea

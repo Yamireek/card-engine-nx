@@ -2,6 +2,7 @@ import {
   CardId,
   GameZoneType,
   PlayerZoneType,
+  getZoneType,
   values,
 } from '@card-engine-nx/basic';
 import { CardTarget } from '@card-engine-nx/state';
@@ -206,7 +207,7 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       : [target.zoneType];
 
     return values(ctx.state.cards)
-      .filter((c) => zones.includes(c.zone))
+      .filter((c) => zones.includes(getZoneType(c.zone)))
       .map((c) => c.id);
   }
 

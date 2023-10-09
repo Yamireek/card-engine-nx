@@ -3,20 +3,21 @@ import {
   CardAction,
   Action,
   StackEffect,
-} from "@card-engine-nx/state";
-import { ExecutionContext } from "../context";
-import { uiEvent } from "../eventFactories";
-import { getCardZoneId, getZoneState } from "../zone/target";
-import { calculateBoolExpr, calculateNumberExpr } from "../expr";
-import { isArray } from "lodash";
+} from '@card-engine-nx/state';
+import { ExecutionContext } from '../context';
+import { uiEvent } from '../eventFactories';
+import { getCardZoneId, getZoneState } from '../zone/target';
+import { calculateBoolExpr, calculateNumberExpr } from '../expr';
+import { isArray } from 'lodash';
 import {
   GameZoneType,
   PlayerZoneType,
   ZoneId,
   getZoneType,
-} from "@card-engine-nx/basic";
-import { getTargetCard, getTargetCards } from "./target";
-import { createPayCostAction } from "../resolution";
+  zonesEqual,
+} from '@card-engine-nx/basic';
+import { getTargetCard, getTargetCards } from './target';
+import { createPayCostAction } from '../resolution';
 
 export function executeCardAction(
   action: CardAction,
@@ -32,16 +33,16 @@ export function executeCardAction(
     return;
   }
 
-  if (action === "empty") {
+  if (action === 'empty') {
     return;
   }
 
-  if (action === "ready") {
+  if (action === 'ready') {
     card.tapped = false;
     return;
   }
 
-  if (action === "travel") {
+  if (action === 'travel') {
     const travelCost = ctx.view.cards[card.id].travel ?? [];
     ctx.state.next.unshift(
       ...travelCost,
@@ -50,29 +51,29 @@ export function executeCardAction(
           target: card.id,
           action: {
             move: {
-              from: "stagingArea",
-              to: "activeLocation",
-              side: "front",
+              from: 'stagingArea',
+              to: 'activeLocation',
+              side: 'front',
             },
           },
         },
       },
-      { event: { type: "traveled", card: card.id } }
+      { event: { type: 'traveled', card: card.id } }
     );
     return;
   }
 
-  if (action === "exhaust") {
+  if (action === 'exhaust') {
     card.tapped = true;
     return;
   }
 
-  if (action === "reveal") {
-    if (card.sideUp === "back") {
+  if (action === 'reveal') {
+    if (card.sideUp === 'back') {
       ctx.state.next.unshift({
         card: {
           target: card.id,
-          action: [{ flip: "front" }, "reveal"],
+          action: [{ flip: 'front' }, 'reveal'],
         },
       });
       return;
@@ -81,15 +82,15 @@ export function executeCardAction(
     const props = ctx.view.cards[card.id].props;
 
     ctx.state.next.unshift(
-      { event: { type: "revealed", card: card.id } },
+      { event: { type: 'revealed', card: card.id } },
       {
         card: {
           target: card.id,
           action: {
             move: {
-              from: "encounterDeck",
-              to: props.type === "treachery" ? "discardPile" : "stagingArea",
-              side: "front",
+              from: 'encounterDeck',
+              to: props.type === 'treachery' ? 'discardPile' : 'stagingArea',
+              side: 'front',
             },
           },
         },
@@ -99,7 +100,7 @@ export function executeCardAction(
     return;
   }
 
-  if (action === "shuffleToDeck") {
+  if (action === 'shuffleToDeck') {
     if (card.owner) {
       ctx.state.next.unshift(
         {
@@ -108,10 +109,10 @@ export function executeCardAction(
             action: {
               move: {
                 to: {
-                  owner: card.owner,
-                  type: "library",
+                  player: card.owner,
+                  type: 'library',
                 },
-                side: "back",
+                side: 'back',
               },
             },
           },
@@ -119,7 +120,7 @@ export function executeCardAction(
         {
           player: {
             target: card.owner,
-            action: "shuffleLibrary",
+            action: 'shuffleLibrary',
           },
         }
       );
@@ -128,7 +129,7 @@ export function executeCardAction(
     return;
   }
 
-  if (action === "discard") {
+  if (action === 'discard') {
     card.tapped = false;
     card.token = { damage: 0, progress: 0, resources: 0 };
     card.mark = {
@@ -145,8 +146,8 @@ export function executeCardAction(
         target: card.id,
         action: {
           move: {
-            to: !owner ? "discardPile" : { type: "discardPile", owner },
-            side: "front",
+            to: !owner ? 'discardPile' : { type: 'discardPile', player: owner },
+            side: 'front',
           },
         },
       },
@@ -154,7 +155,7 @@ export function executeCardAction(
     return;
   }
 
-  if (action === "advance") {
+  if (action === 'advance') {
     const quest = ctx.view.cards[card.id];
 
     card.token.progress = 0;
@@ -164,9 +165,9 @@ export function executeCardAction(
         target: card.id,
         action: {
           move: {
-            from: "questArea",
-            to: "removed",
-            side: "front",
+            from: 'questArea',
+            to: 'removed',
+            side: 'front',
           },
         },
       },
@@ -176,11 +177,11 @@ export function executeCardAction(
       {
         and: [
           {
-            zone: "questDeck",
+            zone: 'questDeck',
           },
           {
             sequence: {
-              plus: [{ card: { target: quest.id, value: "sequence" } }, 1],
+              plus: [{ card: { target: quest.id, value: 'sequence' } }, 1],
             },
           },
         ],
@@ -189,7 +190,7 @@ export function executeCardAction(
     );
 
     if (next.length === 0) {
-      console.log("game won");
+      console.log('game won');
       ctx.state.result = {
         win: true,
         score: 1,
@@ -206,24 +207,24 @@ export function executeCardAction(
             action: [
               {
                 move: {
-                  from: "questDeck",
-                  to: "questArea",
-                  side: "front",
+                  from: 'questDeck',
+                  to: 'questArea',
+                  side: 'front',
                 },
               },
-              { flip: "back" },
+              { flip: 'back' },
             ],
           },
         },
         {
           event: {
-            type: "revealed",
+            type: 'revealed',
             card: next[0],
           },
         }
       );
     } else {
-      if (quest.nextStage === "random") {
+      if (quest.nextStage === 'random') {
         const rnd = ctx.random.item(next);
         ctx.state.next.unshift(
           removedExplored,
@@ -233,30 +234,30 @@ export function executeCardAction(
               action: [
                 {
                   move: {
-                    from: "questDeck",
-                    to: "questArea",
-                    side: "front",
+                    from: 'questDeck',
+                    to: 'questArea',
+                    side: 'front',
                   },
                 },
-                { flip: "back" },
+                { flip: 'back' },
               ],
             },
           },
           {
             event: {
-              type: "revealed",
+              type: 'revealed',
               card: rnd,
             },
           }
         );
       } else {
-        throw new Error("found multiple stages");
+        throw new Error('found multiple stages');
       }
     }
     return;
   }
 
-  if (action === "draw") {
+  if (action === 'draw') {
     const owner = card.owner;
 
     if (!owner) {
@@ -273,8 +274,8 @@ export function executeCardAction(
         target: card.id,
         action: {
           move: {
-            to: { type: "hand", owner },
-            side: "front",
+            to: { type: 'hand', player: owner },
+            side: 'front',
           },
         },
       },
@@ -282,7 +283,7 @@ export function executeCardAction(
     return;
   }
 
-  if (action === "explore") {
+  if (action === 'explore') {
     card.tapped = false;
     card.token = { damage: 0, progress: 0, resources: 0 };
     card.mark = {
@@ -295,7 +296,7 @@ export function executeCardAction(
     ctx.state.next.unshift(
       {
         event: {
-          type: "explored",
+          type: 'explored',
           card: card.id,
         },
       },
@@ -304,8 +305,8 @@ export function executeCardAction(
           target: card.id,
           action: {
             move: {
-              to: "discardPile",
-              side: "front",
+              to: 'discardPile',
+              side: 'front',
             },
           },
         },
@@ -314,7 +315,7 @@ export function executeCardAction(
     return;
   }
 
-  if (action === "destroy" || action.destroy) {
+  if (action === 'destroy' || action.destroy) {
     card.tapped = false;
     card.token = { damage: 0, progress: 0, resources: 0 };
     card.mark = {
@@ -332,18 +333,20 @@ export function executeCardAction(
           target: card.id,
           action: {
             move: {
-              to: !owner ? "discardPile" : { type: "discardPile", owner },
-              side: "front",
+              to: !owner
+                ? 'discardPile'
+                : { type: 'discardPile', player: owner },
+              side: 'front',
             },
           },
         },
       },
       {
         event: {
-          type: "destroyed",
+          type: 'destroyed',
           card: card.id,
           attackers:
-            action === "destroy" ? [] : action.destroy?.attackers ?? [],
+            action === 'destroy' ? [] : action.destroy?.attackers ?? [],
         },
       }
     );
@@ -369,19 +372,19 @@ export function executeCardAction(
         ? [
             {
               player: {
-                target: "first",
+                target: 'first',
                 action: {
                   chooseActions: {
-                    title: "Choose responses for WhenRevealed action",
+                    title: 'Choose responses for WhenRevealed action',
                     actions: optional.map((r) => ({
                       title: r.description,
                       action: {
                         useCardVar: {
-                          name: "self",
+                          name: 'self',
                           value: r.card,
                           action: {
                             useCardVar: {
-                              name: "source",
+                              name: 'source',
                               value: r.source,
                               action: r.action,
                             },
@@ -406,7 +409,7 @@ export function executeCardAction(
         },
       },
       ...reponsesAction,
-      "stackPop"
+      'stackPop'
     );
     return;
   }
@@ -429,11 +432,11 @@ export function executeCardAction(
     return;
   }
 
-  if (action.ready === "refresh") {
+  if (action.ready === 'refresh') {
     const cv = ctx.view.cards[card.id];
     const free = cv.refreshCost.length === 0;
     if (free) {
-      ctx.state.next.unshift({ card: { target: card.id, action: "ready" } });
+      ctx.state.next.unshift({ card: { target: card.id, action: 'ready' } });
     } else {
       if (card.controller) {
         ctx.state.next.unshift({
@@ -441,14 +444,14 @@ export function executeCardAction(
             target: card.controller,
             action: {
               chooseActions: {
-                title: "Pay for refresh?",
+                title: 'Pay for refresh?',
                 actions: [
                   {
-                    title: "Yes",
+                    title: 'Yes',
                     action: {
                       card: {
                         target: card.id,
-                        action: [...cv.refreshCost, "ready"],
+                        action: [...cv.refreshCost, 'ready'],
                       },
                     },
                   },
@@ -470,7 +473,7 @@ export function executeCardAction(
     card.mark.defending = true;
     ctx.state.next.unshift({
       event: {
-        type: "declaredAsDefender",
+        type: 'declaredAsDefender',
         card: card.id,
         attacker: action.declareAsDefender.attacker,
       },
@@ -485,16 +488,16 @@ export function executeCardAction(
           target: card.id,
           action: {
             move: {
-              from: "stagingArea",
-              to: { owner: action.engagePlayer, type: "engaged" },
-              side: "front",
+              from: 'stagingArea',
+              to: { player: action.engagePlayer, type: 'engaged' },
+              side: 'front',
             },
           },
         },
       },
       {
         event: {
-          type: "engaged",
+          type: 'engaged',
           card: card.id,
           player: action.engagePlayer,
         },
@@ -504,7 +507,7 @@ export function executeCardAction(
   }
 
   if (action.heal) {
-    if (action.heal === "all") {
+    if (action.heal === 'all') {
       card.token.damage = 0;
     } else {
       card.token.damage = Math.max(0, card.token.damage - action.heal);
@@ -515,7 +518,7 @@ export function executeCardAction(
 
   if (action.dealDamage) {
     const data =
-      typeof action.dealDamage === "number"
+      typeof action.dealDamage === 'number'
         ? { amount: action.dealDamage, attackers: [] }
         : action.dealDamage;
 
@@ -539,7 +542,7 @@ export function executeCardAction(
 
     ctx.state.next.unshift({
       event: {
-        type: "receivedDamage",
+        type: 'receivedDamage',
         card: card.id,
         damage: amount,
       },
@@ -568,7 +571,7 @@ export function executeCardAction(
     // TODO move also attachments
     // TODO remove tokens/marks here
     if (action.move.from) {
-      if (card.zone !== getZoneType(action.move.from)) {
+      if (!zonesEqual(card.zone, action.move.from)) {
         return;
       }
     }
@@ -583,8 +586,7 @@ export function executeCardAction(
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);
     destinationZone.cards.push(card.id);
     card.sideUp = action.move.side;
-    card.zone =
-      typeof action.move.to === "string" ? action.move.to : action.move.to.type;
+    card.zone = action.move.to;
 
     ctx.events.send(
       uiEvent.card_moved({
@@ -596,7 +598,7 @@ export function executeCardAction(
     );
 
     if (!sourceInGame && destInGame) {
-      ctx.state.next.unshift({ event: { type: "enteredPlay", card: card.id } });
+      ctx.state.next.unshift({ event: { type: 'enteredPlay', card: card.id } });
     }
     return;
   }
@@ -608,7 +610,7 @@ export function executeCardAction(
 
     card.token.progress += action.placeProgress;
     const cw = ctx.view.cards[card.id];
-    if (cw.props.type === "quest") {
+    if (cw.props.type === 'quest') {
       const qp = cw.props.questPoints;
       if (qp && card.token.progress >= qp) {
         const canAdvance =
@@ -617,15 +619,15 @@ export function executeCardAction(
             : true;
 
         if (canAdvance) {
-          executeCardAction("advance", card, ctx);
+          executeCardAction('advance', card, ctx);
         }
       }
     }
 
-    if (cw.props.type === "location") {
+    if (cw.props.type === 'location') {
       const qp = cw.props.questPoints;
       if (qp && card.token.progress >= qp) {
-        executeCardAction("explore", card, ctx);
+        executeCardAction('explore', card, ctx);
       }
     }
 
@@ -637,28 +639,28 @@ export function executeCardAction(
       {
         card: {
           target: card.id,
-          action: { mark: "attacking" },
+          action: { mark: 'attacking' },
         },
       },
-      { playerActions: "Declare defender" },
+      { playerActions: 'Declare defender' },
       {
         player: {
           target: action.resolveEnemyAttacking,
-          action: "declareDefender",
+          action: 'declareDefender',
         },
       },
       {
         player: {
           target: action.resolveEnemyAttacking,
-          action: "determineCombatDamage",
+          action: 'determineCombatDamage',
         },
       },
-      { clearMarks: "attacking" },
-      { clearMarks: "defending" },
+      { clearMarks: 'attacking' },
+      { clearMarks: 'defending' },
       {
         card: {
           target: card.id,
-          action: { mark: "attacked" },
+          action: { mark: 'attacked' },
         },
       }
     );
@@ -668,8 +670,8 @@ export function executeCardAction(
   if (action.resolvePlayerAttacking) {
     const enemy = card.id;
     ctx.state.next.unshift(
-      { card: { target: enemy, action: { mark: "defending" } } },
-      { playerActions: "Declare attackers" },
+      { card: { target: enemy, action: { mark: 'defending' } } },
+      { playerActions: 'Declare attackers' },
       {
         player: {
           target: action.resolvePlayerAttacking,
@@ -678,16 +680,16 @@ export function executeCardAction(
           },
         },
       },
-      { playerActions: "Determine combat damage" },
+      { playerActions: 'Determine combat damage' },
       {
         player: {
           target: action.resolvePlayerAttacking,
-          action: "determineCombatDamage",
+          action: 'determineCombatDamage',
         },
       },
-      { clearMarks: "attacking" },
-      { clearMarks: "defending" },
-      { card: { target: enemy, action: { mark: "attacked" } } }
+      { clearMarks: 'attacking' },
+      { clearMarks: 'defending' },
+      { card: { target: enemy, action: { mark: 'attacked' } } }
     );
     return;
   }
@@ -707,11 +709,11 @@ export function executeCardAction(
           target,
           action: {
             move: {
-              side: "front",
+              side: 'front',
               to: card.owner
                 ? {
                     type: card.zone,
-                    owner: card.owner,
+                    player: card.owner,
                   }
                 : // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   (card.zone as any),
@@ -759,13 +761,13 @@ export function executeCardAction(
 
 export function isInGame(zone: ZoneId) {
   const inGameZones: Array<GameZoneType | PlayerZoneType> = [
-    "activeLocation",
-    "stagingArea",
-    "playerArea",
-    "engaged",
+    'activeLocation',
+    'stagingArea',
+    'playerArea',
+    'engaged',
   ];
 
-  if (typeof zone === "string") {
+  if (typeof zone === 'string') {
     return inGameZones.includes(zone);
   } else {
     return inGameZones.includes(zone.type);

@@ -9,6 +9,7 @@ import {
   Keywords,
   PlayerZoneType,
   GameZoneType,
+  ZoneId,
 } from '@card-engine-nx/basic';
 import { Ability } from './types';
 
@@ -46,5 +47,5 @@ export type CardState = {
     round: Record<string, number>;
   };
   keywords: Keywords;
-  zone: PlayerZoneType | GameZoneType;
+  zone: ZoneId;
 };

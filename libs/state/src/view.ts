@@ -5,6 +5,7 @@ import {
   PlayerId,
   PlayerZoneType,
   PrintedProps,
+  ZoneId,
 } from '@card-engine-nx/basic';
 import {
   CardModifier,
@@ -61,7 +62,7 @@ export type CardView = {
   id: CardId;
   printed: PrintedProps;
   props: PrintedProps;
-  zone: PlayerZoneType | GameZoneType;
+  zone: ZoneId;
   attachesTo?: CardTarget;
   nextStage?: NextStage;
   disabled?: Partial<Record<Mark, boolean>>;

@@ -14,7 +14,7 @@ export function getZoneState(zoneId: ZoneId, state: State): ZoneState {
   if (typeof zoneId === 'string') {
     return state.zones[zoneId];
   } else {
-    const player = state.players[zoneId.owner];
+    const player = state.players[zoneId.player];
     if (player) {
       return player.zones[zoneId.type];
     } else {
@@ -58,7 +58,7 @@ export function getCardZoneId(cardId: CardId, state: State): ZoneId {
   for (const player of keys(state.players) as PlayerId[]) {
     for (const zone of keys(state.players[player]?.zones) as PlayerZoneType[]) {
       if (state.players[player]?.zones[zone].cards.includes(cardId)) {
-        return { owner: player, type: zone };
+        return { player: player, type: zone };
       }
     }
   }

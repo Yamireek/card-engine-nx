@@ -1,6 +1,7 @@
 import { core } from '@card-engine-nx/cards';
 import { TestEngine } from './TestEngine';
 import { it, expect } from 'vitest';
+import { getZoneType } from '@card-engine-nx/basic';
 
 it('Beorn', () => {
   const action =
@@ -69,5 +70,5 @@ it('Gandalf', () => {
   game.chooseOption(response);
   expect(game.state.players['0']?.thread).toBe(-5);
   game.do('endRound');
-  expect(gandalf.state.zone).toBe('discardPile');
+  expect(getZoneType(gandalf.state.zone)).toBe('discardPile');
 });

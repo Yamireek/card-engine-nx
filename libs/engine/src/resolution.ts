@@ -7,7 +7,7 @@ import {
 import { ViewContext } from './context';
 import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
-import { CardId, PlayerId } from '@card-engine-nx/basic';
+import { CardId, PlayerId, getZoneType } from '@card-engine-nx/basic';
 import { getTargetPlayers } from './player/target';
 import { isArray } from 'lodash/fp';
 import { isInPlay } from './utils';
@@ -246,7 +246,7 @@ export function canCardExecute(
   }
 
   const card = ctx.state.cards[cardId];
-  const zone = card.zone;
+  const zone = getZoneType(card.zone);
   const inPlay = isInPlay(zone);
 
   if (typeof action === 'string') {
@@ -255,7 +255,7 @@ export function canCardExecute(
     }
 
     if (inPlay && action === 'exhaust') {
-      return !card.tapped && card.zone === 'playerArea';
+      return !card.tapped && zone === 'playerArea';
     }
 
     if (inPlay && action === 'ready') {
@@ -280,7 +280,7 @@ export function canCardExecute(
       }
 
       const owner = ctx.view.players[card.owner];
-      return card.zone === 'library' && !owner?.disableDraw;
+      return zone === 'library' && !owner?.disableDraw;
     }
 
     return false;
@@ -376,8 +376,9 @@ export function createPayCostAction(
 ): PlayerAction | undefined {
   const view = ctx.view.cards[cardId];
   const state = ctx.state.cards[cardId];
+  const zone = getZoneType(state.zone);
 
-  if (state.zone !== 'hand' || !state.controller) {
+  if (zone !== 'hand' || !state.controller) {
     return undefined;
   }
 

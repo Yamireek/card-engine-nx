@@ -32,8 +32,8 @@ export function createPlayAllyAction(
       target: self,
       action: {
         move: {
-          from: { owner, type: 'hand' },
-          to: { owner, type: 'playerArea' },
+          from: { player: owner, type: 'hand' },
+          to: { player: owner, type: 'playerArea' },
           side: 'front',
         },
       },
@@ -93,8 +93,8 @@ export function createPlayAttachmentAction(
       target: self,
       action: {
         move: {
-          from: { owner, type: 'hand' },
-          to: { owner, type: 'playerArea' },
+          from: { player: owner, type: 'hand' },
+          to: { player: owner, type: 'playerArea' },
           side: 'front',
         },
       },

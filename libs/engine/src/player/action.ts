@@ -134,7 +134,7 @@ export function executePlayerAction(
         { type: 'enemy' },
         { not: { mark: 'attacked' } },
         { enabled: 'attacking' },
-        { zone: { owner: player.id, type: 'engaged' } },
+        { zone: { player: player.id, type: 'engaged' } },
       ],
     };
 
@@ -168,7 +168,7 @@ export function executePlayerAction(
         and: [
           { type: 'enemy' },
           { not: { mark: 'attacked' } },
-          { zone: { owner: player.id, type: 'engaged' } },
+          { zone: { player: player.id, type: 'engaged' } },
         ],
       },
       ctx
@@ -179,7 +179,7 @@ export function executePlayerAction(
         and: [
           'ready',
           'character',
-          { zone: { owner: player.id, type: 'playerArea' } },
+          { zone: { player: player.id, type: 'playerArea' } },
         ],
       },
       ctx
@@ -236,7 +236,7 @@ export function executePlayerAction(
                 and: [
                   'character',
                   'ready',
-                  { zone: { owner: player.id, type: 'playerArea' } },
+                  { zone: { player: player.id, type: 'playerArea' } },
                 ],
               },
               multi: multiple,
@@ -287,7 +287,7 @@ export function executePlayerAction(
               target: {
                 and: [
                   { type: 'hero' },
-                  { zone: { owner: player.id, type: 'playerArea' } },
+                  { zone: { player: player.id, type: 'playerArea' } },
                 ],
               },
               multi: false,
@@ -363,8 +363,8 @@ export function executePlayerAction(
               },
               action: {
                 move: {
-                  from: { owner: player.id, type: 'library' },
-                  to: { owner: player.id, type: 'hand' },
+                  from: { player: player.id, type: 'library' },
+                  to: { player: player.id, type: 'hand' },
                   side: 'front',
                 },
               },
@@ -539,11 +539,11 @@ export function executePlayerAction(
   }
 
   if (action.discard) {
-    const target: CardTarget = { zone: { owner: player.id, type: 'hand' } };
+    const target: CardTarget = { zone: { player: player.id, type: 'hand' } };
     const discard: CardAction = {
       move: {
-        from: { owner: player.id, type: 'hand' },
-        to: { owner: player.id, type: 'discardPile' },
+        from: { player: player.id, type: 'hand' },
+        to: { player: player.id, type: 'discardPile' },
         side: 'front',
       },
     };
@@ -616,7 +616,7 @@ export function executePlayerAction(
         action: action.engaged,
         target: {
           zone: {
-            owner: player.id,
+            player: player.id,
             type: 'engaged',
           },
         },
