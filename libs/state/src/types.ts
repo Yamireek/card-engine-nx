@@ -41,7 +41,10 @@ export type Action =
       player?: { action: PlayerAction; target: PlayerTarget };
       card?: { action: CardAction; target: CardTarget };
       addPlayer?: PlayerDeck;
-      setupScenario?: Scenario;
+      setupScenario?: {
+        scenario: Scenario;
+        difficulty: 'easy' | 'normal';
+      };
       beginPhase?: Phase;
       playerActions?: string;
       setCardVar?: { name: string; value: CardId | undefined };

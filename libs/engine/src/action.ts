@@ -1,6 +1,7 @@
 import {
   Action,
   CardTarget,
+  Difficulty,
   PlayerDeck,
   Scenario,
   createPlayerState,
@@ -247,11 +248,19 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.setupScenario) {
-    for (const encounterCard of action.setupScenario.encounterCards) {
-      addGameCard(ctx.state, encounterCard, 'back', 'encounterDeck');
+    for (const set of action.setupScenario.scenario.sets) {
+      for (const card of set.easy) {
+        addGameCard(ctx.state, card, 'back', 'encounterDeck');
+      }
+
+      if (action.setupScenario.difficulty === 'normal') {
+        for (const card of set.normal) {
+          addGameCard(ctx.state, card, 'back', 'encounterDeck');
+        }
+      }
     }
 
-    for (const questCard of reverse(action.setupScenario.questCards)) {
+    for (const questCard of reverse(action.setupScenario.scenario.quest)) {
       addGameCard(ctx.state, questCard, 'front', 'questDeck');
     }
     return;
@@ -579,11 +588,12 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
 export function beginScenario(
   scenario: Scenario,
+  difficulty: Difficulty,
   ...decks: PlayerDeck[]
 ): Action {
   return [
     {
-      setupScenario: scenario,
+      setupScenario: { scenario, difficulty },
     },
     ...decks.map((d) => ({ addPlayer: d })),
     'shuffleEncounterDeck',

@@ -67,9 +67,20 @@ export const GameSetup = () => {
         title="Choose scenario"
         choices={[
           {
-            title: 'Passage Through Mirkwood',
+            title: 'Passage Through Mirkwood (easy)',
             action: () =>
-              moves.selectScenario(core.scenario.passageThroughMirkwood),
+              moves.selectScenario(
+                core.scenario.passageThroughMirkwood,
+                'easy'
+              ),
+          },
+          {
+            title: 'Passage Through Mirkwood (normal)',
+            action: () =>
+              moves.selectScenario(
+                core.scenario.passageThroughMirkwood,
+                'normal'
+              ),
           },
         ]}
         skippable={false}

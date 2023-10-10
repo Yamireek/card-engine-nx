@@ -1,5 +1,6 @@
 import {
   Action,
+  Difficulty,
   PlayerDeck,
   Scenario,
   State,
@@ -107,8 +108,12 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
   };
 
-  const selectScenario: Move<State> = ({ G, random }, scenario: Scenario) => {
-    G.next.unshift(beginScenario(scenario));
+  const selectScenario: Move<State> = (
+    { G, random },
+    scenario: Scenario,
+    difficulty: Difficulty
+  ) => {
+    G.next.unshift(beginScenario(scenario, difficulty));
     advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
   };
 

@@ -7,6 +7,7 @@ import * as location from './locations';
 import * as quest from './quests';
 import * as scenario from './scenarios';
 import * as treachery from './treacheries';
+import * as set from './sets';
 
 export const core = {
   ally,
@@ -18,4 +19,5 @@ export const core = {
   quest,
   scenario,
   treachery,
+  set,
 };

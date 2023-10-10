@@ -1,5 +1,6 @@
 import {
   Action,
+  Difficulty,
   PlayerDeck,
   Scenario,
   State,
@@ -13,7 +14,7 @@ export type Moves = {
   choose: (...choosen: number[]) => void;
   split: (...amounts: number[]) => void;
   action: (index: number) => void;
-  selectScenario: (scenario: Scenario) => void;
+  selectScenario: (scenario: Scenario, difficulty: Difficulty) => void;
   selectDeck: (deck: PlayerDeck) => void;
   load: (state: State) => void;
   json: (action: Action) => void;

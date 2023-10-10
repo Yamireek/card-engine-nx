@@ -7,8 +7,6 @@ import {
   Orientation,
   PrintedProps,
   Keywords,
-  PlayerZoneType,
-  GameZoneType,
   ZoneId,
 } from '@card-engine-nx/basic';
 import { Ability } from './types';
@@ -21,8 +19,15 @@ export type PlayerDeck = {
 
 export type Scenario = {
   name: string;
-  questCards: CardDefinition[];
-  encounterCards: CardDefinition[];
+  quest: CardDefinition[];
+  sets: EncounterSet[];
+};
+
+export type Difficulty = 'easy' | 'normal';
+
+export type EncounterSet = {
+  easy: CardDefinition[];
+  normal: CardDefinition[];
 };
 
 export type CardDefinition = {
