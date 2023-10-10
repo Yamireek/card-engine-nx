@@ -399,7 +399,13 @@ export function executeCardAction(
       {
         stackPush: {
           description: action.whenRevealed.description,
-          whenRevealed: action.whenRevealed.action,
+          whenRevealed: {
+            useCardVar: {
+              name: 'self',
+              value: card.id,
+              action: action.whenRevealed.action,
+            },
+          },
         },
       },
       ...reponsesAction,
@@ -594,6 +600,17 @@ export function executeCardAction(
     if (!sourceInGame && destInGame) {
       ctx.state.next.unshift({ event: { type: 'enteredPlay', card: card.id } });
     }
+
+    if (sourceInGame && !destInGame) {
+      ctx.state.next.unshift({
+        card: { target: card.attachments, action: 'discard' },
+      });
+
+      ctx.state.modifiers = ctx.state.modifiers.filter(
+        (m) => m.source !== card.id
+      );
+    }
+
     return;
   }
 
@@ -704,13 +721,7 @@ export function executeCardAction(
           action: {
             move: {
               side: 'front',
-              to: card.owner
-                ? {
-                    type: card.zone,
-                    player: card.owner,
-                  }
-                : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  (card.zone as any),
+              to: card.zone,
             },
           },
         },
@@ -723,7 +734,7 @@ export function executeCardAction(
     if (isArray(action.modify)) {
       for (const modifier of action.modify) {
         ctx.state.modifiers.push({
-          source: 0, // TODO fix
+          source: ctx.state.vars.card.self || 0,
           card: card.id,
           modifier,
           until: action.until,
@@ -731,7 +742,7 @@ export function executeCardAction(
       }
     } else {
       ctx.state.modifiers.push({
-        source: 0, // TODO fix
+        source: ctx.state.vars.card.self || 0,
         card: card.id,
         modifier: action.modify,
         until: action.until,
