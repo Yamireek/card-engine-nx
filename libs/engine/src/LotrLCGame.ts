@@ -209,6 +209,14 @@ export function LotrLCGame(events: UIEvents): Game<State> {
           }
         }
 
+        if (choice.type === 'show') {
+          return [{ move: 'skip' }];
+        }
+
+        if (choice.type === 'split') {
+          return [{ move: 'split', args: choice.options.map((o) => 1) }]; // TODO real split
+        }
+
         return [];
       },
     },
