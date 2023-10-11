@@ -114,15 +114,15 @@ export type PlayerAction =
         title: string;
         target: CardTarget;
         action: CardAction;
-        multi: boolean;
-        optional: boolean;
+        multi: boolean; // TODO optional
+        optional: boolean; // TODO optional
       };
       choosePlayerActions?: {
         title: string;
         target: PlayerTarget;
         action: PlayerAction;
-        multi: boolean;
-        optional: boolean;
+        multi: boolean; // TODO optional
+        optional: boolean; // TODO optional
       };
       chooseActions?: {
         title: string;

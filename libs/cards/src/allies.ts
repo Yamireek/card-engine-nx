@@ -457,31 +457,68 @@ export const lorienGuide = ally(
   }
 );
 
-export const northernTracker = ally({
-  name: 'Northern Tracker',
-  cost: 4,
-  willpower: 1,
-  attack: 2,
-  defense: 2,
-  hitPoints: 3,
-  traits: ['dúnedain', 'ranger'],
-  sphere: 'spirit',
-  unique: false,
-});
-// TODO Response: After Northern Tracker commits to a quest, place 1 progress token on each location in the staging area.
+export const northernTracker = ally(
+  {
+    name: 'Northern Tracker',
+    cost: 4,
+    willpower: 1,
+    attack: 2,
+    defense: 2,
+    hitPoints: 3,
+    traits: ['dúnedain', 'ranger'],
+    sphere: 'spirit',
+    unique: false,
+  },
+  {
+    description:
+      'Response: After Northern Tracker commits to a quest, place 1 progress token on each location in the staging area.',
+    target: 'self',
+    response: {
+      event: 'commits',
+      action: {
+        card: {
+          target: { and: [{ type: 'location' }, { zoneType: 'stagingArea' }] },
+          action: { placeProgress: 1 },
+        },
+      },
+    },
+  }
+);
 
-export const daughterOfTheNimrodel = ally({
-  name: 'Daughter of the Nimrodel',
-  cost: 3,
-  willpower: 1,
-  attack: 0,
-  defense: 0,
-  hitPoints: 1,
-  traits: ['silvan'],
-  sphere: 'lore',
-  unique: false,
-});
-// TODO Action: Exhaust Daughter of the Nimrodel to heal up to 2 damage on any 1 hero.
+export const daughterOfTheNimrodel = ally(
+  {
+    name: 'Daughter of the Nimrodel',
+    cost: 3,
+    willpower: 1,
+    attack: 0,
+    defense: 0,
+    hitPoints: 1,
+    traits: ['silvan'],
+    sphere: 'lore',
+    unique: false,
+  },
+  {
+    description:
+      'Action: Exhaust Daughter of the Nimrodel to heal up to 2 damage on any 1 hero.',
+    action: [
+      { card: { target: 'self', action: 'exhaust' } },
+      {
+        player: {
+          target: 'controller',
+          action: {
+            chooseCardActions: {
+              title: 'Choose hero to heal',
+              target: { type: 'hero' },
+              action: { heal: 2 },
+              multi: false,
+              optional: false,
+            },
+          },
+        },
+      },
+    ],
+  }
+);
 
 export const ereborHammersmith = ally({
   name: 'Erebor Hammersmith',
@@ -522,15 +559,37 @@ export const minerOfTheIronHills = ally({
 });
 // TODO Response: After Miner of the Iron Hills enters play, choose and discard 1 Condition attachment from play.
 
-export const gleowine = ally({
-  name: 'Gléowine',
-  cost: 2,
-  willpower: 1,
-  attack: 0,
-  defense: 0,
-  hitPoints: 2,
-  traits: ['minstrel', 'rohan'],
-  sphere: 'lore',
-  unique: true,
-});
-// TODO Action: Exhaust Gléowine to choose a player. That player draws 1 card.
+export const gleowine = ally(
+  {
+    name: 'Gléowine',
+    cost: 2,
+    willpower: 1,
+    attack: 0,
+    defense: 0,
+    hitPoints: 2,
+    traits: ['minstrel', 'rohan'],
+    sphere: 'lore',
+    unique: true,
+  },
+  {
+    description:
+      'Action: Exhaust Gléowine to choose a player. That player draws 1 card.',
+    action: [
+      { card: { target: 'self', action: 'exhaust' } },
+      {
+        player: {
+          target: 'controller',
+          action: {
+            choosePlayerActions: {
+              title: 'Choose player to draw 1 card',
+              target: 'each',
+              action: { draw: 1 },
+              multi: false,
+              optional: false,
+            },
+          },
+        },
+      },
+    ],
+  }
+);
