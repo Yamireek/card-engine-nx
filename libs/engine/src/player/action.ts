@@ -11,7 +11,8 @@ import { ExecutionContext } from '../context';
 import { getTargetCard, getTargetCards } from '../card';
 import { isArray, max, sum } from 'lodash/fp';
 import { getTargetPlayers } from './target';
-import { canCardExecute, canExecute, canPlayerExecute } from '../resolution';
+import { canExecute, canPlayerExecute } from '../resolution';
+import { canCardExecute } from '../card/resolution';
 
 export function executePlayerAction(
   action: PlayerAction,
