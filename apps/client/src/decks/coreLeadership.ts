@@ -2,7 +2,7 @@ import { core } from '@card-engine-nx/cards';
 import { PlayerDeck } from '@card-engine-nx/state';
 
 export const coreLeadership: PlayerDeck = {
-  name: 'Core (Tactics)',
+  name: 'Core (Leadership)',
   heroes: [core.hero.aragorn, core.hero.theodred, core.hero.gloin],
   library: [
     core.ally.guardOfTheCitadel,
@@ -33,7 +33,7 @@ export const coreLeadership: PlayerDeck = {
     core.event.grimResolve,
     core.attachment.stewardOfGondor,
     core.attachment.stewardOfGondor,
-    core.attachment.celebriansStore,
+    core.attachment.celebriansStone,
     core.ally.gandalf,
     core.ally.gandalf,
     core.ally.gandalf,

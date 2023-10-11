@@ -208,7 +208,7 @@ export const stewardOfGondor = attachment(
   }
 );
 
-export const celebriansStore = attachment(
+export const celebriansStone = attachment(
   {
     name: "Celebrían's Stone",
     unique: true,

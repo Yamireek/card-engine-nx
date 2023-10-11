@@ -10,6 +10,8 @@ import { Dialog } from '@mui/material';
 import { coreLeadership } from './decks/coreLeadership';
 import { coreSpirit } from './decks/coreSpirit';
 import { coreLore } from './decks/coreLore';
+import { coreLeadershipSpirit } from './decks/coreLeadershipSpirit';
+import { coreLoreTactics } from './decks/coreLoreTactics';
 
 export const GameSetup = () => {
   const { state, moves, playerId } = useContext(StateContext);
@@ -32,23 +34,16 @@ export const GameSetup = () => {
         <ChooseSingleDialog
           title="Choose deck"
           choices={[
-            {
-              title: 'Core Leadership',
-              action: () => moves.selectDeck(coreLeadership),
-            },
-            {
-              title: 'Core Tactics',
-              action: () => moves.selectDeck(coreTactics),
-            },
-            {
-              title: 'Core Spirit',
-              action: () => moves.selectDeck(coreSpirit),
-            },
-            {
-              title: 'Core Lore',
-              action: () => moves.selectDeck(coreLore),
-            },
-          ]}
+            coreLeadership,
+            coreTactics,
+            coreSpirit,
+            coreLore,
+            coreLeadershipSpirit,
+            coreLoreTactics,
+          ].map((d) => ({
+            title: d.name,
+            action: () => moves.selectDeck(d),
+          }))}
           skippable={false}
         />
       );
