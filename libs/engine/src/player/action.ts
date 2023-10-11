@@ -625,13 +625,25 @@ export function executePlayerAction(
   if (action.engaged) {
     ctx.state.next.unshift({
       card: {
-        action: action.engaged,
         target: {
           zone: {
             player: player.id,
             type: 'engaged',
           },
         },
+        action: action.engaged,
+      },
+    });
+    return;
+  }
+
+  if (action.controlled) {
+    ctx.state.next.unshift({
+      card: {
+        target: {
+          controller: player.id,
+        },
+        action: action.controlled,
       },
     });
     return;

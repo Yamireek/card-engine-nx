@@ -695,7 +695,7 @@ export const phaseResource: Action = [
   {
     card: {
       target: { and: ['inAPlay', { type: 'hero' }] },
-      action: { generateResources: 2 },
+      action: { generateResources: 10 },
     },
   },
   { playerActions: 'End resource phase' },

@@ -131,6 +131,7 @@ export type PlayerAction =
         optional: boolean;
       };
       engaged?: CardAction;
+      controlled?: CardAction;
       modify?: PlayerModifier;
       until?: Until;
       useVar?: {

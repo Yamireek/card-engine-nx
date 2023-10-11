@@ -186,6 +186,12 @@ export function canPlayerExecute(
       );
     }
 
+    if (action.controlled) {
+      const cardAction = action.controlled;
+      const cards = getTargetCards({ controller: player.id }, ctx);
+      return cards.some((c) => canCardExecute(cardAction, c, ctx));
+    }
+
     if (action.modify) {
       if (action.modify === 'can_declate_multiple_defenders') {
         return player.zones.engaged.cards.length > 0;
