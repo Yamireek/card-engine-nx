@@ -450,17 +450,20 @@ export function executePlayerAction(
       return;
     }
 
-    ctx.state.choice = {
-      player: player.id,
-      type: 'split',
-      amount: action.payResources.amount,
-      id: ctx.state.nextId++,
-      title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
-      options,
-      count: {
-        min: action.payResources.heroes ?? 1,
+    ctx.state.next.unshift('stateCheck', {
+      choice: {
+        id: ctx.state.nextId++,
+        player: player.id,
+        type: 'split',
+        amount: action.payResources.amount,
+        title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
+        options,
+        count: {
+          min: action.payResources.heroes ?? 1,
+        },
       },
-    };
+    });
+
     return;
   }
 
@@ -471,25 +474,28 @@ export function executePlayerAction(
       return;
     }
 
-    ctx.state.choice = {
-      id: ctx.state.nextId++,
-      player: player.id,
-      title: action.chooseCardActions.title,
-      type: action.chooseCardActions.multi ? 'multi' : 'single',
-      optional: action.chooseCardActions.optional,
-      options: cardIds
-        .filter((id) => canCardExecute(cardAction, id, ctx))
-        .map((c) => ({
-          title: c.toString(),
-          cardId: c,
-          action: {
-            card: {
-              target: c,
-              action: cardAction,
+    ctx.state.next.unshift('stateCheck', {
+      choice: {
+        id: ctx.state.nextId++,
+        player: player.id,
+        title: action.chooseCardActions.title,
+        type: action.chooseCardActions.multi ? 'multi' : 'single',
+        optional: action.chooseCardActions.optional,
+        options: cardIds
+          .filter((id) => canCardExecute(cardAction, id, ctx))
+          .map((c) => ({
+            title: c.toString(),
+            cardId: c,
+            action: {
+              card: {
+                target: c,
+                action: cardAction,
+              },
             },
-          },
-        })),
-    };
+          })),
+      },
+    });
+
     return;
   }
 
@@ -501,24 +507,27 @@ export function executePlayerAction(
       return;
     }
 
-    ctx.state.choice = {
-      id: ctx.state.nextId++,
-      player: player.id,
-      title: action.choosePlayerActions.title,
-      type: action.choosePlayerActions.multi ? 'multi' : 'single',
-      optional: action.choosePlayerActions.optional,
-      options: playerIds
-        .filter((p) => canPlayerExecute(playerAction, p, ctx))
-        .map((c) => ({
-          title: c.toString(),
-          action: {
-            player: {
-              target: c,
-              action: playerAction,
+    ctx.state.next.unshift('stateCheck', {
+      choice: {
+        id: ctx.state.nextId++,
+        player: player.id,
+        title: action.choosePlayerActions.title,
+        type: action.choosePlayerActions.multi ? 'multi' : 'single',
+        optional: action.choosePlayerActions.optional,
+        options: playerIds
+          .filter((p) => canPlayerExecute(playerAction, p, ctx))
+          .map((c) => ({
+            title: c.toString(),
+            action: {
+              player: {
+                target: c,
+                action: playerAction,
+              },
             },
-          },
-        })),
-    };
+          })),
+      },
+    });
+
     return;
   }
 
@@ -527,14 +536,17 @@ export function executePlayerAction(
       canExecute(a.action, false, ctx)
     );
 
-    ctx.state.choice = {
-      id: ctx.state.nextId++,
-      player: player.id,
-      title: action.chooseActions.title,
-      type: action.chooseActions.multi ? 'multi' : 'single',
-      optional: action.chooseActions.optional,
-      options,
-    };
+    ctx.state.next.unshift('stateCheck', {
+      choice: {
+        id: ctx.state.nextId++,
+        player: player.id,
+        title: action.chooseActions.title,
+        type: action.chooseActions.multi ? 'multi' : 'single',
+        optional: action.chooseActions.optional,
+        options,
+      },
+    });
+
     return;
   }
 

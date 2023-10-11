@@ -14,7 +14,7 @@ import {
   ZoneId,
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
-import { Event, PendingEffect } from './state';
+import { Choice, Event, PendingEffect, State } from './state';
 import { PlayerModifier } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
@@ -37,6 +37,7 @@ export type Action =
   | 'revealEncounterCard'
   | 'win'
   | 'stackPop'
+  | 'stateCheck'
   | {
       player?: { action: PlayerAction; target: PlayerTarget };
       card?: { action: CardAction; target: CardTarget };
@@ -47,6 +48,7 @@ export type Action =
       };
       beginPhase?: Phase;
       playerActions?: string;
+      choice?: Choice;
       setCardVar?: { name: string; value: CardId | undefined };
       setPlayerVar?: { name: string; value: PlayerId | undefined };
       useCardVar?: {
@@ -350,6 +352,8 @@ export type CardTarget =
   | 'event'
   | 'exhausted'
   | 'target'
+  | 'destroyed'
+  | 'explored'
   | CardId
   | CardId[]
   | {

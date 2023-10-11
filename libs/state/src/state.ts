@@ -46,6 +46,49 @@ export type PendingEffect = {
   canceled?: true;
 };
 
+export type Choice =
+  | {
+      id: number;
+      title: string;
+      type: 'show';
+      cardId: CardId;
+    }
+  | {
+      id: number;
+      title: string;
+      type: 'actions';
+    }
+  | {
+      id: number;
+      player: PlayerId;
+      title: string;
+      type: 'single';
+      optional: boolean;
+      options: Array<{ title: string; action: Action; cardId?: CardId }>;
+    }
+  | {
+      id: number;
+      player: PlayerId;
+      title: string;
+      type: 'multi';
+      options: Array<{ title: string; action: Action; cardId?: CardId }>;
+    }
+  | {
+      id: number;
+      player: PlayerId;
+      title: string;
+      type: 'split';
+      amount: number;
+      count?: { min?: number; max?: number };
+      options: Array<{
+        title: string;
+        action: Action;
+        cardId: CardId;
+        min: number;
+        max: number;
+      }>;
+    };
+
 export type State = {
   round: number;
   phase: Phase;
@@ -57,48 +100,7 @@ export type State = {
     end_of_phase: Action[];
     end_of_round: Action[];
   };
-  choice?:
-    | {
-        id: number;
-        title: string;
-        type: 'show';
-        cardId: CardId;
-      }
-    | {
-        id: number;
-        title: string;
-        type: 'actions';
-      }
-    | {
-        id: number;
-        player: PlayerId;
-        title: string;
-        type: 'single';
-        optional: boolean;
-        options: Array<{ title: string; action: Action; cardId?: CardId }>;
-      }
-    | {
-        id: number;
-        player: PlayerId;
-        title: string;
-        type: 'multi';
-        options: Array<{ title: string; action: Action; cardId?: CardId }>;
-      }
-    | {
-        id: number;
-        player: PlayerId;
-        title: string;
-        type: 'split';
-        amount: number;
-        count?: { min?: number; max?: number };
-        options: Array<{
-          title: string;
-          action: Action;
-          cardId: CardId;
-          min: number;
-          max: number;
-        }>;
-      };
+  choice?: Choice;
   stack: PendingEffect[];
   next: Action[];
   result?: {

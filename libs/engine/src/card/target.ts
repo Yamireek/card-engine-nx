@@ -10,7 +10,7 @@ import { intersection, last, uniq } from 'lodash';
 import { ViewContext, cardIds } from '../context';
 import { getTargetZone, getZoneState } from '../zone/target';
 import { difference, isArray, takeRight } from 'lodash/fp';
-import { calculateNumberExpr } from '../expr';
+import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { getTargetPlayers } from '../player/target';
 
 export function getTargetCard(
@@ -105,6 +105,40 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
     } else {
       return [inCtx];
     }
+  }
+
+  if (target === 'destroyed') {
+    return values(ctx.state.cards)
+      .filter((c) => {
+        if (!c.token.damage) {
+          return false;
+        }
+
+        const hp = ctx.view.cards[c.id].props.hitPoints;
+        return hp && hp <= c.token.damage;
+      })
+      .map((c) => c.id);
+  }
+
+  if (target === 'explored') {
+    return values(ctx.state.cards)
+      .filter((c) => {
+        if (!c.token.progress) {
+          return false;
+        }
+
+        const cv = ctx.view.cards[c.id];
+        const needProgress = cv.props.questPoints;
+        const canBeExplored =
+          cv.conditional.advance.length > 0
+            ? calculateBoolExpr({ and: cv.conditional.advance }, ctx)
+            : true;
+            
+        return (
+          needProgress && canBeExplored && needProgress <= c.token.progress
+        );
+      })
+      .map((c) => c.id);
   }
 
   if (target.take) {

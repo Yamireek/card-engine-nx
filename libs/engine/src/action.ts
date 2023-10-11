@@ -1,6 +1,7 @@
 import {
   Action,
   CardTarget,
+  Choice,
   Difficulty,
   PlayerDeck,
   Scenario,
@@ -183,6 +184,30 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if (action === 'stateCheck') {
+    ctx.state.next.unshift(
+      {
+        card: {
+          target: 'destroyed',
+          action: 'destroy',
+        },
+      },
+      {
+        card: {
+          target: { and: [{ type: 'location' }, 'explored'] },
+          action: 'explore',
+        },
+      },
+      {
+        card: {
+          target: { and: [{ type: 'quest' }, 'explored'] },
+          action: 'advance',
+        },
+      }
+    );
+    return;
+  }
+
   if (action.stackPush) {
     ctx.state.stack.push(action.stackPush);
     return;
@@ -271,12 +296,19 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if (action.choice) {
+    ctx.state.choice = action.choice as Choice;
+    return;
+  }
+
   if (action.playerActions) {
-    ctx.state.choice = {
-      id: ctx.state.nextId++,
-      title: action.playerActions,
-      type: 'actions',
-    };
+    ctx.state.next.unshift('stateCheck', {
+      choice: {
+        id: ctx.state.nextId++,
+        title: action.playerActions,
+        type: 'actions',
+      },
+    });
     return;
   }
 

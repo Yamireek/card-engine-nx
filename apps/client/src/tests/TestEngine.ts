@@ -43,7 +43,7 @@ export class TestEngine {
   }
 
   do(...action: Action[]) {
-    this.state.next.unshift(...action);
+    this.state.next.unshift(...action, 'stateCheck');
     advanceToChoiceState(
       this.state,
       consoleEvents,
@@ -134,18 +134,7 @@ export class CardProxy {
   ) {}
 
   update(cardAction: CardAction) {
-    executeCardAction(
-      cardAction,
-      this._state.cards[this.id],
-      crateExecutionContext(this._state, consoleEvents, random)
-    );
-    advanceToChoiceState(
-      this._state,
-      consoleEvents,
-      { actions: true, show: true },
-      true,
-      random
-    );
+    this.game.do({ card: { target: this.id, action: cardAction } });
   }
 
   get props() {
