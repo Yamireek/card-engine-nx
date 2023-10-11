@@ -5,9 +5,9 @@ export const coreTest: PlayerDeck = {
   name: 'Test',
   heroes: [
     core.hero.gimli,
-    // core.hero.aragorn,
-    // core.hero.eowyn,
-    // core.hero.denethor,
+    core.hero.aragorn,
+    core.hero.eowyn,
+    core.hero.denethor,
   ],
   library: [
     // core.ally.faramir,
@@ -16,6 +16,6 @@ export const coreTest: PlayerDeck = {
     // core.ally.sonOfArnor,
     // core.ally.snowbournScout,
     // core.ally.longbeardOrcSlayer,
-    core.ally.brokIronfist,
+    core.ally.lorienGuide,
   ],
 };

@@ -310,6 +310,24 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'commitToQuest') {
+    ctx.state.next.unshift(
+      {
+        card: {
+          target: card.id,
+          action: ['exhaust', { mark: 'questing' }],
+        },
+      },
+      {
+        event: {
+          type: 'commits',
+          card: card.id,
+        },
+      }
+    );
+    return;
+  }
+
   if (action === 'destroy' || action.destroy) {
     card.tapped = false;
     card.token = { damage: 0, progress: 0, resources: 0 };

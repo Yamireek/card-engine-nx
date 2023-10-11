@@ -39,28 +39,20 @@ export function executePlayerAction(
   }
 
   if (action === 'commitCharactersToQuest') {
-    ctx.state.next = [
-      {
-        player: {
-          target: player.id,
-          action: {
-            chooseCardActions: {
-              title: 'Choose characters commiting to quest',
-              multi: true,
-              optional: true,
-              target: { and: ['character', { controller: player.id }] },
-              action: [
-                'exhaust',
-                {
-                  mark: 'questing',
-                },
-              ],
-            },
+    ctx.state.next.unshift({
+      player: {
+        target: player.id,
+        action: {
+          chooseCardActions: {
+            title: 'Choose characters commiting to quest',
+            multi: true,
+            optional: true,
+            target: { and: ['character', { controller: player.id }] },
+            action: 'commitToQuest',
           },
         },
       },
-      ...ctx.state.next,
-    ];
+    });
     return;
   }
 

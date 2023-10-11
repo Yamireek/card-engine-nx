@@ -53,6 +53,10 @@ export function canCardExecute(
       return zone === 'library' && !owner?.disableDraw;
     }
 
+    if (zone === 'playerArea' && action === 'commitToQuest') {
+      return !card.tapped;
+    }
+
     return false;
   }
 

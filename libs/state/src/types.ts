@@ -158,6 +158,7 @@ export type CardAction =
   | 'draw'
   | 'explore'
   | 'ready'
+  | 'commitToQuest'
   | {
       payCost?: CostModifier;
       ready?: 'refresh';

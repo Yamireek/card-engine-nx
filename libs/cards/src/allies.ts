@@ -415,7 +415,6 @@ export const brokIronfist = ally(
     },
   }
 );
-// TODO
 
 export const wanderingTook = ally({
   name: 'Wandering Took',
@@ -430,18 +429,33 @@ export const wanderingTook = ally({
 });
 // TODO Action: Reduce your threat by 3 to give control of Wandering Took to another player. Raise that player's threat by 3. (Limit once per round.)
 
-export const lorienGuide = ally({
-  name: 'Lórien Guide',
-  cost: 3,
-  willpower: 1,
-  attack: 1,
-  defense: 0,
-  hitPoints: 2,
-  traits: ['silvan', 'scout'],
-  sphere: 'spirit',
-  unique: false,
-});
-// TODO Response: After Lórien Guide commits to a quest, place 1 progress token on the active location.
+export const lorienGuide = ally(
+  {
+    name: 'Lórien Guide',
+    cost: 3,
+    willpower: 1,
+    attack: 1,
+    defense: 0,
+    hitPoints: 2,
+    traits: ['silvan', 'scout'],
+    sphere: 'spirit',
+    unique: false,
+  },
+  {
+    description:
+      'Response: After Lórien Guide commits to a quest, place 1 progress token on the active location.',
+    target: 'self',
+    response: {
+      event: 'commits',
+      action: {
+        card: {
+          target: { zoneType: 'activeLocation' },
+          action: { placeProgress: 1 },
+        },
+      },
+    },
+  }
+);
 
 export const northernTracker = ally({
   name: 'Northern Tracker',
