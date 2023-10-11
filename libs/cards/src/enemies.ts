@@ -59,16 +59,9 @@ export const forestSpider = enemy(
   {
     description:
       'Forced: After Forest Spider engages a player, it gets +1 Attack until the end of the round.',
+    target: 'self',
     forced: {
       event: 'engaged',
-      condition: {
-        card: {
-          target: 'event',
-          value: {
-            is: 'self',
-          },
-        },
-      },
       action: {
         card: {
           target: 'self',
@@ -186,16 +179,9 @@ export const chieftanUfthak = enemy(
   {
     description:
       'Forced: After Chieftain Ufthak attacks, place 1 resource token on him.',
+    target: 'self',
     forced: {
       event: 'attacked',
-      condition: {
-        card: {
-          target: 'event',
-          value: {
-            is: 'self',
-          },
-        },
-      },
       action: {
         card: {
           target: 'event',
@@ -279,16 +265,9 @@ export const hummerhorns = enemy(
   {
     description:
       'Forced: After Hummerhorns engages you, deal 5 damage to a single hero you control.',
+    target: 'self',
     forced: {
       event: 'engaged',
-      condition: {
-        card: {
-          target: 'event',
-          value: {
-            is: 'self',
-          },
-        },
-      },
       action: {
         player: {
           target: 'event',

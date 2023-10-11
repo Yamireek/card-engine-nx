@@ -82,16 +82,9 @@ export const forestGate = location(
   {
     description:
       'Response: After you travel to Forest Gate the first player may draw 2 cards.',
+    target: 'self',
     response: {
       event: 'traveled',
-      condition: {
-        card: {
-          target: 'event',
-          value: {
-            is: 'self',
-          },
-        },
-      },
       action: {
         player: {
           target: 'first',

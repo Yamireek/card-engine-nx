@@ -12,6 +12,7 @@ import {
 } from '@card-engine-nx/basic';
 import { getTargetCard, getTargetCards } from './target';
 import { createPayCostAction } from '../resolution';
+import { getTargetPlayer } from '../player/target';
 
 export function executeCardAction(
   action: CardAction,
@@ -482,6 +483,7 @@ export function executeCardAction(
   }
 
   if (action.engagePlayer) {
+    const player = getTargetPlayer(action.engagePlayer, ctx);
     ctx.state.next.unshift(
       {
         card: {
@@ -489,7 +491,7 @@ export function executeCardAction(
           action: {
             move: {
               from: 'stagingArea',
-              to: { player: action.engagePlayer, type: 'engaged' },
+              to: { player, type: 'engaged' },
               side: 'front',
             },
           },
@@ -499,7 +501,7 @@ export function executeCardAction(
         event: {
           type: 'engaged',
           card: card.id,
-          player: action.engagePlayer,
+          player,
         },
       }
     );

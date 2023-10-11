@@ -8,7 +8,7 @@ import { ViewContext } from './context';
 import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
 import { CardId, PlayerId, getZoneType } from '@card-engine-nx/basic';
-import { getTargetPlayers } from './player/target';
+import { getTargetPlayer, getTargetPlayers } from './player/target';
 import { isArray } from 'lodash/fp';
 import { isInPlay } from './utils';
 
@@ -370,6 +370,19 @@ export function canCardExecute(
 
   if (zone === 'stagingArea' && action.engagePlayer) {
     return true;
+  }
+
+  if (action.engagePlayer) {
+    if (card.zone === 'stagingArea') {
+      return true;
+    }
+
+    if (typeof card.zone === 'string') {
+      return false;
+    }
+
+    const player = getTargetPlayer(action.engagePlayer, ctx);
+    return card.zone.player !== player;
   }
 
   return false;

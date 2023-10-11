@@ -30,16 +30,9 @@ export const gondorianSpearman = ally(
   {
     description:
       'Response: After Gondorian Spearman is declared as a defender, deal 1 damage to the attacking enemy.',
+    target: 'self',
     response: {
       event: 'declaredAsDefender',
-      condition: {
-        card: {
-          target: 'event',
-          value: {
-            is: 'self',
-          },
-        },
-      },
       action: {
         card: {
           target: {
@@ -147,16 +140,9 @@ export const gandalf = ally(
   {
     description:
       'Response: After Gandalf enters play, (choose 1): draw 3 cards, deal 4 damage to 1 enemy in play, or reduce your threat by 5.',
+    target: 'self',
     response: {
       event: 'enteredPlay',
-      condition: {
-        card: {
-          target: 'event',
-          value: {
-            is: 'self',
-          },
-        },
-      },
       action: {
         player: {
           target: 'controller',
@@ -278,18 +264,42 @@ export const faramir = ally(
   }
 );
 
-export const sonOfArnor = ally({
-  name: 'Son of Arnor',
-  cost: 3,
-  willpower: 0,
-  attack: 2,
-  defense: 0,
-  hitPoints: 2,
-  traits: ['dúnedain'],
-  sphere: 'leadership',
-  unique: false,
-});
-// TODO Response: After Son of Arnor enters play, choose an enemy card in the staging area or currently engaged with another player. Engage that enemy.
+export const sonOfArnor = ally(
+  {
+    name: 'Son of Arnor',
+    cost: 3,
+    willpower: 0,
+    attack: 2,
+    defense: 0,
+    hitPoints: 2,
+    traits: ['dúnedain'],
+    sphere: 'leadership',
+    unique: false,
+  },
+  {
+    description:
+      'Response: After Son of Arnor enters play, choose an enemy card in the staging area or currently engaged with another player. Engage that enemy.',
+    target: 'self',
+    response: {
+      event: 'enteredPlay',
+      action: {
+        player: {
+          target: 'controller',
+          action: {
+            chooseCardActions: {
+              title: 'Choose enemy to engage',
+              target: { type: 'enemy' },
+              action: { engagePlayer: 'controller' },
+              multi: false,
+              optional: false,
+            },
+          },
+        },
+      },
+    },
+  }
+);
+// TODO
 
 export const snowbournScout = ally({
   name: 'Snowbourn Scout',

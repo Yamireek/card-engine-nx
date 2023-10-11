@@ -169,7 +169,7 @@ export type CardAction =
       payResources?: number;
       placeProgress?: number;
       flip?: Side;
-      engagePlayer?: PlayerId;
+      engagePlayer?: PlayerTarget;
       resolveEnemyAttacking?: PlayerId;
       resolvePlayerAttacking?: PlayerId;
       mark?: Mark;

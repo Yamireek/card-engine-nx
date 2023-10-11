@@ -9,5 +9,10 @@ export const coreTest: PlayerDeck = {
     core.hero.eowyn,
     core.hero.denethor,
   ],
-  library: [core.ally.faramir],
+  library: [
+    core.ally.faramir,
+    core.ally.gondorianSpearman,
+    core.ally.gandalf,
+    core.ally.sonOfArnor,
+  ],
 };
