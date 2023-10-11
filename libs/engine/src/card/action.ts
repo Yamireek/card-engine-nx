@@ -604,6 +604,10 @@ export function executeCardAction(
     }
 
     if (sourceInGame && !destInGame) {
+      ctx.state.next.unshift({ event: { type: 'leftPlay', card: card.id } });
+    }
+
+    if (sourceInGame && !destInGame) {
       ctx.state.next.unshift({
         card: { target: card.attachments, action: 'discard' },
       });
@@ -760,6 +764,17 @@ export function executeCardAction(
 
   if (action.clear) {
     card.mark[action.clear] = false;
+    return;
+  }
+
+  if (action.putInPlay) {
+    const player = getTargetPlayer(action.putInPlay, ctx);
+    ctx.state.next.unshift({
+      card: {
+        target: card.id,
+        action: { move: { to: { player, type: 'playerArea' }, side: 'front' } },
+      },
+    });
     return;
   }
 

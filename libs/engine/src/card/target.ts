@@ -133,7 +133,7 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
           cv.conditional.advance.length > 0
             ? calculateBoolExpr({ and: cv.conditional.advance }, ctx)
             : true;
-            
+
         return (
           needProgress && canBeExplored && needProgress <= c.token.progress
         );
@@ -211,9 +211,9 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
 
   if (target.controller) {
     const targets = getTargetPlayers(target.controller, ctx);
-    return targets.flatMap(
-      (t) => ctx.state.players[t]?.zones.playerArea.cards ?? []
-    );
+    return values(ctx.state.cards)
+      .filter((c) => c.controller && targets.includes(c.controller))
+      .map((s) => s.id);
   }
 
   if (target.mark) {

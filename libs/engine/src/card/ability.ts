@@ -283,17 +283,29 @@ export function createModifiers(
         ];
       }
 
-      if (isInPlay(zone)) {
-        return [
-          {
-            source: self,
-            card: ability.target ?? self,
-            modifier: {
-              description: ability.description,
-              reaction: { ...ability.response, forced: false },
+      if (isInPlay(zone) || zone === ability.zone) {
+        if (controller) {
+          return [
+            {
+              source: self,
+              card: ability.target ?? self,
+              modifier: {
+                description: ability.description,
+                reaction: {
+                  ...ability.response,
+                  forced: false,
+                  action: {
+                    usePlayerVar: {
+                      name: 'controller',
+                      value: controller,
+                      action: ability.response.action,
+                    },
+                  },
+                },
+              },
             },
-          },
-        ];
+          ];
+        }
       }
 
       return [];

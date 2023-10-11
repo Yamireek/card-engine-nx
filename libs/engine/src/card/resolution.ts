@@ -153,5 +153,9 @@ export function canCardExecute(
     return true;
   }
 
+  if (action.putInPlay) {
+    return !inPlay;
+  }
+
   return false;
 }

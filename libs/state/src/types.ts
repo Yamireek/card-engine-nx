@@ -188,6 +188,7 @@ export type CardAction =
         description: string;
         action: Action;
       };
+      putInPlay?: PlayerTarget;
     };
 
 export type PropertyIncrement = Partial<
@@ -227,7 +228,12 @@ export type Ability = { description: string } & (
   | {
       travel: Action;
     }
-  | { response: ResponseAction; target: CardTarget; cost?: CostModifier }
+  | {
+      response: ResponseAction;
+      target: CardTarget;
+      zone?: GameZoneType | PlayerZoneType;
+      cost?: CostModifier;
+    }
   | { forced: ResponseAction; target: CardTarget }
   | { attachesTo: CardTarget }
   | {
