@@ -15,5 +15,6 @@ export const coreTest: PlayerDeck = {
     core.ally.gandalf,
     core.ally.sonOfArnor,
     core.ally.snowbournScout,
+    core.ally.longbeardOrcSlayer,
   ],
 };
