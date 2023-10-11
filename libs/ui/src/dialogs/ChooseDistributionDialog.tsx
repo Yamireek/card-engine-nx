@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { sum } from 'lodash/fp';
 
 export type Amount<T> = { id: T; value: number };
 
@@ -37,16 +38,16 @@ export const ChooseDistributionDialog = <T extends unknown>(props: {
     min?: number;
     max?: number;
   }[];
-  onSubmit: (amounts: Array<Amount<T>>) => void;
+  onSubmit: (amounts: Array<number>) => void;
 }) => {
   const theme = useTheme();
 
-  const [amounts, setAmounts] = useState<Array<Amount<T>>>(
-    props.choices.map((c) => ({ id: c.id, value: c.min ?? 0 }))
+  const [amounts, setAmounts] = useState<Array<number>>(
+    props.choices.map((c) => c.min ?? 0)
   );
 
-  const total = amounts.reduce((p, c) => p + c.value, 0);
-  const count = amounts.filter((a) => a.value).length;
+  const total = sum(amounts);
+  const count = amounts.filter((a) => a).length;
 
   const maxTotalLimit = props.total?.max ? total >= props.total.max : false;
 
@@ -69,22 +70,23 @@ export const ChooseDistributionDialog = <T extends unknown>(props: {
             justifyContent: 'space-evenly',
           }}
         >
-          {props.choices.map((o, i) => {
-            const amount = amounts.find((a) => a.id === o.id)?.value ?? 0;
+          {props.choices.map((o, index) => {
+            const amount = amounts[index];
 
             const minLimit = o.min ? amount <= o.min : amount <= 0;
             const maxLimit = o.max ? amount >= o.max : undefined;
 
             return (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column' }}>
+              <div
+                key={index}
+                style={{ display: 'flex', flexDirection: 'column' }}
+              >
                 <ListItemButton
                   style={{ flex: '0 0 auto' }}
                   onClick={(e) => {
                     if (!(maxLimit || maxTotalLimit)) {
                       setAmounts((p) =>
-                        p.map((a) =>
-                          a.id === o.id ? { ...a, value: a.value + 1 } : a
-                        )
+                        p.map((a, i) => (index === i ? a + 1 : a))
                       );
                     }
                   }}
@@ -105,9 +107,7 @@ export const ChooseDistributionDialog = <T extends unknown>(props: {
                     disabled={maxLimit || maxTotalLimit}
                     onClick={() => {
                       setAmounts((p) =>
-                        p.map((a) =>
-                          a.id === o.id ? { ...a, value: a.value + 1 } : a
-                        )
+                        p.map((a, i) => (index === i ? a + 1 : a))
                       );
                     }}
                   >
@@ -123,9 +123,7 @@ export const ChooseDistributionDialog = <T extends unknown>(props: {
                     disabled={minLimit}
                     onClick={() => {
                       setAmounts((p) =>
-                        p.map((a) =>
-                          a.id === o.id ? { ...a, value: a.value - 1 } : a
-                        )
+                        p.map((a, i) => (index === i ? a - 1 : a))
                       );
                     }}
                   >

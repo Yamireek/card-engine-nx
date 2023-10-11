@@ -139,9 +139,6 @@ export const GameDialogs = () => {
         choices={state.choice.options.map((o, i) => ({
           id: i,
           title: o.title,
-          action: () => {
-            moves.choose(i);
-          },
           image: {
             src: getCardImageUrl(
               view.cards[o.cardId].props,
@@ -154,8 +151,7 @@ export const GameDialogs = () => {
           max: o.max,
         }))}
         onSubmit={(amounts) => {
-          // TODO simple array
-          moves.split(...amounts.map((a) => a.value));
+          moves.split(...amounts);
         }}
       />
     );
