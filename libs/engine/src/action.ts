@@ -185,26 +185,45 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'stateCheck') {
-    ctx.state.next.unshift(
-      {
+    const destroy = getTargetCards('destroyed', ctx);
+    const explore = getTargetCards(
+      { and: [{ type: 'location' }, 'explored'] },
+      ctx
+    );
+    const advance = getTargetCards(
+      { and: [{ type: 'quest' }, 'explored'] },
+      ctx
+    );
+
+    if (destroy.length > 0) {
+      ctx.state.next.unshift({
         card: {
-          target: 'destroyed',
+          target: destroy,
           action: 'destroy',
         },
-      },
-      {
+      });
+    }
+
+    if (explore.length > 0) {
+      ctx.state.next.unshift({
         card: {
-          target: { and: [{ type: 'location' }, 'explored'] },
+          target: explore,
           action: 'explore',
         },
-      },
-      {
+      });
+    }
+
+    if (advance.length > 0) {
+      ctx.state.next.unshift({
         card: {
-          target: { and: [{ type: 'quest' }, 'explored'] },
+          target: advance,
           action: 'advance',
         },
-      }
-    );
+      });
+    }
+
+    // TODO player elimination
+
     return;
   }
 
