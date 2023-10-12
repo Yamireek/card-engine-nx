@@ -1,4 +1,9 @@
-import { Action, CostModifier, PlayerAction } from '@card-engine-nx/state';
+import {
+  Action,
+  CostModifier,
+  PlayerAction,
+  event,
+} from '@card-engine-nx/state';
 import { ViewContext } from './context';
 import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
@@ -109,6 +114,10 @@ export function canExecute(
 
     if (action.cancel) {
       return ctx.state.stack.length > 0;
+    }
+
+    if (action.event) {
+      return true;
     }
   }
 

@@ -141,6 +141,14 @@ export function executeCardAction(
       questing: false,
     };
 
+    if (card.attachedTo) {
+      const parent = ctx.state.cards[card.attachedTo];
+      if (parent) {
+        parent.attachments = parent.attachments.filter((a) => a !== card.id);
+      }
+      card.attachedTo = undefined;
+    }
+
     const owner = card.owner;
 
     ctx.state.next.unshift({
@@ -629,10 +637,6 @@ export function executeCardAction(
     }
 
     if (sourceInGame && !destInGame) {
-      ctx.state.next.unshift({ event: { type: 'leftPlay', card: card.id } });
-    }
-
-    if (sourceInGame && !destInGame) {
       ctx.state.next.unshift({
         card: { target: card.attachments, action: 'discard' },
       });
@@ -640,6 +644,8 @@ export function executeCardAction(
       ctx.state.modifiers = ctx.state.modifiers.filter(
         (m) => m.source !== card.id
       );
+
+      ctx.state.next.unshift({ event: { type: 'leftPlay', card: card.id } });
     }
 
     return;

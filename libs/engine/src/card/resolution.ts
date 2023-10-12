@@ -38,6 +38,10 @@ export function canCardExecute(
       return true;
     }
 
+    if (zone === 'playerArea' && action === 'discard') {
+      return true;
+    }
+
     if (zone === 'encounterDeck' && action === 'discard') {
       return true;
     }

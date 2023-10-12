@@ -378,7 +378,9 @@ export type CardTarget =
       and?: CardTarget[];
       not?: CardTarget;
       type?: CardType | CardType[];
-      top?: ZoneTarget | { zone: ZoneTarget; amount: number };
+      top?:
+        | ZoneTarget
+        | { zone: ZoneTarget; amount: number; filter?: CardTarget };
       sphere?: Sphere | 'any';
       controller?: PlayerTarget;
       mark?: Mark;

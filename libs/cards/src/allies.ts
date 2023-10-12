@@ -502,18 +502,48 @@ export const daughterOfTheNimrodel = ally(
   }
 );
 
-export const ereborHammersmith = ally({
-  name: 'Erebor Hammersmith',
-  cost: 2,
-  willpower: 1,
-  attack: 1,
-  defense: 1,
-  hitPoints: 3,
-  traits: ['dwarf', 'craftsman'],
-  sphere: 'lore',
-  unique: false,
-});
-// TODO Response: After you play Erebor Hammersmith, return the topmost attachment in any player's discard pile to his hand.
+export const ereborHammersmith = ally(
+  {
+    name: 'Erebor Hammersmith',
+    cost: 2,
+    willpower: 1,
+    attack: 1,
+    defense: 1,
+    hitPoints: 3,
+    traits: ['dwarf', 'craftsman'],
+    sphere: 'lore',
+    unique: false,
+  },
+  {
+    description:
+      "Response: After you play Erebor Hammersmith, return the topmost attachment in any player's discard pile to his hand.",
+    target: 'self',
+    response: {
+      event: 'played',
+      action: {
+        card: {
+          top: {
+            amount: 1,
+            filter: { type: 'attachment' },
+            zone: {
+              player: 'controller',
+              type: 'discardPile',
+            },
+          },
+        },
+        action: {
+          move: {
+            side: 'front',
+            to: {
+              player: 'controller',
+              type: 'hand',
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
 export const henamarthRiversong = ally(
   {

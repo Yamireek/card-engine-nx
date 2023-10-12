@@ -193,7 +193,8 @@ export const LotrLCGInfo = () => {
           </IconButton>
           <IconButton
             onClick={() => {
-              console.log(view);
+              console.log('state', state);
+              console.log('view', view);
             }}
           >
             <Icon>bug_report</Icon>

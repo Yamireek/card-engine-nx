@@ -1,7 +1,7 @@
 import { core } from '@card-engine-nx/cards';
 import { TestEngine } from './TestEngine';
 import { it, expect } from 'vitest';
-import { getZoneType } from '@card-engine-nx/basic';
+import { getZoneType } from '@card-engine-nx/engine';
 
 it('Beorn', () => {
   const action =

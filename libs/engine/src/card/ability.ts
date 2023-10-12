@@ -48,7 +48,14 @@ export function createPlayAllyAction(
         usePlayerVar: {
           name: 'controller',
           value: owner,
-          action: [{ payment: { cost: payment, effect: moveToPlay } }],
+          action: [
+            {
+              payment: {
+                cost: payment,
+                effect: [moveToPlay, { event: { type: 'played', card: self } }],
+              },
+            },
+          ],
         },
       },
     },

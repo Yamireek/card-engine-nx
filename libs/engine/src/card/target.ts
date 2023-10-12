@@ -7,7 +7,12 @@ import {
 import { CardTarget } from '@card-engine-nx/state';
 import { intersection, last, uniq } from 'lodash';
 import { ViewContext, cardIds } from '../context';
-import { getTargetZone, getTargetZones, getZoneState, getZoneType } from '../zone/target';
+import {
+  getTargetZone,
+  getTargetZones,
+  getZoneState,
+  getZoneType,
+} from '../zone/target';
 import { difference, isArray, takeRight } from 'lodash/fp';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { getTargetPlayer, getTargetPlayers } from '../player/target';
@@ -189,7 +194,10 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       const zones = getTargetZones(target.top.zone, ctx);
       if (zones.length === 1) {
         const cards = zones[0].cards;
-        return takeRight(5)(cards);
+        const filtered = target.top.filter
+          ? getTargetCards({ and: [cards, target.top.filter] }, ctx)
+          : cards;
+        return takeRight(target.top.amount)(filtered);
       } else {
         throw new Error('need only 1 zone when using amount');
       }

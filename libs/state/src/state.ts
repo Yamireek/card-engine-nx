@@ -32,6 +32,7 @@ export type Event =
     }
   | { type: 'declaredAsDefender'; card: CardId; attacker: CardId }
   | { type: 'enteredPlay'; card: CardId }
+  | { type: 'played'; card: CardId }
   | { type: 'leftPlay'; card: CardId }
   | { type: 'revealed'; card: CardId }
   | { type: 'commits'; card: CardId }
