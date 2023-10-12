@@ -102,8 +102,6 @@ export const achosenPath1 = quest({
                       side: 'front',
                     },
                   },
-                  multi: false,
-                  optional: false,
                 },
               },
             },

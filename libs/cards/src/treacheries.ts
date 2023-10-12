@@ -14,7 +14,6 @@ export const eyesOfTheForest = treachery(
   }
 );
 
-// TODO add test
 export const caughtInAWeb = treachery(
   { name: 'Caught in a Web' },
   {
@@ -51,8 +50,6 @@ export const caughtInAWeb = treachery(
                   },
                 },
               ],
-              multi: false,
-              optional: false,
             },
           },
         ],

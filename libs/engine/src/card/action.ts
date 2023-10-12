@@ -475,7 +475,6 @@ export function executeCardAction(
                     },
                   },
                 ],
-                multi: false,
                 optional: true,
               },
             },

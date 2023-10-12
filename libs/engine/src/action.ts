@@ -89,8 +89,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           action: {
             chooseCardActions: {
               title: 'Choose location for travel',
-              multi: false,
-              optional: true,
               target,
               action: 'travel',
             },
@@ -195,6 +193,16 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       ctx
     );
 
+    const heroes = getTargetCards({ and: [{ type: 'hero' }, 'inAPlay'] }, ctx);
+    if (heroes.length === 0) {
+      ctx.state.result = { win: false, score: 0 }; // TODO eleminate each player
+      return;
+    }
+
+    if (destroy.length > 0 || explore.length > 0 || advance.length > 0) {
+      ctx.state.next.unshift('stateCheck');
+    }
+
     if (destroy.length > 0) {
       ctx.state.next.unshift({
         card: {
@@ -221,8 +229,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         },
       });
     }
-
-    // TODO player elimination
 
     return;
   }

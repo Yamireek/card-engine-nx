@@ -165,8 +165,6 @@ export const eowyn = hero(
                     },
                   },
                 ],
-                multi: false,
-                optional: false,
               },
             },
           },
@@ -219,12 +217,10 @@ export const beravor = hero(
             action: {
               choosePlayerActions: {
                 title: 'Choose player to draw 2 cards',
+                target: 'each',
                 action: {
                   draw: 2,
                 },
-                optional: false,
-                target: 'each',
-                multi: false,
               },
             },
           },
@@ -258,10 +254,8 @@ export const glorfindel = hero(
             action: {
               chooseCardActions: {
                 title: 'Choose character to heal',
-                multi: false,
-                optional: false,
-                action: { heal: 1 },
                 target: 'character',
+                action: { heal: 1 },
               },
             },
           },

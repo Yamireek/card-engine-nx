@@ -75,8 +75,6 @@ export function createPlayAttachmentAction(
       action: {
         chooseCardActions: {
           title: 'Choose target for attachment',
-          multi: false,
-          optional: false,
           target: {
             and: [attachesTo, 'inAPlay'],
           },
@@ -446,8 +444,6 @@ export function createModifiers(
                       chooseCardActions: {
                         title: 'Choose target for attachment',
                         target: ability.attachesTo,
-                        optional: false,
-                        multi: false,
                         action: {
                           attachCard: self,
                         },

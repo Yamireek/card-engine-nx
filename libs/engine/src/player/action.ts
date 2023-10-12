@@ -87,8 +87,6 @@ export function executePlayerAction(
           chooseCardActions: {
             title: 'Choose enemy to engage',
             target: enemyChoices.map((e) => e.id),
-            multi: false,
-            optional: false,
             action: {
               engagePlayer: player.id,
             },
@@ -107,7 +105,6 @@ export function executePlayerAction(
           chooseCardActions: {
             title: 'Choose enemy to optionally engage',
             optional: true,
-            multi: false,
             target: {
               and: [{ type: 'enemy' }, { zone: 'stagingArea' }],
             },
@@ -141,8 +138,6 @@ export function executePlayerAction(
               chooseCardActions: {
                 title: 'Choose enemy attacker',
                 target: filter,
-                multi: false,
-                optional: false,
                 action: {
                   resolveEnemyAttacking: player.id,
                 },
@@ -185,7 +180,7 @@ export function executePlayerAction(
           action: {
             chooseActions: {
               title: 'Choose enemy to attack',
-              multi: false,
+              optional: true,
               actions: enemies.map((e) => ({
                 title: e.toString(),
                 cardId: e,
@@ -204,7 +199,6 @@ export function executePlayerAction(
                   },
                 ],
               })),
-              optional: true,
             },
           },
         },
@@ -283,8 +277,6 @@ export function executePlayerAction(
                   { zone: { player: player.id, type: 'playerArea' } },
                 ],
               },
-              multi: false,
-              optional: false,
               action: {
                 dealDamage: attack,
               },
@@ -315,8 +307,6 @@ export function executePlayerAction(
               action: {
                 chooseCardActions: {
                   title: 'Choose character for damage',
-                  multi: false,
-                  optional: false,
                   target: defending.map((c) => c.id),
                   action: {
                     dealDamage: damage,
@@ -473,7 +463,7 @@ export function executePlayerAction(
         player: player.id,
         title: action.chooseCardActions.title,
         type: action.chooseCardActions.multi ? 'multi' : 'single',
-        optional: action.chooseCardActions.optional,
+        optional: action.chooseCardActions.optional ?? false,
         options: cardIds
           .filter((id) => canCardExecute(cardAction, id, ctx))
           .map((c) => ({
@@ -506,7 +496,7 @@ export function executePlayerAction(
         player: player.id,
         title: action.choosePlayerActions.title,
         type: action.choosePlayerActions.multi ? 'multi' : 'single',
-        optional: action.choosePlayerActions.optional,
+        optional: action.choosePlayerActions.optional ?? false,
         options: playerIds
           .filter((p) => canPlayerExecute(playerAction, p, ctx))
           .map((c) => ({
@@ -535,7 +525,7 @@ export function executePlayerAction(
         player: player.id,
         title: action.chooseActions.title,
         type: action.chooseActions.multi ? 'multi' : 'single',
-        optional: action.chooseActions.optional,
+        optional: action.chooseActions.optional ?? false,
         options,
       },
     });
@@ -565,8 +555,6 @@ export function executePlayerAction(
                   title: 'Choose card to discard',
                   target,
                   action: discard,
-                  multi: false,
-                  optional: false,
                 },
               },
             },

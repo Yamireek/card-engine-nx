@@ -22,6 +22,7 @@ export const kingSpider = enemy(
             name: 'choosen',
             action: {
               chooseCardActions: {
+                title: 'Choose character to exhaust',
                 target: {
                   and: [
                     {
@@ -33,9 +34,6 @@ export const kingSpider = enemy(
                   ],
                 },
                 action: 'exhaust',
-                multi: false,
-                optional: false,
-                title: 'Choose character to exhaust',
               },
             },
           },
@@ -132,13 +130,11 @@ export const dolGuldurOrcs = enemy(
         target: 'first',
         action: {
           chooseCardActions: {
+            title: 'Choose character for 2 damage',
             target: { mark: 'questing' },
             action: {
               dealDamage: 2,
             },
-            multi: false,
-            optional: false,
-            title: 'Choose character for 2 damage',
           },
         },
       },
@@ -241,8 +237,6 @@ export const blackForestBats = enemy(
             action: {
               clear: 'questing',
             },
-            multi: false,
-            optional: false,
           },
         },
       },
@@ -280,8 +274,6 @@ export const hummerhorns = enemy(
               action: {
                 dealDamage: 5,
               },
-              multi: false,
-              optional: false,
             },
           },
         },

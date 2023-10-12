@@ -15,8 +15,6 @@ export const loreOfImladris = event(
         action: {
           chooseCardActions: {
             title: 'Choose character to heal',
-            multi: false,
-            optional: false,
             target: 'character',
             action: {
               heal: 'all',
@@ -52,8 +50,6 @@ export const bladeMastery = event(
               },
               until: 'end_of_phase',
             },
-            multi: false,
-            optional: false,
           },
         },
       },
@@ -83,8 +79,6 @@ export const feint = event(
               },
               until: 'end_of_phase',
             },
-            multi: false,
-            optional: false,
             title: 'Choose enemy',
             target: {
               and: [{ type: 'enemy' }, { zoneType: 'engaged' }],
@@ -113,8 +107,6 @@ export const quickStrike = event(
           action: {
             chooseCardActions: {
               title: 'Choose character as attacker',
-              multi: false,
-              optional: false,
               target: {
                 and: [{ controller: 'controller' }, 'character'],
               },
@@ -134,8 +126,6 @@ export const quickStrike = event(
           action: {
             chooseCardActions: {
               title: 'Choose enemy to attack',
-              multi: false,
-              optional: false,
               target: { zoneType: 'engaged' },
               action: {
                 setAsVar: 'defender',
@@ -198,8 +188,6 @@ export const rainOfArrows = event(
             action: {
               choosePlayerActions: {
                 title: 'Choose player',
-                multi: false,
-                optional: false,
                 target: 'each',
                 action: {
                   engaged: { dealDamage: 1 },
@@ -229,9 +217,7 @@ export const standTogether = event(
         action: {
           choosePlayerActions: {
             title: 'Choose player',
-            multi: false,
             target: 'each',
-            optional: false,
             action: {
               modify: 'can_declate_multiple_defenders',
               until: 'end_of_phase',
@@ -288,8 +274,6 @@ export const thicketOfSpears = event(
         action: {
           choosePlayerActions: {
             title: 'Choose player',
-            optional: false,
-            multi: false,
             target: 'each',
             action: {
               engaged: {

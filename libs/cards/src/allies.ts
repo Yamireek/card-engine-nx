@@ -149,8 +149,6 @@ export const gandalf = ally(
           action: {
             chooseActions: {
               title: 'Choose one',
-              multi: false,
-              optional: false,
               actions: [
                 {
                   title: 'Draw 3 cards',
@@ -177,8 +175,6 @@ export const gandalf = ally(
                           action: {
                             dealDamage: 4,
                           },
-                          multi: false,
-                          optional: false,
                         },
                       },
                     },
@@ -254,8 +250,6 @@ export const faramir = ally(
                 },
               },
               title: 'Choose player',
-              optional: false,
-              multi: false,
             },
           },
         },
@@ -290,8 +284,6 @@ export const sonOfArnor = ally(
               title: 'Choose enemy to engage',
               target: { type: 'enemy' },
               action: { engagePlayer: 'controller' },
-              multi: false,
-              optional: false,
             },
           },
         },
@@ -326,8 +318,6 @@ export const snowbournScout = ally(
               title: 'Choose location',
               target: { type: 'location' },
               action: { placeProgress: 1 },
-              multi: false,
-              optional: false,
             },
           },
         },
@@ -510,8 +500,6 @@ export const daughterOfTheNimrodel = ally(
               title: 'Choose hero to heal',
               target: { type: 'hero' },
               action: { heal: 2 },
-              multi: false,
-              optional: false,
             },
           },
         },
@@ -584,8 +572,6 @@ export const gleowine = ally(
               title: 'Choose player to draw 1 card',
               target: 'each',
               action: { draw: 1 },
-              multi: false,
-              optional: false,
             },
           },
         },

@@ -367,8 +367,6 @@ export const protectorOfLorien = attachment(
             action: {
               chooseActions: {
                 title: 'Choose bonus',
-                multi: false,
-                optional: false,
                 actions: [
                   {
                     title: '+1 [defense]',
