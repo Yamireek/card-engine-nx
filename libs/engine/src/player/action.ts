@@ -5,6 +5,7 @@ import {
   Action,
   CardAction,
   Event,
+  ZoneTarget,
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
@@ -335,28 +336,26 @@ export function executePlayerAction(
       return;
     }
 
-    ctx.state.next = [
-      {
-        repeat: {
-          amount: action.draw,
-          action: {
-            card: {
-              target: {
-                top: { player: { id: player.id, zone: 'library' } },
-              },
-              action: {
-                move: {
-                  from: { player: player.id, type: 'library' },
-                  to: { player: player.id, type: 'hand' },
-                  side: 'front',
-                },
+    ctx.state.next.unshift({
+      repeat: {
+        amount: action.draw,
+        action: {
+          card: {
+            target: {
+              top: { player: player.id, type: 'library' },
+            },
+            action: {
+              move: {
+                from: { player: player.id, type: 'library' },
+                to: { player: player.id, type: 'hand' },
+                side: 'front',
               },
             },
           },
         },
       },
-      ...ctx.state.next,
-    ];
+    });
+
     return;
   }
 

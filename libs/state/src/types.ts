@@ -397,13 +397,12 @@ export type CardTarget =
       take?: number;
     };
 
-export type ZoneTarget = {
-  game?: GameZoneType;
-  player?: {
-    id: PlayerTarget;
-    zone: PlayerZoneType;
-  };
-};
+export type ZoneTarget =
+  | GameZoneType
+  | {
+      player: PlayerTarget;
+      type: PlayerZoneType;
+    };
 
 export type PlayerTarget =
   | PlayerId

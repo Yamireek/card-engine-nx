@@ -25,25 +25,32 @@ export function getZoneState(zoneId: ZoneId, state: State): ZoneState {
   throw new Error(`unknown zone target: ${JSON.stringify(zoneId)}`);
 }
 
-export function getTargetZone( // TODO single/multi variants
+export function getTargetZone(target: ZoneTarget, ctx: ViewContext) {
+  const zones = getTargetZones(target, ctx);
+  if (zones.length <= 1) {
+    return zones[0];
+  } else {
+    throw new Error('unexpected result count');
+  }
+}
+
+export function getTargetZones(
   target: ZoneTarget,
   ctx: ViewContext
 ): ZoneState[] {
-  if (target.game) {
-    return [ctx.state.zones[target.game]];
+  if (typeof target === 'string') {
+    return [ctx.state.zones[target]];
   }
 
-  if (target.player) {
-    const ids = getTargetPlayers(target.player.id, ctx);
-    const zone = target.player.zone;
-    return ids.map((id) => {
-      const player = ctx.state.players[id];
-      if (!player) {
-        throw new Error('player not found');
-      }
-      return player.zones[zone];
-    });
-  }
+  const players = getTargetPlayers(target.player, ctx);
+  return players.flatMap((p) => {
+    const ps = ctx.state.players[p];
+    if (ps) {
+      return ps.zones[target.type];
+    } else {
+      return [];
+    }
+  });
 
   throw new Error(`unknown zone target: ${JSON.stringify(target)}`);
 }

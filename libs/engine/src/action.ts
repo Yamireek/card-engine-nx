@@ -147,7 +147,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'revealEncounterCard') {
-    const card = getTargetCard({ top: { game: 'encounterDeck' } }, ctx);
+    const card = getTargetCard({ top: 'encounterDeck' }, ctx);
 
     if (!card) {
       // TODO reshuffle encounter deck
@@ -393,16 +393,13 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       return;
     }
 
-    const activeLocation = getTargetCards(
-      { top: { game: 'activeLocation' } },
-      ctx
-    );
+    const activeLocation = getTargetCards({ top: 'activeLocation' }, ctx);
 
     if (activeLocation.length === 0) {
       ctx.state.next = [
         {
           card: {
-            target: { top: { game: 'questArea' } },
+            target: { top: 'questArea' },
             action: { placeProgress: action.placeProgress },
           },
         },
@@ -430,7 +427,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           },
           {
             card: {
-              target: { top: { game: 'questArea' } },
+              target: { top: 'questArea' },
               action: { placeProgress: progressQuest },
             },
           }
@@ -685,7 +682,7 @@ export function beginScenario(
     },
     {
       card: {
-        target: { top: { game: 'questDeck' } },
+        target: { top: 'questDeck' },
         action: {
           move: {
             from: 'questDeck',

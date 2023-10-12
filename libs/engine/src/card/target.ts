@@ -8,7 +8,7 @@ import {
 import { CardTarget } from '@card-engine-nx/state';
 import { intersection, last, uniq } from 'lodash';
 import { ViewContext, cardIds } from '../context';
-import { getTargetZone, getZoneState } from '../zone/target';
+import { getTargetZone, getTargetZones, getZoneState } from '../zone/target';
 import { difference, isArray, takeRight } from 'lodash/fp';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { getTargetPlayer, getTargetPlayers } from '../player/target';
@@ -186,8 +186,8 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target.top) {
-    if ('amount' in target.top) {
-      const zones = getTargetZone(target.top.zone, ctx);
+    if (typeof target.top !=="string" && 'amount' in target.top) {
+      const zones = getTargetZones(target.top.zone, ctx);
       if (zones.length === 1) {
         const cards = zones[0].cards;
         return takeRight(5)(cards);
@@ -196,7 +196,7 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       }
     }
 
-    const zones = getTargetZone(target.top, ctx);
+    const zones = getTargetZones(target.top, ctx);
     return zones.flatMap((z) => last(z.cards) ?? []);
   }
 

@@ -106,9 +106,7 @@ export const mountainsOfMirkwood = location(
     travel: {
       card: {
         target: {
-          top: {
-            game: 'encounterDeck',
-          },
+          top: 'encounterDeck',
         },
         action: 'reveal',
       },
@@ -138,10 +136,8 @@ export const mountainsOfMirkwood = location(
                         top: {
                           amount: 5,
                           zone: {
-                            player: {
-                              id: { var: 'choosing' },
-                              zone: 'library',
-                            },
+                            player: { var: 'choosing' },
+                            type: 'library',
                           },
                         },
                       },
