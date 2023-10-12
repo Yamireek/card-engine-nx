@@ -42,7 +42,12 @@ export const coreTest: PlayerDeck = {
 
 export const testScenario: Scenario = {
   name: 'Test',
-  quest: [core.quest.fliesAndSpiders],
+  quest: [
+    core.quest.fliesAndSpiders,
+    core.quest.aForkInTheRoad,
+    core.quest.achosenPath1,
+    core.quest.achosenPath2,
+  ],
   sets: [
     {
       easy: [core.treachery.caughtInAWeb],

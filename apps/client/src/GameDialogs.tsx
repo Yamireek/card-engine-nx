@@ -44,12 +44,14 @@ export const GameDialogs = () => {
   }
 
   if (state.choice.type === 'show') {
+    const cardState = state.cards[state.choice.cardId];
     return (
       <Dialog
         open
         onClose={() => {
           moves.skip();
         }}
+        maxWidth="md"
       >
         <DialogTitle>{state.choice.title}</DialogTitle>
         <DialogContent>
@@ -57,11 +59,13 @@ export const GameDialogs = () => {
             alt=""
             src={getCardImageUrl(
               view.cards[state.choice.cardId].props,
-              state.cards[state.choice.cardId].sideUp
+              cardState.sideUp
             )}
             style={{
-              width: 430,
-              height: 600,
+              width:
+                cardState.definition.orientation === 'portrait' ? 430 : 600,
+              height:
+                cardState.definition.orientation === 'portrait' ? 600 : 430,
             }}
             onClick={() => {
               moves.skip();
@@ -96,8 +100,8 @@ export const GameDialogs = () => {
               view.cards[o.cardId].props,
               state.cards[o.cardId].sideUp
             ),
-            width: 430 / 3,
-            height: 600 / 3,
+            width: 430 / 2,
+            height: 600 / 2,
           },
         }))}
         onSubmit={(ids) => moves.choose(...ids)}
@@ -122,8 +126,8 @@ export const GameDialogs = () => {
               view.cards[o.cardId].props,
               state.cards[o.cardId].sideUp
             ),
-            width: 430 / 3,
-            height: 600 / 3,
+            width: 430 / 2,
+            height: 600 / 2,
           },
         }))}
       />
@@ -144,8 +148,8 @@ export const GameDialogs = () => {
               view.cards[o.cardId].props,
               state.cards[o.cardId].sideUp
             ),
-            width: 430 / 3,
-            height: 600 / 3,
+            width: 430 / 2,
+            height: 600 / 2,
           },
           min: o.min,
           max: o.max,

@@ -208,9 +208,18 @@ export function executeCardAction(
       return;
     }
 
+    // TODO merge conditions
     if (next.length === 1) {
       ctx.state.next.unshift(
         removedExplored,
+        {
+          choice: {
+            id: ctx.state.nextId++,
+            type: 'show',
+            title: 'Next quest card',
+            cardId: next[0],
+          },
+        },
         {
           card: {
             target: next,
@@ -238,6 +247,14 @@ export function executeCardAction(
         const rnd = ctx.random.item(next);
         ctx.state.next.unshift(
           removedExplored,
+          {
+            choice: {
+              id: ctx.state.nextId++,
+              type: 'show',
+              title: 'Next quest card',
+              cardId: rnd,
+            },
+          },
           {
             card: {
               target: rnd,

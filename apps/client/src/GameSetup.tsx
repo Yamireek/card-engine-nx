@@ -17,7 +17,7 @@ import { coreTest, testScenario } from './decks/coreTest';
 export const GameSetup = () => {
   const { state, moves, playerId } = useContext(StateContext);
 
-  if (state.phase !== 'setup') {
+  if (state.phase !== 'setup' || state.choice) {
     return (
       <DetailProvider>
         <GameDisplay />

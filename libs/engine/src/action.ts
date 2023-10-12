@@ -34,10 +34,36 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'setup') {
-    const actions = ctx.view.setup;
-    if (actions.length > 0) {
-      ctx.state.next = [...actions, ...ctx.state.next];
-    }
+    ctx.state.next.unshift();
+    ctx.state.next.unshift(
+      {
+        choice: {
+          id: ctx.state.nextId++,
+          title: 'Setup',
+          type: 'show',
+          cardId: ctx.state.zones.questArea.cards[0] ?? 0,
+        },
+      },
+      ...ctx.view.setup,
+      {
+        card: {
+          action: {
+            flip: 'back',
+          },
+          target: {
+            zone: 'questArea',
+          },
+        },
+      },
+      {
+        choice: {
+          id: ctx.state.nextId++,
+          title: 'Setup',
+          type: 'show',
+          cardId: ctx.state.zones.questArea.cards[0] ?? 0,
+        },
+      }
+    );
     return;
   }
 
@@ -696,16 +722,6 @@ export function beginScenario(
       },
     },
     'setup',
-    {
-      card: {
-        action: {
-          flip: 'back',
-        },
-        target: {
-          zone: 'questArea',
-        },
-      },
-    },
     gameRound(),
   ];
 }
