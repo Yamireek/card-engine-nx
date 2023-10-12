@@ -502,6 +502,7 @@ export const daughterOfTheNimrodel = ally(
   }
 );
 
+// TODO mupltiple players
 export const ereborHammersmith = ally(
   {
     name: 'Erebor Hammersmith',
