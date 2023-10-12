@@ -23,6 +23,22 @@ export function canExecute(
 
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
+    if ('player' in action && 'action' in action) {
+      return canExecute(
+        { player: { target: action.player, action: action.action } },
+        payment,
+        ctx
+      );
+    }
+
+    if ('card' in action && 'action' in action) {
+      return canExecute(
+        { card: { target: action.card, action: action.action } },
+        payment,
+        ctx
+      );
+    }
+
     if (action.player) {
       const playerAction = action.player;
       const players = getTargetPlayers(playerAction.target, ctx);

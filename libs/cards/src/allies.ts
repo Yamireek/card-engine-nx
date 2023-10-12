@@ -144,55 +144,49 @@ export const gandalf = ally(
     response: {
       event: 'enteredPlay',
       action: {
-        player: {
-          target: 'controller',
-          action: {
-            chooseActions: {
-              title: 'Choose one',
-              actions: [
-                {
-                  title: 'Draw 3 cards',
+        player: 'controller',
+        action: {
+          chooseActions: {
+            title: 'Choose one',
+            actions: [
+              {
+                title: 'Draw 3 cards',
+                action: {
+                  player: 'controller',
                   action: {
-                    player: {
-                      target: 'controller',
-                      action: {
-                        draw: 3,
-                      },
-                    },
+                    draw: 3,
                   },
                 },
-                {
-                  title: 'Deal 4 damage to 1 enemy in play',
-                  action: {
-                    player: {
-                      target: 'controller',
-                      action: {
-                        chooseCardActions: {
-                          title: 'Choose enemy',
-                          target: {
-                            type: 'enemy',
-                          },
-                          action: {
-                            dealDamage: 4,
-                          },
+              },
+              {
+                title: 'Deal 4 damage to 1 enemy in play',
+                action: {
+                  player: {
+                    target: 'controller',
+                    action: {
+                      chooseCardActions: {
+                        title: 'Choose enemy',
+                        target: {
+                          type: 'enemy',
+                        },
+                        action: {
+                          dealDamage: 4,
                         },
                       },
                     },
                   },
                 },
-                {
-                  title: 'Reduce your threat by 5',
+              },
+              {
+                title: 'Reduce your threat by 5',
+                action: {
+                  player: 'controller',
                   action: {
-                    player: {
-                      target: 'controller',
-                      action: {
-                        incrementThreat: -5,
-                      },
-                    },
+                    incrementThreat: -5,
                   },
                 },
-              ],
-            },
+              },
+            ],
           },
         },
       },

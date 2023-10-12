@@ -39,6 +39,14 @@ export type Action =
   | 'stackPop'
   | 'stateCheck'
   | {
+      player: PlayerTarget;
+      action: PlayerAction;
+    }
+  | {
+      card: CardTarget;
+      action: CardAction;
+    }
+  | {
       player?: { action: PlayerAction; target: PlayerTarget };
       card?: { action: CardAction; target: CardTarget };
       addPlayer?: PlayerDeck;

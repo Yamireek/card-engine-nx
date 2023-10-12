@@ -233,6 +233,21 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     return;
   }
 
+  if ('player' in action && 'action' in action) {
+    return executeAction(
+      { player: { target: action.player, action: action.action } },
+
+      ctx
+    );
+  }
+
+  if ('card' in action && 'action' in action) {
+    return executeAction(
+      { card: { target: action.card, action: action.action } },
+      ctx
+    );
+  }
+
   if (action.stackPush) {
     ctx.state.stack.push(action.stackPush);
     return;

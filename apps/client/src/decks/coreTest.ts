@@ -10,19 +10,8 @@ export const coreTest: PlayerDeck = {
     core.hero.denethor,
   ],
   library: [
-    core.event.everVigilant,
-    core.event.commonCause,
-    core.event.forGondor,
-    core.event.sneakAttack,
-    core.event.valiantSacrifice,
-    core.event.grimResolve,
-    core.event.theGaladhrimsGreeting,
-    core.event.strengthOfWill,
-    core.event.aTestOfWill,
-    core.event.aLightInIheDark,
     core.event.dwarvenTomb,
-    core.event.fortuneOrFate,
-    core.event.loriensWealth,
-    core.event.beornsHospitality
+    core.ally.wanderingTook,
+    core.ally.veteranAxehand,
   ],
 };
