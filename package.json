@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nx serve client",
     "server": "nx run-many -t serve",
-    "build": "nx run server:build:production",
+    "build": "nx run client:build:production",
     "build:all": "nx run-many -t build",
     "lint": "nx run-many -t lint --max-warnings=0",
     "storybook": "nx run ui:storybook",

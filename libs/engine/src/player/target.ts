@@ -2,6 +2,7 @@ import { PlayerId, values } from '@card-engine-nx/basic';
 import { PlayerTarget } from '@card-engine-nx/state';
 import { intersection, isArray, last, uniq } from 'lodash';
 import { ViewContext } from '../context';
+import { getTargetCard, getTargetCards } from '../card';
 
 export function getTargetPlayer(target: PlayerTarget, ctx: ViewContext) {
   const results = getTargetPlayers(target, ctx);
@@ -57,7 +58,11 @@ export function getTargetPlayers(
     }
 
     if (target.controller) {
-      const card = ctx.state.cards[target.controller];
+      const cardId = getTargetCard(target.controller, ctx);
+      if (!cardId) {
+        return [];
+      }
+      const card = ctx.state.cards[cardId];
       if (card.controller) {
         return [card.controller];
       } else {

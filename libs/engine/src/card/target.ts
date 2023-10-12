@@ -11,7 +11,7 @@ import { ViewContext, cardIds } from '../context';
 import { getTargetZone, getZoneState } from '../zone/target';
 import { difference, isArray, takeRight } from 'lodash/fp';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
-import { getTargetPlayers } from '../player/target';
+import { getTargetPlayer, getTargetPlayers } from '../player/target';
 
 export function getTargetCard(
   target: CardTarget,
@@ -157,7 +157,8 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (target.owner) {
-    const player = ctx.state.players[target.owner];
+    const playerId = getTargetPlayer(target.owner, ctx);
+    const player = ctx.state.players[playerId];
     if (player) {
       return values(player.zones).flatMap((z) => z.cards);
     } else {

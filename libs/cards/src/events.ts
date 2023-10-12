@@ -291,61 +291,269 @@ export const thicketOfSpears = event(
   }
 );
 
-export const everVigilant = event({
-  name: 'Ever Vigilant',
-  cost: 1,
-  sphere: 'leadership',
-});
-// TODO Action: Choose and ready 1 ally card.
+export const everVigilant = event(
+  {
+    name: 'Ever Vigilant',
+    cost: 1,
+    sphere: 'leadership',
+  },
+  {
+    description: 'Action: Choose and ready 1 ally card.',
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose ally to ready',
+            target: { type: 'ally' },
+            action: 'ready',
+          },
+        },
+      },
+    },
+  }
+);
 
-export const commonCause = event({
-  name: 'Common Cause',
-  cost: 0,
-  sphere: 'leadership',
-});
-// TODO Action: Exhaust 1 hero you control to choose and ready a different hero.
+// TODO choose different
+export const commonCause = event(
+  {
+    name: 'Common Cause',
+    cost: 0,
+    sphere: 'leadership',
+  },
+  {
+    description:
+      'Action: Exhaust 1 hero you control to choose and ready a different hero.',
+    action: [
+      {
+        player: {
+          target: 'controller',
+          action: {
+            chooseCardActions: {
+              title: 'Choose hero to exhaust',
+              target: { and: [{ type: 'hero' }, { controller: 'controller' }] },
+              action: 'exhaust',
+            },
+          },
+        },
+      },
+      {
+        player: {
+          target: 'controller',
+          action: {
+            chooseCardActions: {
+              title: 'Choose hero to ready',
+              target: { type: 'hero' },
+              action: 'ready',
+            },
+          },
+        },
+      },
+    ],
+  }
+);
 
-export const forGondor = event({
-  name: 'For Gondor!',
-  cost: 2,
-  sphere: 'leadership',
-});
-// TODO Action: Until the end of the phase, all characters get +1 [attack]. All Gondor characters also get +1 [defense] until the end of the phase.
+export const forGondor = event(
+  {
+    name: 'For Gondor!',
+    cost: 2,
+    sphere: 'leadership',
+  },
+  {
+    description:
+      'Action: Until the end of the phase, all characters get +1 [attack]. All Gondor characters also get +1 [defense] until the end of the phase.',
+    action: [
+      {
+        card: {
+          target: 'character',
+          action: {
+            modify: {
+              description: '+1 [attack] until the end of the phase',
+              increment: {
+                attack: 1,
+              },
+            },
+            until: 'end_of_phase',
+          },
+        },
+      },
+      {
+        card: {
+          target: { trait: 'gondor' },
+          action: {
+            modify: {
+              description: '+1 [defense] until the end of the phase',
+              increment: {
+                defense: 1,
+              },
+            },
+            until: 'end_of_phase',
+          },
+        },
+      },
+    ],
+  }
+);
 
-export const sneakAttack = event({
-  name: 'Sneak Attack',
-  cost: 1,
-  sphere: 'leadership',
-});
-// TODO Action: Put 1 ally card into play from your hand. At the end of the phase, if that ally is still in play, return it to your hand.
+// TODO return to hand at end of phase
+export const sneakAttack = event(
+  {
+    name: 'Sneak Attack',
+    cost: 1,
+    sphere: 'leadership',
+  },
+  {
+    description:
+      'Action: Put 1 ally card into play from your hand. At the end of the phase, if that ally is still in play, return it to your hand.',
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose ally to put in play',
+            target: { and: [{ type: 'ally' }, { zoneType: 'hand' }] },
+            action: [
+              {
+                putInPlay: 'controller',
+              },
+            ],
+          },
+        },
+      },
+    },
+  }
+);
 
-export const valiantSacrifice = event({
-  name: 'Valiant Sacrifice',
-  cost: 1,
-  sphere: 'leadership',
-});
-// TODO Response: After an ally card leaves play, that card's controller draws 2 cards.
+export const valiantSacrifice = event(
+  {
+    name: 'Valiant Sacrifice',
+    cost: 1,
+    sphere: 'leadership',
+  },
+  {
+    description:
+      "Response: After an ally card leaves play, that card's controller draws 2 cards.",
+    target: { type: 'ally' },
+    response: {
+      event: 'leftPlay',
+      action: {
+        player: {
+          target: { controller: 'target' },
+          action: {
+            draw: 2,
+          },
+        },
+      },
+    },
+  }
+);
 
-export const grimResolve = event({
-  name: 'Grim Resolve',
-  cost: 5,
-  sphere: 'leadership',
-});
-// TODO Action: Ready all character cards in play.
+export const grimResolve = event(
+  {
+    name: 'Grim Resolve',
+    cost: 5,
+    sphere: 'leadership',
+  },
+  {
+    description: 'Action: Ready all character cards in play.',
+    action: {
+      card: {
+        target: 'character',
+        action: 'ready',
+      },
+    },
+  }
+);
 
-export const theGaladhrimsGreeting = event({
-  name: "The Galadhrim's Greeting",
-  cost: 3,
-  sphere: 'spirit',
-});
-// TODO Action: Reduce one player's threat by 6, or reduce each player's threat by 2.
+export const theGaladhrimsGreeting = event(
+  {
+    name: "The Galadhrim's Greeting",
+    cost: 3,
+    sphere: 'spirit',
+  },
+  {
+    description:
+      "Action: Reduce one player's threat by 6, or reduce each player's threat by 2.",
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          chooseActions: {
+            title: 'Choose one',
+            actions: [
+              {
+                title: "Reduce one player's threat by 6",
+                action: {
+                  player: {
+                    target: 'controller',
+                    action: {
+                      choosePlayerActions: {
+                        title: 'Choose player',
+                        target: 'each',
+                        action: {
+                          incrementThreat: -6,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                title: "Reduce each player's threat by 2.",
+                action: {
+                  player: {
+                    target: 'each',
+                    action: {
+                      incrementThreat: -2,
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  }
+);
 
-export const strengthOfWill = event({
-  name: 'Strength of Will',
-  cost: 0,
-  sphere: 'spirit',
-});
-// TODO Response: After you travel to a location, exhaust a [spirit] character to place 2 progress tokens on that location.
+export const strengthOfWill = event(
+  {
+    name: 'Strength of Will',
+    cost: 0,
+    sphere: 'spirit',
+  },
+  {
+    description:
+      'Response: After you travel to a location, exhaust a [spirit] character to place 2 progress tokens on that location.',
+    target: { type: 'location' },
+    response: {
+      event: 'traveled',
+      action: [
+        {
+          player: {
+            target: 'controller',
+            action: {
+              chooseCardActions: {
+                title: 'Choose character',
+                target: { and: ['character', { sphere: 'spirit' }] },
+                action: 'exhaust',
+              },
+            },
+          },
+        },
+        {
+          card: {
+            target: 'target',
+            action: {
+              placeProgress: 2,
+            },
+          },
+        },
+      ],
+    },
+  }
+);
 
 export const hastyStroke = event({
   name: 'Hasty Stroke',
@@ -361,12 +569,26 @@ export const willOfTheWest = event({
 });
 // TODO Action: Choose a player. Shuffle that player's discard pile back into his deck. Remove Will of the West from the game.
 
-export const aTestOfWill = event({
-  name: 'A Test of Will',
-  cost: 1,
-  sphere: 'spirit',
-});
-// TODO Response: Cancel the “when revealed” effects of a card that was just revealed from the encounter deck.
+export const aTestOfWill = event(
+  {
+    name: 'A Test of Will',
+    cost: 1,
+    sphere: 'spirit',
+  },
+  {
+    description:
+      'Response: Cancel the “when revealed” effects of a card that was just revealed from the encounter deck.',
+    target: {
+      zoneType: 'encounterDeck',
+    },
+    response: {
+      event: 'whenRevealed',
+      action: {
+        cancel: 'when.revealed',
+      },
+    },
+  }
+);
 
 export const standAndFight = event({
   name: 'Stand and Fight',
@@ -375,33 +597,119 @@ export const standAndFight = event({
 });
 // TODO Action: Choose an ally with a printed cost of X in any player's discard pile. Put that ally into play under your control. (The chosen ally can belong to any sphere of influence.)
 
-export const aLightInIheDark = event({
-  name: 'A Light in the Dark',
-  cost: 2,
-  sphere: 'spirit',
-});
-// TODO Action: Choose an enemy engaged with a player. Return that enemy to the staging area.
+export const aLightInIheDark = event(
+  {
+    name: 'A Light in the Dark',
+    cost: 2,
+    sphere: 'spirit',
+  },
+  {
+    description:
+      'Action: Choose an enemy engaged with a player. Return that enemy to the staging area.',
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose enemy',
+            target: { and: [{ type: 'enemy' }, { zoneType: 'engaged' }] },
+            action: {
+              move: {
+                side: 'front',
+                to: 'stagingArea',
+              },
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
-export const dwarvenTomb = event({
-  name: 'Dwarven Tomb',
-  cost: 1,
-  sphere: 'spirit',
-});
-// TODO Action: Return 1 [spirit] card from your discard pile to your hand.
+export const dwarvenTomb = event(
+  {
+    name: 'Dwarven Tomb',
+    cost: 1,
+    sphere: 'spirit',
+  },
+  {
+    description:
+      'Action: Return 1 [spirit] card from your discard pile to your hand.',
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose card',
+            target: {
+              and: [
+                { zoneType: 'discardPile' },
+                { owner: 'controller' },
+                { sphere: 'spirit' },
+              ],
+            },
+            action: {
+              // TODO move to cotrollers hand
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
-export const fortuneOrFate = event({
-  name: 'Fortune or Fate',
-  cost: 5,
-  sphere: 'spirit',
-});
-// TODO Action: Choose a hero in any player's discard pile. Put that card into play, under its owner's control.
+export const fortuneOrFate = event(
+  {
+    name: 'Fortune or Fate',
+    cost: 5,
+    sphere: 'spirit',
+  },
+  {
+    description:
+      "Action: Choose a hero in any player's discard pile. Put that card into play, under its owner's control.",
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose hero',
+            target: { and: [{ type: 'hero' }, { zoneType: 'discardPile' }] },
+            action: {
+              putInPlay: {
+                controller: 'self',
+              }, // TODO 2 player test
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
-export const loriensWealth = event({
-  name: "Lórien's Wealth",
-  cost: 3,
-  sphere: 'lore',
-});
-// TODO Action: Choose a player. That player draws 3 cards.
+export const loriensWealth = event(
+  {
+    name: "Lórien's Wealth",
+    cost: 3,
+    sphere: 'lore',
+  },
+  {
+    description: 'Action: Choose a player. That player draws 3 cards.',
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          choosePlayerActions: {
+            title: 'Choose player',
+            target: 'each',
+            action: {
+              draw: 3,
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
 export const radagastsCunning = event({
   name: "Radagast's Cunning",
@@ -424,9 +732,30 @@ export const gandalfsSearch = event({
 });
 // TODO Action: Look at the top X cards of any player's deck, add 1 of those cards to its owner's hand, and return the rest to the top of the deck in any order.
 
-export const beornsHospitality = event({
-  name: "Beorn's Hospitality",
-  cost: 5,
-  sphere: 'lore',
-});
-// TODO Action: Choose a player. Heal all damage on each hero controlled by that player.
+export const beornsHospitality = event(
+  {
+    name: "Beorn's Hospitality",
+    cost: 5,
+    sphere: 'lore',
+  },
+  {
+    description:
+      'Action: Choose a player. Heal all damage on each hero controlled by that player.',
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          choosePlayerActions: {
+            title: 'Choose player',
+            target: 'each',
+            action: {
+              controlled: {
+                heal: 'all',
+              },
+            },
+          },
+        },
+      },
+    },
+  }
+);

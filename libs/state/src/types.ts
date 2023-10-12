@@ -366,7 +366,7 @@ export type CardTarget =
   | CardId[]
   | {
       name?: string;
-      owner?: PlayerId;
+      owner?: PlayerTarget;
       and?: CardTarget[];
       not?: CardTarget;
       type?: CardType | CardType[];
@@ -409,7 +409,7 @@ export type PlayerTarget =
   | 'highestThreat'
   | {
       and?: PlayerTarget[];
-      controller?: CardId;
+      controller?: CardTarget;
       var?: string;
     };
 
