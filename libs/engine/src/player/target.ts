@@ -57,8 +57,8 @@ export function getTargetPlayers(
       return uniq(intersection(...lists));
     }
 
-    if (target.controller) {
-      const cardId = getTargetCard(target.controller, ctx);
+    if (target.controllerOf) {
+      const cardId = getTargetCard(target.controllerOf, ctx);
       if (!cardId) {
         return [];
       }

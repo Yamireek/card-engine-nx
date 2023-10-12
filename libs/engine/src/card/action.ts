@@ -1,13 +1,20 @@
 import { CardState, CardAction, Action } from '@card-engine-nx/state';
 import { ExecutionContext } from '../context';
 import { uiEvent } from '../eventFactories';
-import { getCardZoneId, getZoneState } from '../zone/target';
+import {
+  getCardZoneId,
+  getTargetZone,
+  getTargetZoneId,
+  getZoneState,
+  getZoneType,
+} from '../zone/target';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { isArray } from 'lodash';
 import {
   GameZoneType,
   PlayerZoneType,
   ZoneId,
+  ZoneType,
   zonesEqual,
 } from '@card-engine-nx/basic';
 import { getTargetCard, getTargetCards } from './target';
@@ -597,21 +604,22 @@ export function executeCardAction(
 
     const fromId = action.move.from ?? getCardZoneId(card.id, ctx.state);
     const sourceZone = getZoneState(fromId, ctx.state);
-    const destinationZone = getZoneState(action.move.to, ctx.state);
+    const destinationZone = getTargetZone(action.move.to, ctx);
 
     const sourceInGame = isInGame(fromId);
-    const destInGame = isInGame(action.move.to);
+    const destInGame = isInGame(getZoneType(action.move.to));
 
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);
     destinationZone.cards.push(card.id);
     card.sideUp = action.move.side;
-    card.zone = action.move.to;
+    const destZoneId = getTargetZoneId(action.move.to, ctx);
+    card.zone = destZoneId;
 
     ctx.events.send(
       uiEvent.card_moved({
         cardId: card.id,
         source: fromId,
-        destination: action.move.to,
+        destination: destZoneId,
         side: action.move.side,
       })
     );
@@ -798,7 +806,7 @@ export function executeCardAction(
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
 }
 
-export function isInGame(zone: ZoneId) {
+export function isInGame(zone: ZoneId | ZoneType) {
   const inGameZones: Array<GameZoneType | PlayerZoneType> = [
     'activeLocation',
     'stagingArea',

@@ -1,10 +1,11 @@
 import { CardAction } from '@card-engine-nx/state';
-import { CardId, getZoneType } from '@card-engine-nx/basic';
+import { CardId } from '@card-engine-nx/basic';
 import { isArray } from 'lodash';
 import { ViewContext } from '../context';
 import { getTargetPlayer } from '../player/target';
 import { createPayCostAction, canPlayerExecute } from '../resolution';
 import { isInPlay } from '../utils';
+import { getZoneType } from '../zone/target';
 
 export function canCardExecute(
   action: CardAction,
@@ -12,7 +13,8 @@ export function canCardExecute(
   ctx: ViewContext
 ): boolean {
   if (isArray(action)) {
-    return action.every((a) => canCardExecute(a, cardId, ctx));
+    const values = action.map((a) => canCardExecute(a, cardId, ctx));
+    return values.every((v) => v);
   }
 
   const card = ctx.state.cards[cardId];
@@ -73,7 +75,7 @@ export function canCardExecute(
     return true;
   }
 
-  if (inPlay && action.mark) {
+  if (action.mark) {
     const disabled = ctx.view.cards[cardId].disabled?.[action.mark];
     return !disabled;
   }

@@ -14,7 +14,7 @@ import { getTargetCards } from './card';
 import { getTargetPlayers } from './player/target';
 import { calculateBoolExpr } from './expr';
 import { ViewContext } from './context';
-import { getZoneType } from '@card-engine-nx/basic';
+import { getZoneType } from './zone/target';
 
 export function createView(state: State): View {
   const view: View = {

@@ -13,14 +13,6 @@ export type Keywords = {
   surge?: boolean;
 };
 
-export function getZoneType(zoneId: ZoneId) {
-  if (typeof zoneId === 'string') {
-    return zoneId;
-  } else {
-    return zoneId.type;
-  }
-}
-
 export function getZoneIdString(zoneId: ZoneId) {
   if (typeof zoneId === 'string') {
     return zoneId;

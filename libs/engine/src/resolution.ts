@@ -2,10 +2,11 @@ import { Action, CostModifier, PlayerAction } from '@card-engine-nx/state';
 import { ViewContext } from './context';
 import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
-import { CardId, PlayerId, getZoneType } from '@card-engine-nx/basic';
+import { CardId, PlayerId } from '@card-engine-nx/basic';
 import { getTargetPlayers } from './player/target';
 import { isArray } from 'lodash/fp';
 import { canCardExecute } from './card/resolution';
+import { getZoneType } from './zone/target';
 
 export function canExecute(
   action: Action,

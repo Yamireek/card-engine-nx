@@ -25,7 +25,7 @@ export type CardType =
   | 'player_back'
   | 'encounter_back';
 
-export type Mark = 'questing' | 'attacked' | 'attacking' | 'defending';
+export type Mark = 'questing' | 'attacked' | 'attacking' | 'defending' | string;
 
 export type GameZoneType =
   | 'discardPile'

@@ -395,7 +395,6 @@ export const forGondor = event(
   }
 );
 
-// TODO return to hand at end of phase
 export const sneakAttack = event(
   {
     name: 'Sneak Attack',
@@ -405,22 +404,46 @@ export const sneakAttack = event(
   {
     description:
       'Action: Put 1 ally card into play from your hand. At the end of the phase, if that ally is still in play, return it to your hand.',
-    action: {
-      player: {
-        target: 'controller',
-        action: {
-          chooseCardActions: {
-            title: 'Choose ally to put in play',
-            target: { and: [{ type: 'ally' }, { zoneType: 'hand' }] },
-            action: [
-              {
-                putInPlay: 'controller',
-              },
-            ],
+    action: [
+      {
+        player: {
+          target: 'controller',
+          action: {
+            chooseCardActions: {
+              title: 'Choose ally to put in play',
+              target: { and: [{ type: 'ally' }, { zoneType: 'hand' }] },
+              action: [
+                {
+                  putInPlay: 'controller',
+                },
+                {
+                  mark: 'sneak.attack',
+                },
+              ],
+            },
           },
         },
       },
-    },
+      {
+        atEndOfPhase: [
+          {
+            card: { mark: 'sneak.attack' },
+            action: [
+              {
+                move: {
+                  side: 'front',
+                  to: {
+                    player: { controllerOf: 'target' },
+                    type: 'hand',
+                  },
+                },
+              },
+            ],
+          },
+          { clearMarks: 'sneak.attack' },
+        ],
+      },
+    ],
   }
 );
 
@@ -438,7 +461,7 @@ export const valiantSacrifice = event(
       event: 'leftPlay',
       action: {
         player: {
-          target: { controller: 'target' },
+          target: { controllerOf: 'target' },
           action: {
             draw: 2,
           },
@@ -676,7 +699,7 @@ export const fortuneOrFate = event(
             target: { and: [{ type: 'hero' }, { zoneType: 'discardPile' }] },
             action: {
               putInPlay: {
-                controller: 'self',
+                controllerOf: 'self',
               }, // TODO 2 player test
             },
           },

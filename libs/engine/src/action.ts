@@ -283,7 +283,10 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     for (const id of ids) {
       const card = ctx.state.cards[id];
       if (card) {
-        executeCardAction(action.card.action, card, ctx);
+        executeCardAction(action.card.action, card, {
+          ...ctx,
+          card: { ...ctx.card, target: id },
+        });
       } else {
         throw new Error('card not found');
       }

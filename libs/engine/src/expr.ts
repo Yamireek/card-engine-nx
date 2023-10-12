@@ -4,8 +4,9 @@ import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
 import { ViewContext } from './context';
 import { last, max, min, multiply, values } from 'lodash/fp';
-import { CardId, getZoneType } from '@card-engine-nx/basic';
+import { CardId } from '@card-engine-nx/basic';
 import { isInPlay } from './utils';
+import { getZoneType } from './zone/target';
 
 export function calculateNumberExpr(
   expr: NumberExpr,

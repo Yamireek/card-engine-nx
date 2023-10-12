@@ -10,7 +10,11 @@ export const coreTest: PlayerDeck = {
     core.hero.denethor,
   ],
   library: [
-    core.event.dwarvenTomb,
+    core.event.sneakAttack,
+    core.event.sneakAttack,
+    core.event.sneakAttack,
+    core.ally.gandalf,
+    core.ally.beorn,
     core.ally.wanderingTook,
     core.ally.veteranAxehand,
   ],

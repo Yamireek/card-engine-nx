@@ -6,7 +6,7 @@ import {
   ZoneId,
 } from '@card-engine-nx/basic';
 import { State, ZoneState, ZoneTarget } from '@card-engine-nx/state';
-import { getTargetPlayers } from '../player/target';
+import { getTargetPlayer, getTargetPlayers } from '../player/target';
 import { keys } from 'lodash/fp';
 import { ViewContext } from '../context';
 
@@ -31,6 +31,18 @@ export function getTargetZone(target: ZoneTarget, ctx: ViewContext) {
     return zones[0];
   } else {
     throw new Error('unexpected result count');
+  }
+}
+
+export function getTargetZoneId(target: ZoneTarget, ctx: ViewContext): ZoneId {
+  if (typeof target === 'string') {
+    return target;
+  } else {
+    const player = getTargetPlayer(target.player, ctx);
+    return {
+      player,
+      type: target.type,
+    };
   }
 }
 
@@ -71,4 +83,12 @@ export function getCardZoneId(cardId: CardId, state: State): ZoneId {
   }
 
   throw new Error(`card not found`);
+}
+
+export function getZoneType(zoneId: ZoneId | ZoneTarget) {
+  if (typeof zoneId === 'string') {
+    return zoneId;
+  } else {
+    return zoneId.type;
+  }
 }

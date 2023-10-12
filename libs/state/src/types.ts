@@ -186,7 +186,7 @@ export type CardAction =
       attachCard?: CardTarget;
       move?: {
         from?: ZoneId;
-        to: ZoneId;
+        to: ZoneTarget;
         side: Side;
       };
       modify?: CardModifier | CardModifier[];
@@ -416,7 +416,7 @@ export type PlayerTarget =
   | 'highestThreat'
   | {
       and?: PlayerTarget[];
-      controller?: CardTarget;
+      controllerOf?: CardTarget;
       var?: string;
     };
 
