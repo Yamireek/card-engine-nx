@@ -1,5 +1,5 @@
 import { core } from '@card-engine-nx/cards';
-import { PlayerDeck, event } from '@card-engine-nx/state';
+import { PlayerDeck, Scenario, event } from '@card-engine-nx/state';
 
 export const discardTargetCard = event(
   {
@@ -35,9 +35,18 @@ export const coreTest: PlayerDeck = {
     core.event.grimResolve,
     core.ally.ereborHammersmith,
     core.attachment.darkKnowledge,
-    discardTargetCard,
-    discardTargetCard,
-    discardTargetCard,
+    core.ally.minerOfTheIronHills,
     core.ally.gandalf,
+  ],
+};
+
+export const testScenario: Scenario = {
+  name: 'Test',
+  quest: [core.quest.fliesAndSpiders],
+  sets: [
+    {
+      easy: [core.treachery.caughtInAWeb],
+      normal: [],
+    },
   ],
 };

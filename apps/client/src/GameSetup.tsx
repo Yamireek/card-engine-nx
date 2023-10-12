@@ -12,7 +12,7 @@ import { coreSpirit } from './decks/coreSpirit';
 import { coreLore } from './decks/coreLore';
 import { coreLeadershipSpirit } from './decks/coreLeadershipSpirit';
 import { coreLoreTactics } from './decks/coreLoreTactics';
-import { coreTest } from './decks/coreTest';
+import { coreTest, testScenario } from './decks/coreTest';
 
 export const GameSetup = () => {
   const { state, moves, playerId } = useContext(StateContext);
@@ -78,6 +78,10 @@ export const GameSetup = () => {
                 core.scenario.passageThroughMirkwood,
                 'normal'
               ),
+          },
+          {
+            title: 'Test',
+            action: () => moves.selectScenario(testScenario, 'normal'),
           },
         ]}
         skippable={false}
