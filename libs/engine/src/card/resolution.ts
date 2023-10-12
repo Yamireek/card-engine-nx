@@ -163,5 +163,9 @@ export function canCardExecute(
     return !inPlay;
   }
 
+  if (action.flip) {
+    return card.sideUp !== action.flip;
+  }
+
   return false;
 }
