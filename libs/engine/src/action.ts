@@ -69,11 +69,12 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action === 'endRound') {
     ctx.state.actionLimits = ctx.state.actionLimits.filter(
-      (l) => l.type !== 'once_per_round'
+      (l) => l.type !== 'round'
     );
+
     for (const player of values(ctx.state.players)) {
       for (const limit of keys(player.limits)) {
-        if (player.limits[limit] === 'once_per_round') {
+        if (player.limits[limit].type === 'round') {
           delete player.limits[limit];
         }
       }
@@ -88,6 +89,18 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'endPhase') {
+    ctx.state.actionLimits = ctx.state.actionLimits.filter(
+      (l) => l.type !== 'phase'
+    );
+
+    for (const player of values(ctx.state.players)) {
+      for (const limit of keys(player.limits)) {
+        if (player.limits[limit].type === 'phase') {
+          delete player.limits[limit];
+        }
+      }
+    }
+
     ctx.state.modifiers = ctx.state.modifiers.filter(
       (m) => m.until !== 'end_of_phase'
     );
@@ -482,12 +495,20 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.useLimit) {
-    if (action.useLimit.type === 'none') {
-      return;
+    const existing = ctx.state.actionLimits.find(
+      (l) => l.card === action.useLimit?.card
+    );
+
+    if (!existing) {
+      ctx.state.actionLimits.push({
+        card: action.useLimit.card,
+        amount: 1,
+        type: action.useLimit.type,
+      });
     } else {
-      ctx.state.actionLimits.push(action.useLimit);
-      return;
+      existing.amount += 1;
     }
+    return;
   }
 
   if (action.event) {

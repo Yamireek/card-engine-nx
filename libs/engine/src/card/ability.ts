@@ -222,8 +222,8 @@ export function createModifiers(
                             {
                               useLimit: {
                                 card: self,
-                                type: ability.limit,
-                                index: 0, // TODO index
+                                type: ability.limit.type,
+                                max: ability.limit.max,
                               },
                             },
                             ability.action,

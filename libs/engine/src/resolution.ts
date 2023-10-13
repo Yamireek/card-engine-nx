@@ -72,12 +72,9 @@ export function canExecute(
     }
 
     if (action.useLimit) {
-      const existing = ctx.state.actionLimits.some(
-        (u) =>
-          u.card === action.useLimit?.card && u.index === action.useLimit.index
-      );
-
-      return !existing;
+      const card = action.useLimit.card;
+      const existing = ctx.state.actionLimits.find((u) => u.card === card);
+      return !existing || existing.amount < action.useLimit.max;
     }
 
     if (action.resolveAttack) {
@@ -200,8 +197,9 @@ export function canPlayerExecute(
       return player.zones.hand.cards.length >= action.discard.amount;
     }
 
-    if (action.setLimit) {
-      return !player.limits[action.setLimit.key];
+    if (action.useLimit) {
+      const existing = player.limits[action.useLimit.key];
+      return !existing || existing.uses < action.useLimit.limit.max;
     }
 
     if (action.engaged) {

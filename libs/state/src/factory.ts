@@ -169,7 +169,6 @@ export function createPlayerState(playerId: PlayerId): PlayerState {
       discardPile: { cards: [] },
       engaged: { cards: [] },
     },
-    limitUses: { game: {} },
     flags: {},
     eliminated: false,
     limits: {},

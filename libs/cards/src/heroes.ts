@@ -159,9 +159,12 @@ export const eowyn = hero(
                     },
                   },
                   {
-                    setLimit: {
+                    useLimit: {
                       key: 'eowyn_action',
-                      limit: 'once_per_round',
+                      limit: {
+                        max: 1,
+                        type: 'round',
+                      },
                     },
                   },
                 ],
@@ -202,7 +205,10 @@ export const beravor = hero(
   {
     description:
       'Exhaust Beravor to choose a player. That player draws 2 cards. Limit once per round.',
-    limit: 'once_per_round',
+    limit: {
+      max: 1,
+      type: 'round',
+    },
     action: {
       payment: {
         cost: {
@@ -244,7 +250,10 @@ export const glorfindel = hero(
   {
     description:
       "Pay 1 resource from Glorfindel's pool to heal 1 damage on any character. (Limit once per round.)",
-    limit: 'once_per_round',
+    limit: {
+      max: 1,
+      type: 'round',
+    },
     action: {
       payment: {
         cost: { card: { target: 'self', action: { payResources: 1 } } },

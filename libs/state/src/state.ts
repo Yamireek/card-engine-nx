@@ -16,6 +16,7 @@ import {
   PlayerTarget,
   Until,
   BoolExpr,
+  LimitType,
 } from './types';
 import { PlayerModifier } from './view';
 
@@ -115,7 +116,12 @@ export type State = {
     card: Record<string, CardId | undefined>;
     player: Record<string, PlayerId | undefined>;
   };
-  actionLimits: Array<{ type: Limit; card: CardId; index: number }>;
+  // TODO move to cards
+  actionLimits: Array<{
+    card: CardId;
+    amount: number;
+    type: LimitType;
+  }>;
   event: Event[];
   modifiers: GameModifier[];
 };

@@ -1,15 +1,12 @@
 import { PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
 import { ZoneState } from './zone';
-import { Limit } from './types';
+import { LimitType } from './types';
 
 export type PlayerState = {
   id: PlayerId;
   zones: Record<PlayerZoneType, ZoneState>;
   thread: number;
   eliminated: boolean;
-  limitUses: {
-    game: Record<string, number>;
-  };
   flags: Record<string, boolean>;
-  limits: Record<string, Limit>;
+  limits: Record<string, { type: LimitType; uses: number }>;
 };

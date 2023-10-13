@@ -364,7 +364,10 @@ export const protectorOfLorien = attachment(
   {
     description:
       'Action: Discard a card from your hand to give attached hero +1 [defense] or +1 [willpower] until the end of the phase. Limit 3 times per phase.',
-    limit: 'once_per_round', // TODO 3 times per phase
+    limit: {
+      max: 3,
+      type: 'phase',
+    },
     action: {
       payment: {
         cost: {

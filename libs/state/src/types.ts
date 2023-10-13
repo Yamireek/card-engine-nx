@@ -19,7 +19,8 @@ import { PlayerModifier } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
-export type Limit = 'none' | 'once_per_round';
+export type LimitType = 'round' | 'phase';
+export type Limit = { type: LimitType; max: number };
 
 export type Until = 'end_of_phase' | 'end_of_round';
 
@@ -82,9 +83,9 @@ export type Action =
         action: CardAction;
       };
       useLimit?: {
-        type: Limit;
         card: CardId;
-        index: number;
+        max: number;
+        type: LimitType;
       };
       event?: Event | 'none';
       resolveAttack?: {
@@ -114,7 +115,7 @@ export type PlayerAction =
         amount: number;
         target: 'choice' | 'random';
       };
-      setLimit?: { key: string; limit: Limit };
+      useLimit?: { key: string; limit: Limit };
       incrementThreat?: NumberExpr;
       payResources?: { amount: number; sphere: Sphere[]; heroes?: number };
       declareAttackers?: CardId;
@@ -215,7 +216,7 @@ export type Ability = { description: string } & (
       action: Action;
       cost?: CostModifier;
       phase?: Phase;
-      limit?: 'once_per_round';
+      limit?: Limit;
     }
   | {
       card: CardModifier | CardModifier[];

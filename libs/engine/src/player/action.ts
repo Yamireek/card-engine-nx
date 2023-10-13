@@ -596,8 +596,16 @@ export function executePlayerAction(
     return;
   }
 
-  if (action.setLimit) {
-    player.limits[action.setLimit.key] = action.setLimit.limit;
+  if (action.useLimit) {
+    const existing = player.limits[action.useLimit.key];
+    if (existing) {
+      existing.uses += 1;
+    } else {
+      player.limits[action.useLimit.key] = {
+        type: action.useLimit.limit.type,
+        uses: 1,
+      };
+    }
     return;
   }
 
