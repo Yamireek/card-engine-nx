@@ -47,6 +47,16 @@ export function getTargetPlayers(
     }
   }
 
+  if (target === 'target') {
+    if (ctx.player['target']) {
+      return [ctx.player['target']];
+    } else if (ctx.state.vars.player['target']) {
+      return [ctx.state.vars.player['target']];
+    } else {
+      throw new Error('no target player in context');
+    }
+  }
+
   if (target === 'first') {
     return [ctx.state.firstPlayer];
   }

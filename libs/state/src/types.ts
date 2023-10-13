@@ -186,7 +186,7 @@ export type CardAction =
       clear?: Mark;
       attachCard?: CardTarget;
       move?: {
-        from?: ZoneId;
+        from?: ZoneTarget;
         to: ZoneTarget;
         side: Side;
       };
@@ -422,6 +422,7 @@ export type PlayerTarget =
   | 'next'
   | 'event'
   | 'highestThreat'
+  | 'target'
   | {
       and?: PlayerTarget[];
       controllerOf?: CardTarget;

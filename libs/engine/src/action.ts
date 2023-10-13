@@ -3,6 +3,7 @@ import {
   CardTarget,
   Choice,
   Difficulty,
+  PlayerAction,
   PlayerDeck,
   Scenario,
   createPlayerState,
@@ -309,7 +310,10 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     for (const id of ids) {
       const player = ctx.state.players[id];
       if (player) {
-        executePlayerAction(action.player.action, player, ctx);
+        const playerAction: PlayerAction = !ctx.state.vars.player.target
+          ? { useVar: { name: 'target', action: action.player.action } }
+          : action.player.action;
+        executePlayerAction(playerAction, player, ctx);
       } else {
         throw new Error('player not found');
       }

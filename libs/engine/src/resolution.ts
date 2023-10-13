@@ -48,13 +48,23 @@ export function canExecute(
     if (action.player) {
       const playerAction = action.player;
       const players = getTargetPlayers(playerAction.target, ctx);
-      return players.some((p) => canPlayerExecute(playerAction.action, p, ctx));
+      return players.some((p) =>
+        canPlayerExecute(playerAction.action, p, {
+          ...ctx,
+          player: { ...ctx.player, target: p },
+        })
+      );
     }
 
     if (action.card) {
       const cardAction = action.card;
       const cards = getTargetCards(cardAction.target, ctx);
-      return cards.some((card) => canCardExecute(cardAction.action, card, ctx));
+      return cards.some((card) =>
+        canCardExecute(cardAction.action, card, {
+          ...ctx,
+          card: { ...ctx.player, target: card },
+        })
+      );
     }
 
     if (action.setCardVar) {

@@ -621,17 +621,21 @@ export function executeCardAction(
   if (action.move) {
     // TODO move also attachments
     // TODO remove tokens/marks here
+
+    const fromId = action.move.from
+      ? getTargetZoneId(action.move.from, ctx)
+      : getCardZoneId(card.id, ctx.state);
+
     if (action.move.from) {
-      if (!zonesEqual(card.zone, action.move.from)) {
+      if (!zonesEqual(card.zone, fromId)) {
         return;
       }
     }
 
-    const fromId = action.move.from ?? getCardZoneId(card.id, ctx.state);
-    const sourceZone = getZoneState(fromId, ctx.state);
+    const sourceZone = getTargetZone(fromId, ctx);
     const destinationZone = getTargetZone(action.move.to, ctx);
 
-    const sourceInGame = isInGame(fromId);
+    const sourceInGame = isInGame(getZoneType(fromId));
     const destInGame = isInGame(getZoneType(action.move.to));
 
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);

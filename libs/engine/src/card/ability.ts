@@ -190,7 +190,22 @@ export function createModifiers(
                           },
                         },
                         {
-                          card: { target: self, action: 'discard' },
+                          card: {
+                            target: self,
+                            action: {
+                              move: {
+                                side: 'front',
+                                from: {
+                                  player: 'controller',
+                                  type: 'hand',
+                                },
+                                to: {
+                                  player: 'controller',
+                                  type: 'discardPile',
+                                },
+                              },
+                            },
+                          },
                         },
                       ],
                     },
@@ -276,7 +291,22 @@ export function createModifiers(
                             },
                           },
                           {
-                            card: { target: self, action: 'discard' },
+                            card: {
+                              target: self,
+                              action: {
+                                move: {
+                                  side: 'front',
+                                  from: {
+                                    player: 'controller',
+                                    type: 'hand',
+                                  },
+                                  to: {
+                                    player: 'controller',
+                                    type: 'discardPile',
+                                  },
+                                },
+                              },
+                            },
                           },
                         ],
                       },
