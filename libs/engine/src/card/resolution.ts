@@ -6,6 +6,7 @@ import { getTargetPlayer } from '../player/target';
 import { createPayCostAction, canPlayerExecute } from '../resolution';
 import { isInPlay } from '../utils';
 import { getZoneType } from '../zone/target';
+import { getTargetCards } from './target';
 
 export function canCardExecute(
   action: CardAction,
@@ -105,7 +106,29 @@ export function canCardExecute(
   }
 
   if (action.move) {
-    return true;
+    const zone = getZoneType(action.move.to);
+    if (!isInPlay(zone)) {
+      return true;
+    }
+
+    const cv = ctx.view.cards[card.id];
+    if (!cv) {
+      return false;
+    }
+
+    const unique = cv.props.unique;
+    if (!unique) {
+      return true;
+    }
+
+    const exising = getTargetCards(
+      {
+        and: [{ name: cv.props.name ?? '' }, 'inAPlay'],
+      },
+      ctx
+    );
+
+    return exising.length === 0;
   }
 
   if (inPlay && action.attachCard) {

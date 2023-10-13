@@ -37,7 +37,8 @@ export const coreTest: PlayerDeck = {
     core.attachment.celebriansStone,
     core.ally.minerOfTheIronHills,
     core.ally.gandalf,
-    core.ally.wanderingTook
+    core.ally.gandalf,
+    core.ally.wanderingTook,
   ],
 };
 
