@@ -12,7 +12,7 @@ import {
 import { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { sum } from 'lodash/fp';
+import { min, sum } from 'lodash/fp';
 
 export type Amount<T> = { id: T; value: number };
 
@@ -85,9 +85,21 @@ export const ChooseDistributionDialog = <T extends unknown>(props: {
                   style={{ flex: '0 0 auto' }}
                   onClick={(e) => {
                     if (!(maxLimit || maxTotalLimit)) {
-                      setAmounts((p) =>
-                        p.map((a, i) => (index === i ? a + 1 : a))
-                      );
+                      if (props.total?.max && o.max) {
+                        const remainTotal = props.total.max - total;
+                        const remainPart = o.max - amount;
+                        setAmounts((p) =>
+                          p.map((a, i) =>
+                            index === i
+                              ? a + (min([remainPart, remainTotal]) ?? 0)
+                              : a
+                          )
+                        );
+                      } else {
+                        setAmounts((p) =>
+                          p.map((a, i) => (index === i ? a + 1 : a))
+                        );
+                      }
                     }
                   }}
                 >

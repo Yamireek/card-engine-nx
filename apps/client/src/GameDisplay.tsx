@@ -31,6 +31,7 @@ import { sum } from 'lodash/fp';
 import { GameDialogs } from './GameDialogs';
 import { FloatingCardsProvider } from './FloatingCardsContext';
 import Editor from '@monaco-editor/react';
+import { PlayerHand } from './PlayerHand';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 
@@ -252,7 +253,7 @@ export const GameDisplay = () => {
             </GameSceneLoader>
           </TexturesProvider>
         </div>
-        {/* <PlayerHand player="A" /> */}
+        <PlayerHand player="0" />
         <GameDialogs />
       </div>
     </FloatingCardsProvider>

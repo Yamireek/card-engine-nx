@@ -6,7 +6,7 @@ import { LotrDeck3d } from './LotrDeck3d';
 import { LotrCardArea } from './LotrCardArea';
 
 const positions: Record<number, Partial<Record<PlayerId, Vector3>>> = {
-  '1': { '0': [0, 0.25, 0] },
+  '1': { '0': [0, 0.4, 0] },
   '2': { '0': [0.5, 0, 0], '1': [-0.5, 0, 0] },
   '3': { '0': [0.5, -0.4, 0], '1': [-0.5, -0.4, 0], '2': [0, 0.4, 0] },
   '4': {
@@ -47,28 +47,20 @@ export const PlayerAreas = (props: { player: PlayerId }) => {
       <LotrDeck3d
         zone={{ player: props.player, type: 'discardPile' }}
         position={[0.46, -0.45, 0]}
-      />
-      <LotrCardArea
-        layout={{
-          color: 'blue',
-          position: [-0.075, -0.45],
-          size: { width: 0.85, height: 0.1 },
-        }}
-        cards={playerState.zones.hand.cards}
-      />
+      />  
       <LotrCardArea
         layout={{
           color: 'green',
-          position: [0, -0.325],
-          size: { width: 1, height: 0.15 },
+          position: [-0.075, -0.45],
+          size: { width: 0.85, height: 0.2 },
         }}
         cards={playerState.zones.playerArea.cards}
       />
       <LotrCardArea
         layout={{
           color: 'red',
-          position: [0, -0.175],
-          size: { width: 1, height: 0.15 },
+          position: [0, -0.3],
+          size: { width: 1, height: 0.1 },
         }}
         cards={playerState.zones.engaged.cards}
       />
