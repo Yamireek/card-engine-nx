@@ -373,10 +373,9 @@ export function executePlayerAction(
   }
 
   if (action.payResources) {
-    const sphere =
-      action.payResources.sphere === 'neutral'
-        ? 'any'
-        : action.payResources.sphere;
+    const sphere = action.payResources.sphere.includes('neutral')
+      ? 'any'
+      : action.payResources.sphere;
 
     const target: CardTarget = {
       and: [

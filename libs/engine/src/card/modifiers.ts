@@ -1,7 +1,7 @@
 import { CardView, CardModifier } from '@card-engine-nx/state';
 import { ViewContext } from '../context';
 import { CardId, keys } from '@card-engine-nx/basic';
-import { calculateNumberExpr } from '../expr';
+import { calculateCardBoolExpr, calculateNumberExpr } from '../expr';
 
 export function applyModifier(
   modifier: CardModifier,
@@ -101,6 +101,26 @@ export function applyModifier(
     case !!modifier.travel:
       self.travel.push(modifier.travel);
       return;
+
+    case !!modifier.addSphere:
+      if (!self.props.sphere) {
+        self.props.sphere = [modifier.addSphere];
+      } else {
+        self.props.sphere.push(modifier.addSphere);
+      }
+      return;
+
+    case !!modifier.if: {
+      const condition = calculateCardBoolExpr(
+        modifier.if.condition,
+        self.id,
+        ctx
+      );
+      if (condition) {
+        applyModifier(modifier.if.modifier, self, source, ctx);
+      }
+      return;
+    }
 
     default:
       throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);

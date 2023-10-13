@@ -9,6 +9,7 @@ export function hero(
   return {
     front: {
       ...props,
+      sphere: [props.sphere],
       abilities,
       type: 'hero',
       unique: true,

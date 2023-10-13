@@ -221,16 +221,33 @@ export const celebriansStone = attachment(
     attachesTo: { type: 'hero' },
   },
   {
-    description: 'Attached hero gains +2 [willpower].',
+    description:
+      'Attached hero gains +2 [willpower]. If attached hero is Aragorn, he also gains a [spirit] resource icon.',
     target: {
       hasAttachment: 'self',
     },
-    increment: {
-      willpower: 2,
-    },
+    card: [
+      {
+        description: '+2 [willpower]',
+        increment: {
+          willpower: 2,
+        },
+      },
+      {
+        description: '',
+        if: {
+          condition: {
+            name: 'Aragorn',
+          },
+          modifier: {
+            description: '+[spirit] resource icon',
+            addSphere: 'spirit',
+          },
+        },
+      },
+    ],
   }
 );
-// TODO If attached hero is Aragorn, he also gains a [spirit] resource icon.
 
 export const theFavorOfTheLady = attachment(
   {

@@ -18,6 +18,7 @@ import { UIEvents } from './uiEvents';
 import { createView } from './view';
 import { calculateBoolExpr } from './expr';
 import { Random } from './utils/random';
+import { isArray } from 'lodash/fp';
 
 export function addPlayerCard(
   state: State,
@@ -179,5 +180,13 @@ export function isInPlay(zone: PlayerZoneType | GameZoneType): boolean {
       return true;
     default:
       return false;
+  }
+}
+
+export function asArray<T>(item: T | T[]): T[] {
+  if (isArray(item)) {
+    return item;
+  } else {
+    return [item];
   }
 }

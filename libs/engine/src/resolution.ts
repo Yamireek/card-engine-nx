@@ -169,7 +169,11 @@ export function canPlayerExecute(
       const heroes = player.zones.playerArea.cards
         .map((c) => ctx.view.cards[c])
         .filter((c) => c.props.type === 'hero')
-        .filter((c) => sphere === 'neutral' || c.props.sphere === sphere)
+        .filter(
+          (c) =>
+            sphere.includes('neutral') ||
+            c.props.sphere?.some((s) => sphere.includes(s))
+        )
         .filter((c) => ctx.state.cards[c.id].token.resources > 0);
 
       if (

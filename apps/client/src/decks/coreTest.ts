@@ -34,9 +34,10 @@ export const coreTest: PlayerDeck = {
     core.ally.henamarthRiversong,
     core.event.grimResolve,
     core.ally.ereborHammersmith,
-    core.attachment.darkKnowledge,
+    core.attachment.celebriansStone,
     core.ally.minerOfTheIronHills,
     core.ally.gandalf,
+    core.ally.wanderingTook
   ],
 };
 

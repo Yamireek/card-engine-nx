@@ -9,6 +9,7 @@ export function event(
   return {
     front: {
       ...props,
+      sphere: [props.sphere],
       abilities,
       type: 'event',
       traits: [],

@@ -116,7 +116,7 @@ export type PlayerAction =
       };
       setLimit?: { key: string; limit: Limit };
       incrementThreat?: NumberExpr;
-      payResources?: { amount: number; sphere: Sphere; heroes?: number };
+      payResources?: { amount: number; sphere: Sphere[]; heroes?: number };
       declareAttackers?: CardId;
       chooseCardActions?: {
         title: string;
@@ -218,7 +218,7 @@ export type Ability = { description: string } & (
       limit?: 'once_per_round';
     }
   | {
-      card: CardModifier;
+      card: CardModifier | CardModifier[];
       target?: CardTarget;
       condition?: BoolExpr;
     }
@@ -279,6 +279,11 @@ export type CardModifier = {
   keywords?: Keywords;
   type?: CardType;
   trait?: Trait;
+  if?: {
+    condition: CardBoolExpr;
+    modifier: CardModifier;
+  };
+  addSphere?: Sphere;
 };
 
 export type CostModifier = {
@@ -381,7 +386,7 @@ export type CardTarget =
       top?:
         | ZoneTarget
         | { zone: ZoneTarget; amount: number; filter?: CardTarget };
-      sphere?: Sphere | 'any';
+      sphere?: Sphere | Sphere[] | 'any';
       controller?: PlayerTarget;
       mark?: Mark;
       enabled?: Mark;

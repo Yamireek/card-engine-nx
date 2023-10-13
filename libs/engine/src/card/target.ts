@@ -16,6 +16,7 @@ import {
 import { difference, isArray, takeRight } from 'lodash/fp';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { getTargetPlayer, getTargetPlayers } from '../player/target';
+import { asArray } from '../utils';
 
 export function getTargetCard(
   target: CardTarget,
@@ -212,8 +213,10 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       return values(ctx.view.cards).map((c) => c.id);
     }
 
+    const spheres = asArray(target.sphere);
+
     return values(ctx.view.cards)
-      .filter((c) => c.props.sphere === target.sphere)
+      .filter((c) => c.props.sphere?.some((s) => spheres.includes(s)))
       .map((s) => s.id);
   }
 

@@ -9,6 +9,7 @@ export function ally(
   return {
     front: {
       ...props,
+      sphere: [props.sphere],
       abilities,
       type: 'ally',
     },

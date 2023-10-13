@@ -9,6 +9,7 @@ export function attachment(
   return {
     front: {
       ...props,
+      sphere: [props.sphere],
       abilities,
       type: 'attachment',
     },

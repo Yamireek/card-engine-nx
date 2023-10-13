@@ -12,10 +12,11 @@ import {
   Sphere,
   ZoneType,
 } from '@card-engine-nx/basic';
-import { isInPlay } from '../utils';
+import { asArray, isInPlay } from '../utils';
+import { isArray } from 'lodash/fp';
 
 export function createPlayAllyAction(
-  sphere: Sphere,
+  sphere: Sphere[],
   cost: number,
   owner: PlayerId,
   self: CardId
@@ -63,7 +64,7 @@ export function createPlayAllyAction(
 }
 
 export function createPlayAttachmentAction(
-  sphere: Sphere,
+  sphere: Sphere[],
   cost: number,
   attachesTo: CardTarget,
   owner: PlayerId,
@@ -484,14 +485,12 @@ export function createModifiers(
 
     case 'card' in ability:
       if (isInPlay(zone)) {
-        return [
-          {
-            source: self,
-            card: ability.target ?? self,
-            modifier: ability.card,
-            condition: ability.condition,
-          },
-        ];
+        return asArray(ability.card).map((modifier) => ({
+          source: self,
+          card: ability.target ?? self,
+          modifier: modifier,
+          condition: ability.condition,
+        }));
       }
 
       return [];
