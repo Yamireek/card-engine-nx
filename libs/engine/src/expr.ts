@@ -206,5 +206,13 @@ export function calculateCardBoolExpr(
     return ctx.state.cards[cardId].zone === expr.zone;
   }
 
+  if (expr.and) {
+    return expr.and.every((e) => calculateCardBoolExpr(e, cardId, ctx));
+  }
+
+  if (expr.global) {
+    return calculateBoolExpr(expr.global, ctx);
+  }
+
   throw new Error(`unknown card bool expression: ${JSON.stringify(expr)}`);
 }

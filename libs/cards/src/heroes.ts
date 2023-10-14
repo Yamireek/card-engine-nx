@@ -337,7 +337,6 @@ export const eleanor = hero(
   }
 );
 
-// TODO attack bonus
 export const dunhere = hero(
   {
     name: 'Dúnhere',
@@ -352,12 +351,40 @@ export const dunhere = hero(
   {
     description:
       'Dúnhere can target enemies in the staging area when he attacks alone. When doing so, he gets +1 Attack.',
-    card: {
-      description: '',
-      rule: {
-        attacksStagingArea: true,
+    card: [
+      {
+        description: '',
+        rule: {
+          attacksStagingArea: true,
+        },
       },
-    },
+      {
+        description: '',
+        if: {
+          condition: {
+            and: [
+              {
+                hasMark: 'attacking',
+              },
+              {
+                global: {
+                  someCard: {
+                    mark: 'defending',
+                    zoneType: 'stagingArea',
+                  },
+                },
+              },
+            ],
+          },
+          modifier: {
+            description: '',
+            increment: {
+              attack: 1,
+            },
+          },
+        },
+      },
+    ],
   }
 );
 

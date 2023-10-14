@@ -365,6 +365,9 @@ export type CardBoolExpr =
       is?: CardTarget;
       name?: string;
       zone?: GameZoneType | PlayerZoneType;
+      global?: BoolExpr;
+      predicate?: CardTarget;
+      and?: CardBoolExpr[];
     };
 
 export type SimpleCardTarget =
