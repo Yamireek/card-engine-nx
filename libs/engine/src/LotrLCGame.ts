@@ -170,7 +170,7 @@ export function LotrLCGame(events: UIEvents): Game<State> {
       }
 
       return G.result;
-    },    
+    },
     ai: {
       enumerate: (G) => {
         const choice = G.choice;

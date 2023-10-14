@@ -412,6 +412,7 @@ export type CardTarget =
       var?: string;
       event?: 'attacking';
       take?: number;
+      side?: Side;
     };
 
 export type ZoneTarget =

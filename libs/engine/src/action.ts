@@ -17,6 +17,7 @@ import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
 import { canExecute } from './resolution';
+import { getZoneState } from './zone/target';
 
 export function executeAction(action: Action, ctx: ExecutionContext) {
   if (isArray(action)) {
@@ -139,7 +140,19 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'dealShadowCards') {
-    // TODO dealShadowCards
+    const enemies = getTargetCards({ type: 'enemy', zoneType: 'engaged' }, ctx);
+    for (const enemy of enemies) {
+      const deck = ctx.state.zones.encounterDeck;
+      const shadow = deck.cards.pop();
+      if (shadow) {
+        const targetZone = getZoneState(ctx.state.cards[enemy].zone, ctx.state);
+        ctx.state.cards[enemy].shadow.push(shadow);
+        ctx.state.cards[shadow].zone = ctx.state.cards[enemy].zone;
+        ctx.state.cards[shadow].sideUp = 'shadow';
+        deck.cards.pop();
+        targetZone.cards.push(shadow);
+      }
+    }
     return;
   }
 
@@ -877,6 +890,7 @@ export const phaseCombat: Action = [
   },
   { clearMarks: 'attacked' },
   { playerActions: 'End combat phase' },
+  { card: { side: 'shadow' }, action: 'discard' },
   'endPhase',
 ];
 

@@ -200,6 +200,10 @@ export function checkCardPredicate(
     }
   }
 
+  if (target.side) {
+    return target.side === state.sideUp;
+  }
+
   throw new Error(`unknown card predicate: ${JSON.stringify(target)}`);
 }
 

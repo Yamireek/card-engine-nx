@@ -23,7 +23,8 @@ export type CardType =
   | 'location'
   | 'quest'
   | 'player_back'
-  | 'encounter_back';
+  | 'encounter_back'
+  | 'shadow';
 
 export type Mark = 'questing' | 'attacked' | 'attacking' | 'defending' | string;
 
@@ -46,7 +47,7 @@ export type PlayerZoneType =
 
 export type ZoneType = GameZoneType | PlayerZoneType;
 
-export type Side = 'front' | 'back';
+export type Side = 'front' | 'back' | 'shadow';
 
 export type Trait =
   | 'dwarf'

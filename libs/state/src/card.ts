@@ -9,7 +9,7 @@ import {
   Keywords,
   ZoneId,
 } from '@card-engine-nx/basic';
-import { Ability } from './types';
+import { Ability, Action } from './types';
 
 export type PlayerDeck = {
   name: string;
@@ -33,6 +33,7 @@ export type EncounterSet = {
 export type CardDefinition = {
   front: PrintedProps & { abilities: Ability[] };
   back: PrintedProps & { abilities: Ability[] };
+  shadow?: Action;
   orientation: Orientation;
 };
 
@@ -53,4 +54,5 @@ export type CardState = {
   };
   keywords: Keywords;
   zone: ZoneId;
+  shadow: CardId[];
 };

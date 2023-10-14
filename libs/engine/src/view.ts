@@ -29,6 +29,10 @@ export function createView(state: State): View {
   };
 
   view.modifiers = values(state.cards).flatMap((c) => {
+    if (c.sideUp === 'shadow') {
+      return [];
+    }
+
     const abilities = c.definition[c.sideUp].abilities;
     return abilities
       .flatMap((a) =>

@@ -5,7 +5,7 @@ import { PlayerDeck } from '@card-engine-nx/state';
 
 export const coreThree: PlayerDeck = {
   name: 'Core (Three spheres)',
-  heroes: [core.hero.dunhere, core.hero.eowyn, core.hero.denethor],
+  heroes: [core.hero.theodred, core.hero.eowyn, core.hero.denethor],
   library: [
     core.ally.daughterOfTheNimrodel,
     core.ally.daughterOfTheNimrodel,

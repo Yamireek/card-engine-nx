@@ -18,7 +18,7 @@ function getDeckImage(zoneId: ZoneId, zone: ZoneState, state: State): string {
   }
 
   const card = state.cards[topCardId];
-  const side = card.sideUp;
+  const side = card.sideUp === 'shadow' ? 'front' : card.sideUp;
 
   return getCardImageUrl(card.definition[side], side);
 }
