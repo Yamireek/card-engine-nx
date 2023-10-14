@@ -334,8 +334,8 @@ export const forestSnare = attachment(
     sphere: 'lore',
   },
   {
-    description: 'Attach to an enemy engaged with a player.', // TODO fix attachment zone
-    attachesTo: { and: [{ type: 'enemy' }, { zoneType: 'engaged' }] },
+    description: 'Attach to an enemy engaged with a player.',
+    attachesTo: { type: 'enemy', zoneType: 'engaged' },
   },
   {
     description: 'Attached enemy cannot attack.',

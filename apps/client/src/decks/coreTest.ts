@@ -30,18 +30,7 @@ export const coreTest: PlayerDeck = {
     core.hero.eowyn,
     core.hero.denethor,
   ],
-  library: [
-    core.event.willOfTheWest,
-    core.event.willOfTheWest,
-    core.event.willOfTheWest,
-    core.event.willOfTheWest,
-    core.event.willOfTheWest,
-    discardTargetCard,
-    discardTargetCard,
-    discardTargetCard,
-    discardTargetCard,
-    discardTargetCard,
-  ],
+  library: [core.attachment.forestSnare],
 };
 
 export const testScenario: Scenario = {
@@ -54,7 +43,7 @@ export const testScenario: Scenario = {
   ],
   sets: [
     {
-      easy: [core.treachery.caughtInAWeb],
+      easy: [core.enemy.forestSpider],
       normal: [],
     },
   ],
