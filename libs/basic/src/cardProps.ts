@@ -10,7 +10,7 @@ export type PrintedProps = {
   defense?: number;
   hitPoints?: number;
   traits: Trait[];
-  sphere?: Sphere[]; // TODO required
+  sphere: Sphere[];
   sequence?: number;
   questPoints?: number;
   cost?: number;

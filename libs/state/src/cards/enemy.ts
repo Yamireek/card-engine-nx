@@ -10,12 +10,14 @@ export function enemy(
     front: {
       ...props,
       abilities,
+      sphere: [],
       type: 'enemy',
     },
     back: {
       type: 'encounter_back',
       abilities: [],
       traits: [],
+      sphere: [],
     },
     orientation: 'portrait',
   };

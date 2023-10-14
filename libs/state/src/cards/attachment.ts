@@ -17,6 +17,7 @@ export function attachment(
       type: 'player_back',
       abilities: [],
       traits: [],
+      sphere: [],
     },
     orientation: 'portrait',
   };

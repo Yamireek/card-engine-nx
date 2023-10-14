@@ -10,12 +10,14 @@ export function location(
     front: {
       ...props,
       abilities,
+      sphere: [],
       type: 'location',
     },
     back: {
       type: 'encounter_back',
       abilities: [],
       traits: [],
+      sphere: [],
     },
     orientation: 'portrait',
   };

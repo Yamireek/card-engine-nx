@@ -17,6 +17,7 @@ export function ally(
       type: 'player_back',
       abilities: [],
       traits: [],
+      sphere: [],
     },
     orientation: 'portrait',
   };

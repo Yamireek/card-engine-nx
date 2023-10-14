@@ -11,11 +11,13 @@ export function treachery(
       ...props,
       abilities,
       type: 'treachery',
+      sphere: [],
       traits: [],
     },
     back: {
       type: 'encounter_back',
       abilities: [],
+      sphere: [],
       traits: [],
     },
     orientation: 'portrait',

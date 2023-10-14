@@ -18,6 +18,7 @@ export function event(
       type: 'player_back',
       abilities: [],
       traits: [],
+      sphere: [],
     },
     orientation: 'portrait',
   };
