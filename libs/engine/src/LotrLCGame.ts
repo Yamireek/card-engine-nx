@@ -164,7 +164,7 @@ export function LotrLCGame(events: UIEvents): Game<State> {
     endIf: ({ G }) => {
       if (G.result?.win) {
         return {
-          score: G.result.score,
+          score: 100 / G.result.score,
           winner: '0',
         };
       }
@@ -182,7 +182,9 @@ export function LotrLCGame(events: UIEvents): Game<State> {
           const view = createView(G);
           return [
             { move: 'skip' },
-            ...view.actions.map((_, i) => ({ move: 'action', args: [i] })),
+            ...view.actions
+              .filter((a) => a.enabled)
+              .map((_, i) => ({ move: 'action', args: [i] })),
           ];
         }
 
