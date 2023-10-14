@@ -15,7 +15,9 @@ export function keys<TK extends string | number, TI>(
   if (!records) {
     return [];
   }
-  return Object.keys(records) as TK[];
+  return Object.keys(records).filter(
+    (k) => records[k as TK] !== undefined
+  ) as TK[];
 }
 
 export function validPlayerId(id?: number | string | null): PlayerId {

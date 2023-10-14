@@ -365,7 +365,7 @@ export type CardBoolExpr =
       zone?: GameZoneType | PlayerZoneType;
     };
 
-export type CardTarget =
+export type SimpleCardTarget =
   | 'self'
   | 'each'
   | 'inAPlay'
@@ -375,13 +375,17 @@ export type CardTarget =
   | 'exhausted'
   | 'target'
   | 'destroyed'
-  | 'explored'
+  | 'explored';
+
+export type CardTarget =
+  | SimpleCardTarget
   | CardId
   | CardId[]
   | {
       name?: string;
       owner?: PlayerTarget;
-      and?: CardTarget[];
+      simple?: SimpleCardTarget | SimpleCardTarget[];
+      and?: CardTarget[]; // TODO remove
       not?: CardTarget;
       type?: CardType | CardType[];
       top?:

@@ -1,22 +1,12 @@
-import {
-  CardId,
-  GameZoneType,
-  PlayerZoneType,
-  values,
-} from '@card-engine-nx/basic';
-import { CardTarget } from '@card-engine-nx/state';
-import { intersection, last, uniq } from 'lodash';
+import { CardId, keys, zonesEqual } from '@card-engine-nx/basic';
+import { CardState, CardTarget, CardView } from '@card-engine-nx/state';
+import { intersection, last } from 'lodash';
 import { ViewContext, cardIds } from '../context';
-import {
-  getTargetZone,
-  getTargetZones,
-  getZoneState,
-  getZoneType,
-} from '../zone/target';
-import { difference, isArray, takeRight } from 'lodash/fp';
+import { getTargetZones, getZoneType } from '../zone/target';
+import { isArray, takeRight } from 'lodash/fp';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
-import { getTargetPlayer, getTargetPlayers } from '../player/target';
-import { asArray } from '../utils';
+import { getTargetPlayers } from '../player/target';
+import { asArray, isInPlay } from '../utils';
 
 export function getTargetCard(
   target: CardTarget,
@@ -30,54 +20,45 @@ export function getTargetCard(
   }
 }
 
-export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
+export function checkCardPredicate(
+  target: CardTarget,
+  state: CardState,
+  view: CardView,
+  ctx: ViewContext
+): boolean {
   if (typeof target === 'number') {
-    return [target];
-  }
-
-  if (target === 'self') {
-    if (ctx.card['self']) {
-      return [ctx.card['self']];
-    } else if (ctx.state.vars.card['self']) {
-      return [ctx.state.vars.card['self']];
-    } else {
-      throw new Error('no self card in context');
-    }
-  }
-
-  if (target === 'each') {
-    return cardIds(ctx);
-  }
-
-  if (target === 'inAPlay') {
-    const gameZones: GameZoneType[] = ['activeLocation', 'stagingArea'];
-    const playerzones: PlayerZoneType[] = ['playerArea', 'engaged'];
-
-    const gameIds = gameZones
-      .map((z) => ctx.state.zones[z])
-      .flatMap((z) => z.cards);
-
-    const playerIds = playerzones.flatMap((z) =>
-      values(ctx.state.players).flatMap((p) => p.zones[z].cards)
-    );
-
-    return [...gameIds, ...playerIds];
-  }
-
-  if (target === 'character') {
-    return values(ctx.view.cards)
-      .filter((c) => c.props.type === 'ally' || c.props.type === 'hero')
-      .map((c) => c.id);
+    return state.id === target;
   }
 
   if (isArray(target)) {
-    return target;
+    return target.includes(state.id);
+  }
+
+  if (typeof target !== 'string' && Object.keys(target).length > 1) {
+    return keys(target).every((key) =>
+      checkCardPredicate({ [key]: target[key] }, state, view, ctx)
+    );
+  }
+
+  if (target === 'self' || target === 'target') {
+    const id = ctx.card[target] ?? ctx.state.vars.card[target];
+    return id === state.id;
+  }
+
+  if (target === 'each') {
+    return true;
+  }
+
+  if (target === 'inAPlay') {
+    return isInPlay(getZoneType(state.zone));
+  }
+
+  if (target === 'character') {
+    return view.props.type === 'ally' || view.props.type === 'hero';
   }
 
   if (target === 'ready') {
-    return values(ctx.state.cards)
-      .filter((c) => !c.tapped)
-      .map((c) => c.id);
+    return !state.tapped;
   }
 
   if (target === 'event') {
@@ -87,110 +68,155 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       event.type !== 'end_of_round' &&
       event.type !== 'whenRevealed'
     ) {
-      return [event.card];
+      return event.card === state.id;
     } else {
-      throw new Error('no event');
+      return false;
     }
   }
 
   if (target === 'exhausted') {
-    return values(ctx.state.cards)
-      .filter((c) => c.tapped)
-      .map((c) => c.id);
-  }
-
-  if (target === 'target') {
-    const inCtx = ctx.card['target'];
-    if (!inCtx) {
-      const inState = ctx.state.vars.card['target'];
-      if (inState) {
-        return [inState];
-      }
-      throw new Error('no target card in ctx or state');
-    } else {
-      return [inCtx];
-    }
+    return state.tapped;
   }
 
   if (target === 'destroyed') {
-    return values(ctx.state.cards)
-      .filter((c) => {
-        if (!c.token.damage) {
-          return false;
-        }
-
-        const hp = ctx.view.cards[c.id].props.hitPoints;
-        return hp && hp <= c.token.damage;
-      })
-      .map((c) => c.id);
+    const hitpoints = view.props.hitPoints;
+    return hitpoints !== undefined && hitpoints <= state.token.damage;
   }
 
   if (target === 'explored') {
-    return values(ctx.state.cards)
-      .filter((c) => {
-        if (!c.token.progress) {
-          return false;
-        }
-
-        const cv = ctx.view.cards[c.id];
-        const needProgress = cv.props.questPoints;
-        const canBeExplored =
-          cv.conditional.advance.length > 0
-            ? calculateBoolExpr({ and: cv.conditional.advance }, ctx)
-            : true;
-
-        return (
-          needProgress && canBeExplored && needProgress <= c.token.progress
-        );
-      })
-      .map((c) => c.id);
+    const need = view.props.questPoints;
+    const condition =
+      view.conditional.advance.length > 0
+        ? calculateBoolExpr({ and: view.conditional.advance }, ctx)
+        : true;
+    return need !== undefined && condition && need <= state.token.progress;
   }
 
-  if (target.take) {
-    const all = getTargetCards({ ...target, take: undefined }, ctx);
-    return all.slice(0, target.take);
+  if (target.simple) {
+    return asArray(target.simple).every((s) =>
+      checkCardPredicate(s, state, view, ctx)
+    );
   }
 
   if (target.and) {
-    const lists = target.and.map((t) => getTargetCards(t, ctx));
-    return uniq(intersection(...lists));
+    return target.and.every((p) => checkCardPredicate(p, state, view, ctx));
   }
 
   if (target.not) {
-    const valid = getTargetCards(target.not, ctx);
-    return difference(cardIds(ctx), valid);
+    return !checkCardPredicate(target.not, state, view, ctx);
   }
 
   if (target.owner) {
-    const playerId = getTargetPlayer(target.owner, ctx);
-    const player = ctx.state.players[playerId];
-    if (player) {
-      return values(player.zones).flatMap((z) => z.cards);
-    } else {
-      throw new Error('player not found');
+    if (!state.owner) {
+      return false;
     }
+
+    const players = getTargetPlayers(target.owner, ctx);
+    return players.includes(state.owner);
   }
 
   if (target.type) {
-    if (isArray(target.type)) {
-      return values(ctx.view.cards)
-        .filter((c) => target.type?.includes(c.props.type))
-        .map((s) => s.id);
-    } else {
-      return values(ctx.view.cards)
-        .filter((c) => target.type === c.props.type)
-        .map((s) => s.id);
-    }
+    return asArray(target.type).includes(view.props.type);
   }
 
   if (target.sequence) {
     const value = calculateNumberExpr(target.sequence, ctx);
-    return values(ctx.view.cards)
-      .filter((c) => value === c.props.sequence)
-      .map((s) => s.id);
+    return value === view.props.sequence;
   }
 
-  if (target.top) {
+  if (target.sphere) {
+    if (target.sphere === 'any') {
+      return (
+        view.props.sphere !== undefined &&
+        view.props.sphere.length > 0 &&
+        !view.props.sphere.includes('neutral')
+      );
+    }
+
+    const spheres = asArray(target.sphere);
+
+    return view.props.sphere?.some((s) => spheres.includes(s)) ?? false;
+  }
+
+  if (target.controller) {
+    if (!state.controller) {
+      return false;
+    }
+
+    const players = getTargetPlayers(target.controller, ctx);
+    return players.includes(state.controller);
+  }
+
+  if (target.mark) {
+    return state.mark[target.mark];
+  }
+
+  if (target.trait) {
+    return view.props.traits.includes(target.trait);
+  }
+
+  if (target.zone) {
+    return zonesEqual(target.zone, state.zone);
+  }
+
+  if (target.zoneType) {
+    const type = getZoneType(state.zone);
+    return target.zoneType === type;
+  }
+
+  if (target.hasAttachment) {
+    const attachments = getTargetCards(target.hasAttachment, ctx);
+    return intersection(attachments, state.attachments).length > 0;
+  }
+
+  if (target.enabled) {
+    return !view.disabled || !view.disabled[target.enabled];
+  }
+
+  if (target.keyword) {
+    return (
+      (view.props.keywords && view.props.keywords[target.keyword]) ?? false
+    );
+  }
+
+  if (target.var) {
+    const id = ctx.state.vars.card[target.var];
+    return id === state.id;
+  }
+
+  if (target.name) {
+    return (
+      state.definition.front.name === target.name ||
+      state.definition.back.name === target.name
+    );
+  }
+
+  if (target.event === 'attacking') {
+    const event = last(ctx.state.event);
+    if (event?.type === 'declaredAsDefender') {
+      return event.attacker === state.id;
+    } else {
+      return false;
+    }
+  }
+
+  throw new Error(`unknown card predicate: ${JSON.stringify(target)}`);
+}
+
+export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
+  if (typeof target === 'number') {
+    return [target];
+  }
+
+  if (isArray(target)) {
+    return target;
+  }
+
+  if (target === 'each') {
+    return cardIds(ctx);
+  }
+
+  if (typeof target !== 'string' && target.top) {
     if (typeof target.top !== 'string' && 'amount' in target.top) {
       const zones = getTargetZones(target.top.zone, ctx);
       if (zones.length === 1) {
@@ -208,99 +234,22 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
     return zones.flatMap((z) => last(z.cards) ?? []);
   }
 
-  if (target.sphere) {
-    if (target.sphere === 'any') {
-      return values(ctx.view.cards).map((c) => c.id);
-    }
-
-    const spheres = asArray(target.sphere);
-
-    return values(ctx.view.cards)
-      .filter((c) => c.props.sphere?.some((s) => spheres.includes(s)))
-      .map((s) => s.id);
+  if (typeof target !== 'string' && target.take) {
+    const all = getTargetCards({ ...target, take: undefined }, ctx);
+    return all.slice(0, target.take);
   }
 
-  if (target.controller) {
-    const targets = getTargetPlayers(target.controller, ctx);
-    return values(ctx.state.cards)
-      .filter((c) => c.controller && targets.includes(c.controller))
-      .map((s) => s.id);
-  }
+  return cardIds(ctx).flatMap((id) => {
+    const state = ctx.state.cards[id];
+    const view = ctx.view.cards[id];
 
-  if (target.mark) {
-    const type = target.mark;
-    return values(ctx.state.cards)
-      .filter((c) => c.mark[type])
-      .map((c) => c.id);
-  }
-
-  if (target.trait) {
-    const type = target.trait;
-    return values(ctx.view.cards)
-      .filter((c) => c.props.traits?.includes(type))
-      .map((c) => c.id);
-  }
-
-  if (target.zone) {
-    const zone = getZoneState(target.zone, ctx.state);
-    return zone.cards;
-  }
-
-  if (target.zoneType) {
-    const zones = isArray(target.zoneType)
-      ? target.zoneType
-      : [target.zoneType];
-
-    return values(ctx.state.cards)
-      .filter((c) => zones.includes(getZoneType(c.zone)))
-      .map((c) => c.id);
-  }
-
-  if (target.hasAttachment) {
-    const attachments = getTargetCards(target.hasAttachment, ctx);
-    return values(ctx.state.cards)
-      .filter((c) => c.attachments.some((a) => attachments.includes(a)))
-      .map((c) => c.id);
-  }
-
-  if (target.enabled) {
-    const type = target.enabled;
-    return values(ctx.view.cards)
-      .filter((c) => !c.disabled || !c.disabled[type])
-      .map((c) => c.id);
-  }
-
-  if (target.keyword) {
-    const type = target.keyword;
-    return values(ctx.view.cards)
-      .filter((c) => c.props.keywords && c.props.keywords[type])
-      .map((c) => c.id);
-  }
-
-  if (target.var) {
-    const card = ctx.state.vars.card[target.var];
-    if (card) {
-      return [card];
-    } else {
+    if (!state || !view) {
       return [];
     }
-  }
 
-  if (target.name) {
-    const name = target.name;
-    return values(ctx.state.cards)
-      .filter((c) => c.definition.front.name === name)
-      .map((c) => c.id);
-  }
-
-  if (target.event === 'attacking') {
-    const event = last(ctx.state.event);
-    if (event?.type === 'declaredAsDefender') {
-      return [event.attacker];
-    } else {
-      throw new Error('missing event data');
-    }
-  }
+    const checked = checkCardPredicate(target, state, view, ctx);
+    return checked ? id : [];
+  });
 
   throw new Error(`unknown card target: ${JSON.stringify(target)}`);
 }

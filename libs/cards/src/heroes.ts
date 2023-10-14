@@ -73,9 +73,7 @@ export const thalin = hero(
   {
     description:
       'While Thalin is committed to a quest, deal 1 damage to each enemy as it is revealed by the encounter deck.',
-    target: {
-      and: [{ type: 'enemy' }, { zoneType: 'encounterDeck' }],
-    },
+    target: { type: 'enemy', zoneType: 'encounterDeck' },
     response: {
       event: 'revealed',
       condition: {
@@ -316,9 +314,7 @@ export const eleanor = hero(
   {
     description:
       'Response: Exhaust Eleanor to cancel the "when revealed" effects of a treachery card just revealed by the encounter deck. Then, discard that card, and replace it with the next card from the encounter deck.',
-    target: {
-      and: [{ type: 'treachery' }, { zoneType: 'encounterDeck' }],
-    },
+    target: { type: 'treachery', zoneType: 'encounterDeck' },
     response: {
       event: 'whenRevealed',
       action: [

@@ -82,7 +82,8 @@ export const beorn = ally(
         atEndOfPhase: {
           card: {
             target: {
-              and: ['inAPlay', { name: 'Beorn' }],
+              name: 'Beorn',
+              simple: 'inAPlay',
             },
             action: 'shuffleToDeck',
           },
