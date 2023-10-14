@@ -200,11 +200,7 @@ export function executeCardAction(
     );
 
     if (next.length === 0) {
-      console.log('game won');
-      ctx.state.result = {
-        win: true,
-        score: 1,
-      };
+      ctx.state.next.unshift('win');
       return;
     }
 

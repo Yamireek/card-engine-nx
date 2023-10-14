@@ -37,6 +37,7 @@ export type Action =
   | 'dealShadowCards'
   | 'revealEncounterCard'
   | 'win'
+  | 'loose'
   | 'stackPop'
   | 'stateCheck'
   | {

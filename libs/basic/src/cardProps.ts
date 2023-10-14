@@ -19,6 +19,7 @@ export type PrintedProps = {
   threat?: number;
   keywords?: Keywords;
   hitpoints?: number;
+  victory?: number;
 };
 
 export type HeroProps = {

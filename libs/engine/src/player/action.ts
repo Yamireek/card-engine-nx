@@ -10,7 +10,7 @@ import {
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';
 import { getTargetCard, getTargetCards } from '../card';
-import { isArray, max, sum } from 'lodash/fp';
+import { isArray, max, sum, values } from 'lodash/fp';
 import { getTargetPlayers } from './target';
 import { canExecute, canPlayerExecute } from '../resolution';
 import { canCardExecute } from '../card/resolution';
@@ -324,9 +324,17 @@ export function executePlayerAction(
 
   if (action === 'eliminate') {
     player.eliminated = true;
+
+    if (values(ctx.state.players).every((p) => p.eliminated)) {
+      ctx.state.next.unshift('loose');
+      return;
+    }
+
+    // TODO return engaged
     ctx.state.next.unshift({
       card: { target: { owner: player.id }, action: 'destroy' },
     });
+
     return;
   }
 

@@ -86,6 +86,8 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     );
 
     ctx.state.next.unshift({ event: { type: 'end_of_round' } }, gameRound());
+    ctx.state.triggers.end_of_round = [];
+    ctx.state.round++;
     return;
   }
 
@@ -107,7 +109,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     );
 
     ctx.state.next.unshift(...ctx.state.triggers.end_of_phase);
-    ctx.state.triggers.end_of_round = [];
+    ctx.state.triggers.end_of_phase = [];
     return;
   }
 
@@ -205,9 +207,54 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'win') {
+    const playerScores = values(ctx.state.players).map((p) => {
+      const threat = p.thread;
+      const deadHeroes = getTargetCards(
+        {
+          zone: { player: p.id, type: 'discardPile' },
+          type: 'hero',
+        },
+        ctx
+      ).map((id) => ctx.state.cards[id]);
+
+      const aliveHeroes = getTargetCards(
+        {
+          zone: { player: p.id, type: 'discardPile' },
+          type: 'hero',
+        },
+        ctx
+      ).map((id) => ctx.state.cards[id]);
+
+      return (
+        threat +
+        sum(deadHeroes.map((h) => h.definition.front.threatCost)) +
+        sum(aliveHeroes.map((h) => h.token.damage))
+      );
+    });
+
+    const victoryCards = getTargetCards(
+      {
+        zoneType: 'victoryDisplay',
+      },
+      ctx
+    ).map((id) => ctx.view.cards[id]);
+
+    const score =
+      sum(playerScores) -
+      sum(victoryCards.map((c) => c.props.victory)) +
+      ctx.state.round * 10;
+
     ctx.state.result = {
       win: true,
-      score: 50, // TODO count
+      score,
+    };
+    return;
+  }
+
+  if (action === 'loose') {
+    ctx.state.result = {
+      win: false,
+      score: 0,
     };
     return;
   }
@@ -232,12 +279,6 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       { and: [{ type: 'quest' }, 'explored'] },
       ctx
     );
-
-    const heroes = getTargetCards({ and: [{ type: 'hero' }, 'inAPlay'] }, ctx);
-    if (heroes.length === 0) {
-      ctx.state.result = { win: false, score: 0 }; // TODO eleminate each player
-      return;
-    }
 
     if (destroy.length > 0 || explore.length > 0 || advance.length > 0) {
       ctx.state.next.unshift('stateCheck');
@@ -268,6 +309,17 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
           action: 'advance',
         },
       });
+    }
+
+    for (const player of values(ctx.state.players)) {
+      const heroes = getTargetCards(
+        { simple: 'inAPlay', type: 'hero', controller: player.id },
+        ctx
+      );
+      if (heroes.length === 0) {
+        ctx.state.next.unshift({ player: player.id, action: 'eliminate' });
+        return;
+      }
     }
 
     return;
