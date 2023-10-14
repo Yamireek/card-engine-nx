@@ -13,6 +13,7 @@ import { coreLore } from './decks/coreLore';
 import { coreLeadershipSpirit } from './decks/coreLeadershipSpirit';
 import { coreLoreTactics } from './decks/coreLoreTactics';
 import { coreTest, testScenario } from './decks/coreTest';
+import { coreThree } from './decks/coreThree';
 
 export const GameSetup = () => {
   const { state, moves, playerId } = useContext(StateContext);
@@ -41,6 +42,7 @@ export const GameSetup = () => {
             coreLore,
             coreLeadershipSpirit,
             coreLoreTactics,
+            coreThree,
             coreTest,
           ].map((d) => ({
             title: d.name,
