@@ -58,6 +58,10 @@ export type AbilityView = {
   ability: CardModifier;
 };
 
+export type CardRules = {
+  attacksStagingArea?: true;
+};
+
 export type CardView = {
   id: CardId;
   printed: PrintedProps;
@@ -75,6 +79,7 @@ export type CardView = {
   };
   refreshCost: CardAction[];
   cost?: CostModifier;
+  rules: CardRules;
 };
 
 export type PlayerView = {

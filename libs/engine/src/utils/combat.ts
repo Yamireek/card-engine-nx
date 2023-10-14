@@ -48,6 +48,10 @@ export function canCharacterAttack(
     return true;
   }
 
+  if (character.view.rules.attacksStagingArea && zone === 'stagingArea') {
+    return true;
+  }
+
   return false;
 }
 

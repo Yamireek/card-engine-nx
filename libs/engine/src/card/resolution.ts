@@ -157,7 +157,10 @@ export function canCardExecute(
     return true;
   }
 
-  if (zone === 'engaged' && action.resolvePlayerAttacking) {
+  if (
+    zone === 'engaged' ||
+    (zone === 'stagingArea' && action.resolvePlayerAttacking)
+  ) {
     return true;
   }
 

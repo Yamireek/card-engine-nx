@@ -15,7 +15,7 @@ import {
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
 import { Choice, Event, PendingEffect, State } from './state';
-import { PlayerModifier } from './view';
+import { CardRules, PlayerModifier } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';
 
@@ -286,6 +286,7 @@ export type CardModifier = {
     modifier: CardModifier;
   };
   addSphere?: Sphere;
+  rule?: CardRules;
 };
 
 export type CostModifier = {

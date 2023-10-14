@@ -154,15 +154,10 @@ export function executePlayerAction(
   }
 
   if (action === 'resolvePlayerAttacks') {
-    const enemies = getTargetCards(
-      { type: 'enemy', zone: { player: player.id, type: 'engaged' } },
-      ctx
-    );
-
+    const enemies = getTargetCards({ type: 'enemy', simple: 'inAPlay' }, ctx);
     const characters = getTargetCards(
       {
-        zone: { player: player.id, type: 'playerArea' },
-        simple: ['character', 'ready'],
+        simple: ['character', 'ready', 'inAPlay'],
       },
       ctx
     );

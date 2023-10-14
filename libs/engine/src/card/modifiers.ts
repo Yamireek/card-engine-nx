@@ -122,6 +122,11 @@ export function applyModifier(
       return;
     }
 
+    case !!modifier.rule: {
+      self.rules = { ...self.rules, ...modifier.rule };
+      return;
+    }
+
     default:
       throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);
   }

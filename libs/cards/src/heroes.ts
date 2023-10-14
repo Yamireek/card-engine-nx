@@ -337,17 +337,29 @@ export const eleanor = hero(
   }
 );
 
-export const dunhere = hero({
-  name: 'Dúnhere',
-  threatCost: 8,
-  willpower: 1,
-  attack: 2,
-  defense: 1,
-  hitPoints: 4,
-  traits: ['rohan', 'warrior'],
-  sphere: 'spirit',
-});
-// TODO Dúnhere can target enemies in the staging area when he attacks alone. When doing so, he gets +1 Attack.
+// TODO attack bonus
+export const dunhere = hero(
+  {
+    name: 'Dúnhere',
+    threatCost: 8,
+    willpower: 1,
+    attack: 2,
+    defense: 1,
+    hitPoints: 4,
+    traits: ['rohan', 'warrior'],
+    sphere: 'spirit',
+  },
+  {
+    description:
+      'Dúnhere can target enemies in the staging area when he attacks alone. When doing so, he gets +1 Attack.',
+    card: {
+      description: '',
+      rule: {
+        attacksStagingArea: true,
+      },
+    },
+  }
+);
 
 export const denethor = hero({
   name: 'Denethor',
