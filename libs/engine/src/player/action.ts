@@ -14,6 +14,11 @@ import { isArray, max, sum, values } from 'lodash/fp';
 import { getTargetPlayers } from './target';
 import { canExecute, canPlayerExecute } from '../resolution';
 import { canCardExecute } from '../card/resolution';
+import {
+  canCharacterAttack,
+  canCharacterDefend,
+  canEnemyAttack,
+} from '../utils/combat';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -120,69 +125,60 @@ export function executePlayerAction(
   }
 
   if (action === 'resolveEnemyAttacks') {
-    const filter: CardTarget = {
-      and: [
-        { type: 'enemy' },
-        { not: { mark: 'attacked' } },
-        { enabled: 'attacking' },
-        { zone: { player: player.id, type: 'engaged' } },
-      ],
-    };
+    const enemies = getTargetCards(
+      { type: 'enemy', simple: 'inAPlay' },
+      ctx
+    ).filter((enemy) => canEnemyAttack(enemy, player.id, ctx));
 
-    ctx.state.next.unshift({
-      while: {
-        condition: { someCard: filter },
-        action: {
-          player: {
-            target: player.id,
-            action: {
-              chooseCardActions: {
-                title: 'Choose enemy attacker',
-                target: filter,
-                action: {
-                  resolveEnemyAttacking: player.id,
-                },
+    if (enemies.length > 0) {
+      ctx.state.next.unshift(
+        {
+          player: player.id,
+          action: {
+            chooseCardActions: {
+              title: 'Choose enemy attacker',
+              target: enemies,
+              action: {
+                resolveEnemyAttacking: player.id,
               },
             },
           },
         },
-      },
-    });
+        {
+          player: player.id,
+          action: 'resolveEnemyAttacks',
+        }
+      );
+    }
     return;
   }
 
   if (action === 'resolvePlayerAttacks') {
     const enemies = getTargetCards(
+      { type: 'enemy', zone: { player: player.id, type: 'engaged' } },
+      ctx
+    );
+
+    const characters = getTargetCards(
       {
-        and: [
-          { type: 'enemy' },
-          { not: { mark: 'attacked' } },
-          { zone: { player: player.id, type: 'engaged' } },
-        ],
+        zone: { player: player.id, type: 'playerArea' },
+        simple: ['character', 'ready'],
       },
       ctx
     );
 
-    const attackers = getTargetCards(
-      {
-        and: [
-          'ready',
-          'character',
-          { zone: { player: player.id, type: 'playerArea' } },
-        ],
-      },
-      ctx
+    const attackable = enemies.filter((enemy) =>
+      characters.some((character) => canCharacterAttack(character, enemy, ctx))
     );
 
-    if (enemies && attackers && attackers.length > 0 && enemies.length > 0) {
+    if (attackable.length > 0) {
       ctx.state.next.unshift({
         player: {
           target: player.id,
           action: {
             chooseActions: {
               title: 'Choose enemy to attack',
-              optional: true,
-              actions: enemies.map((e) => ({
+              actions: attackable.map((e) => ({
                 title: e.toString(),
                 cardId: e,
                 action: [
@@ -199,6 +195,7 @@ export function executePlayerAction(
                     },
                   },
                 ],
+                optional: true,
               })),
             },
           },
@@ -214,30 +211,31 @@ export function executePlayerAction(
     const attacker = getTargetCard({ mark: 'attacking' }, ctx);
 
     if (attacker) {
-      ctx.state.next.unshift({
-        player: {
-          target: player.id,
-          action: {
-            chooseCardActions: {
-              title: !multiple ? 'Declare defender' : 'Declare defenders',
-              target: {
-                and: [
-                  'character',
-                  'ready',
-                  { zone: { player: player.id, type: 'playerArea' } },
-                ],
-              },
-              multi: multiple,
-              optional: true,
-              action: {
-                declareAsDefender: {
-                  attacker,
+      const defenders = getTargetCards(
+        { simple: ['character', 'inAPlay'] },
+        ctx
+      ).filter((defender) => canCharacterDefend(defender, attacker, ctx));
+
+      if (defenders.length > 0) {
+        ctx.state.next.unshift({
+          player: {
+            target: player.id,
+            action: {
+              chooseCardActions: {
+                title: !multiple ? 'Declare defender' : 'Declare defenders',
+                target: defenders,
+                multi: multiple,
+                optional: true,
+                action: {
+                  declareAsDefender: {
+                    attacker,
+                  },
                 },
               },
             },
           },
-        },
-      });
+        });
+      }
     }
 
     return;
@@ -585,22 +583,28 @@ export function executePlayerAction(
   }
 
   if (action.declareAttackers) {
-    ctx.state.next.unshift({
-      player: {
-        target: player.id,
-        action: {
-          chooseCardActions: {
-            title: 'Declare attackers',
-            target: {
-              and: ['character', { controller: player.id }],
+    const enemy = action.declareAttackers;
+    const characters = getTargetCards(
+      { simple: ['character', 'inAPlay'] },
+      ctx
+    ).filter((character) => canCharacterAttack(character, enemy, ctx));
+
+    if (characters.length > 0) {
+      ctx.state.next.unshift({
+        player: {
+          target: player.id,
+          action: {
+            chooseCardActions: {
+              title: 'Declare attackers',
+              target: characters,
+              action: [{ mark: 'attacking' }, 'exhaust'],
+              multi: true,
+              optional: true,
             },
-            action: [{ mark: 'attacking' }, 'exhaust'],
-            multi: true,
-            optional: true,
           },
         },
-      },
-    });
+      });
+    }
     return;
   }
 

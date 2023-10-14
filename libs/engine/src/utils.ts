@@ -5,6 +5,7 @@ import {
   createCardState,
 } from '@card-engine-nx/state';
 import {
+  CardId,
   GameZoneType,
   PlayerId,
   PlayerZoneType,
@@ -12,7 +13,7 @@ import {
   values,
 } from '@card-engine-nx/basic';
 import { executeAction } from './action';
-import { ExecutionContext } from './context';
+import { ExecutionContext, ViewContext } from './context';
 import { uiEvent } from './eventFactories';
 import { UIEvents } from './uiEvents';
 import { createView } from './view';
@@ -189,4 +190,16 @@ export function asArray<T>(item: T | T[]): T[] {
   } else {
     return [item];
   }
+}
+
+export function getCard(id: CardId, ctx: ViewContext) {
+  const state = ctx.state.cards[id];
+  const view = ctx.view.cards[id];
+  return { id, state, view };
+}
+
+export function getPlayer(id: PlayerId, ctx: ViewContext) {
+  const state = ctx.state.players[id];
+  const view = ctx.view.players[id];
+  return { id, state, view };
 }

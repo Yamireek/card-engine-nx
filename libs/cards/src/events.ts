@@ -158,6 +158,7 @@ export const quickStrike = event(
   }
 );
 
+// TODO choose target to exhaust
 export const rainOfArrows = event(
   {
     name: 'Rain of Arrows',
