@@ -20,14 +20,10 @@ export const greatForestWeb = location(
               chooseCardActions: {
                 title: 'Choose hero to exhaust',
                 target: {
-                  and: [
-                    { type: 'hero' },
-                    {
-                      controller: {
-                        var: 'choosen',
-                      },
-                    },
-                  ],
+                  type: 'hero',
+                  controller: {
+                    var: 'choosen',
+                  },
                 },
                 action: 'exhaust',
               },

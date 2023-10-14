@@ -7,6 +7,7 @@ import { createPayCostAction, canPlayerExecute } from '../resolution';
 import { isInPlay } from '../utils';
 import { getZoneType } from '../zone/target';
 import { getTargetCards } from './target';
+import { calculateBoolExpr } from '../expr';
 
 export function canCardExecute(
   action: CardAction,
@@ -24,7 +25,16 @@ export function canCardExecute(
 
   if (typeof action === 'string') {
     if (inPlay && action === 'travel') {
-      return ctx.state.zones.activeLocation.cards.length === 0;
+      if (ctx.state.zones.activeLocation.cards.length > 0) {
+        return false;
+      }
+
+      const cv = ctx.view.cards[cardId];
+      if (cv.conditional.travel) {
+        return calculateBoolExpr({ and: cv.conditional.travel }, ctx);
+      }
+
+      return true;
     }
 
     if (inPlay && action === 'exhaust') {

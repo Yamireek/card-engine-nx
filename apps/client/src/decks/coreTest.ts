@@ -25,12 +25,12 @@ export const discardTargetCard = event(
 export const coreTest: PlayerDeck = {
   name: 'Test',
   heroes: [
-    core.hero.gimli,
+    core.hero.legolas,
     core.hero.aragorn,
     core.hero.eowyn,
     core.hero.denethor,
   ],
-  library: [core.attachment.forestSnare],
+  library: [core.event.rainOfArrows],
 };
 
 export const testScenario: Scenario = {
@@ -38,7 +38,7 @@ export const testScenario: Scenario = {
   quest: [core.quest.fliesAndSpiders, core.quest.aForkInTheRoad],
   sets: [
     {
-      easy: [core.enemy.forestSpider],
+      easy: [core.enemy.blackForestBats],
       normal: [],
     },
   ],

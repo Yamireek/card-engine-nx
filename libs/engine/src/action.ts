@@ -114,30 +114,27 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action === 'chooseTravelDestination') {
-    const target: CardTarget = {
-      and: [{ zone: 'stagingArea' }, { type: 'location' }],
-    };
+    const existing = getTargetCards({ zoneType: 'activeLocation' }, ctx);
+    if (existing.length > 0) {
+      return;
+    }
 
-    const locations = getTargetCards(target, ctx).filter((l) => {
-      const travelCost = ctx.view.cards[l].travel;
-      // TODO move to travel action
-      return travelCost.length === 0 || canExecute(travelCost, true, ctx);
-    });
-
-    if (locations.length > 0) {
-      ctx.state.next.unshift({
-        player: {
-          target: 'first',
-          action: {
-            chooseCardActions: {
-              title: 'Choose location for travel',
-              target,
-              action: 'travel',
+    ctx.state.next.unshift({
+      player: {
+        target: 'first',
+        action: {
+          chooseCardActions: {
+            title: 'Choose location for travel',
+            target: {
+              zone: 'stagingArea',
+              type: 'location',
             },
+            action: 'travel',
+            optional: true,
           },
         },
-      });
-    }
+      },
+    });
     return;
   }
 
