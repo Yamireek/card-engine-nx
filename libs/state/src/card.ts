@@ -55,4 +55,5 @@ export type CardState = {
   keywords: Keywords;
   zone: ZoneId;
   shadow: CardId[];
+  shadowOf?: CardId;
 };

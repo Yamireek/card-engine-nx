@@ -26,6 +26,7 @@ export const LotrCard3d = (props: {
   const actions = view.actions.filter(
     (a) => a.card === props.cardId && a.enabled === true
   );
+
   const card = state.cards[props.cardId];
 
   const textures = {
@@ -42,7 +43,11 @@ export const LotrCard3d = (props: {
         height: props.size.height,
       }}
       position={props.position}
-      rotation={[0, 0, card.tapped ? -Math.PI / 4 : 0]}
+      rotation={[
+        0,
+        0,
+        card.tapped ? -Math.PI / 4 : card.shadowOf ? Math.PI / 3 : 0,
+      ]}
       texture={
         card.sideUp === 'front'
           ? textures

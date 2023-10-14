@@ -4,7 +4,7 @@ import { CardId, Orientation } from '@card-engine-nx/basic';
 import { cardSize } from './Card3d';
 import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
-import { max } from 'lodash/fp';
+import { max, sum, sumBy } from 'lodash/fp';
 import React from 'react';
 import { LotrCard3d } from './LotrCard3d';
 
@@ -20,7 +20,7 @@ export const LotrCardArea = (props: {
 
   const items = props.cards
     .map((id) => state.cards[id])
-    .filter((c) => !c.attachedTo);
+    .filter((c) => !c.attachedTo && !c.shadowOf);
 
   const maxAttachments = max(items.map((i) => i.attachments.length)) ?? 0;
 
@@ -63,6 +63,20 @@ export const LotrCardArea = (props: {
                   position={[
                     p.position[0],
                     p.position[1] + offsetMin + diff * (i + 1),
+                    0.01 - (i + 1) * 0.001,
+                  ]}
+                />
+              );
+            })}
+            {p.item.shadow.map((a, i) => {
+              return (
+                <LotrCard3d
+                  key={a}
+                  cardId={a}
+                  size={realItemSize}
+                  position={[
+                    p.position[0],
+                    p.position[1]-0.02,
                     0.01 - (i + 1) * 0.001,
                   ]}
                 />
