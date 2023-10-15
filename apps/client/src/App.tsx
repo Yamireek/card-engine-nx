@@ -224,6 +224,25 @@ game.chooseOption(
 );
 game.chooseOption('Deal 4 damage to 1 enemy in play');
 game.chooseOption('56');
+game.skip();
+game.chooseOption('55');
+game.skip();
+game.chooseOption('35');
+game.skip();
+game.skip();
+game.chooseOptions(['34', '36', '41', '45', '50']);
+game.skip();
+game.skip();
+game.skip();
+game.skip();
+game.chooseAction('Play ally Snowbourn Scout');
+game.chooseOption(
+  'Response: After Snowbourn Scout enters play, choose a location. Place 1 progress token on that location.'
+);
+game.chooseAction(
+  "Action: Exhaust Steward of Gondor to add 2 resources to attached hero's resource pool."
+);
+game.chooseAction('Play ally Gandalf');
 
 export const App = () => {
   return (

@@ -66,7 +66,7 @@ it('Gandalf', () => {
 
   const gandalf = game.getCard('Gandalf');
   game.do({ beginPhase: 'planning' });
-  game.chooseAction('Play ally');
+  game.chooseAction('Play ally Gandalf');
   game.chooseOption(response);
   expect(game.state.players['0']?.thread).toBe(-5);
   game.do('endRound');

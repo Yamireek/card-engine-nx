@@ -67,10 +67,6 @@ export class TestEngine {
   }
 
   chooseAction(description: string) {
-    if (!this.state.choice || this.state.choice.type !== 'actions') {
-      throw new Error('no action choices');
-    }
-
     const action = this.actions.find((a) => a.description === description);
     if (!action) {
       throw new Error(
@@ -80,19 +76,24 @@ export class TestEngine {
       );
     }
 
-    const next: Choice = {
-      id: this.state.choice.id,
-      type: 'actions',
-      title: this.state.choice.title,
-    };
+    const next: Choice | undefined =
+      this.state.choice && this.state.choice.type === 'actions'
+        ? {
+            id: this.state.choice.id,
+            type: 'actions',
+            title: this.state.choice.title,
+          }
+        : undefined;
 
     this.state.choice = undefined;
 
     this.do([
       action.action,
-      {
-        choice: next,
-      },
+      next
+        ? {
+            choice: next,
+          }
+        : [],
     ]);
   }
 
