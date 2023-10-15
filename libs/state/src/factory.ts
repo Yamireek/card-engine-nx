@@ -147,7 +147,7 @@ export function createCardState(
     tapped: false,
     definition: definition,
     attachments: [],
-    shadow: [],
+    shadows: [],
     owner: owner,
     controller: owner,
     limitUses: {

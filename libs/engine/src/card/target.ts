@@ -169,6 +169,15 @@ export function checkCardPredicate(
     return intersection(attachments, state.attachments).length > 0;
   }
 
+  if (target.shadows) {
+    if (!state.shadowOf) {
+      return false;
+    }
+
+    const targets = getTargetCards(target.shadows, ctx);
+    return targets.includes(state.shadowOf);
+  }
+
   if (target.enabled) {
     return !view.disabled || !view.disabled[target.enabled];
   }
@@ -206,7 +215,7 @@ export function checkCardPredicate(
 
   if (target.hasShadow) {
     const shadows = getTargetCards(target.hasShadow, ctx);
-    return state.shadow.some((s) => shadows.includes(s));
+    return state.shadows.some((s) => shadows.includes(s));
   }
 
   if (target.attachmentOf) {

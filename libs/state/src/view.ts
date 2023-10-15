@@ -80,7 +80,7 @@ export type CardView = {
   refreshCost: CardAction[];
   cost?: CostModifier;
   rules: CardRules;
-  shadows: Array<{ description: string; action: Action; source: CardId }>;
+  shadows: Array<{ description: string; action: Action }>;
 };
 
 export type PlayerView = {

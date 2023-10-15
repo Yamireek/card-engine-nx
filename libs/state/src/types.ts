@@ -423,6 +423,7 @@ export type CardTarget =
       event?: 'attacking';
       take?: number;
       side?: Side;
+      shadows?: CardTarget;
     };
 
 export type ZoneTarget =

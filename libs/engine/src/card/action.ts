@@ -149,6 +149,14 @@ export function executeCardAction(
       card.attachedTo = undefined;
     }
 
+    if (card.shadowOf) {
+      const parent = ctx.state.cards[card.shadowOf];
+      if (parent) {
+        parent.shadows = parent.shadows.filter((a) => a !== card.id);
+      }
+      card.shadowOf = undefined;
+    }
+
     const owner = card.owner;
 
     ctx.state.next.unshift({
@@ -357,7 +365,7 @@ export function executeCardAction(
   }
 
   if (action === 'resolveShadowEffects') {
-    const cards = ctx.state.cards[card.id].shadow.flatMap(
+    const cards = ctx.state.cards[card.id].shadows.flatMap(
       (id) => ctx.view.cards[id]
     );
 
@@ -399,7 +407,7 @@ export function executeCardAction(
               shadow: {
                 useCardVar: {
                   name: 'self',
-                  value: shadow.source,
+                  value: card.id,
                   action: shadow.action,
                 },
               },

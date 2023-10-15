@@ -253,6 +253,13 @@ export function executePlayerAction(
     const attack = sum(attacking.map((a) => a.props.attack || 0));
     const defense = sum(defending.map((d) => d.props.defense || 0));
 
+    ctx.state.next.unshift({
+      card: {
+        shadows: attacking.map((c) => c.id),
+      },
+      action: 'discard',
+    });
+
     ctx.state.next.unshift(
       ...attacking.map((a) => {
         const event: Event = { type: 'attacked', card: a.id };

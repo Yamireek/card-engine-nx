@@ -68,7 +68,7 @@ export const LotrCardArea = (props: {
                 />
               );
             })}
-            {p.item.shadow.map((a, i) => {
+            {p.item.shadows.map((a, i) => {
               return (
                 <LotrCard3d
                   key={a}

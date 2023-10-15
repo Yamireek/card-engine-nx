@@ -56,6 +56,6 @@ export type CardState = {
   };
   keywords: Keywords;
   zone: ZoneId;
-  shadow: CardId[];
+  shadows: CardId[];
   shadowOf?: CardId;
 };
