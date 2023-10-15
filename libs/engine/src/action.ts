@@ -148,7 +148,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         const targetZone = getZoneState(ctx.state.cards[enemy].zone, ctx.state);
         ctx.state.cards[enemy].shadows.push(shadow);
         ctx.state.cards[shadow].zone = ctx.state.cards[enemy].zone;
-        ctx.state.cards[shadow].shadowOf = enemy;        
+        ctx.state.cards[shadow].shadowOf = enemy;
         targetZone.cards.push(shadow);
       }
     }
@@ -173,16 +173,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       ctx
     );
 
-    const totalThreat = calculateNumberExpr(
-      {
-        card: {
-          target: { zone: 'stagingArea' },
-          value: 'threat',
-          sum: true,
-        },
-      },
-      ctx
-    );
+    const totalThreat = calculateNumberExpr('totalThreat', ctx);
 
     const diff = totalWillpower - totalThreat;
     if (diff > 0) {
@@ -706,6 +697,10 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
     }
 
     if (action.event.type === 'revealed') {
+      if (action.event.card === 75) {
+        //debugger;
+      }
+
       const card = ctx.view.cards[action.event.card];
       if (card.whenRevealed.length > 0) {
         const target = action.event.card;

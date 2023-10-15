@@ -20,6 +20,13 @@ export function calculateNumberExpr(
     return Object.keys(ctx.state.players).length;
   }
 
+  if (expr === 'totalThreat') {
+    const values = ctx.state.zones.stagingArea.cards
+      .map((c) => ctx.view.cards[c])
+      .map((v) => (v.rules.noThreatContribution ? 0 : v.props.threat ?? 0));
+    return sum(values);
+  }
+
   if (expr.card) {
     const ids = getTargetCards(expr.card.target, ctx);
     if (ids.length === 1) {

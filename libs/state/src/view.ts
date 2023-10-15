@@ -60,6 +60,7 @@ export type AbilityView = {
 
 export type CardRules = {
   attacksStagingArea?: true;
+  noThreatContribution?: true;
 };
 
 export type CardView = {

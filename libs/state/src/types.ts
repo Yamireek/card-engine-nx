@@ -110,7 +110,7 @@ export type PlayerAction =
   | 'shuffleLibrary'
   | 'resolveEnemyAttacks'
   | 'resolvePlayerAttacks'
-  | 'commitCharactersToQuest'  
+  | 'commitCharactersToQuest'
   | 'engagementCheck'
   | 'optionalEngagement'
   | 'declareDefender'
@@ -314,6 +314,7 @@ export type ResponseAction = {
 export type NumberExpr =
   | number
   | 'countOfPlayers'
+  | 'totalThreat'
   | {
       count?: {
         cards?: CardTarget;

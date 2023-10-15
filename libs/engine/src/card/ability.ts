@@ -365,7 +365,7 @@ export function createModifiers(
       return [];
 
     case 'whenRevealed' in ability: {
-      if (zone === 'encounterDeck') {
+      if (zone === 'encounterDeck' || zone === 'questArea') {
         return [
           {
             source: self,

@@ -1,9 +1,9 @@
-import React, { useContext, useMemo } from "react";
-import { useAsync } from "react-use";
-import { Texture, TextureLoader } from "three";
-import { mapValues } from "lodash";
-import { values } from "@card-engine-nx/basic";
-import { Material } from "../types";
+import React, { useContext, useMemo } from 'react';
+import { useAsync } from 'react-use';
+import { Texture, TextureLoader } from 'three';
+import { mapValues } from 'lodash';
+import { values } from '@card-engine-nx/basic';
+import { Material } from '../types';
 
 type MaterialDefiniton = { color: string; roughness: string; normal: string };
 
@@ -30,7 +30,6 @@ async function loadTextures(
   const textures: Record<string, Texture> = {};
   for (const url of [...images, ...materialUrls]) {
     if (url) {
-      console.log("loading texture", url);
       textures[url] = await loader.loadAsync(url);
     }
   }
@@ -46,7 +45,7 @@ export const TexturesProvider = (
   const textures = useAsync(() =>
     loadTextures(props.textures, values(props.materials))
   );
-  
+
   const materials = useMemo(() => {
     if (textures.value) {
       return mapValues(props.materials, (v) => {
@@ -57,11 +56,11 @@ export const TexturesProvider = (
             normal: textures.value[v.normal],
           };
         } else {
-          throw new Error("missing textures");
+          throw new Error('missing textures');
         }
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [textures.value]);
 
   if (textures.loading || !textures.value || !materials) {

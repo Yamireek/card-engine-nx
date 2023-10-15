@@ -6,7 +6,7 @@ import {
 } from '@card-engine-nx/ui';
 import { useContext, useMemo, useState } from 'react';
 import { StateContext } from './StateContext';
-import { UiEvent, UIEvents } from '@card-engine-nx/engine';
+import { calculateNumberExpr, UiEvent, UIEvents } from '@card-engine-nx/engine';
 import { values } from '@card-engine-nx/basic';
 import { Board3d } from './Board3d';
 import { State } from '@card-engine-nx/state';
@@ -125,9 +125,12 @@ export const LotrLCGInfo = () => {
       .map((c) => view.cards[c.id].props.willpower ?? 0)
   );
 
-  const totalThreat = sum(
-    state.zones.stagingArea.cards.map((id) => view.cards[id].props.threat ?? 0)
-  );
+  const totalThreat = calculateNumberExpr('totalThreat', {
+    state,
+    view,
+    card: {},
+    player: {},
+  });
 
   const currentProgress = sum(
     state.zones.questArea.cards.map((id) => state.cards[id].token.progress)

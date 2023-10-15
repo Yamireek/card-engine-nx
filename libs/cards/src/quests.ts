@@ -90,10 +90,8 @@ export const achosenPath1 = quest({
                 chooseCardActions: {
                   title: 'Choose 1 Spider',
                   target: {
-                    and: [
-                      { zoneType: ['encounterDeck', 'discardPile'] },
-                      { trait: 'spider' },
-                    ],
+                    zoneType: ['encounterDeck', 'discardPile'],
+                    trait: 'spider',
                   },
                   action: {
                     move: {
@@ -105,14 +103,14 @@ export const achosenPath1 = quest({
               },
             },
           },
-          {
-            card: {
-              target: { zoneType: 'encounterDeck' },
-              action: {
-                flip: 'back',
-              },
-            },
-          },
+          // {
+          //   card: {
+          //     target: { zoneType: 'encounterDeck' },
+          //     action: {
+          //       flip: 'back',
+          //     },
+          //   },
+          // },
           'shuffleEncounterDeck',
         ],
       },

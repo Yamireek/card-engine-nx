@@ -39,7 +39,6 @@ export const testScenario: Scenario = {
     core.quest.fliesAndSpiders,
     core.quest.aForkInTheRoad,
     core.quest.achosenPath1,
-    core.quest.achosenPath2,
   ],
   sets: [
     {
