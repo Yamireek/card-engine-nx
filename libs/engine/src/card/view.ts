@@ -25,6 +25,7 @@ export function createCardView(state: CardState): CardView {
       travel: [],
       refreshCost: [],
       rules: {},
+      shadows: state.definition.shadow ? [state.definition.shadow] : [],
     };
   }
 
@@ -42,6 +43,7 @@ export function createCardView(state: CardState): CardView {
     },
     travel: [],
     refreshCost: [],
+    shadows: [],
     rules: {},
   };
 }

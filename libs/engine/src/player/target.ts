@@ -27,34 +27,23 @@ export function getTargetPlayers(
       .map((p) => p.id);
   }
 
-  if (target === 'owner') {
-    if (ctx.player['owner']) {
-      return [ctx.player['owner']];
-    } else if (ctx.state.vars.player['owner']) {
-      return [ctx.state.vars.player['owner']];
+  if (
+    target === 'owner' ||
+    target === 'controller' ||
+    target === 'target' ||
+    target === 'defending'
+  ) {
+    const inCtx = ctx.player[target];
+    if (inCtx) {
+      return [inCtx];
     } else {
-      throw new Error('no owner player in context');
+      const inVar = ctx.state.vars.player[target];
+      if (inVar) {
+        return [inVar];
+      }
     }
-  }
 
-  if (target === 'controller') {
-    if (ctx.player['controller']) {
-      return [ctx.player['controller']];
-    } else if (ctx.state.vars.player['controller']) {
-      return [ctx.state.vars.player['controller']];
-    } else {
-      throw new Error('no controller player in context');
-    }
-  }
-
-  if (target === 'target') {
-    if (ctx.player['target']) {
-      return [ctx.player['target']];
-    } else if (ctx.state.vars.player['target']) {
-      return [ctx.state.vars.player['target']];
-    } else {
-      throw new Error('no target player in context');
-    }
+    throw new Error(`no ${target} player in context`);
   }
 
   if (target === 'first') {

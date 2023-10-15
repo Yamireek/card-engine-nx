@@ -356,6 +356,48 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'resolveShadowEffects') {
+    const cards = ctx.state.cards[card.id].shadow.flatMap(
+      (id) => ctx.view.cards[id]
+    );
+
+    if (cards.length > 0) {
+      ctx.state.next.unshift(
+        {
+          card: cards.map((s) => s.id),
+          action: {
+            flip: 'shadow',
+          },
+        },
+        {
+          card: cards.map((s) => s.id),
+          action: 'resolveShadow',
+        }
+      );
+    }
+
+    return;
+  }
+
+  if (action === 'resolveShadow') {
+    debugger;
+    const shadows = ctx.view.cards[card.id].shadows;
+    if (shadows.length > 0) {
+      for (const shadow of shadows) {
+        ctx.state.next.unshift(
+          {
+            stackPush: {
+              description: shadow.description,
+              shadow: shadow.action,
+            },
+          },
+          'stackPop'
+        );
+      }
+    }
+    return;
+  }
+
   if (action === 'destroy' || action.destroy) {
     card.tapped = false;
     card.token = { damage: 0, progress: 0, resources: 0 };
@@ -713,6 +755,10 @@ export function executeCardAction(
           target: action.resolveEnemyAttacking,
           action: 'declareDefender',
         },
+      },
+      {
+        card: card.id,
+        action: 'resolveShadowEffects',
       },
       {
         player: {

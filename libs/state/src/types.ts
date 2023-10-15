@@ -95,7 +95,7 @@ export type Action =
       };
       atEndOfPhase?: Action;
       stackPush?: PendingEffect;
-      cancel?: 'when.revealed';
+      cancel?: 'when.revealed' | 'shadow';
     };
 
 export type PlayerAction =
@@ -169,6 +169,8 @@ export type CardAction =
   | 'explore'
   | 'ready'
   | 'commitToQuest'
+  | 'resolveShadowEffects'
+  | 'resolveShadow'
   | {
       payCost?: CostModifier;
       ready?: 'refresh';
@@ -433,6 +435,7 @@ export type PlayerTarget =
   | 'event'
   | 'highestThreat'
   | 'target'
+  | 'defending'
   | {
       and?: PlayerTarget[];
       controllerOf?: CardTarget;

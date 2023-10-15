@@ -149,7 +149,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         ctx.state.cards[enemy].shadow.push(shadow);
         ctx.state.cards[shadow].zone = ctx.state.cards[enemy].zone;
         ctx.state.cards[shadow].sideUp = 'shadow';
-        ctx.state.cards[shadow].shadowOf = enemy
+        ctx.state.cards[shadow].shadowOf = enemy;
         deck.cards.pop();
         targetZone.cards.push(shadow);
       }
@@ -273,8 +273,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   if (action === 'stackPop') {
     const effect = ctx.state.stack.pop();
     if (effect) {
-      if (effect.whenRevealed && !effect.canceled) {
+      if ('whenRevealed' in effect && !effect.canceled) {
         ctx.state.next.unshift(effect.whenRevealed);
+      }
+      if ('shadow' in effect && !effect.canceled) {
+        ctx.state.next.unshift(effect.shadow);
       }
     }
     return;
@@ -362,7 +365,11 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       throw new Error('no effect to cancel');
     }
 
-    if (effect.whenRevealed) {
+    if ('whenRevealed' in effect && action.cancel === 'when.revealed') {
+      effect.canceled = true;
+    }
+
+    if ('shadow' in effect && action.cancel === 'shadow') {
       effect.canceled = true;
     }
     return;

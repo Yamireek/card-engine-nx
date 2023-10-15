@@ -38,7 +38,11 @@ export const testScenario: Scenario = {
   quest: [core.quest.fliesAndSpiders, core.quest.aForkInTheRoad],
   sets: [
     {
-      easy: [core.enemy.blackForestBats],
+      easy: [
+        core.enemy.forestSpider,
+        core.enemy.kingSpider,
+        core.enemy.kingSpider,
+      ],
       normal: [],
     },
   ],

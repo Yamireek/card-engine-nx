@@ -135,11 +135,16 @@ export function executePlayerAction(
         {
           player: player.id,
           action: {
-            chooseCardActions: {
-              title: 'Choose enemy attacker',
-              target: enemies,
+            useVar: {
+              name: 'defending',
               action: {
-                resolveEnemyAttacking: player.id,
+                chooseCardActions: {
+                  title: 'Choose enemy attacker',
+                  target: enemies,
+                  action: {
+                    resolveEnemyAttacking: player.id,
+                  },
+                },
               },
             },
           },

@@ -30,10 +30,12 @@ export type EncounterSet = {
   normal: CardDefinition[];
 };
 
+export type Shadow = { description: string; action: Action };
+
 export type CardDefinition = {
   front: PrintedProps & { abilities: Ability[] };
   back: PrintedProps & { abilities: Ability[] };
-  shadow?: Action;
+  shadow?: Shadow;
   orientation: Orientation;
 };
 

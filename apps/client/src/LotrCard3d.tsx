@@ -49,7 +49,7 @@ export const LotrCard3d = (props: {
         card.tapped ? -Math.PI / 4 : card.shadowOf ? Math.PI / 3 : 0,
       ]}
       texture={
-        card.sideUp === 'front'
+        card.sideUp === 'front' || card.sideUp === 'shadow'
           ? textures
           : { front: textures.back, back: textures.front }
       }

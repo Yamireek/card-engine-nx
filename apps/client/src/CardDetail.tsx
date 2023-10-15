@@ -29,7 +29,7 @@ export const CardDetail = () => {
     view: view.cards[cardId],
   };
 
-  const name = card.view.props.name ?? 'uknown';
+  const name = card.view.props.name ?? '';
   const exhaused = card.state.tapped ? 'E' : '';
   const unique = card.view.props.unique ? 'U' : '';
 
@@ -37,7 +37,7 @@ export const CardDetail = () => {
     <CardText
       title={`${name} (${card.state.id}) [${exhaused}${unique}]`}
       sphere={card.view.props.sphere}
-      abilities={
+      text={
         card.state.sideUp !== 'shadow'
           ? [
               ...card.state.definition[card.state.sideUp].abilities.map(
@@ -45,7 +45,7 @@ export const CardDetail = () => {
               ),
               ...card.view.effects,
             ]
-          : []
+          : card.view.shadows.map((s) => s.description)
       }
       attachments={[]}
       traits={card.view.props.traits ?? []}

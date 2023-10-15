@@ -45,11 +45,11 @@ const PropertyView = (props: PropertyProps) => {
 
 export const CardText = (props: {
   title: string;
-  sphere: Sphere[] | undefined;
+  sphere: Sphere[];
   properties: Array<PropertyProps>;
   tokens: Tokens;
   traits: Trait[];
-  abilities: string[];
+  text: string[];
   attachments: string[];
   keywords: Keywords;
 }) => {
@@ -82,7 +82,7 @@ export const CardText = (props: {
             <td>{props.tokens.resources}</td>
           </tr>
         )}
-        {props.sphere && (
+        {props.sphere?.length > 0 && (
           <tr>
             <td>sphere</td>
             <td>{props.sphere.join(', ')}</td>
@@ -112,7 +112,7 @@ export const CardText = (props: {
             ))}
           </td>
         </tr>
-        {props.abilities.map((a, i) => (
+        {props.text.map((a, i) => (
           <tr key={i}>
             <td colSpan={2}>{a}</td>
           </tr>

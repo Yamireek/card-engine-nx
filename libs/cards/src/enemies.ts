@@ -1,5 +1,6 @@
 import { enemy } from '@card-engine-nx/state';
 
+// TODO undefended shadow
 export const kingSpider = enemy(
   {
     name: 'King Spider',
@@ -9,7 +10,20 @@ export const kingSpider = enemy(
     defense: 1,
     hitPoints: 3,
     traits: ['creature', 'spider'],
-    // TODO Shadow: Defending player must choose and exhaust 1 character he controls. (2 characters instead if this attack is undefended.)
+    shadow: {
+      description:
+        'Shadow: Defending player must choose and exhaust 1 character he controls. (2 characters instead if this attack is undefended.)',
+      action: {
+        player: 'defending',
+        action: {
+          chooseCardActions: {
+            title: 'Choose character to exhaust',
+            target: { simple: 'character', controller: 'defending' },
+            action: 'exhaust',
+          },
+        },
+      },
+    },
   },
   {
     description:

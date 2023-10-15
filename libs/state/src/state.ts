@@ -44,11 +44,17 @@ export type Event =
   | { type: 'explored'; card: CardId }
   | { type: 'whenRevealed' };
 
-export type PendingEffect = {
-  description: string;
-  whenRevealed: Action;
-  canceled?: true;
-};
+export type PendingEffect =
+  | {
+      description: string;
+      whenRevealed: Action;
+      canceled?: true;
+    }
+  | {
+      description: string;
+      shadow: Action;
+      canceled?: boolean;
+    };
 
 export type Choice =
   | {
