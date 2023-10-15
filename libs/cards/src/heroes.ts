@@ -287,18 +287,41 @@ export const aragorn = hero({
 });
 // TODO Response: After Aragorn commits to a quest, spend 1 resource from his resource pool to ready him.
 
-export const theodred = hero({
-  name: 'Théodred',
-  threatCost: 8,
-  willpower: 1,
-  attack: 2,
-  defense: 1,
-  hitPoints: 4,
-  traits: ['noble', 'rohan', 'warrior'],
-  keywords: {},
-  sphere: 'leadership',
-});
-// TODO Response: Response: After Théodred commits to a quest, choose a hero committed to that quest. Add 1 resource to that hero's resource pool.
+export const theodred = hero(
+  {
+    name: 'Théodred',
+    threatCost: 8,
+    willpower: 1,
+    attack: 2,
+    defense: 1,
+    hitPoints: 4,
+    traits: ['noble', 'rohan', 'warrior'],
+    keywords: {},
+    sphere: 'leadership',
+  },
+  {
+    description:
+      "Response: Response: After Théodred commits to a quest, choose a hero committed to that quest. Add 1 resource to that hero's resource pool.",
+    response: {
+      event: 'commits',
+      action: {
+        player: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose hero for 1 resource',
+            target: {
+              type: 'hero',
+              mark: 'questing',
+            },
+            action: {
+              generateResources: 1,
+            },
+          },
+        },
+      },
+    },
+  }
+);
 
 export const eleanor = hero(
   {

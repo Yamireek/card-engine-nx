@@ -347,20 +347,12 @@ export function executeCardAction(
   }
 
   if (action === 'commitToQuest') {
-    ctx.state.next.unshift(
-      {
-        card: {
-          target: card.id,
-          action: ['exhaust', { mark: 'questing' }],
-        },
+    ctx.state.next.unshift({
+      card: {
+        target: card.id,
+        action: ['exhaust', { mark: 'questing' }],
       },
-      {
-        event: {
-          type: 'commits',
-          card: card.id,
-        },
-      }
-    );
+    });
     return;
   }
 

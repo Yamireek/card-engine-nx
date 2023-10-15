@@ -96,7 +96,7 @@ export class TestEngine {
     ]);
   }
 
-  chooseSkip() {
+  skip() {
     if (this.state.choice) {
       if (this.state.choice.type === 'actions') {
         this.state.choice = undefined;

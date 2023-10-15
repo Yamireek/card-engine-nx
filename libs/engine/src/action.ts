@@ -148,8 +148,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         const targetZone = getZoneState(ctx.state.cards[enemy].zone, ctx.state);
         ctx.state.cards[enemy].shadows.push(shadow);
         ctx.state.cards[shadow].zone = ctx.state.cards[enemy].zone;
-        ctx.state.cards[shadow].shadowOf = enemy;
-        deck.cards.pop();
+        ctx.state.cards[shadow].shadowOf = enemy;        
         targetZone.cards.push(shadow);
       }
     }
@@ -335,6 +334,21 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       }
     }
 
+    return;
+  }
+
+  if (action === 'sendCommitedEvents') {
+    const questers = getTargetCards({ mark: 'questing' }, ctx);
+    if (questers.length > 0) {
+      ctx.state.next.unshift(
+        questers.map((id) => ({
+          event: {
+            type: 'commits',
+            card: id,
+          },
+        }))
+      );
+    }
     return;
   }
 
@@ -866,6 +880,7 @@ export const phaseQuest: Action = [
       action: 'commitCharactersToQuest',
     },
   },
+  'sendCommitedEvents',
   { playerActions: 'Staging' },
   { repeat: { amount: 'countOfPlayers', action: 'revealEncounterCard' } },
   { playerActions: 'Quest resolution' },
