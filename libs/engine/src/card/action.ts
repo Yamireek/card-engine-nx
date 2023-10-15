@@ -396,7 +396,13 @@ export function executeCardAction(
           {
             stackPush: {
               description: shadow.description,
-              shadow: shadow.action,
+              shadow: {
+                useCardVar: {
+                  name: 'self',
+                  value: shadow.source,
+                  action: shadow.action,
+                },
+              },
             },
           },
           'stackPop'

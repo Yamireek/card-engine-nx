@@ -30,7 +30,7 @@ export const coreTest: PlayerDeck = {
     core.hero.eowyn,
     core.hero.denethor,
   ],
-  library: [core.event.rainOfArrows],
+  library: [core.event.rainOfArrows, core.attachment.citadelPlate],
 };
 
 export const testScenario: Scenario = {

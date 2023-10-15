@@ -25,7 +25,9 @@ export function createCardView(state: CardState): CardView {
       travel: [],
       refreshCost: [],
       rules: {},
-      shadows: state.definition.shadow ? [state.definition.shadow] : [],
+      shadows: state.definition.shadow
+        ? [{ ...state.definition.shadow, source: state.id }]
+        : [],
     };
   }
 

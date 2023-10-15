@@ -29,7 +29,7 @@ export const CardDetail = () => {
     view: view.cards[cardId],
   };
 
-  const name = card.view.props.name ?? '';
+  const name = card.view.props.name ?? card.state.definition.front.name ?? '';
   const exhaused = card.state.tapped ? 'E' : '';
   const unique = card.view.props.unique ? 'U' : '';
 

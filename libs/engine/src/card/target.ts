@@ -204,6 +204,20 @@ export function checkCardPredicate(
     return target.side === state.sideUp;
   }
 
+  if (target.hasShadow) {
+    const shadows = getTargetCards(target.hasShadow, ctx);
+    return state.shadow.some((s) => shadows.includes(s));
+  }
+
+  if (target.attachmentOf) {
+    if (!state.attachedTo) {
+      return false;
+    }
+
+    const targets = getTargetCards(target.attachmentOf, ctx);
+    return targets.includes(state.attachedTo);
+  }
+
   throw new Error(`unknown card predicate: ${JSON.stringify(target)}`);
 }
 

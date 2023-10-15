@@ -147,7 +147,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       if (shadow) {
         const targetZone = getZoneState(ctx.state.cards[enemy].zone, ctx.state);
         ctx.state.cards[enemy].shadow.push(shadow);
-        ctx.state.cards[shadow].zone = ctx.state.cards[enemy].zone;        
+        ctx.state.cards[shadow].zone = ctx.state.cards[enemy].zone;
         ctx.state.cards[shadow].shadowOf = enemy;
         deck.cards.pop();
         targetZone.cards.push(shadow);
@@ -773,6 +773,18 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         setPlayerVar: { name: action.usePlayerVar.name, value: undefined },
       }
     );
+  }
+
+  if (action.if) {
+    const result = calculateBoolExpr(action.if.condition, ctx);
+    if (result && action.if.true) {
+      ctx.state.next.unshift(action.if.true);
+    }
+
+    if (!result && action.if.false) {
+      ctx.state.next.unshift(action.if.false);
+    }
+    return;
   }
 
   throw new Error(`unknown action: ${JSON.stringify(action)}`);
