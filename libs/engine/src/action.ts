@@ -415,26 +415,33 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       ? '3'
       : '2';
 
-    ctx.state.players[playerId] = createPlayerState(playerId);
+    const player = createPlayerState(playerId);
+
+    ctx.state.players[playerId] = player;
 
     for (const hero of action.addPlayer.heroes) {
       addPlayerCard(ctx.state, hero, playerId, 'front', 'playerArea');
     }
 
-    for (const card of action.addPlayer.library) {
+    for (const card of reverse(action.addPlayer.library)) {
       addPlayerCard(ctx.state, card, playerId, 'back', 'library');
     }
+
+    player.thread = sum(
+      action.addPlayer.heroes.map((h) => h.front.threatCost ?? 0)
+    );
+
     return;
   }
 
   if (action.setupScenario) {
-    for (const set of action.setupScenario.scenario.sets) {
-      for (const card of set.easy) {
+    for (const set of reverse(action.setupScenario.scenario.sets)) {
+      for (const card of reverse(set.easy)) {
         addGameCard(ctx.state, card, 'back', 'encounterDeck');
       }
 
       if (action.setupScenario.difficulty === 'normal') {
-        for (const card of set.normal) {
+        for (const card of reverse(set.normal)) {
           addGameCard(ctx.state, card, 'back', 'encounterDeck');
         }
       }
@@ -838,7 +845,7 @@ export const phaseResource: Action = [
   {
     card: {
       target: { and: ['inAPlay', { type: 'hero' }] },
-      action: { generateResources: 10 },
+      action: { generateResources: 1 },
     },
   },
   { playerActions: 'End resource phase' },

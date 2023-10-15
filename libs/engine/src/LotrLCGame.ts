@@ -144,10 +144,14 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
   };
 }
 
-export function LotrLCGame(events: UIEvents): Game<State> {
+export function LotrLCGame(events: UIEvents, initState?: State): Game<State> {
   return {
     name: 'LotrLCG',
     setup: ({ ctx }) => {
+      if (initState) {
+        return initState;
+      }
+
       const state = createState();
       for (let index = 0; index < ctx.numPlayers; index++) {
         const id = validPlayerId(index);

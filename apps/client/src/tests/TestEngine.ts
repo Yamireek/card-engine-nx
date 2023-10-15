@@ -12,10 +12,11 @@ import {
   crateExecutionContext,
   createView,
   executeCardAction,
+  noRandom,
   randomJS,
 } from '@card-engine-nx/engine';
 
-const random = randomJS();
+const random = noRandom();
 
 export class TestEngine {
   state: State;
@@ -54,6 +55,9 @@ export class TestEngine {
 
     if (this.state.choice) {
       console.log(this.state.choice);
+      if (this.state.choice.type === 'actions') {
+        console.log(this.view.actions.filter((a) => a.enabled));
+      }
     }
   }
 

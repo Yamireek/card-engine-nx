@@ -47,10 +47,11 @@ export const LotrLCGBoard = (props: LotrLCGProps) => {
 export function LotrLCGClient(
   events: UIEvents,
   numPlayers: number,
-  multiplayer?: ClientOpts['multiplayer']
+  multiplayer?: ClientOpts['multiplayer'],
+  initState?: State
 ) {
   return Client({
-    game: LotrLCGame(events),
+    game: LotrLCGame(events, initState),
     board: LotrLCGBoard,
     numPlayers,
     multiplayer,

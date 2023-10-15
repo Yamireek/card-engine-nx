@@ -43,3 +43,14 @@ export function randomJS(): Random {
     },
   };
 }
+
+export function noRandom(): Random {
+  return {
+    item<T>(items: T[]) {
+      return items[0];
+    },
+    shuffle<T>(items: T[]) {
+      return items;
+    },
+  };
+}

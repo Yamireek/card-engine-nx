@@ -35,24 +35,39 @@ export const coreTest: PlayerDeck = {
 
 export const testScenario: Scenario = {
   name: 'Test',
-  quest: [core.quest.fliesAndSpiders, core.quest.aForkInTheRoad],
+  quest: [
+    core.quest.fliesAndSpiders,
+    core.quest.aForkInTheRoad,
+    core.quest.achosenPath1,
+    core.quest.achosenPath2,
+  ],
   sets: [
     {
-      easy: [
+      easy: [],
+      normal: [
         core.enemy.forestSpider,
+        core.location.oldForestRoad,
+        core.treachery.theNecromancersReach,
+        core.enemy.dolGuldurOrcs,
+        core.enemy.hummerhorns,
+        core.enemy.kingSpider,
+        core.location.greatForestWeb,
+        core.enemy.chieftanUfthak,
         core.enemy.forestSpider,
-        // core.enemy.kingSpider,
-        // core.enemy.kingSpider,
-        // core.enemy.ungoliantsSpawn,
-        // core.enemy.dolGuldurOrcs,
-        core.enemy.eastBightPatrol,
-        core.enemy.eastBightPatrol,
-        core.enemy.eastBightPatrol,
-        core.enemy.eastBightPatrol,
-        // core.enemy.hummerhorns,
-        // core.treachery.drivenByShadow,
+        core.enemy.dolGuldurBeastmaster,
+        core.location.mountainsOfMirkwood,
+        core.enemy.dolGuldurOrcs,
+        core.treachery.drivenByShadow,
+        core.treachery.caughtInAWeb,
+        core.treachery.theNecromancersReach,
+        core.location.enchantedStream,
+        core.location.oldForestRoad,
+        core.enemy.blackForestBats,
+        core.location.mountainsOfMirkwood,
+        core.location.necromancersPass,
+
+        core.enemy.ungoliantsSpawn,
       ],
-      normal: [],
     },
   ],
 };
