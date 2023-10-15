@@ -619,7 +619,7 @@ export function executeCardAction(
         ? { amount: action.dealDamage, attackers: [] }
         : action.dealDamage;
 
-    const amount = data.amount;
+    const amount = calculateNumberExpr(data.amount, ctx);
 
     card.token.damage += amount;
 
@@ -629,7 +629,7 @@ export function executeCardAction(
       executeCardAction(
         {
           destroy: {
-            attackers: data.attackers,
+            attackers: data.attackers ?? [],
           },
         },
         card,

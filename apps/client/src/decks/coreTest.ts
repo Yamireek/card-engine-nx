@@ -40,8 +40,14 @@ export const testScenario: Scenario = {
     {
       easy: [
         core.enemy.forestSpider,
+        core.enemy.forestSpider,
         core.enemy.kingSpider,
         core.enemy.kingSpider,
+        core.enemy.ungoliantsSpawn,
+        core.enemy.dolGuldurOrcs,
+        core.enemy.eastBightPatrol,
+        core.enemy.hummerhorns,
+        core.treachery.drivenByShadow,
       ],
       normal: [],
     },

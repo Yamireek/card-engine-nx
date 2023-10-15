@@ -96,6 +96,11 @@ export type Action =
       atEndOfPhase?: Action;
       stackPush?: PendingEffect;
       cancel?: 'when.revealed' | 'shadow';
+      if?: {
+        condition: BoolExpr;
+        true?: Action;
+        false?: Action;
+      };
     };
 
 export type PlayerAction =
@@ -176,7 +181,7 @@ export type CardAction =
       ready?: 'refresh';
       declareAsDefender?: { attacker: CardId };
       destroy?: { attackers: CardId[] };
-      dealDamage?: number | { amount: number; attackers: CardId[] };
+      dealDamage?: number | { amount: NumberExpr; attackers?: CardId[] };
       heal?: number | 'all';
       generateResources?: NumberExpr;
       payResources?: number;
@@ -411,6 +416,8 @@ export type CardTarget =
         | Array<PlayerZoneType | GameZoneType>;
       sequence?: NumberExpr;
       hasAttachment?: CardTarget;
+      attachmentOf?: CardTarget;
+      hasShadow?: CardTarget;
       keyword?: keyof Keywords;
       var?: string;
       event?: 'attacking';
