@@ -26,10 +26,10 @@ export const coreThree: PlayerDeck = {
     core.ally.guardOfTheCitadel,
     core.ally.lorienGuide,
     core.ally.gandalf,
+    core.ally.ereborHammersmith,
 
     core.ally.daughterOfTheNimrodel,
     core.ally.daughterOfTheNimrodel,
-    core.ally.ereborHammersmith,
     core.ally.ereborHammersmith,
     core.ally.faramir,
     core.ally.gandalf,

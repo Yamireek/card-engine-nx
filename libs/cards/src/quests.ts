@@ -103,14 +103,14 @@ export const achosenPath1 = quest({
               },
             },
           },
-          // {
-          //   card: {
-          //     target: { zoneType: 'encounterDeck' },
-          //     action: {
-          //       flip: 'back',
-          //     },
-          //   },
-          // },
+          {
+            card: {
+              target: { zoneType: 'encounterDeck' },
+              action: {
+                flip: 'back',
+              },
+            },
+          },
           'shuffleEncounterDeck',
         ],
       },

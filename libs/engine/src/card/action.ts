@@ -674,8 +674,12 @@ export function executeCardAction(
     // TODO move also attachments
     // TODO remove tokens/marks here
 
+    const moveCtx = card.controller
+      ? { ...ctx, player: { ...ctx.player, controller: card.controller } }
+      : ctx;
+
     const fromId = action.move.from
-      ? getTargetZoneId(action.move.from, ctx)
+      ? getTargetZoneId(action.move.from, moveCtx)
       : getCardZoneId(card.id, ctx.state);
 
     if (action.move.from) {
@@ -684,8 +688,8 @@ export function executeCardAction(
       }
     }
 
-    const sourceZone = getTargetZone(fromId, ctx);
-    const destinationZone = getTargetZone(action.move.to, ctx);
+    const sourceZone = getTargetZone(fromId, moveCtx);
+    const destinationZone = getTargetZone(action.move.to, moveCtx);
 
     const sourceInGame = isInGame(getZoneType(fromId));
     const destInGame = isInGame(getZoneType(action.move.to));
@@ -693,7 +697,7 @@ export function executeCardAction(
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);
     destinationZone.cards.push(card.id);
     card.sideUp = action.move.side;
-    const destZoneId = getTargetZoneId(action.move.to, ctx);
+    const destZoneId = getTargetZoneId(action.move.to, moveCtx);
     card.zone = destZoneId;
 
     ctx.events.send(

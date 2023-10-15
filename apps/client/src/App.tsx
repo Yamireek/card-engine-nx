@@ -161,6 +161,69 @@ game.skip();
 game.chooseOption(
   'Response: Cancel the “when revealed” effects of a card that was just revealed from the encounter deck.'
 );
+game.skip();
+game.chooseOption('56');
+game.skip();
+game.skip();
+game.skip();
+game.skip();
+game.skip();
+game.skip();
+game.chooseOption('55');
+game.skip();
+game.chooseOption('42');
+game.chooseOption('68');
+game.skip();
+game.chooseOption('3');
+game.skip();
+game.chooseOption('50');
+game.skip();
+game.chooseOption('65');
+game.skip();
+game.chooseOptions(['36', '41', '45']);
+game.skip();
+game.skip();
+game.skip();
+game.skip();
+game.chooseAction(
+  "Action: Exhaust Steward of Gondor to add 2 resources to attached hero's resource pool."
+);
+game.chooseAction(
+  'Action: Exhaust Gléowine to choose a player. That player draws 1 card.'
+);
+game.chooseAction('Play ally Erebor Hammersmith');
+game.skip();
+game.chooseOptions(['1', '2']);
+game.chooseOption(
+  "Response: Response: After Théodred commits to a quest, choose a hero committed to that quest. Add 1 resource to that hero's resource pool."
+);
+game.chooseOption('1');
+game.skip();
+game.chooseAction(
+  'Quest Action: Choose a location in the staging area. Until the end of the phase, that location does not contribute its [threat].'
+);
+game.skip();
+game.skip();
+game.chooseOption('61');
+game.skip();
+game.skip();
+game.skip();
+game.skip();
+game.skip();
+game.chooseOption('55');
+game.skip();
+game.chooseOption('3');
+game.skip();
+game.chooseOption('42');
+game.chooseAction(
+  'Action: Put 1 ally card into play from your hand. At the end of the phase, if that ally is still in play, return it to your hand.'
+);
+game.chooseOption('35');
+game.chooseOption(
+  'Response: After Gandalf enters play, (choose 1): draw 3 cards, deal 4 damage to 1 enemy in play, or reduce your threat by 5.'
+);
+game.chooseOption('Deal 4 damage to 1 enemy in play');
+game.chooseOption('56');
 
 export const App = () => {
   return (

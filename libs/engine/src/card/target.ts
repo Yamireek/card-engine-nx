@@ -161,7 +161,7 @@ export function checkCardPredicate(
 
   if (target.zoneType) {
     const type = getZoneType(state.zone);
-    return target.zoneType === type;
+    return target.zoneType.includes(type);
   }
 
   if (target.hasAttachment) {
