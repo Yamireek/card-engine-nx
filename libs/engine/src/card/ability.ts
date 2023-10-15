@@ -135,7 +135,8 @@ export function createModifiers(
   ability: Ability,
   phase: Phase,
   zone: ZoneType,
-  type: CardType
+  type: CardType,
+  name: string
 ): GameModifier[] {
   switch (true) {
     case 'increment' in ability:
@@ -320,28 +321,28 @@ export function createModifiers(
       }
 
       if (isInPlay(zone) || zone === ability.zone) {
-        if (controller) {
-          return [
-            {
-              source: self,
-              card: ability.target ?? self,
-              modifier: {
-                description: ability.description,
-                reaction: {
-                  ...ability.response,
-                  forced: false,
-                  action: {
-                    usePlayerVar: {
-                      name: 'controller',
-                      value: controller,
-                      action: ability.response.action,
-                    },
-                  },
-                },
+        return [
+          {
+            source: self,
+            card: ability.target ?? self,
+            modifier: {
+              description: ability.description,
+              reaction: {
+                ...ability.response,
+                forced: false,
+                action: controller
+                  ? {
+                      usePlayerVar: {
+                        name: 'controller',
+                        value: controller,
+                        action: ability.response.action,
+                      },
+                    }
+                  : ability.response.action,
               },
             },
-          ];
-        }
+          },
+        ];
       }
 
       return [];
@@ -450,7 +451,7 @@ export function createModifiers(
 
     case 'multi' in ability:
       return ability.multi.flatMap((a) =>
-        createModifiers(self, controller, a, phase, zone, type)
+        createModifiers(self, controller, a, phase, zone, type, name)
       );
 
     case 'attachesTo' in ability: {
@@ -465,7 +466,7 @@ export function createModifiers(
             source: self,
             card: self,
             modifier: {
-              description: ability.description,
+              description: `Play attachment ${name}`,
               action: {
                 player: {
                   target: controller,

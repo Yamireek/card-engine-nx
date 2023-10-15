@@ -37,7 +37,6 @@ export const fliesAndSpiders = quest({
               },
             },
           },
-          'shuffleEncounterDeck',
         ],
       },
     ],

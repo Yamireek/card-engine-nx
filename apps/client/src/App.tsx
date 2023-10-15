@@ -11,8 +11,39 @@ const game = new TestEngine({
 
 game.do({ addPlayer: coreThree });
 game.do(beginScenario(testScenario, 'normal'));
-
-console.log(game.state);
+game.chooseSkip();
+game.chooseAction('Play ally Henamarth Riversong');
+game.chooseSkip();
+game.chooseOptions(['1', '2', '3', '51']);
+game.chooseSkip();
+game.chooseSkip();
+game.chooseSkip();
+game.chooseSkip();
+game.chooseOption('54');
+game.chooseOption(
+  'Response: After you travel to Old Forest Road the first player may choose and ready 1 character he controls.'
+);
+game.chooseOption('3');
+game.chooseSkip();
+game.chooseSkip();
+game.chooseSkip();
+game.chooseSkip();
+game.chooseSkip();
+game.chooseSkip();
+game.chooseOption('3');
+game.chooseSkip();
+game.chooseSkip();
+game.chooseSkip();
+game.chooseSkip();
+game.chooseAction('Play attachment Steward of Gondor');
+game.chooseOption('3');
+game.chooseAction(
+  "Action: Exhaust Steward of Gondor to add 2 resources to attached hero's resource pool."
+);
+game.chooseAction('Play ally Gléowine');
+game.chooseAction(
+  'Action: Exhaust Gléowine to choose a player. That player draws 1 card.'
+);
 
 export const App = () => {
   return (

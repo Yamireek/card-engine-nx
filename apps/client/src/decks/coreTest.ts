@@ -45,8 +45,6 @@ export const testScenario: Scenario = {
     {
       easy: [],
       normal: [
-        core.enemy.forestSpider,
-        core.location.oldForestRoad,
         core.treachery.theNecromancersReach,
         core.enemy.dolGuldurOrcs,
         core.enemy.hummerhorns,
@@ -67,6 +65,8 @@ export const testScenario: Scenario = {
         core.location.necromancersPass,
 
         core.enemy.ungoliantsSpawn,
+        core.enemy.forestSpider,
+        core.location.oldForestRoad,
       ],
     },
   ],

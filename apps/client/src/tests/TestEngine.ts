@@ -1,6 +1,7 @@
 import {
   Action,
   CardAction,
+  Choice,
   SimpleState,
   State,
   createState,
@@ -54,14 +55,22 @@ export class TestEngine {
     );
 
     if (this.state.choice) {
-      console.log(this.state.choice);
       if (this.state.choice.type === 'actions') {
-        console.log(this.view.actions.filter((a) => a.enabled));
+        console.log(
+          'actions',
+          this.view.actions.filter((a) => a.enabled)
+        );
+      } else {
+        console.log('choice', this.state.choice);
       }
     }
   }
 
   chooseAction(description: string) {
+    if (!this.state.choice || this.state.choice.type !== 'actions') {
+      throw new Error('no action choices');
+    }
+
     const action = this.actions.find((a) => a.description === description);
     if (!action) {
       throw new Error(
@@ -71,7 +80,41 @@ export class TestEngine {
       );
     }
 
-    this.do(action.action);
+    const next: Choice = {
+      id: this.state.choice.id,
+      type: 'actions',
+      title: this.state.choice.title,
+    };
+
+    this.state.choice = undefined;
+
+    this.do([
+      action.action,
+      {
+        choice: next,
+      },
+    ]);
+  }
+
+  chooseSkip() {
+    if (this.state.choice) {
+      if (this.state.choice.type === 'actions') {
+        this.state.choice = undefined;
+        this.do([]);
+        return;
+      }
+
+      if (
+        this.state.choice.type === 'multi' ||
+        this.state.choice?.type === 'single'
+      ) {
+        this.state.choice = undefined;
+        this.do([]);
+        return;
+      }
+    } else {
+      throw new Error('no choice to skip');
+    }
   }
 
   chooseOption(description: string) {

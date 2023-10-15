@@ -42,7 +42,8 @@ export function createView(state: State): View {
           a,
           state.phase,
           getZoneType(c.zone),
-          c.definition.front.type
+          c.definition.front.type,
+          c.definition.front.name ?? ''
         )
       )
       .flatMap((modifier) => ({ applied: false, modifier }));
@@ -136,7 +137,7 @@ export function createView(state: State): View {
           card.props.cost
         ) {
           view.actions.push({
-            description: 'Play ally',
+            description: `Play ally ${card.props.name}`,
             card: cardId,
             action: createPlayAllyAction(
               card.props.sphere,
