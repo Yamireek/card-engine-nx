@@ -4,7 +4,11 @@ import { image } from '.';
 
 export type CardImageUrls = { front: string; back: string };
 
-export function getCardImageUrl(props: PrintedProps, side: Side): string {
+export function getCardImageUrl(
+  props: PrintedProps,
+  side: Side,
+  frontName?: string
+): string {
   if (props.type === 'player_back') {
     return image.playerBack;
   }
@@ -20,7 +24,7 @@ export function getCardImageUrl(props: PrintedProps, side: Side): string {
     } - ${name}.jpg`;
   }
 
-  const name = props.name || props.type;
+  const name = side === 'shadow' ? frontName : props.name || props.type;
   return `./images/cards/01-core/${name}.jpg`;
 }
 

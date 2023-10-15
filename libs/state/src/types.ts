@@ -334,6 +334,7 @@ export type EventBool = { type: 'destroyed'; isAttacker: CardTarget }; // TODO r
 export type BoolExpr =
   | boolean
   | 'enemiesToEngage'
+  | 'undefended.attack'
   | {
       event?: EventBool;
       and?: BoolExpr[];

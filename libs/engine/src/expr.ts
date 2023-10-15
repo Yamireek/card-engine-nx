@@ -110,6 +110,11 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
     return minEng <= maxEng;
   }
 
+  if (expr === 'undefended.attack') {
+    const defenders = getTargetCards({ mark: 'defending' }, ctx);
+    return defenders.length === 0;
+  }
+
   if (expr.phase) {
     return ctx.state.phase === expr.phase;
   }

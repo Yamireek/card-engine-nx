@@ -147,8 +147,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
       if (shadow) {
         const targetZone = getZoneState(ctx.state.cards[enemy].zone, ctx.state);
         ctx.state.cards[enemy].shadow.push(shadow);
-        ctx.state.cards[shadow].zone = ctx.state.cards[enemy].zone;
-        ctx.state.cards[shadow].sideUp = 'shadow';
+        ctx.state.cards[shadow].zone = ctx.state.cards[enemy].zone;        
         ctx.state.cards[shadow].shadowOf = enemy;
         deck.cards.pop();
         targetZone.cards.push(shadow);

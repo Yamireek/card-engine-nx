@@ -59,7 +59,8 @@ export const GameDialogs = () => {
             alt=""
             src={getCardImageUrl(
               view.cards[state.choice.cardId].props,
-              cardState.sideUp
+              cardState.sideUp,
+              cardState.definition.front.name
             )}
             style={{
               width:

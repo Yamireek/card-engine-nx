@@ -380,11 +380,19 @@ export function executeCardAction(
   }
 
   if (action === 'resolveShadow') {
-    debugger;
     const shadows = ctx.view.cards[card.id].shadows;
+
     if (shadows.length > 0) {
       for (const shadow of shadows) {
         ctx.state.next.unshift(
+          {
+            choice: {
+              title: 'Shadow effect',
+              id: ctx.state.nextId++,
+              type: 'show',
+              cardId: card.id,
+            },
+          },
           {
             stackPush: {
               description: shadow.description,
