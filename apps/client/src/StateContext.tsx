@@ -25,6 +25,8 @@ export const StateContext = createContext<{
   view: View;
   moves: Moves;
   playerId?: PlayerId;
+  undo: () => void;
+  redo: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }>({} as any);
 

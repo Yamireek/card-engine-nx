@@ -25,8 +25,8 @@ export const App = () => {
           players: [coreThree],
           difficulty: 'easy',
           extra: {
-            resources: 10,
-            cards: 10,
+            resources: 1,
+            cards: 0,
           },
         }}
       />

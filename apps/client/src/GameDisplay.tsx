@@ -117,7 +117,7 @@ export const ActionEditorButton = () => {
 };
 
 export const LotrLCGInfo = () => {
-  const { state, view, playerId, moves } = useContext(StateContext);
+  const { state, view, playerId, moves, undo, redo } = useContext(StateContext);
 
   const totalWillpower = sum(
     values(state.cards)
@@ -202,8 +202,23 @@ export const LotrLCGInfo = () => {
             }}
           >
             <Icon>bug_report</Icon>
-          </IconButton>{' '}
-          <ActionEditorButton />
+          </IconButton>
+
+          <IconButton
+            onClick={() => {
+              undo();
+            }}
+          >
+            <Icon>undo</Icon>
+          </IconButton>
+
+          <IconButton
+            onClick={() => {
+              redo();
+            }}
+          >
+            <Icon>redo</Icon>
+          </IconButton>
         </Stack>
       </Paper>
     </div>

@@ -42,6 +42,8 @@ export const LotrLCGBoard = (props: LotrLCGProps) => {
         moves: props.moves as any,
         view,
         playerId: props.playerID ? validPlayerId(props.playerID) : undefined,
+        undo: props.undo,
+        redo: props.redo,
       }}
     >
       <GameSetup />
