@@ -1,5 +1,5 @@
 import { TestEngine, beginScenario } from '@card-engine-nx/engine';
-import { coreThree } from '../decks/coreThree';
+import { coreThree } from '../../../apps/client/src/decks/coreThree';
 import { Scenario } from '@card-engine-nx/state';
 import { core } from '@card-engine-nx/cards';
 import { it } from 'vitest';

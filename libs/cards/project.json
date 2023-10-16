@@ -10,6 +10,14 @@
       "options": {
         "lintFilePatterns": ["libs/cards/**/*.ts"]
       }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/libs/cards"
+      }
     }
   },
   "tags": []

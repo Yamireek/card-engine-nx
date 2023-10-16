@@ -1,5 +1,5 @@
 import { core } from '@card-engine-nx/cards';
-import { TestEngine } from '../../../../libs/engine/src/TestEngine';
+import { TestEngine } from '../../engine/src/TestEngine';
 import { it, expect } from 'vitest';
 
 it('Citadel plate', () => {
