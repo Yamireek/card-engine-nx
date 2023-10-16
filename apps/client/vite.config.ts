@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
-import viteTsConfigPaths from 'vite-tsconfig-paths';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import { checker } from 'vite-plugin-checker';
 
 export default defineConfig({
@@ -25,9 +25,7 @@ export default defineConfig({
         tsconfigPath: 'tsconfig.app.json',
       },
     }),
-    viteTsConfigPaths({
-      root: '../../',
-    }),
+    nxViteTsPaths(),
   ],
 
   define: {
