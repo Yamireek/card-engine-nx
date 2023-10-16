@@ -1,12 +1,17 @@
-import { LotrLCGame, UIEvents, createView } from '@card-engine-nx/engine';
+import {
+  GameSetupData,
+  LotrLCGame,
+  UIEvents,
+  createView,
+} from '@card-engine-nx/engine';
 import { State } from '@card-engine-nx/state';
 import { BoardProps, Client } from 'boardgame.io/react';
-import { GameSetup } from '../GameSetup';
 import { StateContext } from '../StateContext';
 import { useEffect, useMemo } from 'react';
 import { validPlayerId } from '@card-engine-nx/basic';
 import { Debug } from 'boardgame.io/debug';
 import { ClientOpts } from 'boardgame.io/dist/types/src/client/client';
+import { GameSetup } from '../GameSetup';
 
 export type LotrLCGProps = BoardProps<State>;
 
@@ -48,10 +53,10 @@ export function LotrLCGClient(
   events: UIEvents,
   numPlayers: number,
   multiplayer?: ClientOpts['multiplayer'],
-  initState?: State
+  setup?: GameSetupData
 ) {
   return Client({
-    game: LotrLCGame(events, initState),
+    game: LotrLCGame(events, setup),
     board: LotrLCGBoard,
     numPlayers,
     multiplayer,

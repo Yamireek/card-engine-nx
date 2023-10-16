@@ -4,7 +4,7 @@ import { CardId, Orientation } from '@card-engine-nx/basic';
 import { cardSize } from './Card3d';
 import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
-import { max, sum, sumBy } from 'lodash/fp';
+import { max } from 'lodash/fp';
 import React from 'react';
 import { LotrCard3d } from './LotrCard3d';
 
@@ -76,7 +76,7 @@ export const LotrCardArea = (props: {
                   size={realItemSize}
                   position={[
                     p.position[0],
-                    p.position[1]-0.02,
+                    p.position[1] - 0.02,
                     0.01 - (i + 1) * 0.001,
                   ]}
                 />

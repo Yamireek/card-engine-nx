@@ -1,23 +1,14 @@
-import {
-  Action,
-  Difficulty,
-  PlayerDeck,
-  Scenario,
-  State,
-  createPlayerState,
-  createState,
-} from '@card-engine-nx/state';
+import { Action, State, createState } from '@card-engine-nx/state';
 import type { Game, Move } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { UIEvents } from './uiEvents';
-import { addPlayerCard, advanceToChoiceState } from './utils';
+import { advanceToChoiceState } from './utils';
 import { createView } from './view';
 import { beginScenario } from './action';
 import { ActivePlayers } from 'boardgame.io/core';
-import { PlayerId, validPlayerId } from '@card-engine-nx/basic';
-import { sum } from 'lodash/fp';
 import { PowerSet } from 'js-combinatorics';
 import { randomBgIO } from './utils/random';
+import { GameSetupData } from './GameSetupData';
 
 const skipOptions = { actions: false, show: false };
 
@@ -108,55 +99,50 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
   };
 
-  const selectScenario: Move<State> = (
-    { G, random },
-    scenario: Scenario,
-    difficulty: Difficulty
-  ) => {
-    G.next.unshift(beginScenario(scenario, difficulty));
-    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
-  };
-
-  const selectDeck: Move<State> = ({ G, playerID }, deck: PlayerDeck) => {
-    for (const hero of deck.heroes) {
-      addPlayerCard(G, hero, validPlayerId(playerID), 'front', 'playerArea');
-    }
-
-    for (const card of deck.library) {
-      addPlayerCard(G, card, validPlayerId(playerID), 'back', 'library');
-    }
-
-    const player = G.players[playerID as PlayerId];
-    if (player) {
-      player.thread = sum(deck.heroes.map((h) => h.front.threatCost ?? 0));
-    }
-  };
-
   return {
     skip,
     choose,
     split,
     action,
-    selectDeck,
-    selectScenario,
     load,
     json,
   };
 }
 
-export function LotrLCGame(events: UIEvents, initState?: State): Game<State> {
+export function LotrLCGame(
+  events: UIEvents,
+  setupClient?: GameSetupData
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Game<State, any, GameSetupData | { state: State }> {
   return {
     name: 'LotrLCG',
-    setup: ({ ctx }) => {
-      if (initState) {
-        return initState;
+    setup: (_, setupServer) => {
+      const setup = setupServer ?? setupClient;
+
+      if (!setup) {
+        throw new Error('missing setupData');
+      }
+
+      if ('state' in setup) {
+        return setup.state;
       }
 
       const state = createState();
-      for (let index = 0; index < ctx.numPlayers; index++) {
-        const id = validPlayerId(index);
-        state.players[id] = createPlayerState(id);
-      }
+      state.choice = {
+        id: 0,
+        player: '0',
+        title: '',
+        type: 'single',
+        options: [
+          {
+            title: 'START',
+            action: {},
+          },
+        ],
+        optional: false,
+      };
+      state.next = [beginScenario(setup)];
+
       return state;
     },
     minPlayers: 1,
@@ -220,7 +206,7 @@ export function LotrLCGame(events: UIEvents, initState?: State): Game<State> {
         }
 
         if (choice.type === 'split') {
-          return [{ move: 'split', args: choice.options.map((o) => 1) }]; // TODO real split
+          return [{ move: 'split', args: choice.options.map(() => 1) }]; // TODO real split
         }
 
         return [];

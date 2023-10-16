@@ -1,9 +1,7 @@
 import {
   CardId,
-  GameZoneType,
   Mark,
   PlayerId,
-  PlayerZoneType,
   PrintedProps,
   ZoneId,
 } from '@card-engine-nx/basic';

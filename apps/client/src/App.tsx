@@ -1,5 +1,7 @@
 import { CssBaseline } from '@mui/material';
 import { Game } from './Game';
+import { core } from '@card-engine-nx/cards';
+import { coreThree } from './decks/coreThree';
 
 export const App = () => {
   return (
@@ -18,6 +20,15 @@ export const App = () => {
         playerID={window.location.hash.substring(1)}
         multiplayer={false}
         server="localhost:3000"
+        setup={{
+          scenario: core.scenario.passageThroughMirkwood,
+          players: [coreThree],
+          difficulty: 'easy',
+          extra: {
+            resources: 10,
+            cards: 10,
+          },
+        }}
       />
     </div>
   );

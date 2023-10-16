@@ -5,7 +5,6 @@ import {
   getCardZoneId,
   getTargetZone,
   getTargetZoneId,
-  getZoneState,
   getZoneType,
 } from '../zone/target';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';

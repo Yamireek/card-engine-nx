@@ -94,6 +94,7 @@ function addCard(
     zoneType === 'library' || zoneType === 'encounterDeck' ? 'back' : 'front',
     'card' in definition ? definition.card : definition,
     player,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     player ? { player, type: zoneType } : (zoneType as any)
   );
 
@@ -112,6 +113,7 @@ function addCard(
           'front',
           a,
           player,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           player ? { player, type: zoneType } : (zoneType as any)
         );
 

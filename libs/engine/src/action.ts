@@ -1,11 +1,7 @@
 import {
   Action,
-  CardTarget,
   Choice,
-  Difficulty,
   PlayerAction,
-  PlayerDeck,
-  Scenario,
   createPlayerState,
 } from '@card-engine-nx/state';
 import { getTargetPlayer, getTargetPlayers } from './player/target';
@@ -16,8 +12,8 @@ import { addPlayerCard, addGameCard } from './utils';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
-import { canExecute } from './resolution';
 import { getZoneState } from './zone/target';
+import { ScenarioSetupData } from './GameSetupData';
 
 export function executeAction(action: Action, ctx: ExecutionContext) {
   if (isArray(action)) {
@@ -806,16 +802,12 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   throw new Error(`unknown action: ${JSON.stringify(action)}`);
 }
 
-export function beginScenario(
-  scenario: Scenario,
-  difficulty: Difficulty,
-  ...decks: PlayerDeck[]
-): Action {
+export function beginScenario(data: ScenarioSetupData): Action {
   return [
     {
-      setupScenario: { scenario, difficulty },
+      setupScenario: { scenario: data.scenario, difficulty: data.difficulty },
     },
-    ...decks.map((d) => ({ addPlayer: d })),
+    ...data.players.map((d) => ({ addPlayer: d })),
     'shuffleEncounterDeck',
     {
       player: {
@@ -827,9 +819,13 @@ export function beginScenario(
       player: {
         target: 'each',
         action: {
-          draw: 6,
+          draw: 6 + data.extra.cards,
         },
       },
+    },
+    {
+      card: { type: 'hero' },
+      action: { generateResources: data.extra.resources },
     },
     {
       card: {

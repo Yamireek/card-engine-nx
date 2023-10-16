@@ -1,4 +1,4 @@
-import { State } from '@card-engine-nx/state';
+import { GameSetupData } from '@card-engine-nx/engine';
 import { rxEvents } from './GameDisplay';
 import { LotrLCGClient } from './bgio/LotrLCGBoard';
 import { Local, SocketIO } from 'boardgame.io/multiplayer';
@@ -8,7 +8,7 @@ export const Game = (props: {
   playerID?: string;
   multiplayer: boolean;
   server?: string;
-  initState?: State;
+  setup?: GameSetupData;
 }) => {
   const Client = LotrLCGClient(
     rxEvents,
@@ -18,7 +18,7 @@ export const Game = (props: {
         ? SocketIO({ server: props.server })
         : Local({ persist: true })
       : undefined,
-    props.initState
+    props.setup
   );
 
   const playerID = props.playerID ? props.playerID : '0';

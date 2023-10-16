@@ -13,7 +13,6 @@ import {
   ZoneType,
 } from '@card-engine-nx/basic';
 import { asArray, isInPlay } from '../utils';
-import { isArray } from 'lodash/fp';
 
 export function createPlayAllyAction(
   sphere: Sphere[],

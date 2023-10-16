@@ -1,5 +1,5 @@
 import { core } from '@card-engine-nx/cards';
-import { PlayerDeck, Scenario, event } from '@card-engine-nx/state';
+import { PlayerDeck, event } from '@card-engine-nx/state';
 
 export const discardTargetCard = event(
   {

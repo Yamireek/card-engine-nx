@@ -1,5 +1,5 @@
-import { core } from '@card-engine-nx/cards';
-import { TestEngine } from '../../engine/src/TestEngine';
+import { TestEngine } from '@card-engine-nx/engine';
+import { core } from './index';
 import { it, expect } from 'vitest';
 
 it('Blade Mastery', () => {

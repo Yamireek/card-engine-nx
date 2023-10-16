@@ -5,7 +5,6 @@ import {
   Action,
   CardAction,
   Event,
-  ZoneTarget,
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
 import { ExecutionContext } from '../context';

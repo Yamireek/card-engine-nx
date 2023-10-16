@@ -1,9 +1,4 @@
-import {
-  Action,
-  CostModifier,
-  PlayerAction,
-  event,
-} from '@card-engine-nx/state';
+import { Action, CostModifier, PlayerAction } from '@card-engine-nx/state';
 import { ViewContext } from './context';
 import { getTargetCards } from './card';
 import { sumBy } from 'lodash';

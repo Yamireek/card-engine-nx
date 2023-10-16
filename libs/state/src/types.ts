@@ -14,7 +14,7 @@ import {
   ZoneId,
 } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario } from './card';
-import { Choice, Event, PendingEffect, State } from './state';
+import { Choice, Event, PendingEffect } from './state';
 import { CardRules, PlayerModifier } from './view';
 
 export type ActionResult = 'none' | 'partial' | 'full';

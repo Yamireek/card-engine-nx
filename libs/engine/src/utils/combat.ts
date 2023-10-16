@@ -1,6 +1,6 @@
 import { CardId, PlayerId, zonesEqual } from '@card-engine-nx/basic';
 import { ViewContext } from '../context';
-import { getCard, getPlayer } from '../utils';
+import { getCard } from '../utils';
 import { getZoneType } from '../zone/target';
 
 export function canEnemyAttack(
