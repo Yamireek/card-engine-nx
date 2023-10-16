@@ -1,5 +1,4 @@
-import { beginScenario } from '@card-engine-nx/engine';
-import { TestEngine } from './TestEngine';
+import { TestEngine, beginScenario } from '@card-engine-nx/engine';
 import { coreThree } from '../decks/coreThree';
 import { Scenario } from '@card-engine-nx/state';
 import { core } from '@card-engine-nx/cards';

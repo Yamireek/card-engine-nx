@@ -7,15 +7,10 @@ import {
   createState,
 } from '@card-engine-nx/state';
 import { CardId, PlayerId, values } from '@card-engine-nx/basic';
-import {
-  advanceToChoiceState,
-  consoleEvents,
-  crateExecutionContext,
-  createView,
-  executeCardAction,
-  noRandom,
-  randomJS,
-} from '@card-engine-nx/engine';
+import { consoleEvents } from './uiEvents';
+import { advanceToChoiceState } from './utils';
+import { noRandom } from './utils/random';
+import { createView } from './view';
 
 const random = noRandom();
 
