@@ -281,7 +281,7 @@ export type CardModifier = {
   whenRevealed?: Action;
   travel?: Action;
   setup?: Action;
-  nextStage?: 'random';
+  nextStage?: 'random'; // TODO automatic, when multiple choices
   conditional?: {
     advance?: BoolExpr;
   };

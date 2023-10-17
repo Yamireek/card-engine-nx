@@ -228,3 +228,7 @@ export function calculateCardBoolExpr(
 
   throw new Error(`unknown card bool expression: ${JSON.stringify(expr)}`);
 }
+
+export function getNumberExprText(expr: NumberExpr) {
+  return JSON.stringify(expr, null, 1);
+}

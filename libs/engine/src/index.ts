@@ -11,3 +11,4 @@ export * from './resolution';
 export * from './utils/random';
 export * from './TestEngine';
 export * from './GameSetupData';
+export * from './modifiers';

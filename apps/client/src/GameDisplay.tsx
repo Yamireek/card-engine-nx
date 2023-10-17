@@ -6,7 +6,12 @@ import {
 } from '@card-engine-nx/ui';
 import { useContext, useMemo, useState } from 'react';
 import { StateContext } from './StateContext';
-import { calculateNumberExpr, UiEvent, UIEvents } from '@card-engine-nx/engine';
+import {
+  calculateNumberExpr,
+  getModifierText,
+  UiEvent,
+  UIEvents,
+} from '@card-engine-nx/engine';
 import { values } from '@card-engine-nx/basic';
 import { Board3d } from './Board3d';
 import { State } from '@card-engine-nx/state';
@@ -227,10 +232,24 @@ export const LotrLCGInfo = () => {
             </IconButton>
           </Stack>
         </Paper>
+        {state.modifiers.length > 0 && (
+          <Paper style={{ padding: 4, overflow: 'auto' }}>
+            <Typography variant="caption">Temporary effects</Typography>
+            {state.modifiers.map((m) => (
+              <>
+                <Tooltip
+                  title={view.cards[m.source].props.name}
+                  placement="left"
+                >
+                  <Typography>{getModifierText(m, state, view)}</Typography>
+                </Tooltip>
+                <Divider variant="fullWidth" />
+              </>
+            ))}
+          </Paper>
+        )}
         <Paper style={{ padding: 4, overflow: 'auto' }}>
-          <pre>{JSON.stringify(state.modifiers, null, 1)}</pre>
-        </Paper>
-        <Paper style={{ padding: 4, overflow: 'auto' }}>
+          <Typography variant="caption">Possible actions</Typography>
           {view.actions
             .filter((a) => a.enabled)
             .map((a) => (

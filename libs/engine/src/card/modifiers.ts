@@ -1,7 +1,11 @@
 import { CardView, CardModifier } from '@card-engine-nx/state';
 import { ViewContext } from '../context';
 import { CardId, keys } from '@card-engine-nx/basic';
-import { calculateCardBoolExpr, calculateNumberExpr } from '../expr';
+import {
+  calculateCardBoolExpr,
+  calculateNumberExpr,
+  getNumberExprText,
+} from '../expr';
 
 export function applyModifier(
   modifier: CardModifier,
@@ -129,5 +133,48 @@ export function applyModifier(
 
     default:
       throw new Error(`unknown modifier: ${JSON.stringify(modifier)}`);
+  }
+}
+
+export function getCardModifierText(modifier: CardModifier): string {
+  switch (true) {
+    case !!modifier.increment: {
+      const increment = modifier.increment;
+      return (
+        'has ' +
+        keys(modifier.increment)
+          .flatMap((property) => {
+            const expr = increment[property];
+            if (typeof expr === 'number') {
+              if (expr === 0) {
+                return;
+              }
+              return `${expr > 0 ? '+' : '-'}${expr} [${property}]`;
+            } else {
+              if (expr !== undefined) {
+                return `[${property}] incremented by ${getNumberExprText(
+                  expr
+                )}`;
+              }
+            }
+          })
+          .join(', ')
+      );
+    }
+
+    case modifier.disable === 'attacking':
+      return "can't attack";
+
+    case !!modifier.addSphere:
+      return `gains [${modifier.addSphere}] resource icon`;
+
+    case modifier.rule?.attacksStagingArea:
+      return 'can attack enemies in stagin area';
+
+    case modifier.rule?.noThreatContribution:
+      return "does not contribute it's threat";
+
+    default:
+      return JSON.stringify(modifier, null, 1);
   }
 }
