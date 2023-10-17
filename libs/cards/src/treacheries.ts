@@ -14,6 +14,7 @@ export const eyesOfTheForest = treachery(
   }
 );
 
+// TODO static modifiers
 export const caughtInAWeb = treachery(
   { name: 'Caught in a Web' },
   {
@@ -28,8 +29,8 @@ export const caughtInAWeb = treachery(
               target: 'self',
               action: {
                 modify: [
-                  { description: '', type: 'attachment' },
-                  { description: '', trait: 'condition' },
+                  { description: '', replaceType: 'attachment' },
+                  { description: '', addTrait: 'condition' },
                 ],
               },
             },

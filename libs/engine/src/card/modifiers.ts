@@ -94,12 +94,12 @@ export function applyModifier(
       self.refreshCost.push(modifier.refreshCost);
       return;
 
-    case !!modifier.type:
-      self.props.type = modifier.type;
+    case !!modifier.replaceType:
+      self.props.type = modifier.replaceType;
       return;
 
-    case !!modifier.trait:
-      self.props.traits.push(modifier.trait);
+    case !!modifier.addTrait:
+      self.props.traits.push(modifier.addTrait);
       return;
 
     case !!modifier.travel:

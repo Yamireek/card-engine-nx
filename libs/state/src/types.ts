@@ -287,8 +287,8 @@ export type CardModifier = {
   };
   cost?: CostModifier;
   keywords?: Keywords;
-  type?: CardType;
-  trait?: Trait;
+  replaceType?: CardType;
+  addTrait?: Trait;
   if?: {
     condition: CardBoolExpr;
     modifier: CardModifier;

@@ -181,7 +181,7 @@ export const stewardOfGondor = attachment(
     },
     card: {
       description: 'Gains Gondor trait',
-      trait: 'gondor',
+      addTrait: 'gondor',
     },
   },
   {
