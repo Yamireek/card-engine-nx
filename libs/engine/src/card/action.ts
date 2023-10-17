@@ -24,7 +24,7 @@ export function executeCardAction(
   action: CardAction,
   card: CardState,
   ctx: ExecutionContext
-) {
+): undefined | boolean {
   if (isArray(action)) {
     const actions: Action[] = action.map((a) => ({
       card: { target: card.id, action: a },
@@ -40,7 +40,7 @@ export function executeCardAction(
 
   if (action === 'ready') {
     card.tapped = false;
-    return;
+    return true;
   }
 
   if (action === 'travel') {
@@ -66,7 +66,7 @@ export function executeCardAction(
 
   if (action === 'exhaust') {
     card.tapped = true;
-    return;
+    return true;
   }
 
   if (action === 'reveal') {
@@ -579,7 +579,7 @@ export function executeCardAction(
         attacker: action.declareAsDefender.attacker,
       },
     });
-    return;
+    return true;
   }
 
   if (action.engagePlayer) {
@@ -615,7 +615,7 @@ export function executeCardAction(
       card.token.damage = Math.max(0, card.token.damage - action.heal);
     }
 
-    return;
+    return true;
   }
 
   if (action.dealDamage) {
@@ -650,12 +650,12 @@ export function executeCardAction(
       },
     });
 
-    return;
+    return true;
   }
 
   if (action.flip) {
     card.sideUp = action.flip;
-    return;
+    return true;
   }
 
   if (action.generateResources !== undefined) {
@@ -724,7 +724,7 @@ export function executeCardAction(
       ctx.state.next.unshift({ event: { type: 'leftPlay', card: card.id } });
     }
 
-    return;
+    return true;
   }
 
   if (action.placeProgress !== undefined) {

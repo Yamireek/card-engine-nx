@@ -48,13 +48,14 @@ export function addGameCard(
   state.nextId++;
 }
 
-export function nextStep(ctx: ExecutionContext) {
+export function nextStep(ctx: ExecutionContext): boolean {
   const action = ctx.state.next.shift();
   if (!action) {
-    return;
+    return false;
   } else {
     console.log('executing ', JSON.parse(JSON.stringify(action)));
-    executeAction(action, ctx);
+    const result = executeAction(action, ctx);
+    return result ?? false;
   }
 }
 
@@ -145,7 +146,13 @@ export function advanceToChoiceState(
     }
 
     try {
-      nextStep(crateExecutionContext(state, events, random));
+      const ctx = crateExecutionContext(state, events, random);
+      while (ctx !== undefined) {
+        const newView = nextStep(ctx);
+        if (newView || ctx.state.choice || ctx.state.next.length === 0) {
+          break;
+        }
+      }
 
       if (state.result) {
         return;

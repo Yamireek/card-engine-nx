@@ -15,7 +15,10 @@ import { ExecutionContext } from './context';
 import { getZoneState } from './zone/target';
 import { ScenarioSetupData } from './GameSetupData';
 
-export function executeAction(action: Action, ctx: ExecutionContext) {
+export function executeAction(
+  action: Action,
+  ctx: ExecutionContext
+): undefined | boolean {
   if (isArray(action)) {
     ctx.state.next.unshift(...action);
     return;
@@ -393,18 +396,21 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
   if (action.card) {
     const ids = getTargetCards(action.card.target, ctx);
+    const results: boolean[] = [];
     for (const id of ids) {
       const card = ctx.state.cards[id];
       if (card) {
-        executeCardAction(action.card.action, card, {
-          ...ctx,
-          card: { ...ctx.card, target: id },
-        });
+        results.push(
+          executeCardAction(action.card.action, card, {
+            ...ctx,
+            card: { ...ctx.card, target: id },
+          }) ?? false
+        );
       } else {
         throw new Error('card not found');
       }
     }
-    return;
+    return results.some((r) => r);
   }
 
   if (action.addPlayer) {
@@ -773,7 +779,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
   }
 
   if (action.usePlayerVar) {
-    return ctx.state.next.unshift(
+    ctx.state.next.unshift(
       {
         setPlayerVar: {
           name: action.usePlayerVar.name,
@@ -785,6 +791,7 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
         setPlayerVar: { name: action.usePlayerVar.name, value: undefined },
       }
     );
+    return;
   }
 
   if (action.if) {
