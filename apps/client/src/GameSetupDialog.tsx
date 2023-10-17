@@ -1,5 +1,5 @@
 import { keys } from '@card-engine-nx/basic';
-import { core } from '@card-engine-nx/cards';
+import { core, decks } from '@card-engine-nx/cards';
 import {
   Button,
   Dialog,
@@ -16,21 +16,8 @@ import {
   ToggleButtonGroupElement,
   useFormContext,
 } from 'react-hook-form-mui';
-import { coreTactics } from './decks/coreTactics';
-import { coreLeadership } from './decks/coreLeadership';
-import { coreLore } from './decks/coreLore';
-import { coreSpirit } from './decks/coreSpirit';
-import { coreThree } from './decks/coreThree';
 import { GameSetupData } from '@card-engine-nx/engine';
 import { Difficulty } from '@card-engine-nx/state';
-
-const decks = {
-  coreTactics,
-  coreLeadership,
-  coreLore,
-  coreSpirit,
-  coreThree,
-};
 
 const GameSetupForm = () => {
   const form = useFormContext();

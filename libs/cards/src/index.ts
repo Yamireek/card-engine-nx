@@ -8,6 +8,7 @@ import * as quest from './quests';
 import * as scenario from './scenarios';
 import * as treachery from './treacheries';
 import * as set from './sets';
+export * as decks from './decks/index';
 
 export const core = {
   ally,

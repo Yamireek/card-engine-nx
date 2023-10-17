@@ -1,7 +1,7 @@
 import { CssBaseline } from '@mui/material';
 import { Game } from './Game';
 import { core } from '@card-engine-nx/cards';
-import { coreThree } from './decks/coreThree';
+import { coreThree } from '../../../libs/cards/src/decks/coreThree';
 import { useState } from 'react';
 import { GameSetupData } from '@card-engine-nx/engine';
 import { GameSetupDialog } from './GameSetupDialog';
