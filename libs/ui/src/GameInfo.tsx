@@ -27,7 +27,7 @@ type GameInfoProps = {
 
 export const GameInfo = (props: GameInfoProps) => {
   return (
-    <TableContainer component={Paper} sx={{ opacity: 0.75 }}>
+    <TableContainer component={Paper} sx={{ opacity: 0.75, flexShrink: 0 }}>
       <Table size="small">
         <TableBody>
           <TableRow>

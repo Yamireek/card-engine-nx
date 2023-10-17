@@ -14,7 +14,7 @@ export const PlayerHand = (props: { player: PlayerId }) => {
       style={{
         position: 'absolute',
         bottom: -100,
-        width: '100%',
+        width: 'calc(100% - 300px)',
       }}
     >
       <HandLayout

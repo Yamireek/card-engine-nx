@@ -22,10 +22,13 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  Divider,
   Icon,
   IconButton,
   Paper,
   Stack,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { sum } from 'lodash/fp';
 import { GameDialogs } from './GameDialogs';
@@ -145,82 +148,101 @@ export const LotrLCGInfo = () => {
       style={{
         position: 'absolute',
         width: 300,
-        padding: 8,
+        margin: 4,
         zIndex: 10,
         right: 0,
+        height: '100%',
+        paddingBottom: 80,
       }}
     >
-      <GameInfo
-        players={values(state.players).map((p) => ({
-          id: p.id,
-          threat: p.thread,
-          state: p.eliminated ? 'eliminated' : 'active',
-        }))}
-        progress={{ current: currentProgress, target: targetProgress }}
-        showPlayer={playerId}
-        threat={totalThreat}
-        willpower={totalWillpower}
-      />
-      <Paper>
-        <Stack direction="row">
-          <IconButton
-            onClick={() => {
-              localStorage.setItem('saved_state', JSON.stringify(state));
-            }}
-          >
-            <Icon>save</Icon>
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              const value = localStorage.getItem('saved_state');
-              if (!value) {
-                return;
-              }
-              try {
-                const loaded = JSON.parse(value);
-                moves.load(loaded);
-              } catch (error) {
-                if (error instanceof Error) {
-                  console.log(error.message);
+      <Stack direction="column" spacing={1} height="100%">
+        <GameInfo
+          players={values(state.players).map((p) => ({
+            id: p.id,
+            threat: p.thread,
+            state: p.eliminated ? 'eliminated' : 'active',
+          }))}
+          progress={{ current: currentProgress, target: targetProgress }}
+          showPlayer={playerId}
+          threat={totalThreat}
+          willpower={totalWillpower}
+        />
+        <Paper>
+          <Stack direction="row">
+            <IconButton
+              onClick={() => {
+                localStorage.setItem('saved_state', JSON.stringify(state));
+              }}
+            >
+              <Icon>save</Icon>
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                const value = localStorage.getItem('saved_state');
+                if (!value) {
+                  return;
                 }
-              }
-            }}
-          >
-            <Icon>upload</Icon>
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              localStorage.removeItem('saved_state');
-            }}
-          >
-            <Icon>delete</Icon>
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              console.log('state', state);
-              console.log('view', view);
-            }}
-          >
-            <Icon>bug_report</Icon>
-          </IconButton>
+                try {
+                  const loaded = JSON.parse(value);
+                  moves.load(loaded);
+                } catch (error) {
+                  if (error instanceof Error) {
+                    console.log(error.message);
+                  }
+                }
+              }}
+            >
+              <Icon>upload</Icon>
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                localStorage.removeItem('saved_state');
+              }}
+            >
+              <Icon>delete</Icon>
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                console.log('state', state);
+                console.log('view', view);
+              }}
+            >
+              <Icon>bug_report</Icon>
+            </IconButton>
 
-          <IconButton
-            onClick={() => {
-              undo();
-            }}
-          >
-            <Icon>undo</Icon>
-          </IconButton>
+            <IconButton
+              onClick={() => {
+                undo();
+              }}
+            >
+              <Icon>undo</Icon>
+            </IconButton>
 
-          <IconButton
-            onClick={() => {
-              redo();
-            }}
-          >
-            <Icon>redo</Icon>
-          </IconButton>
-        </Stack>
-      </Paper>
+            <IconButton
+              onClick={() => {
+                redo();
+              }}
+            >
+              <Icon>redo</Icon>
+            </IconButton>
+          </Stack>
+        </Paper>
+        <Paper style={{ padding: 4, overflow: 'auto' }}>
+          <pre>{JSON.stringify(state.modifiers, null, 1)}</pre>
+        </Paper>
+        <Paper style={{ padding: 4, overflow: 'auto' }}>
+          {view.actions
+            .filter((a) => a.enabled)
+            .map((a) => (
+              <>
+                <Tooltip title={view.cards[a.card].props.name} placement="left">
+                  <Typography>{a.description}</Typography>
+                </Tooltip>
+                <Divider variant="fullWidth" />
+              </>
+            ))}
+        </Paper>
+      </Stack>
     </div>
   );
 };
