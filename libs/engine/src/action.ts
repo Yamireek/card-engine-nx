@@ -804,10 +804,10 @@ export function executeAction(action: Action, ctx: ExecutionContext) {
 
 export function beginScenario(data: ScenarioSetupData): Action {
   return [
+    ...data.players.map((d) => ({ addPlayer: d })),
     {
       setupScenario: { scenario: data.scenario, difficulty: data.difficulty },
     },
-    ...data.players.map((d) => ({ addPlayer: d })),
     'shuffleEncounterDeck',
     {
       player: {

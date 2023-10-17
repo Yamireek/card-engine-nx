@@ -658,7 +658,7 @@ export function executeCardAction(
     return;
   }
 
-  if (action.generateResources) {
+  if (action.generateResources !== undefined) {
     const amount = calculateNumberExpr(action.generateResources, ctx);
     card.token.resources += amount;
     return;
