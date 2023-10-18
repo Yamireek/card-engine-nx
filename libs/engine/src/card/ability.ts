@@ -438,7 +438,6 @@ export function createModifiers(
             source: self,
             card: self,
             modifier: {
-              description: ability.description,
               conditional: ability.conditional,
             },
           },

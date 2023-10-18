@@ -217,7 +217,7 @@ export type PropertyIncrement = Partial<
   >
 >;
 
-export type Ability = { description?: string } & (
+export type Ability = { description: string } & (
   | {
       whenRevealed: Action;
     }
@@ -249,54 +249,76 @@ export type Ability = { description?: string } & (
     }
   | {
       response: ResponseAction;
-      target: CardTarget;
+      target?: CardTarget;
       zone?: GameZoneType | PlayerZoneType;
       cost?: CostModifier;
     }
-  | { forced: ResponseAction; target: CardTarget }
+  | { forced: ResponseAction; target?: CardTarget }
   | { attachesTo: CardTarget }
   | {
-      multi: Array<Omit<Ability, 'description'>>;
+      multi: Array<Ability>;
     }
   | {
-      conditional?: {
-        advance?: BoolExpr;
+      conditional: {
+        advance: BoolExpr;
       };
     }
   | { nextStage: 'random' }
 );
 
-export type CardModifier = {
-  description?: string;
-  increment?: PropertyIncrement;
-  disable?: Mark;
-  refreshCost?: CardAction;
-  reaction?: {
-    event: EventType;
-    condition?: BoolExpr;
-    action: Action;
-    forced: boolean;
-  };
-  action?: Action;
-  whenRevealed?: Action;
-  travel?: Action;
-  setup?: Action;
-  nextStage?: 'random'; // TODO automatic, when multiple choices
-  conditional?: {
-    advance?: BoolExpr;
-  };
-  cost?: CostModifier;
-  keywords?: Keywords;
-  replaceType?: CardType;
-  addTrait?: Trait;
-  if?: {
-    condition: CardBoolExpr;
-    true?: CardModifier | CardModifier[];
-    false?: CardModifier | CardModifier[];
-  };
-  addSphere?: Sphere;
-  rule?: CardRules;
-};
+export type CardModifier =
+  | {
+      description: string;
+      reaction: {
+        event: EventType;
+        condition?: BoolExpr;
+        action: Action;
+        forced: boolean;
+      };
+    }
+  | {
+      description: string;
+      action: Action;
+    }
+  | {
+      description: string;
+      whenRevealed: Action;
+    }
+  | {
+      increment: PropertyIncrement;
+    }
+  | {
+      disable: Mark; // TODO move to rules
+    }
+  | {
+      refreshCost: CardAction;
+    }
+  | { travel: Action }
+  | { setup: Action }
+  | { nextStage: 'random' } // TODO automatic, when multiple choices}
+  | {
+      conditional: {
+        advance: BoolExpr;
+      };
+    }
+  | {
+      cost: CostModifier;
+    }
+  | { keywords: Keywords }
+  | { replaceType: CardType }
+  | { replaceType: CardType }
+  | { addTrait: Trait }
+  | {
+      if: {
+        condition: CardBoolExpr;
+        true?: CardModifier | CardModifier[];
+        false?: CardModifier | CardModifier[];
+      };
+    }
+  | { addSphere: Sphere }
+  | {
+      rule: CardRules;
+    };
 
 export type CostModifier = {
   heroes?: number;

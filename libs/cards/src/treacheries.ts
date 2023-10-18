@@ -21,6 +21,7 @@ export const caughtInAWeb = treachery(
       "When Revealed: The player with the highest threat level attaches this card to one of his heroes. (Counts as a Condition attachment with the text: 'Attached hero does not ready during the refresh phase unless you pay 2 resources from that hero's pool.')",
     multi: [
       {
+        description: '',
         whenRevealed: {
           player: {
             target: 'highestThreat',
@@ -39,28 +40,27 @@ export const caughtInAWeb = treachery(
         },
       },
       {
+        description: '',
         card: {
-          description: '',
           if: {
             condition: {
               predicate: 'isAttached',
             },
             true: [
               {
-                description: '',
                 replaceType: 'attachment',
               },
-              { description: '', addTrait: 'condition' },
+              { addTrait: 'condition' },
             ],
           },
         },
       },
       {
+        description: '',
         target: {
           hasAttachment: 'self',
         },
         card: {
-          description: '',
           refreshCost: { payResources: 2 },
         },
       },
