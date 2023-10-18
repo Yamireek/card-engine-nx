@@ -6,6 +6,18 @@ import { PlayerDeck } from '@card-engine-nx/state';
 
 // https://www.youtube.com/watch?v=Pyk_PrY58g8
 
+export const testDeck: PlayerDeck = {
+  name: 'Test',
+  heroes: [hero.theodred, hero.eowyn, hero.denethor],
+  library: [
+    ally.gandalf,
+    ally.gandalf,
+    event.sneakAttack,
+    attachment.stewardOfGondor,
+    attachment.stewardOfGondor,
+  ],
+};
+
 export const coreThree: PlayerDeck = {
   name: 'Core (Three spheres)',
   heroes: [hero.theodred, hero.eowyn, hero.denethor],

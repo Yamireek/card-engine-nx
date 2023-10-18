@@ -8,10 +8,7 @@ import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 import { getTargetPlayers } from '../player/target';
 import { asArray, isInPlay } from '../utils';
 
-export function getTargetCard(
-  target: CardTarget,
-  ctx: ViewContext
-): CardId | undefined {
+export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId {
   const results = getTargetCards(target, ctx);
   if (results.length <= 1) {
     return results[0];

@@ -6,7 +6,7 @@ import { getTargetPlayer } from '../player/target';
 import { createPayCostAction, canPlayerExecute } from '../resolution';
 import { isInPlay } from '../utils';
 import { getZoneType } from '../zone/target';
-import { getTargetCards } from './target';
+import { getTargetCard, getTargetCards } from './target';
 import { calculateBoolExpr } from '../expr';
 
 export function canCardExecute(
@@ -142,7 +142,21 @@ export function canCardExecute(
   }
 
   if (inPlay && action.attachCard) {
-    return true;
+    const target = getTargetCard(action.attachCard, ctx);
+
+    const cv = ctx.view.cards[target];
+    if (!cv.props.unique) {
+      return true;
+    }
+
+    const exising = getTargetCards(
+      {
+        and: [{ name: cv.props.name ?? '' }, 'inAPlay'],
+      },
+      ctx
+    );
+
+    return exising.length === 0;
   }
 
   if (inPlay && action.modify) {
@@ -200,7 +214,23 @@ export function canCardExecute(
   }
 
   if (action.putInPlay) {
-    return !inPlay;
+    if (inPlay) {
+      return false;
+    }
+
+    const cv = ctx.view.cards[card.id];
+    if (!cv.props.unique) {
+      return true;
+    }
+
+    const exising = getTargetCards(
+      {
+        and: [{ name: cv.props.name ?? '' }, 'inAPlay'],
+      },
+      ctx
+    );
+
+    return exising.length === 0;
   }
 
   if (action.flip) {

@@ -4,3 +4,4 @@ export * from './coreLore';
 export * from './coreLoreTactics';
 export * from './coreSpirit';
 export * from './coreTactics';
+export * from './coreThree';

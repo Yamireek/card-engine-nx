@@ -133,7 +133,7 @@ export function createView(state: State): View {
         const card = view.cards[cardId];
         if (
           card.props.type === 'ally' &&
-          card.props.sphere &&
+          card.props.sphere.length > 0 &&
           card.props.cost
         ) {
           view.actions.push({
