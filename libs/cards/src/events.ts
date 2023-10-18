@@ -44,8 +44,6 @@ export const bladeMastery = event(
             target: 'character',
             action: {
               modify: {
-                description:
-                  'Has +1 [attack] and +1 [defense] until end of the phase',
                 increment: { attack: 1, defense: 1 },
               },
               until: 'end_of_phase',
@@ -74,7 +72,6 @@ export const feint = event(
           chooseCardActions: {
             action: {
               modify: {
-                description: "Can't attack until end of phase",
                 disable: 'attacking',
               },
               until: 'end_of_phase',
@@ -279,7 +276,6 @@ export const thicketOfSpears = event(
             action: {
               engaged: {
                 modify: {
-                  description: "Can't attack until end of phase",
                   disable: 'attacking',
                 },
                 until: 'end_of_phase',
@@ -369,7 +365,6 @@ export const forGondor = event(
           target: 'character',
           action: {
             modify: {
-              description: '+1 [attack] until the end of the phase',
               increment: {
                 attack: 1,
               },
@@ -383,7 +378,6 @@ export const forGondor = event(
           target: { trait: 'gondor' },
           action: {
             modify: {
-              description: '+1 [defense] until the end of the phase',
               increment: {
                 defense: 1,
               },
@@ -798,7 +792,6 @@ export const secretPaths = event(
           target: { type: 'location', zoneType: 'stagingArea' },
           action: {
             modify: {
-              description: '',
               rule: {
                 noThreatContribution: true,
               },

@@ -175,7 +175,6 @@ export const eowyn = hero(
             target: 'self',
             action: {
               modify: {
-                description: '+1 [willpower] until the end of the phase',
                 increment: {
                   willpower: 1,
                 },
@@ -376,13 +375,11 @@ export const dunhere = hero(
       'Dúnhere can target enemies in the staging area when he attacks alone. When doing so, he gets +1 Attack.',
     card: [
       {
-        description: '',
         rule: {
           attacksStagingArea: true,
         },
       },
       {
-        description: '',
         if: {
           condition: {
             and: [
@@ -400,7 +397,6 @@ export const dunhere = hero(
             ],
           },
           true: {
-            description: '',
             increment: {
               attack: 1,
             },

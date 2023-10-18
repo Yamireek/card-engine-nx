@@ -104,7 +104,6 @@ export const forestSpider = enemy(
           target: 'self',
           action: {
             modify: {
-              description: '+1 [attack] until end of round',
               increment: {
                 attack: 1,
               },
@@ -153,7 +152,6 @@ export const ungoliantsSpawn = enemy(
         },
         action: {
           modify: {
-            description: '-1 [willpower] until end of phase',
             increment: {
               willpower: -1,
             },
@@ -183,7 +181,6 @@ export const dolGuldurOrcs = enemy(
         },
         action: {
           modify: {
-            description: '',
             increment: {
               attack: {
                 if: {
@@ -295,7 +292,6 @@ export const eastBightPatrol = enemy({
         },
         action: {
           modify: {
-            description: '',
             increment: {
               attack: 1,
             },

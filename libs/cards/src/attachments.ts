@@ -180,7 +180,6 @@ export const stewardOfGondor = attachment(
       hasAttachment: 'self',
     },
     card: {
-      description: 'Gains Gondor trait',
       addTrait: 'gondor',
     },
   },
@@ -228,19 +227,16 @@ export const celebriansStone = attachment(
     },
     card: [
       {
-        description: '+2 [willpower]',
         increment: {
           willpower: 2,
         },
       },
       {
-        description: '',
         if: {
           condition: {
             name: 'Aragorn',
           },
           true: {
-            description: '+[spirit] resource icon',
             addSphere: 'spirit',
           },
         },
@@ -343,7 +339,6 @@ export const forestSnare = attachment(
       hasAttachment: 'self',
     },
     card: {
-      description: 'Cannot attack',
       disable: 'attacking',
     },
   }
@@ -397,7 +392,6 @@ export const protectorOfLorien = attachment(
                         },
                         action: {
                           modify: {
-                            description: '+1 [defense] until end of phase',
                             increment: {
                               defense: 1,
                             },
@@ -416,7 +410,6 @@ export const protectorOfLorien = attachment(
                         },
                         action: {
                           modify: {
-                            description: '+1 [willpower] until end of phase',
                             increment: {
                               willpower: 1,
                             },

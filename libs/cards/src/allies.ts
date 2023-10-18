@@ -69,7 +69,6 @@ export const beorn = ally(
           target: 'self',
           action: {
             modify: {
-              description: '+5 [attack] until end of phase',
               increment: {
                 attack: 5,
               },
@@ -238,7 +237,6 @@ export const faramir = ally(
               action: {
                 controlled: {
                   modify: {
-                    description: '+1 [willpower] until the end of the phase',
                     increment: { willpower: 1 },
                   },
                   until: 'end_of_phase',
