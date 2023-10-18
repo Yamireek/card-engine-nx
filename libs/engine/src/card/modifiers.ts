@@ -6,20 +6,28 @@ import {
   calculateNumberExpr,
   getNumberExprText,
 } from '../expr';
+import { isArray } from 'lodash/fp';
 
 export function applyModifier(
-  modifier: CardModifier,
+  modifier: CardModifier | CardModifier[],
   self: CardView,
   source: CardId,
   ctx: ViewContext
 ) {
+  if (isArray(modifier)) {
+    for (const m of modifier) {
+      applyModifier(m, self, source, ctx);
+    }
+    return;
+  }
+
   if (source !== self.id && source !== 0) {
     self.effects.push(
       `[${ctx.view.cards[source].props.name}] ${modifier.description}`
     );
   }
 
-  if (source === 0) {
+  if (source === 0 && modifier.description) {
     self.effects.push(modifier.description);
   }
 
@@ -61,7 +69,7 @@ export function applyModifier(
       ctx.view.responses[modifier.reaction.event]?.push({
         source: source,
         card: self.id,
-        description: modifier.description,
+        description: modifier.description ?? '',
         action: modifier.reaction.action,
         condition: modifier.reaction.condition,
         forced: modifier.reaction.forced,
@@ -70,7 +78,7 @@ export function applyModifier(
 
     case !!modifier.whenRevealed: {
       self.whenRevealed.push({
-        description: modifier.description,
+        description: modifier.description ?? '',
         action: modifier.whenRevealed,
       });
       return;
@@ -85,7 +93,7 @@ export function applyModifier(
     case !!modifier.action:
       ctx.view.actions.push({
         card: self.id,
-        description: modifier.description,
+        description: modifier.description ?? '',
         action: modifier.action,
       });
       return;
@@ -120,8 +128,15 @@ export function applyModifier(
         self.id,
         ctx
       );
-      if (condition) {
-        applyModifier(modifier.if.modifier, self, source, ctx);
+
+      const ifTrue = modifier.if.true;
+      const ifFalse = modifier.if.false;
+
+      if (condition && ifTrue) {
+        applyModifier(ifTrue, self, source, ctx);
+      }
+      if (!condition && ifFalse) {
+        applyModifier(ifFalse, self, source, ctx);
       }
       return;
     }

@@ -239,7 +239,7 @@ export const celebriansStone = attachment(
           condition: {
             name: 'Aragorn',
           },
-          modifier: {
+          true: {
             description: '+[spirit] resource icon',
             addSphere: 'spirit',
           },

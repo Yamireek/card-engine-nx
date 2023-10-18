@@ -158,6 +158,7 @@ export const LotrLCGInfo = () => {
         right: 0,
         height: '100%',
         paddingBottom: 80,
+        pointerEvents: 'none',
       }}
     >
       <Stack direction="column" spacing={1} height="100%">
@@ -173,7 +174,7 @@ export const LotrLCGInfo = () => {
           willpower={totalWillpower}
         />
         <Paper>
-          <Stack direction="row">
+          <Stack direction="row" style={{ pointerEvents: 'auto' }}>
             <IconButton
               onClick={() => {
                 localStorage.setItem('saved_state', JSON.stringify(state));
@@ -233,7 +234,9 @@ export const LotrLCGInfo = () => {
           </Stack>
         </Paper>
         {state.modifiers.length > 0 && (
-          <Paper style={{ padding: 4, overflow: 'auto' }}>
+          <Paper
+            style={{ padding: 4, overflow: 'auto', pointerEvents: 'auto' }}
+          >
             <Typography variant="caption">Temporary effects</Typography>
             {state.modifiers.map((m) => (
               <>
@@ -248,7 +251,7 @@ export const LotrLCGInfo = () => {
             ))}
           </Paper>
         )}
-        <Paper style={{ padding: 4, overflow: 'auto' }}>
+        <Paper style={{ padding: 4, overflow: 'auto', pointerEvents: 'auto' }}>
           <Typography variant="caption">Possible actions</Typography>
           {view.actions
             .filter((a) => a.enabled)

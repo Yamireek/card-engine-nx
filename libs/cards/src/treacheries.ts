@@ -14,48 +14,57 @@ export const eyesOfTheForest = treachery(
   }
 );
 
-// TODO static modifiers
 export const caughtInAWeb = treachery(
   { name: 'Caught in a Web' },
   {
     description:
       "When Revealed: The player with the highest threat level attaches this card to one of his heroes. (Counts as a Condition attachment with the text: 'Attached hero does not ready during the refresh phase unless you pay 2 resources from that hero's pool.')",
-    whenRevealed: {
-      player: {
-        target: 'highestThreat',
-        action: [
-          {
-            card: {
-              target: 'self',
-              action: {
-                modify: [
-                  { description: '', replaceType: 'attachment' },
-                  { description: '', addTrait: 'condition' },
-                ],
-              },
-            },
-          },
-          {
-            chooseCardActions: {
-              title: 'Choose hero',
-              target: {
-                and: [{ type: 'hero', controller: 'highestThreat' }],
-              },
-              action: [
-                { attachCard: 'self' },
-                {
-                  modify: {
-                    description:
-                      'Pay 2 resources to ready durimg refresh phase',
-                    refreshCost: { payResources: 2 },
+    multi: [
+      {
+        whenRevealed: {
+          player: {
+            target: 'highestThreat',
+            action: [
+              {
+                chooseCardActions: {
+                  title: 'Choose hero',
+                  target: {
+                    and: [{ type: 'hero', controller: 'highestThreat' }],
                   },
+                  action: [{ attachCard: 'self' }],
                 },
-              ],
-            },
+              },
+            ],
           },
-        ],
+        },
       },
-    },
+      {
+        card: {
+          description: '',
+          if: {
+            condition: {
+              predicate: 'isAttached',
+            },
+            true: [
+              {
+                description: '',
+                replaceType: 'attachment',
+              },
+              { description: '', addTrait: 'condition' },
+            ],
+          },
+        },
+      },
+      {
+        target: {
+          hasAttachment: 'self',
+        },
+        card: {
+          description: '',
+          refreshCost: { payResources: 2 },
+        },
+      },
+    ],
   }
 );
 

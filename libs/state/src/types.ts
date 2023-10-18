@@ -217,7 +217,7 @@ export type PropertyIncrement = Partial<
   >
 >;
 
-export type Ability = { description: string } & (
+export type Ability = { description?: string } & (
   | {
       whenRevealed: Action;
     }
@@ -256,7 +256,7 @@ export type Ability = { description: string } & (
   | { forced: ResponseAction; target: CardTarget }
   | { attachesTo: CardTarget }
   | {
-      multi: Array<Ability>;
+      multi: Array<Omit<Ability, 'description'>>;
     }
   | {
       conditional?: {
@@ -267,7 +267,7 @@ export type Ability = { description: string } & (
 );
 
 export type CardModifier = {
-  description: string;
+  description?: string;
   increment?: PropertyIncrement;
   disable?: Mark;
   refreshCost?: CardAction;
@@ -291,7 +291,8 @@ export type CardModifier = {
   addTrait?: Trait;
   if?: {
     condition: CardBoolExpr;
-    modifier: CardModifier;
+    true?: CardModifier | CardModifier[];
+    false?: CardModifier | CardModifier[];
   };
   addSphere?: Sphere;
   rule?: CardRules;
@@ -390,7 +391,8 @@ export type SimpleCardTarget =
   | 'exhausted'
   | 'target'
   | 'destroyed'
-  | 'explored';
+  | 'explored'
+  | 'isAttached';
 
 export type CardTarget =
   | SimpleCardTarget

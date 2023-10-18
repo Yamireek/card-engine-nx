@@ -1,6 +1,7 @@
 import { Scenario } from '@card-engine-nx/state';
 import * as quest from './quests';
 import * as set from './sets';
+import * as treachery from './treacheries';
 
 export const passageThroughMirkwood: Scenario = {
   name: 'Passage Through Mirkwood',
@@ -11,4 +12,20 @@ export const passageThroughMirkwood: Scenario = {
     quest.achosenPath2,
   ],
   sets: [set.dolGuldurOrcs, set.passageThroughMirkwood, set.spidersOfMirkwood],
+};
+
+export const testScenario: Scenario = {
+  name: 'Test',
+  quest: [
+    quest.fliesAndSpiders,
+    quest.aForkInTheRoad,
+    quest.achosenPath1,
+    quest.achosenPath2,
+  ],
+  sets: [
+    {
+      easy: [],
+      normal: [treachery.caughtInAWeb],
+    },
+  ],
 };

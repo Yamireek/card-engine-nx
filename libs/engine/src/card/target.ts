@@ -92,6 +92,10 @@ export function checkCardPredicate(
     return need !== undefined && condition && need <= state.token.progress;
   }
 
+  if (target === 'isAttached') {
+    return !!state.attachedTo;
+  }
+
   if (target.simple) {
     return asArray(target.simple).every((s) =>
       checkCardPredicate(s, state, view, ctx)

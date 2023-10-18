@@ -41,7 +41,7 @@ export const CardDetail = () => {
         card.state.sideUp !== 'shadow'
           ? [
               ...card.state.definition[card.state.sideUp].abilities.map(
-                (a) => a.description
+                (a) => a.description ?? ''
               ),
               ...card.view.effects,
             ]

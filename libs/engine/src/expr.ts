@@ -1,5 +1,9 @@
 import { BoolExpr, CardBoolExpr, NumberExpr } from '@card-engine-nx/state';
-import { getTargetCard, getTargetCards } from './card/target';
+import {
+  checkCardPredicate,
+  getTargetCard,
+  getTargetCards,
+} from './card/target';
 import { calculateCardExpr } from './card/expr';
 import { sum } from 'lodash';
 import { ViewContext } from './context';
@@ -224,6 +228,15 @@ export function calculateCardBoolExpr(
 
   if (expr.global) {
     return calculateBoolExpr(expr.global, ctx);
+  }
+
+  if (expr.predicate) {
+    return checkCardPredicate(
+      expr.predicate,
+      ctx.state.cards[cardId],
+      ctx.view.cards[cardId],
+      ctx
+    );
   }
 
   throw new Error(`unknown card bool expression: ${JSON.stringify(expr)}`);

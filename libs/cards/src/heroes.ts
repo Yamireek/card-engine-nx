@@ -399,7 +399,7 @@ export const dunhere = hero(
               },
             ],
           },
-          modifier: {
+          true: {
             description: '',
             increment: {
               attack: 1,
