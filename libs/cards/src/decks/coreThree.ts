@@ -9,16 +9,7 @@ import { PlayerDeck } from '@card-engine-nx/state';
 export const testDeck: PlayerDeck = {
   name: 'Test',
   heroes: [hero.theodred, hero.eowyn, hero.denethor, hero.legolas],
-  library: [
-    ally.gandalf,
-    ally.gandalf,
-    ally.silverlodeArcher,
-    event.sneakAttack,
-    attachment.stewardOfGondor,
-    attachment.stewardOfGondor,
-    event.rainOfArrows,
-    event.commonCause,
-  ],
+  library: [event.radagastsCunning, event.secretPaths],
 };
 
 export const coreThree: PlayerDeck = {
