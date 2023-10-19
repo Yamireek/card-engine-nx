@@ -719,7 +719,13 @@ export const dwarvenTomb = event(
               ],
             },
             action: {
-              // TODO move to cotrollers hand
+              move: {
+                side: 'front',
+                to: {
+                  player: 'controller',
+                  type: 'hand',
+                },
+              },
             },
           },
         },
