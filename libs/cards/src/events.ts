@@ -310,7 +310,6 @@ export const everVigilant = event(
   }
 );
 
-// TODO choose different
 export const commonCause = event(
   {
     name: 'Common Cause',
@@ -328,7 +327,12 @@ export const commonCause = event(
             chooseCardActions: {
               title: 'Choose hero to exhaust',
               target: { and: [{ type: 'hero' }, { controller: 'controller' }] },
-              action: 'exhaust',
+              action: [
+                {
+                  setAsVar: 'exhausted',
+                },
+                'exhaust',
+              ],
             },
           },
         },
@@ -339,7 +343,7 @@ export const commonCause = event(
           action: {
             chooseCardActions: {
               title: 'Choose hero to ready',
-              target: { type: 'hero' },
+              target: { type: 'hero', not: { var: 'exhausted' } },
               action: 'ready',
             },
           },

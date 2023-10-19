@@ -17,6 +17,7 @@ export const testDeck: PlayerDeck = {
     attachment.stewardOfGondor,
     attachment.stewardOfGondor,
     event.rainOfArrows,
+    event.commonCause,
   ],
 };
 
