@@ -71,33 +71,6 @@ export const caughtInAWeb = treachery(
 export const drivenByShadow = treachery(
   {
     name: 'Driven by Shadow',
-    shadow: {
-      description:
-        'Shadow: Choose and discard 1 attachment from the defending character. (If this attack is undefended, discard all attachments you control.)',
-      action: {
-        if: {
-          condition: 'undefended.attack',
-          true: {
-            card: { controller: 'defending', type: 'attachment' },
-            action: 'discard',
-          },
-          false: {
-            player: 'defending',
-            action: {
-              chooseCardActions: {
-                title: 'Choose attachment to discard',
-                target: {
-                  attachmentOf: {
-                    mark: 'defending',
-                  },
-                },
-                action: 'discard',
-              },
-            },
-          },
-        },
-      },
-    },
   },
   {
     description:
@@ -128,6 +101,33 @@ export const drivenByShadow = treachery(
       description: 'Surge',
       keywords: {
         surge: true,
+      },
+    },
+  },
+  {
+    description:
+      'Shadow: Choose and discard 1 attachment from the defending character. (If this attack is undefended, discard all attachments you control.)',
+    shadow: {
+      if: {
+        condition: 'undefended.attack',
+        true: {
+          card: { controller: 'defending', type: 'attachment' },
+          action: 'discard',
+        },
+        false: {
+          player: 'defending',
+          action: {
+            chooseCardActions: {
+              title: 'Choose attachment to discard',
+              target: {
+                attachmentOf: {
+                  mark: 'defending',
+                },
+              },
+              action: 'discard',
+            },
+          },
+        },
       },
     },
   }

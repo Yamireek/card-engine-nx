@@ -1,11 +1,10 @@
 import { EnemyProps } from '@card-engine-nx/basic';
-import { CardDefinition, Shadow } from '../card';
+import { CardDefinition } from '../card';
 import { Ability } from '../types';
+import { getShadowAbility } from './utils';
 
 export function enemy(
-  props: Omit<EnemyProps, 'type'> & {
-    shadow?: Shadow;
-  },
+  props: Omit<EnemyProps, 'type'>,
   ...abilities: Ability[]
 ): CardDefinition {
   return {
@@ -21,7 +20,7 @@ export function enemy(
       traits: [],
       sphere: [],
     },
-    shadow: props.shadow,
+    shadow: getShadowAbility(abilities),
     orientation: 'portrait',
   };
 }

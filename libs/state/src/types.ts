@@ -221,6 +221,7 @@ export type Ability = { description: string } & (
   | {
       whenRevealed: Action;
     }
+  | { shadow: Action }
   | {
       action: Action;
       cost?: CostModifier;
@@ -318,6 +319,10 @@ export type CardModifier =
   | { addSphere: Sphere }
   | {
       rule: CardRules;
+    }
+  | {
+      description: string;
+      shadow: Action;
     };
 
 export type CostModifier = {

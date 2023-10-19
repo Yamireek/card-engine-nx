@@ -380,6 +380,10 @@ export function createModifiers(
       return [];
     }
 
+    case 'shadow' in ability: {
+      return [];
+    }
+
     case 'travel' in ability: {
       if (zone === 'stagingArea') {
         return [

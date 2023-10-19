@@ -9,33 +9,6 @@ export const kingSpider = enemy(
     defense: 1,
     hitPoints: 3,
     traits: ['creature', 'spider'],
-    shadow: {
-      description:
-        'Shadow: Defending player must choose and exhaust 1 character he controls. (2 characters instead if this attack is undefended.)',
-      action: [
-        {
-          repeat: {
-            amount: {
-              if: {
-                cond: 'undefended.attack',
-                false: 1,
-                true: 2,
-              },
-            },
-            action: {
-              player: 'defending',
-              action: {
-                chooseCardActions: {
-                  title: 'Choose character to exhaust',
-                  target: { simple: 'character', controller: 'defending' },
-                  action: 'exhaust',
-                },
-              },
-            },
-          },
-        },
-      ],
-    },
   },
   {
     description:
@@ -66,6 +39,33 @@ export const kingSpider = enemy(
         },
       },
     },
+  },
+  {
+    description:
+      'Shadow: Defending player must choose and exhaust 1 character he controls. (2 characters instead if this attack is undefended.)',
+    shadow: [
+      {
+        repeat: {
+          amount: {
+            if: {
+              cond: 'undefended.attack',
+              false: 1,
+              true: 2,
+            },
+          },
+          action: {
+            player: 'defending',
+            action: {
+              chooseCardActions: {
+                title: 'Choose character to exhaust',
+                target: { simple: 'character', controller: 'defending' },
+                action: 'exhaust',
+              },
+            },
+          },
+        },
+      },
+    ],
   }
 );
 
@@ -78,20 +78,6 @@ export const forestSpider = enemy(
     defense: 1,
     hitPoints: 4,
     traits: ['creature', 'spider'],
-    shadow: {
-      description:
-        'Shadow: Defending player must choose and discard 1 attachment he controls.',
-      action: {
-        player: 'defending',
-        action: {
-          chooseCardActions: {
-            title: 'Choose attachment to discard',
-            target: { type: 'attachment', controller: 'defending' },
-            action: 'discard',
-          },
-        },
-      },
-    },
   },
   {
     description:
@@ -113,6 +99,20 @@ export const forestSpider = enemy(
         },
       },
     },
+  },
+  {
+    description:
+      'Shadow: Defending player must choose and discard 1 attachment he controls.',
+    shadow: {
+      player: 'defending',
+      action: {
+        chooseCardActions: {
+          title: 'Choose attachment to discard',
+          target: { type: 'attachment', controller: 'defending' },
+          action: 'discard',
+        },
+      },
+    },
   }
 );
 
@@ -125,22 +125,6 @@ export const ungoliantsSpawn = enemy(
     defense: 2,
     hitPoints: 9,
     traits: ['creature', 'spider'],
-    shadow: {
-      description:
-        "Shadow: Raise defending player's threat by 4. (Raise defending player's threat by 8 instead if this attack is undefended.)",
-      action: {
-        player: 'defending',
-        action: {
-          incrementThreat: {
-            if: {
-              cond: 'undefended.attack',
-              true: 8,
-              false: 4,
-            },
-          },
-        },
-      },
-    },
   },
   {
     description:
@@ -160,6 +144,22 @@ export const ungoliantsSpawn = enemy(
         },
       },
     },
+  },
+  {
+    description:
+      "Shadow: Raise defending player's threat by 4. (Raise defending player's threat by 8 instead if this attack is undefended.)",
+    shadow: {
+      player: 'defending',
+      action: {
+        incrementThreat: {
+          if: {
+            cond: 'undefended.attack',
+            true: 8,
+            false: 4,
+          },
+        },
+      },
+    },
   }
 );
 
@@ -172,28 +172,6 @@ export const dolGuldurOrcs = enemy(
     defense: 0,
     hitPoints: 3,
     traits: ['dolGuldur', 'orc'],
-    shadow: {
-      description:
-        'Shadow: Attacking enemy gets +1 Attack (+3 Attack instead if this attack is undefended.)',
-      action: {
-        card: {
-          hasShadow: 'self',
-        },
-        action: {
-          modify: {
-            increment: {
-              attack: {
-                if: {
-                  cond: 'undefended.attack',
-                  true: 3,
-                  false: 1,
-                },
-              },
-            },
-          },
-        },
-      },
-    },
   },
   {
     description:
@@ -207,6 +185,28 @@ export const dolGuldurOrcs = enemy(
             target: { mark: 'questing' },
             action: {
               dealDamage: 2,
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    description:
+      'Shadow: Attacking enemy gets +1 Attack (+3 Attack instead if this attack is undefended.)',
+    shadow: {
+      card: {
+        hasShadow: 'self',
+      },
+      action: {
+        modify: {
+          increment: {
+            attack: {
+              if: {
+                cond: 'undefended.attack',
+                true: 3,
+                false: 1,
+              },
             },
           },
         },
@@ -274,18 +274,20 @@ export const dolGuldurBeastmaster = enemy({
   // TODO Forced: When Dol Guldur Beastmaster attacks, deal it 1 additional shadow card.
 });
 
-export const eastBightPatrol = enemy({
-  name: 'East Bight Patrol',
-  engagement: 5,
-  threat: 3,
-  attack: 3,
-  defense: 1,
-  hitPoints: 2,
-  traits: ['goblin', 'orc'],
-  shadow: {
+export const eastBightPatrol = enemy(
+  {
+    name: 'East Bight Patrol',
+    engagement: 5,
+    threat: 3,
+    attack: 3,
+    defense: 1,
+    hitPoints: 2,
+    traits: ['goblin', 'orc'],
+  },
+  {
     description:
       'Shadow: attacking enemy gets +1 Attack (If this attack is undefended, also raise your threat by 3.)',
-    action: [
+    shadow: [
       {
         card: {
           hasShadow: 'self',
@@ -308,8 +310,8 @@ export const eastBightPatrol = enemy({
         },
       },
     ],
-  },
-});
+  }
+);
 
 export const blackForestBats = enemy(
   {
@@ -353,26 +355,6 @@ export const hummerhorns = enemy(
     hitPoints: 3,
     victory: 5,
     traits: ['creature', 'insect'],
-    shadow: {
-      description:
-        'Shadow: Deal 1 damage to each character the defending player controls. (2 damage instead if this attack is undefended.)',
-      action: {
-        card: {
-          controller: 'defending',
-        },
-        action: {
-          dealDamage: {
-            amount: {
-              if: {
-                cond: 'undefended.attack',
-                true: 2,
-                false: 1,
-              },
-            },
-          },
-        },
-      },
-    },
   },
   {
     description:
@@ -392,6 +374,26 @@ export const hummerhorns = enemy(
               action: {
                 dealDamage: 5,
               },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    description:
+      'Shadow: Deal 1 damage to each character the defending player controls. (2 damage instead if this attack is undefended.)',
+    shadow: {
+      card: {
+        controller: 'defending',
+      },
+      action: {
+        dealDamage: {
+          amount: {
+            if: {
+              cond: 'undefended.attack',
+              true: 2,
+              false: 1,
             },
           },
         },

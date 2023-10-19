@@ -1,11 +1,10 @@
 import { TreacheryProps } from '@card-engine-nx/basic';
-import { CardDefinition, Shadow } from '../card';
+import { CardDefinition } from '../card';
 import { Ability } from '../types';
+import { getShadowAbility } from './utils';
 
 export function treachery(
-  props: Omit<TreacheryProps, 'type'> & {
-    shadow?: Shadow;
-  },
+  props: Omit<TreacheryProps, 'type'>,
   ...abilities: Ability[]
 ): CardDefinition {
   return {
@@ -22,7 +21,7 @@ export function treachery(
       sphere: [],
       traits: [],
     },
-    shadow: props.shadow,
+    shadow: getShadowAbility(abilities),
     orientation: 'portrait',
   };
 }
