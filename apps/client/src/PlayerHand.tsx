@@ -1,9 +1,10 @@
-import { getCardImageUrl, HandLayout } from '@card-engine-nx/ui';
+import { getCardImageUrl } from '@card-engine-nx/ui';
 import { useGameState } from './StateContext';
 import { PlayerId } from '@card-engine-nx/basic';
 import { useContext } from 'react';
 import { DetailContext } from './DetailContext';
 import { indexOf } from 'lodash';
+import { HandLayout } from './HandLayout';
 
 export const PlayerHand = (props: { player: PlayerId }) => {
   const { state, view, moves } = useGameState();

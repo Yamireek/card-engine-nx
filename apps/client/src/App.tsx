@@ -17,6 +17,7 @@ export const App = () => {
         padding: 0,
         margin: 0,
         overflow: 'hidden',
+        userSelect: 'none',
       }}
     >
       <CssBaseline />

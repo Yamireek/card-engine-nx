@@ -3,6 +3,7 @@ import { StateContext } from './StateContext';
 import { CardText } from './CardText';
 import { DetailContext } from './DetailContext';
 import { Paper } from '@mui/material';
+import { CardId } from '@card-engine-nx/basic';
 
 const cardProperties = [
   'cost',
@@ -17,9 +18,11 @@ const cardProperties = [
   'questPoints',
 ] as const;
 
-export const CardDetail = () => {
+export const CardDetail = (props: { cardId?: CardId }) => {
   const { state, view } = useContext(StateContext);
-  const { cardId } = useContext(DetailContext);
+  const detail = useContext(DetailContext);
+
+  const cardId = props.cardId ?? detail.cardId;
 
   if (!cardId) {
     return null;
@@ -35,38 +38,28 @@ export const CardDetail = () => {
   const unique = card.view.props.unique ? 'U' : '';
 
   return (
-    <Paper
-      style={{
-        position: 'absolute',
-        width: 300,
-        background: 'rgba(255,255,255,0.75)',
-        padding: 8,
-        zIndex: 10,
-      }}
-    >
-      <CardText
-        title={`${name} (${card.state.id}) [${exhaused}${unique}]`}
-        sphere={card.view.props.sphere}
-        text={
-          card.state.sideUp !== 'shadow'
-            ? [
-                ...card.state.definition[card.state.sideUp].abilities.map(
-                  (a) => a.description ?? ''
-                ),
-                ...card.view.effects,
-              ]
-            : card.view.shadows.map((s) => s.description)
-        }
-        attachments={[]}
-        traits={card.view.props.traits ?? []}
-        properties={cardProperties.map((p) => ({
-          name: p,
-          printed: card.view.printed[p],
-          current: card.view.props[p],
-        }))}
-        tokens={card.state.token}
-        keywords={card.view.props.keywords ?? {}}
-      />
-    </Paper>
+    <CardText
+      title={`${name} (${card.state.id}) [${exhaused}${unique}]`}
+      sphere={card.view.props.sphere}
+      text={
+        card.state.sideUp !== 'shadow'
+          ? [
+              ...card.state.definition[card.state.sideUp].abilities.map(
+                (a) => a.description ?? ''
+              ),
+              ...card.view.effects,
+            ]
+          : card.view.shadows.map((s) => s.description)
+      }
+      attachments={[]}
+      traits={card.view.props.traits ?? []}
+      properties={cardProperties.map((p) => ({
+        name: p,
+        printed: card.view.printed[p],
+        current: card.view.props[p],
+      }))}
+      tokens={card.state.token}
+      keywords={card.view.props.keywords ?? {}}
+    />
   );
 };

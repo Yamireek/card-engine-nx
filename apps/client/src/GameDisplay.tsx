@@ -283,7 +283,6 @@ export const GameDisplay = () => {
   return (
     <FloatingCardsProvider>
       <div style={{ width: '100%', height: '100vh' }}>
-        <CardDetail />
         <LotrLCGInfo />
         <div style={{ width: '100%', height: '100%' }}>
           <TexturesProvider

@@ -5,6 +5,10 @@ import * as THREE from 'three';
 import { Perf } from 'r3f-perf';
 import { Dimensions } from '@card-engine-nx/ui';
 import { useMeasure } from 'react-use';
+import { Tooltip } from '@mui/material';
+import { CardDetail } from './CardDetail';
+import { useContext } from 'react';
+import { DetailContext } from './DetailContext';
 
 const near = 0.01;
 const far = 50000;
@@ -19,15 +23,18 @@ export type GameSceneProps = React.PropsWithChildren<{
 
 export const GameSceneLoader = (props: GameSceneProps) => {
   const [ref, { width, height }] = useMeasure<HTMLDivElement>();
+  const { cardId } = useContext(DetailContext);
 
   return (
-    <div ref={ref} style={{ width: '100%', height: '100%' }}>
-      {width > 300 ? (
-        <GameScene size={{ width, height }} {...props}>
-          {props.children}
-        </GameScene>
-      ) : null}
-    </div>
+    <Tooltip title={cardId ? <CardDetail /> : null} followCursor>
+      <div ref={ref} style={{ width: '100%', height: '100%' }}>
+        {width > 300 ? (
+          <GameScene size={{ width, height }} {...props}>
+            {props.children}
+          </GameScene>
+        ) : null}
+      </div>
+    </Tooltip>
   );
 };
 

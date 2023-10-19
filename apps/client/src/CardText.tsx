@@ -54,7 +54,7 @@ export const CardText = (props: {
   keywords: Keywords;
 }) => {
   return (
-    <table style={{ width: '100%' }}>
+    <table>
       <tbody>
         <tr>
           <td colSpan={2} style={{ textAlign: 'center' }}>
