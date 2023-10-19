@@ -155,7 +155,6 @@ export const quickStrike = event(
   }
 );
 
-// TODO choose target to exhaust
 export const rainOfArrows = event(
   {
     name: 'Rain of Arrows',
@@ -168,16 +167,16 @@ export const rainOfArrows = event(
     action: {
       payment: {
         cost: {
-          card: {
-            target: {
-              and: [
-                {
-                  controller: 'controller',
-                },
-                { keyword: 'ranged' },
-              ],
+          player: 'controller',
+          action: {
+            chooseCardActions: {
+              title: 'Choose character to exhaust',
+              target: {
+                controller: 'controller',
+                keyword: 'ranged',
+              },
+              action: 'exhaust',
             },
-            action: 'exhaust',
           },
         },
         effect: {

@@ -4,7 +4,7 @@ import {
   getCardImageUrls,
   image,
 } from '@card-engine-nx/ui';
-import { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { StateContext } from './StateContext';
 import {
   calculateNumberExpr,
@@ -238,31 +238,34 @@ export const LotrLCGInfo = () => {
             style={{ padding: 4, overflow: 'auto', pointerEvents: 'auto' }}
           >
             <Typography variant="caption">Temporary effects</Typography>
-            {state.modifiers.map((m) => (
-              <>
-                <Tooltip
-                  title={view.cards[m.source].props.name}
-                  placement="left"
-                >
-                  <Typography>{getModifierText(m, state, view)}</Typography>
-                </Tooltip>
-                <Divider variant="fullWidth" />
-              </>
-            ))}
+            {state.modifiers.map((m, i) => {
+              const title = view.cards[m.source].props.name ?? '';
+              return (
+                <React.Fragment key={title + i}>
+                  <Tooltip title={title} placement="left">
+                    <Typography>{getModifierText(m, state, view)}</Typography>
+                  </Tooltip>
+                  <Divider variant="fullWidth" />
+                </React.Fragment>
+              );
+            })}
           </Paper>
         )}
         <Paper style={{ padding: 4, overflow: 'auto', pointerEvents: 'auto' }}>
           <Typography variant="caption">Possible actions</Typography>
           {view.actions
             .filter((a) => a.enabled)
-            .map((a) => (
-              <>
-                <Tooltip title={view.cards[a.card].props.name} placement="left">
-                  <Typography>{a.description}</Typography>
-                </Tooltip>
-                <Divider variant="fullWidth" />
-              </>
-            ))}
+            .map((a, i) => {
+              const title = view.cards[a.card].props.name ?? '';
+              return (
+                <React.Fragment key={title + i}>
+                  <Tooltip title={title} placement="left">
+                    <Typography>{a.description}</Typography>
+                  </Tooltip>
+                  <Divider variant="fullWidth" />
+                </React.Fragment>
+              );
+            })}
         </Paper>
       </Stack>
     </div>
