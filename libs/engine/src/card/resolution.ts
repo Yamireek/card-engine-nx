@@ -24,6 +24,10 @@ export function canCardExecute(
   const inPlay = isInPlay(zone);
 
   if (typeof action === 'string') {
+    if (action === 'moveToBottom') {
+      return true;
+    }
+
     if (inPlay && action === 'travel') {
       if (ctx.state.zones.activeLocation.cards.length > 0) {
         return false;

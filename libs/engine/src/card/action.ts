@@ -5,6 +5,7 @@ import {
   getCardZoneId,
   getTargetZone,
   getTargetZoneId,
+  getZoneState,
   getZoneType,
 } from '../zone/target';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
@@ -408,6 +409,12 @@ export function executeCardAction(
         );
       }
     }
+    return;
+  }
+
+  if (action === 'moveToBottom') {
+    const zone = getZoneState(card.zone, ctx.state);
+    zone.cards = [card.id, ...zone.cards.filter((id) => id !== card.id)];
     return;
   }
 

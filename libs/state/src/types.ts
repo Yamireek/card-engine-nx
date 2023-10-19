@@ -177,6 +177,7 @@ export type CardAction =
   | 'commitToQuest'
   | 'resolveShadowEffects'
   | 'resolveShadow'
+  | 'moveToBottom'
   | {
       payCost?: CostModifier;
       ready?: 'refresh';
