@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { GameSetupData } from '@card-engine-nx/engine';
 import { GameSetupDialog } from './GameSetupDialog';
 
-const saved = localStorage.getItem('saved_state');
+const savedState = localStorage.getItem('saved_state');
 
 export const App = () => {
   const [setup, setSetup] = useState<GameSetupData | undefined>();
@@ -21,15 +21,15 @@ export const App = () => {
     >
       <CssBaseline />
 
-      {!setup && !saved && <GameSetupDialog onSubmit={setSetup} />}
+      {!setup && !savedState && <GameSetupDialog onSubmit={setSetup} />}
 
-      {(setup || saved) && (
+      {(setup || savedState) && (
         <Game
           players={1}
           playerID={window.location.hash.substring(1)}
           multiplayer={false}
           server="localhost:3000"
-          setup={saved ? { state: JSON.parse(saved) } : setup}
+          setup={savedState ? { state: JSON.parse(savedState) } : setup}
         />
       )}
     </div>

@@ -92,6 +92,9 @@ const GameSetupForm = () => {
     </Grid>
   );
 };
+
+const defaults = localStorage.getItem('setup');
+
 export const GameSetupDialog = (props: {
   onSubmit: (setup: GameSetupData) => void;
 }) => {
@@ -107,17 +110,22 @@ export const GameSetupDialog = (props: {
         };
         players: Array<keyof typeof decks>;
       }>
-        defaultValues={{
-          playerCount: '1',
-          scenario: 'passageThroughMirkwood',
-          difficulty: 'normal',
-          extra: {
-            resources: 0,
-            cards: 0,
-          },
-        }}
+        defaultValues={
+          defaults
+            ? JSON.parse(defaults)
+            : {
+                playerCount: '1',
+                scenario: 'passageThroughMirkwood',
+                difficulty: 'normal',
+                extra: {
+                  resources: 0,
+                  cards: 0,
+                },
+              }
+        }
         onSuccess={(data) => {
           console.log(data);
+          localStorage.setItem('setup', JSON.stringify(data));
           props.onSubmit({
             players: data.players.map((key) => decks[key]),
             scenario: core.scenario[data.scenario],
