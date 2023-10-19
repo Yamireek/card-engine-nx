@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 export type CardAreaLayoutProps<T> = {
   position: Vector2;
   size: Dimensions;
-  color: string;
+  color?: string;
   itemSize: Dimensions;
   items: T[];
   renderer: (p: {
@@ -35,10 +35,12 @@ export const CardAreaLayout = <T extends any>(
 
   return (
     <group position={[props.position[0], props.position[1], 0.0001]}>
-      <mesh>
-        <planeGeometry args={[props.size.width, props.size.height]} />
-        <meshBasicMaterial color={props.color} opacity={0.1} transparent />
-      </mesh>
+      {props.color && (
+        <mesh>
+          <planeGeometry args={[props.size.width, props.size.height]} />
+          <meshBasicMaterial color={props.color} opacity={0.1} transparent />
+        </mesh>
+      )}
       {props.items.map((item, index) => {
         const columns = Math.floor(props.size.width / itemSize.width);
 
