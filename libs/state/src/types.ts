@@ -178,6 +178,7 @@ export type CardAction =
   | 'resolveShadowEffects'
   | 'resolveShadow'
   | 'moveToBottom'
+  | 'dealShadowCard'
   | {
       payCost?: CostModifier;
       ready?: 'refresh';

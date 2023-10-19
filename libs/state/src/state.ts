@@ -41,6 +41,7 @@ export type Event =
   | { type: 'end_of_round' }
   | { type: 'attacked'; card: CardId }
   | { type: 'explored'; card: CardId }
+  | { type: 'attacks'; card: CardId }
   | { type: 'shadow' }
   | { type: 'whenRevealed' };
 

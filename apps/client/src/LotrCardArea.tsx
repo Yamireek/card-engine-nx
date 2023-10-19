@@ -76,7 +76,7 @@ export const LotrCardArea = (props: {
                   size={realItemSize}
                   position={[
                     p.position[0],
-                    p.position[1] - 0.02,
+                    p.position[1] - 0.02 * (i + 1),
                     0.01 - (i + 1) * 0.001,
                   ]}
                 />

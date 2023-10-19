@@ -139,18 +139,10 @@ export function executeAction(
   }
 
   if (action === 'dealShadowCards') {
-    const enemies = getTargetCards({ type: 'enemy', zoneType: 'engaged' }, ctx);
-    for (const enemy of enemies) {
-      const deck = ctx.state.zones.encounterDeck;
-      const shadow = deck.cards.pop();
-      if (shadow) {
-        const targetZone = getZoneState(ctx.state.cards[enemy].zone, ctx.state);
-        ctx.state.cards[enemy].shadows.push(shadow);
-        ctx.state.cards[shadow].zone = ctx.state.cards[enemy].zone;
-        ctx.state.cards[shadow].shadowOf = enemy;
-        targetZone.cards.push(shadow);
-      }
-    }
+    ctx.state.next.unshift({
+      card: { type: 'enemy', zoneType: 'engaged' },
+      action: 'dealShadowCard',
+    });
     return;
   }
 

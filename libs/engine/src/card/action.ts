@@ -419,6 +419,20 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'dealShadowCard') {
+    const cardId = card.id;
+    const deck = ctx.state.zones.encounterDeck;
+    const shadow = deck.cards.pop();    
+    if (shadow) {
+      const targetZone = getZoneState(ctx.state.cards[cardId].zone, ctx.state);
+      ctx.state.cards[cardId].shadows.push(shadow);
+      ctx.state.cards[shadow].zone = ctx.state.cards[cardId].zone;
+      ctx.state.cards[shadow].shadowOf = cardId;
+      targetZone.cards.push(shadow);
+    }
+    return true;
+  }
+
   if (action === 'destroy' || action.destroy) {
     card.tapped = false;
     card.token = { damage: 0, progress: 0, resources: 0 };
@@ -726,6 +740,12 @@ export function executeCardAction(
         card: {
           target: card.id,
           action: { mark: 'attacking' },
+        },
+      },
+      {
+        event: {
+          type: 'attacks',
+          card: card.id,
         },
       },
       { playerActions: 'Declare defender' },
