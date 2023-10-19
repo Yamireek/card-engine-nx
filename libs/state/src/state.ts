@@ -41,15 +41,18 @@ export type Event =
   | { type: 'end_of_round' }
   | { type: 'attacked'; card: CardId }
   | { type: 'explored'; card: CardId }
+  | { type: 'shadow' }
   | { type: 'whenRevealed' };
 
 export type PendingEffect =
   | {
+      type: 'whenRevealed';
       description: string;
       whenRevealed: Action;
       canceled?: true;
     }
   | {
+      type: 'shadow';
       description: string;
       shadow: Action;
       canceled?: boolean;

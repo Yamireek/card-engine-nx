@@ -576,12 +576,23 @@ export const strengthOfWill = event(
   }
 );
 
-export const hastyStroke = event({
-  name: 'Hasty Stroke',
-  cost: 1,
-  sphere: 'spirit',
-});
-// TODO Response: Cancel a shadow effect just triggered during combat.
+export const hastyStroke = event(
+  {
+    name: 'Hasty Stroke',
+    cost: 1,
+    sphere: 'spirit',
+  },
+  {
+    description:
+      'Response: Cancel a shadow effect just triggered during combat.',
+    response: {
+      event: 'shadow',
+      action: {
+        cancel: 'shadow',
+      },
+    },
+  }
+);
 
 export const willOfTheWest = event(
   {

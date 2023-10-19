@@ -60,11 +60,7 @@ export function checkCardPredicate(
 
   if (target === 'event') {
     const event = last(ctx.state.event);
-    if (
-      event &&
-      event.type !== 'end_of_round' &&
-      event.type !== 'whenRevealed'
-    ) {
+    if (event && 'card' in event) {
       return event.card === state.id;
     } else {
       return false;

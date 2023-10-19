@@ -359,6 +359,45 @@ export function executeAction(
 
   if (action.stackPush) {
     ctx.state.stack.push(action.stackPush);
+
+    const responses = ctx.view.responses[action.stackPush.type] ?? [];
+
+    const reponsesAction: Action =
+      responses.length > 0
+        ? [
+            {
+              player: {
+                target: 'first',
+                action: {
+                  chooseActions: {
+                    title: `Choose responses for: ${action.stackPush.description}`,
+                    actions: responses.map((r) => ({
+                      title: r.description,
+                      action: {
+                        useCardVar: {
+                          name: 'target',
+                          value: r.card,
+                          action: {
+                            useCardVar: {
+                              name: 'self',
+                              value: r.source,
+                              action: r.action,
+                            },
+                          },
+                        },
+                      },
+                    })),
+                    optional: true,
+                    multi: true,
+                  },
+                },
+              },
+            },
+          ]
+        : [];
+
+    ctx.state.next.unshift(reponsesAction);
+
     return;
   }
 
@@ -699,10 +738,6 @@ export function executeAction(
     }
 
     if (action.event.type === 'revealed') {
-      if (action.event.card === 75) {
-        //debugger;
-      }
-
       const card = ctx.view.cards[action.event.card];
       if (card.whenRevealed.length > 0) {
         const target = action.event.card;

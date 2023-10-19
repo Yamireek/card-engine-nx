@@ -395,6 +395,7 @@ export function executeCardAction(
           },
           {
             stackPush: {
+              type: 'shadow',
               description: shadow.description,
               shadow: {
                 useCardVar: {
@@ -458,55 +459,10 @@ export function executeCardAction(
   }
 
   if (action.whenRevealed) {
-    const responses = ctx.view.responses.whenRevealed ?? [];
-    const optional = responses
-      .filter((r) => r.card === card.id)
-      .filter(
-        (r) =>
-          !r.condition ||
-          calculateBoolExpr(r.condition, {
-            ...ctx,
-            card: { ...ctx.card, target: r.card, self: r.source },
-          })
-      );
-
-    const reponsesAction: Action =
-      optional.length > 0
-        ? [
-            {
-              player: {
-                target: 'first',
-                action: {
-                  chooseActions: {
-                    title: `Choose responses for: ${action.whenRevealed.description}`,
-                    actions: optional.map((r) => ({
-                      title: r.description,
-                      action: {
-                        useCardVar: {
-                          name: 'target',
-                          value: r.card,
-                          action: {
-                            useCardVar: {
-                              name: 'self',
-                              value: r.source,
-                              action: r.action,
-                            },
-                          },
-                        },
-                      },
-                    })),
-                    optional: true,
-                    multi: true,
-                  },
-                },
-              },
-            },
-          ]
-        : [];
-
     ctx.state.next.unshift(
       {
         stackPush: {
+          type: 'whenRevealed',
           description: action.whenRevealed.description,
           whenRevealed: {
             useCardVar: {
@@ -517,7 +473,6 @@ export function executeCardAction(
           },
         },
       },
-      ...reponsesAction,
       'stackPop'
     );
     return;
@@ -872,7 +827,7 @@ export function executeCardAction(
         until: action.until,
       });
     }
-    return;
+    return true;
   }
 
   if (action.setAsVar) {

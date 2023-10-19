@@ -465,4 +465,3 @@ export const denethor = hero(
     ],
   }
 );
-// TODO
