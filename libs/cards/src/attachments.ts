@@ -449,9 +449,30 @@ export const darkKnowledge = attachment(
     increment: {
       willpower: -1,
     },
+  },
+  {
+    description:
+      'Response: Exhaust Dark Knowledge to look at 1 shadow card that was just dealt to an enemy attacking you.',
+    action: [
+      {
+        card: 'self',
+        action: 'exhaust',
+      },
+      {
+        player: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose card',
+            target: { side: 'back', simple: 'isShadow' },
+            action: {
+              flip: 'shadow',
+            },
+          },
+        },
+      },
+    ],
   }
 );
-// TODO Response: Exhaust Dark Knowledge to look at 1 shadow card that was just dealt to an enemy attacking you.
 
 export const selfPreservation = attachment(
   {

@@ -89,6 +89,10 @@ export function checkCardPredicate(
     return !!state.attachedTo;
   }
 
+  if (target === 'isShadow') {
+    return !!state.shadowOf;
+  }
+
   if (target.simple) {
     return asArray(target.simple).every((s) =>
       checkCardPredicate(s, state, view, ctx)

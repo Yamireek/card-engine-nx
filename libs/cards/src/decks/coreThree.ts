@@ -16,6 +16,7 @@ export const testDeck: PlayerDeck = {
     event.dwarvenTomb,
     event.aTestOfWill,
     event.theGaladhrimsGreeting,
+    attachment.darkKnowledge,
   ],
 };
 

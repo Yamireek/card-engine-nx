@@ -421,7 +421,8 @@ export type SimpleCardTarget =
   | 'target'
   | 'destroyed'
   | 'explored'
-  | 'isAttached';
+  | 'isAttached'
+  | 'isShadow';
 
 export type CardTarget =
   | SimpleCardTarget
