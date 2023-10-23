@@ -6,7 +6,7 @@ import { LotrCardArea } from './LotrCardArea';
 import { cardSize } from './Card3d';
 
 const positions: Record<number, Vector3> = {
-  '1': [0, 0.4, 0],
+  '1': [-0.155, 0.39, 0],
   '2': [0, 0, 0],
   '3': [0, 0, 0],
   '4': [0, 0, 0],
@@ -43,6 +43,7 @@ export const GameAreas = (props: { playerCount: number }) => {
         layout={{
           position: [-0.1, -0.2],
           size: { width: 0.4, height: 0.1 },
+          color: 'red',
         }}
         cards={state.zones.stagingArea.cards}
       />

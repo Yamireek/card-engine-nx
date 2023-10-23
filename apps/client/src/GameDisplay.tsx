@@ -152,7 +152,7 @@ export const LotrLCGInfo = () => {
     <div
       style={{
         position: 'absolute',
-        width: 300,
+        width: 372,
         margin: 4,
         zIndex: 10,
         right: 0,
