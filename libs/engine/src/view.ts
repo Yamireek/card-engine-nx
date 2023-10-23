@@ -134,7 +134,7 @@ export function createView(state: State): View {
         if (
           card.props.type === 'ally' &&
           card.props.sphere.length > 0 &&
-          card.props.cost
+          typeof card.props.cost === 'number'
         ) {
           view.actions.push({
             description: `Play ally ${card.props.name}`,
@@ -151,7 +151,7 @@ export function createView(state: State): View {
         if (
           card.props.type === 'attachment' &&
           card.props.sphere &&
-          card.props.cost &&
+          typeof card.props.cost === 'number' &&
           card.attachesTo
         ) {
           view.actions.push({

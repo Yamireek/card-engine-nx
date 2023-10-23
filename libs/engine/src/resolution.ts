@@ -286,7 +286,7 @@ export function createPayCostAction(
   const sphere = view.props.sphere;
   const amount = view.props.cost;
 
-  if (!sphere || amount === undefined) {
+  if (!sphere || typeof amount !== 'number') {
     return undefined;
   }
 

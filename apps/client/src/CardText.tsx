@@ -7,7 +7,11 @@ import {
 } from '@card-engine-nx/basic';
 import React from 'react';
 
-type PropertyProps = { name: string; printed?: number; current?: number };
+type PropertyProps = {
+  name: string;
+  printed?: number | 'X';
+  current?: number | 'X';
+};
 
 const valueWidth = 50;
 
@@ -20,7 +24,11 @@ const PropertyView = (props: PropertyProps) => {
   }
 
   if (printed !== undefined && current !== undefined) {
-    const bonus = current - printed;
+    const bonus =
+      typeof current === 'number' && typeof printed === 'number'
+        ? current - printed
+        : 0;
+
     return (
       <tr>
         <td>{props.name}</td>

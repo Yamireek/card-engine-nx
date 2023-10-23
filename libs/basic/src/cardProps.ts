@@ -13,7 +13,7 @@ export type PrintedProps = {
   sphere: Sphere[];
   sequence?: number;
   questPoints?: number;
-  cost?: number;
+  cost?: number | 'X';
   unique?: boolean;
   engagement?: number;
   threat?: number;
@@ -53,7 +53,7 @@ export type AllyProps = {
 export type EventProps = {
   type: 'event';
   name: string;
-  cost: number;
+  cost: number | 'X';
   sphere: Sphere;
   keywords?: Keywords;
 };
