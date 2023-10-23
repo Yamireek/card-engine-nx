@@ -53,6 +53,7 @@ export const HandLayout = (props: {
         >
           {cards.map((card, i) => (
             <div
+              key={card.id}
               style={{
                 position: 'absolute',
                 transform: `translateX(${
