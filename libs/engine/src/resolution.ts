@@ -7,6 +7,7 @@ import { getTargetPlayers } from './player/target';
 import { isArray } from 'lodash/fp';
 import { canCardExecute } from './card/resolution';
 import { getZoneType } from './zone/target';
+import { calculateNumberExpr } from './expr';
 
 export function canExecute(
   action: Action,
@@ -156,7 +157,12 @@ export function canPlayerExecute(
     if (action.chooseCardActions) {
       const targets = getTargetCards(action.chooseCardActions.target, ctx);
       const cardAction = action.chooseCardActions.action;
-      return targets.some((id) => canCardExecute(cardAction, id, ctx));
+      return targets.some((id) =>
+        canCardExecute(cardAction, id, {
+          ...ctx,
+          card: { ...ctx.card, target: id },
+        })
+      );
     }
 
     if (action.choosePlayerActions) {
@@ -167,7 +173,7 @@ export function canPlayerExecute(
 
     if (action.payResources) {
       const sphere = action.payResources.sphere;
-      const cost = action.payResources.amount;
+      const cost = calculateNumberExpr(action.payResources.amount, ctx);
       const heroes = player.zones.playerArea.cards
         .map((c) => ctx.view.cards[c])
         .filter((c) => c.props.type === 'hero')

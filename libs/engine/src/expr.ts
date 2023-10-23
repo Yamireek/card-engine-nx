@@ -41,6 +41,7 @@ export function calculateNumberExpr(
           ids.map((id) => calculateCardExpr(expr.card?.value || 0, id, ctx))
         );
       } else {
+        debugger;
         throw new Error('multiple card');
       }
     }

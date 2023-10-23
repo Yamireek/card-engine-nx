@@ -1,8 +1,8 @@
 import * as ally from '../allies';
 import * as attachment from '../attachments';
-import * as event from '../events';
+import * as events from '../events';
 import * as hero from '../heroes';
-import { PlayerDeck } from '@card-engine-nx/state';
+import { PlayerDeck, event } from '@card-engine-nx/state';
 
 // https://www.youtube.com/watch?v=Pyk_PrY58g8
 
@@ -10,13 +10,15 @@ export const testDeck: PlayerDeck = {
   name: 'Test',
   heroes: [hero.aragorn, hero.eowyn, hero.denethor, hero.legolas],
   library: [
-    event.radagastsCunning,
-    event.secretPaths,
-    event.hastyStroke,
-    event.dwarvenTomb,
-    event.aTestOfWill,
-    event.theGaladhrimsGreeting,
-    attachment.darkKnowledge,
+    events.standAndFight,
+    ally.faramir,
+    event(
+      { name: 'Dwarven Tomb', cost: 0, sphere: 'leadership' },
+      {
+        description: 'Discard alies in play',
+        action: { card: { type: 'ally' }, action: 'discard' },
+      }
+    ),
   ],
 };
 
@@ -28,18 +30,18 @@ export const coreThree: PlayerDeck = {
     ally.gleowine,
     ally.henamarthRiversong,
     ally.minerOfTheIronHills,
-    event.valiantSacrifice,
+    events.valiantSacrifice,
     ally.snowbournScout,
-    event.sneakAttack,
-    event.secretPaths,
+    events.sneakAttack,
+    events.secretPaths,
     ally.guardOfTheCitadel,
-    event.secretPaths,
+    events.secretPaths,
     attachment.darkKnowledge,
     ally.faramir,
     ally.wanderingTook,
-    event.loriensWealth,
-    event.radagastsCunning,
-    event.aTestOfWill,
+    events.loriensWealth,
+    events.radagastsCunning,
+    events.aTestOfWill,
     ally.guardOfTheCitadel,
     ally.lorienGuide,
     ally.gandalf,
@@ -66,14 +68,14 @@ export const coreThree: PlayerDeck = {
     attachment.theFavorOfTheLady,
     attachment.theFavorOfTheLady,
     attachment.unexpectedCourage,
-    event.aTestOfWill,
-    event.loriensWealth,
-    event.radagastsCunning,
-    event.sneakAttack,
-    event.standAndFight,
-    event.standAndFight,
-    event.theGaladhrimsGreeting,
-    event.theGaladhrimsGreeting,
-    event.valiantSacrifice,
+    events.aTestOfWill,
+    events.loriensWealth,
+    events.radagastsCunning,
+    events.sneakAttack,
+    events.standAndFight,
+    events.standAndFight,
+    events.theGaladhrimsGreeting,
+    events.theGaladhrimsGreeting,
+    events.valiantSacrifice,
   ],
 };

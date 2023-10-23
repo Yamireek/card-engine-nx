@@ -12,7 +12,6 @@ import { getTargetCard, getTargetCards } from '../card';
 import { isArray, max, sum, values } from 'lodash/fp';
 import { getTargetPlayers } from './target';
 import { canExecute, canPlayerExecute } from '../resolution';
-import { canCardExecute } from '../card/resolution';
 import {
   canCharacterAttack,
   canCharacterDefend,
@@ -448,7 +447,7 @@ export function executePlayerAction(
         id: ctx.state.nextId++,
         player: player.id,
         type: 'split',
-        amount: action.payResources.amount,
+        amount: calculateNumberExpr(action.payResources.amount, ctx),
         title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
         options,
         count: {
@@ -474,18 +473,31 @@ export function executePlayerAction(
         title: action.chooseCardActions.title,
         type: action.chooseCardActions.multi ? 'multi' : 'single',
         optional: action.chooseCardActions.optional ?? false,
-        options: cardIds
-          .filter((id) => canCardExecute(cardAction, id, ctx))
-          .map((c) => ({
-            title: c.toString(),
-            cardId: c,
-            action: {
-              card: {
-                target: c,
-                action: cardAction,
+        options: cardIds.flatMap((id) => {
+          const action: Action = {
+            useCardVar: {
+              name: 'target',
+              action: {
+                card: {
+                  target: id,
+                  action: cardAction,
+                },
               },
+              value: id,
             },
-          })),
+          };
+
+          const result = canExecute(action, false, ctx);
+          if (result) {
+            return {
+              title: id.toString(),
+              cardId: id,
+              action,
+            };
+          } else {
+            return [];
+          }
+        }),
       },
     });
 

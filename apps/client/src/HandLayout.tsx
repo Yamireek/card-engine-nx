@@ -27,7 +27,7 @@ export const HandLayout = (props: {
     <Tooltip
       title={
         detail !== undefined ? (
-          <CardDetail cardId={cards[detail].id} />
+          <CardDetail cardId={cards[detail]?.id} />
         ) : undefined
       }
       followCursor

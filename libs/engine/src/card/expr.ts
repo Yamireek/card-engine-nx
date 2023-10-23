@@ -27,6 +27,11 @@ export function calculateCardExpr(
     return ctx.view.cards[cardId].props.sequence || 0;
   }
 
+  if (expr === 'cost') {
+    const cost = ctx.view.cards[cardId].props.cost;
+    return typeof cost === 'number' ? cost : 0;
+  }
+
   if (expr.tokens) {
     return ctx.state.cards[cardId].token[expr.tokens];
   }

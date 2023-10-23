@@ -124,7 +124,11 @@ export type PlayerAction =
       };
       useLimit?: { key: string; limit: Limit };
       incrementThreat?: NumberExpr;
-      payResources?: { amount: number; sphere: Sphere[]; heroes?: number };
+      payResources?: {
+        amount: NumberExpr;
+        sphere: Sphere | Sphere[];
+        heroes?: number;
+      };
       declareAttackers?: CardId;
       chooseCardActions?: {
         title: string;
@@ -187,7 +191,7 @@ export type CardAction =
       dealDamage?: number | { amount: NumberExpr; attackers?: CardId[] };
       heal?: number | 'all';
       generateResources?: NumberExpr;
-      payResources?: number;
+      payResources?: NumberExpr;
       placeProgress?: number;
       flip?: Side;
       engagePlayer?: PlayerTarget;
@@ -210,6 +214,7 @@ export type CardAction =
         action: Action;
       };
       putInPlay?: PlayerTarget;
+      controller?: PlayerAction;
     };
 
 export type PropertyIncrement = Partial<
@@ -391,6 +396,7 @@ export type CardNumberExpr =
   | 'willpower'
   | 'threat'
   | 'sequence'
+  | 'cost'
   | {
       tokens: Token;
     };

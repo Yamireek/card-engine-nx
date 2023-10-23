@@ -422,7 +422,7 @@ export function executeCardAction(
   if (action === 'dealShadowCard') {
     const cardId = card.id;
     const deck = ctx.state.zones.encounterDeck;
-    const shadow = deck.cards.pop();    
+    const shadow = deck.cards.pop();
     if (shadow) {
       const targetZone = getZoneState(ctx.state.cards[cardId].zone, ctx.state);
       ctx.state.cards[cardId].shadows.push(shadow);
@@ -641,7 +641,8 @@ export function executeCardAction(
   }
 
   if (action.payResources !== undefined) {
-    card.token.resources -= action.payResources;
+    const amount = calculateNumberExpr(action.payResources, ctx);
+    card.token.resources -= amount;
     return;
   }
 
@@ -867,6 +868,15 @@ export function executeCardAction(
         target: card.id,
         action: { move: { to: { player, type: 'playerArea' }, side: 'front' } },
       },
+    });
+    return;
+  }
+
+  if (action.controller && card.controller) {
+    const controller = card.controller;
+    ctx.state.next.unshift({
+      player: controller,
+      action: action.controller,
     });
     return;
   }

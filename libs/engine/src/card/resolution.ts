@@ -7,7 +7,7 @@ import { createPayCostAction, canPlayerExecute } from '../resolution';
 import { isInPlay } from '../utils';
 import { getZoneType } from '../zone/target';
 import { getTargetCard, getTargetCards } from './target';
-import { calculateBoolExpr } from '../expr';
+import { calculateBoolExpr, calculateNumberExpr } from '../expr';
 
 export function canCardExecute(
   action: CardAction,
@@ -87,7 +87,8 @@ export function canCardExecute(
 
   if (zone === 'playerArea' && action.payResources) {
     const card = ctx.state.cards[cardId];
-    return card.token.resources >= action.payResources;
+    const amount = calculateNumberExpr(action.payResources, ctx);
+    return card.token.resources >= amount;
   }
 
   if (zone === 'engaged' && action.resolveEnemyAttacking) {
@@ -190,7 +191,7 @@ export function canCardExecute(
     const payCostAction = createPayCostAction(cardId, action.payCost, ctx);
 
     if (!payCostAction) {
-      return false;
+      return true;
     }
 
     return canPlayerExecute(payCostAction, card.controller, ctx);
@@ -239,6 +240,10 @@ export function canCardExecute(
 
   if (action.flip) {
     return card.sideUp !== action.flip;
+  }
+
+  if (action.controller && card.controller) {
+    return canPlayerExecute(action.controller, card.controller, ctx);
   }
 
   return false;
