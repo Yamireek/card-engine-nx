@@ -419,6 +419,12 @@ export function executeCardAction(
     return;
   }
 
+  if (action === 'moveToTop') {
+    const zone = getZoneState(card.zone, ctx.state);
+    zone.cards = [...zone.cards.filter((id) => id !== card.id), card.id];
+    return;
+  }
+
   if (action === 'dealShadowCard') {
     const cardId = card.id;
     const deck = ctx.state.zones.encounterDeck;

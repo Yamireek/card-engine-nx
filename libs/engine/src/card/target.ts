@@ -252,7 +252,8 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
         const filtered = target.top.filter
           ? getTargetCards({ and: [cards, target.top.filter] }, ctx)
           : cards;
-        return takeRight(target.top.amount)(filtered);
+        const amount = calculateNumberExpr(target.top.amount, ctx);
+        return takeRight(amount)(filtered);
       } else {
         throw new Error('need only 1 zone when using amount');
       }

@@ -24,7 +24,7 @@ export function canCardExecute(
   const inPlay = isInPlay(zone);
 
   if (typeof action === 'string') {
-    if (action === 'moveToBottom') {
+    if (action === 'moveToBottom' || action === 'moveToTop') {
       return true;
     }
 

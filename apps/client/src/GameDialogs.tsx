@@ -140,7 +140,7 @@ export const GameDialogs = () => {
       <ChooseDistributionDialog
         key={state.choice.id.toString()}
         title={state.choice.title}
-        total={{ min: state.choice.amount, max: state.choice.amount }}
+        total={{ min: state.choice.min, max: state.choice.max }}
         choices={state.choice.options.map((o, i) => ({
           id: i,
           title: o.title,

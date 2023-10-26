@@ -442,12 +442,15 @@ export function executePlayerAction(
       return;
     }
 
+    const amount = calculateNumberExpr(action.payResources.amount, ctx);
+
     ctx.state.next.unshift('stateCheck', {
       choice: {
         id: ctx.state.nextId++,
         player: player.id,
         type: 'split',
-        amount: calculateNumberExpr(action.payResources.amount, ctx),
+        min: amount,
+        max: amount,
         title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
         options,
         count: {
@@ -552,6 +555,29 @@ export function executePlayerAction(
       },
     });
 
+    return;
+  }
+
+  if (action.chooseX) {
+    const min = calculateNumberExpr(action.chooseX.min, ctx);
+    const max = calculateNumberExpr(action.chooseX.max, ctx);
+    ctx.state.next.unshift(
+      'stateCheck',
+      'clearX',
+      {
+        choice: {
+          id: ctx.state.nextId++,
+          player: player.id,
+          title: 'Choose X',
+          type: 'split',
+          min,
+          max,
+          options: [{ min, max, title: 'X', cardId: 1, action: 'incX' }], // TODO optional cardId
+        },
+      },
+      action.chooseX.action,
+      'clearX'
+    );
     return;
   }
 
@@ -702,6 +728,16 @@ export function executePlayerAction(
       card: {
         target: action.card.target,
         action: action.card.action,
+      },
+    });
+    return;
+  }
+
+  if (action.player) {
+    ctx.state.next.unshift({
+      player: {
+        target: action.player.target,
+        action: action.player.action,
       },
     });
     return;

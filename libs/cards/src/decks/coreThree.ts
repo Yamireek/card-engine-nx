@@ -10,16 +10,25 @@ export const testDeck: PlayerDeck = {
   name: 'Test',
   heroes: [hero.aragorn, hero.eowyn, hero.denethor, hero.legolas],
   library: [
-    events.standAndFight,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    ally.silverlodeArcher,
+    ally.veteranAxehand,
+    ally.beorn,
+    ally.brokIronfist,
+    ally.gondorianSpearman,
+    ally.gleowine,
+    ally.lorienGuide,
     ally.faramir,
-    ally.gandalf,
-    event(
-      { name: 'Dwarven Tomb', cost: 0, sphere: 'leadership' },
-      {
-        description: 'Discard alies in play',
-        action: { card: { type: 'ally' }, action: 'discard' },
-      }
-    ),
+    // event(
+    //   { name: 'Dwarven Tomb', cost: 0, sphere: 'leadership' },
+    //   {
+    //     description: 'Discard alies in play',
+    //     action: { card: { type: 'ally' }, action: 'discard' },
+    //   }
+    // ),
   ],
 };
 

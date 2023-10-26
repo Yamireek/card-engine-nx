@@ -41,6 +41,8 @@ export type Action =
   | 'loose'
   | 'stackPop'
   | 'stateCheck'
+  | 'incX'
+  | 'clearX'
   | {
       player: PlayerTarget;
       action: PlayerAction;
@@ -150,6 +152,11 @@ export type PlayerAction =
         multi?: boolean;
         optional?: boolean;
       };
+      chooseX?: {
+        min: NumberExpr;
+        max: NumberExpr;
+        action: Action;
+      };
       engaged?: CardAction;
       controlled?: CardAction;
       modify?: PlayerModifier;
@@ -162,6 +169,10 @@ export type PlayerAction =
       card?: {
         target: CardTarget;
         action: CardAction;
+      };
+      player?: {
+        target: PlayerTarget;
+        action: PlayerAction;
       };
     };
 
@@ -182,6 +193,7 @@ export type CardAction =
   | 'resolveShadowEffects'
   | 'resolveShadow'
   | 'moveToBottom'
+  | 'moveToTop'
   | 'dealShadowCard'
   | {
       payCost?: CostModifier;
@@ -346,10 +358,13 @@ export type ResponseAction = {
   action: Action;
 };
 
+export type PlayerNumberExpr = { resources: Sphere };
+
 export type NumberExpr =
   | number
   | 'countOfPlayers'
   | 'totalThreat'
+  | 'X'
   | {
       count?: {
         cards?: CardTarget;
@@ -359,14 +374,20 @@ export type NumberExpr =
         target: CardTarget;
         value: CardNumberExpr;
       };
+      player?: {
+        target: PlayerTarget;
+        value: PlayerNumberExpr;
+      };
       event?: EventNumbers;
       plus?: NumberExpr[];
+      minus?: [NumberExpr, NumberExpr];
       if?: {
         cond: BoolExpr;
         true: NumberExpr;
         false: NumberExpr;
       };
       multiply?: [NumberExpr, NumberExpr];
+      min?: NumberExpr[];
     };
 
 export type EventNumbers = { type: 'receivedDamage'; value: 'damage' }; // TODO remove type
@@ -443,7 +464,7 @@ export type CardTarget =
       type?: CardType | CardType[];
       top?:
         | ZoneTarget
-        | { zone: ZoneTarget; amount: number; filter?: CardTarget };
+        | { zone: ZoneTarget; amount: NumberExpr; filter?: CardTarget };
       sphere?: Sphere | Sphere[] | 'any';
       controller?: PlayerTarget;
       mark?: Mark;

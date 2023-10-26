@@ -11,6 +11,8 @@ import { last, max, min, multiply, values } from 'lodash/fp';
 import { CardId } from '@card-engine-nx/basic';
 import { isInPlay } from './utils';
 import { getZoneType } from './zone/target';
+import { getTargetPlayers } from './player/target';
+import { calculatePlayerExpr } from './player/expr';
 
 export function calculateNumberExpr(
   expr: NumberExpr,
@@ -31,6 +33,13 @@ export function calculateNumberExpr(
     return sum(values);
   }
 
+  if (expr === 'X') {
+    if (ctx.state.x === undefined) {
+      throw new Error('no x value');
+    }
+    return ctx.state.x;
+  }
+
   if (expr.card) {
     const ids = getTargetCards(expr.card.target, ctx);
     if (ids.length === 1) {
@@ -41,9 +50,17 @@ export function calculateNumberExpr(
           ids.map((id) => calculateCardExpr(expr.card?.value || 0, id, ctx))
         );
       } else {
-        debugger;
         throw new Error('multiple card');
       }
+    }
+  }
+
+  if (expr.player) {
+    const ids = getTargetPlayers(expr.player.target, ctx);
+    if (ids.length === 1) {
+      return calculatePlayerExpr(expr.player.value, ids[0], ctx);
+    } else {
+      throw new Error('multiple players card');
     }
   }
 
@@ -68,6 +85,12 @@ export function calculateNumberExpr(
     return sum(values) ?? 0;
   }
 
+  if (expr.minus) {
+    const a = calculateNumberExpr(expr.minus[0], ctx);
+    const b = calculateNumberExpr(expr.minus[1], ctx);
+    return a - b;
+  }
+
   if (expr.multiply) {
     const values = expr.multiply.map((e) => calculateNumberExpr(e, ctx));
     return multiply(values[0], values[1]) ?? 0;
@@ -87,6 +110,15 @@ export function calculateNumberExpr(
       const cards = getTargetCards(expr.count.cards, ctx);
       return cards.length;
     }
+  }
+
+  if (expr.min) {
+    const values = expr.min.map((v) => calculateNumberExpr(v, ctx));
+    const minimun = min(values);
+    if (minimun === undefined) {
+      throw new Error('no values');
+    }
+    return minimun;
   }
 
   throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);

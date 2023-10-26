@@ -91,7 +91,8 @@ export type Choice =
       player: PlayerId;
       title: string;
       type: 'split';
-      amount: number;
+      min: number;
+      max: number;
       count?: { min?: number; max?: number };
       options: Array<{
         title: string;
@@ -133,6 +134,7 @@ export type State = {
   }>;
   event: Event[];
   modifiers: GameModifier[];
+  x?: number;
 };
 
 export type GameModifier =

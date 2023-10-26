@@ -334,6 +334,17 @@ export function executeAction(
     return;
   }
 
+  if (action === 'incX') {
+    const x = ctx.state.x ?? 0;
+    ctx.state.x = x + 1;
+    return;
+  }
+
+  if (action === 'clearX') {
+    ctx.state.x = undefined;
+    return;
+  }
+
   if ('player' in action && 'action' in action) {
     return executeAction(
       { player: { target: action.player, action: action.action } },

@@ -270,6 +270,25 @@ export function canPlayerExecute(
       );
     }
 
+    if (action.player) {
+      return canExecute(
+        {
+          player: {
+            target: action.player.target,
+            action: action.player.action,
+          },
+        },
+        false,
+        ctx
+      );
+    }
+
+    if (action.chooseX) {
+      const min = calculateNumberExpr(action.chooseX.min, ctx);
+      const max = calculateNumberExpr(action.chooseX.max, ctx);
+      return max >= min;
+    }
+
     throw new Error(
       `not implemented: canPlayerExecute ${JSON.stringify(action)}`
     );
