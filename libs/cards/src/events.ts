@@ -918,6 +918,15 @@ export const gandalfsSearch = event(
                     },
                     action: [
                       {
+                        player: 'controller',
+                        action: {
+                          payResources: {
+                            amount: 'X',
+                            sphere: 'lore',
+                          },
+                        },
+                      },
+                      {
                         card: {
                           top: {
                             amount: 'X',
