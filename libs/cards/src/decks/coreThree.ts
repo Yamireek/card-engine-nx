@@ -12,6 +12,7 @@ export const testDeck: PlayerDeck = {
   library: [
     events.standAndFight,
     ally.faramir,
+    ally.gandalf,
     event(
       { name: 'Dwarven Tomb', cost: 0, sphere: 'leadership' },
       {
