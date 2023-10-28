@@ -25,12 +25,7 @@ export const testScenario: Scenario = {
   sets: [
     {
       easy: [],
-      normal: [
-        enemy.dolGuldurBeastmaster,
-        enemy.dolGuldurBeastmaster,
-        enemy.dolGuldurBeastmaster,
-        enemy.dolGuldurBeastmaster,
-      ],
+      normal: [enemy.kingSpider, enemy.kingSpider],
     },
   ],
 };

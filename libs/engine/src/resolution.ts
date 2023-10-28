@@ -122,6 +122,10 @@ export function canExecute(
     if (action.event) {
       return true;
     }
+
+    if (action.repeat) {
+      return canExecute(action.repeat.action, payment, ctx);
+    }
   }
 
   throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);

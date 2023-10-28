@@ -107,6 +107,10 @@ export function chooseOnlyOption(
       state.next.unshift(...choice.options.map((o) => o.action));
       state.choice = undefined;
     }
+
+    if (!choice.optional && choice.options.length === 0) {
+      state.choice = undefined;
+    }
   }
 
   if (choice.type === 'multi') {
