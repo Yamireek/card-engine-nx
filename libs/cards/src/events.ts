@@ -649,6 +649,7 @@ export const aTestOfWill = event(
     description:
       'Response: Cancel the “when revealed” effects of a card that was just revealed from the encounter deck.',
     target: {
+      side: 'front',
       zoneType: 'encounterDeck',
     },
     response: {
