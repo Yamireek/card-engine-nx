@@ -7,7 +7,7 @@ import { cardSize } from './Card3d';
 
 const positions: Record<number, Vector3> = {
   '1': [-0.155, 0.39, 0],
-  '2': [0, 0, 0],
+  '2': [-0.155, 0.39, 0],
   '3': [0, 0, 0],
   '4': [0, 0, 0],
 };

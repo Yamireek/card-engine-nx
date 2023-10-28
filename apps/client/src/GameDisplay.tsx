@@ -12,7 +12,7 @@ import {
   UiEvent,
   UIEvents,
 } from '@card-engine-nx/engine';
-import { values } from '@card-engine-nx/basic';
+import { keys, values } from '@card-engine-nx/basic';
 import { Board3d } from './Board3d';
 import { State } from '@card-engine-nx/state';
 import { uniq } from 'lodash';
@@ -307,7 +307,20 @@ export const GameDisplay = () => {
             </GameSceneLoader>
           </TexturesProvider>
         </div>
-        <PlayerHand player="0" />
+
+        <div
+          style={{
+            position: 'absolute',
+            bottom: -100,
+            width: 'calc(100% - 200px)',
+          }}
+        >
+          <Stack direction="row">
+            {keys(state.players).map((id) => (
+              <PlayerHand key={id} player={id} />
+            ))}
+          </Stack>
+        </div>
         <GameDialogs />
       </div>
     </FloatingCardsProvider>
