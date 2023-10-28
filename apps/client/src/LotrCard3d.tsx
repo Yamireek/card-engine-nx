@@ -84,7 +84,7 @@ export const LotrCard3d = (props: {
         amount={card.token.damage}
       />
       <Token3d
-        position={[0.01, 0.03]}
+        position={props.orientation === 'portrait' ? [0.01, 0.03] : [0.03, 0.01]}
         texture={texture[image.progress]}
         amount={card.token.progress}
       />
