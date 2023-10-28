@@ -363,6 +363,7 @@ export function executeAction(
 
   if (action.stackPush) {
     if (action.stackPush.type === 'whenRevealed') {
+      debugger;
       const hasEffect = canExecute(action.stackPush.whenRevealed, false, ctx);
       if (!hasEffect) {
         return;

@@ -7,7 +7,7 @@ import { getTargetPlayers } from './player/target';
 import { isArray } from 'lodash/fp';
 import { canCardExecute } from './card/resolution';
 import { getZoneType } from './zone/target';
-import { calculateNumberExpr } from './expr';
+import { calculateBoolExpr, calculateNumberExpr } from './expr';
 
 export function canExecute(
   action: Action,
@@ -20,6 +20,10 @@ export function canExecute(
 
   if (typeof action === 'string') {
     if (action === 'revealEncounterCard') {
+      return true;
+    }
+
+    if (action === 'shuffleEncounterDeck') {
       return true;
     }
 
@@ -125,6 +129,21 @@ export function canExecute(
 
     if (action.repeat) {
       return canExecute(action.repeat.action, payment, ctx);
+    }
+
+    if (action.if) {
+      const result = calculateBoolExpr(action.if.condition, ctx);
+      if (result) {
+        return (
+          action.if.true !== undefined &&
+          canExecute(action.if.true, payment, ctx)
+        );
+      } else {
+        return (
+          action.if.false !== undefined &&
+          canExecute(action.if.false, payment, ctx)
+        );
+      }
     }
   }
 

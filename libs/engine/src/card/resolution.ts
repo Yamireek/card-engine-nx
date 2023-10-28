@@ -239,7 +239,7 @@ export function canCardExecute(
   }
 
   if (action.flip) {
-    return card.sideUp !== action.flip;
+    return true;
   }
 
   if (action.controller && card.controller) {

@@ -17,7 +17,7 @@ export const LotrCard3d = (props: {
   cardId: CardId;
   position: Vector3;
   size: Dimensions;
-  orientation?: Orientation;
+  orientation?: Orientation; // TODO required
 }) => {
   const { state, view, moves } = useContext(StateContext);
   const { texture } = useTextures();
