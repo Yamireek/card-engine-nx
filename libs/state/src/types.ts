@@ -316,7 +316,7 @@ export type CardModifier =
     }
   | { travel: Action }
   | { setup: Action }
-  | { nextStage: 'random' } // TODO automatic, when multiple choices}
+  | { nextStage: 'random' }
   | {
       conditional: {
         advance: BoolExpr;

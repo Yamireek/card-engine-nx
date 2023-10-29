@@ -300,10 +300,6 @@ export function executePlayerAction(
           });
         }
 
-        if (defending.length === 0) {
-          // TODO undefended
-        }
-
         if (defending.length > 1) {
           ctx.state.next.unshift({
             player: {

@@ -3,6 +3,8 @@ import { PlayerTarget } from '@card-engine-nx/state';
 import { intersection, isArray, last, uniq } from 'lodash';
 import { ViewContext } from '../context';
 import { getTargetCard } from '../card';
+import { maxBy } from 'lodash';
+import { max } from 'lodash/fp';
 
 export function getTargetPlayer(target: PlayerTarget, ctx: ViewContext) {
   const results = getTargetPlayers(target, ctx);
@@ -113,8 +115,13 @@ export function getTargetPlayers(
   }
 
   if (target === 'highestThreat') {
-    // TODO highestThreat
-    return ['0'];
+    const players = values(ctx.state.players);
+    const value = max(players.map((p) => p.thread));
+    if (value !== undefined) {
+      return players.filter((p) => value === p.thread).map((p) => p.id);
+    } else {
+      return [];
+    }
   }
 
   if (['0', '1', '2', '3'].includes(target)) {
