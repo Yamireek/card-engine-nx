@@ -249,8 +249,16 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       const zones = getTargetZones(target.top.zone, ctx);
       if (zones.length === 1) {
         const cards = zones[0].cards;
-        const filtered = target.top.filter
-          ? getTargetCards({ and: [cards, target.top.filter] }, ctx)
+        const predicate = target.top.filter;
+        const filtered = predicate
+          ? cards.filter((c) =>
+              checkCardPredicate(
+                predicate,
+                ctx.state.cards[c],
+                ctx.view.cards[c],
+                ctx
+              )
+            )
           : cards;
         const amount = calculateNumberExpr(target.top.amount, ctx);
         return takeRight(amount)(filtered);

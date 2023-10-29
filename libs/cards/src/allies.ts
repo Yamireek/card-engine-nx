@@ -541,7 +541,6 @@ export const daughterOfTheNimrodel = ally(
   }
 );
 
-// TODO mupltiple players
 export const ereborHammersmith = ally(
   {
     name: 'Erebor Hammersmith',
@@ -561,22 +560,33 @@ export const ereborHammersmith = ally(
     response: {
       event: 'played',
       action: {
-        card: {
-          top: {
-            amount: 1,
-            filter: { type: 'attachment' },
-            zone: {
-              player: 'controller',
-              type: 'discardPile',
-            },
-          },
-        },
+        player: 'controller',
         action: {
-          move: {
-            side: 'front',
-            to: {
-              player: 'controller',
-              type: 'hand',
+          choosePlayerActions: {
+            title: 'Choose player',
+            target: 'each',
+            action: {
+              card: {
+                target: {
+                  top: {
+                    amount: 1,
+                    filter: { type: 'attachment' },
+                    zone: {
+                      player: 'target',
+                      type: 'discardPile',
+                    },
+                  },
+                },
+                action: {
+                  move: {
+                    side: 'front',
+                    to: {
+                      player: 'target',
+                      type: 'hand',
+                    },
+                  },
+                },
+              },
             },
           },
         },

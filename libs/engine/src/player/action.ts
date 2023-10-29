@@ -523,7 +523,12 @@ export function executePlayerAction(
         type: action.choosePlayerActions.multi ? 'multi' : 'single',
         optional: action.choosePlayerActions.optional ?? false,
         options: playerIds
-          .filter((p) => canPlayerExecute(playerAction, p, ctx))
+          .filter((p) =>
+            canPlayerExecute(playerAction, p, {
+              ...ctx,
+              player: { ...ctx.player, target: p },
+            })
+          )
           .map((id) => ({
             title: id.toString(),
             action: {
