@@ -75,9 +75,19 @@ export const ChooseDistributionDialog = <T extends unknown>(props: {
             return (
               <div
                 key={index}
-                style={{ display: 'flex', flexDirection: 'column' }}
+                style={{ display: 'flex', flexDirection: 'column', margin: 4 }}
               >
-                <ListItemButton style={{ flex: '0 0 auto' }}>
+                <ListItemButton
+                  style={{ flex: '0 0 auto' }}
+                  onClick={(e) => {
+                    const remainPart = o.max - amount;
+                    setAmounts((p) =>
+                      p.map((a, i) =>
+                        index === i ? a + (min([remainPart, remains]) ?? 0) : a
+                      )
+                    );
+                  }}
+                >
                   <img
                     alt=""
                     src={o.image?.src}

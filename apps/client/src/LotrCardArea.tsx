@@ -52,7 +52,6 @@ export const LotrCardArea = (props: {
               cardId={p.item.id}
               position={[p.position[0], p.position[1] + offsetMin, 0.01]}
               size={realItemSize}
-              orientation={props.orientation}
             />
             {p.item.attachments.map((a, i) => {
               return (

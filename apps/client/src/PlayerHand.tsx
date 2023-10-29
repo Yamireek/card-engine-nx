@@ -33,7 +33,6 @@ export const PlayerHand = (props: { player: PlayerId }) => {
           if (actions.length === 1) {
             moves.action(indexOf(view.actions, actions[0]));
           } else {
-            // TODO multiple actions
             // tslint:disable-next-line:no-console
             console.log('todo multiple actions');
           }

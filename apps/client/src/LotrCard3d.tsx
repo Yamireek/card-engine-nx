@@ -7,7 +7,7 @@ import {
 } from '@card-engine-nx/ui';
 import { useContext } from 'react';
 import { StateContext } from './StateContext';
-import { CardId, Orientation } from '@card-engine-nx/basic';
+import { CardId } from '@card-engine-nx/basic';
 import { Card3d, cardSize } from './Card3d';
 import { Token3d } from './Token3d';
 import { indexOf } from 'lodash';
@@ -17,7 +17,6 @@ export const LotrCard3d = (props: {
   cardId: CardId;
   position: Vector3;
   size: Dimensions;
-  orientation?: Orientation; // TODO required
 }) => {
   const { state, view, moves } = useContext(StateContext);
   const { texture } = useTextures();
@@ -33,6 +32,8 @@ export const LotrCard3d = (props: {
     front: texture[getCardImageUrl(card.definition.front, 'front')],
     back: texture[getCardImageUrl(card.definition.back, 'back')],
   };
+
+  const orientation = card.definition.orientation;
 
   return (
     <Card3d
@@ -53,7 +54,7 @@ export const LotrCard3d = (props: {
           ? textures
           : { front: textures.back, back: textures.front }
       }
-      orientation={props.orientation}
+      orientation={orientation}
       hidden={cards.some((c) => c.id === props.cardId)}
       onClick={() => {
         if (
@@ -66,7 +67,6 @@ export const LotrCard3d = (props: {
           if (actions.length === 1) {
             moves.action(indexOf(view.actions, actions[0]));
           } else {
-            // TODO multiple actions
             // tslint:disable-next-line:no-console
             console.log('todo multiple actions');
           }
@@ -84,7 +84,7 @@ export const LotrCard3d = (props: {
         amount={card.token.damage}
       />
       <Token3d
-        position={props.orientation === 'portrait' ? [0.01, 0.03] : [0.03, 0.01]}
+        position={orientation === 'portrait' ? [0.01, 0.03] : [0.03, 0.01]}
         texture={texture[image.progress]}
         amount={card.token.progress}
       />
