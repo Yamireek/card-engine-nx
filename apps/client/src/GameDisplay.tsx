@@ -21,7 +21,6 @@ import { FloatingCards } from './FloatingCards';
 import { GameSceneLoader } from './GameScene';
 import { PlayerAreas } from './PlayerAreas';
 import { GameAreas } from './GameAreas';
-import { CardDetail } from './CardDetail';
 import {
   Button,
   Dialog,

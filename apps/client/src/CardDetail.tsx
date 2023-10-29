@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { StateContext } from './StateContext';
 import { CardText } from './CardText';
 import { DetailContext } from './DetailContext';
-import { Paper } from '@mui/material';
 import { CardId } from '@card-engine-nx/basic';
 
 const cardProperties = [

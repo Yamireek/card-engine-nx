@@ -12,7 +12,6 @@ import { addPlayerCard, addGameCard } from './utils';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext } from './context';
-import { getZoneState } from './zone/target';
 import { ScenarioSetupData } from './GameSetupData';
 import { canExecute } from './resolution';
 
@@ -363,7 +362,6 @@ export function executeAction(
 
   if (action.stackPush) {
     if (action.stackPush.type === 'whenRevealed') {
-      debugger;
       const hasEffect = canExecute(action.stackPush.whenRevealed, false, ctx);
       if (!hasEffect) {
         return;
