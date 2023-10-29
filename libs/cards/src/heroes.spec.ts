@@ -175,7 +175,10 @@ it('Eleanor', async () => {
     players: [
       { playerArea: [core.hero.eleanor], hand: [core.event.forGondor] },
     ],
-    encounterDeck: [core.treachery.eyesOfTheForest],
+    encounterDeck: [
+      core.treachery.theNecromancersReach,
+      core.treachery.eyesOfTheForest,
+    ],
   });
 
   const hero = game.getCard('Eleanor');

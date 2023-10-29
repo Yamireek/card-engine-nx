@@ -183,7 +183,24 @@ export function executeAction(
     const card = getTargetCard({ top: 'encounterDeck' }, ctx);
 
     if (!card) {
-      // TODO reshuffle encounter deck
+      if (ctx.state.zones.discardPile.cards.length > 0) {
+        ctx.state.next.unshift(
+          {
+            card: {
+              zone: 'discardPile',
+            },
+            action: {
+              move: {
+                to: 'encounterDeck',
+                side: 'back',
+              },
+            },
+          },
+          'shuffleEncounterDeck',
+          'revealEncounterCard'
+        );
+      }
+
       return;
     }
 
