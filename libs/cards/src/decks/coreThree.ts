@@ -10,14 +10,14 @@ export const testDeck: PlayerDeck = {
   name: 'Test',
   heroes: [hero.aragorn, hero.eowyn, hero.denethor, hero.legolas],
   library: [
-    ally.ereborHammersmith,    
-    attachment.citadelPlate,
+    ally.ereborHammersmith,
+    attachment.selfPreservation,
     event(
       { name: 'Dwarven Tomb', cost: 0, sphere: 'leadership' },
       {
-        description: 'Discard attachments in play',
+        description: 'Discard ally in play',
         action: {
-          card: { type: 'attachment', simple: 'inAPlay' },
+          card: { type: 'ally', simple: 'inAPlay' },
           action: 'discard',
         },
       }

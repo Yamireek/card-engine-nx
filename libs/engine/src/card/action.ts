@@ -132,31 +132,6 @@ export function executeCardAction(
   }
 
   if (action === 'discard') {
-    card.tapped = false;
-    card.token = { damage: 0, progress: 0, resources: 0 };
-    card.mark = {
-      attacked: false,
-      attacking: false,
-      defending: false,
-      questing: false,
-    };
-
-    if (card.attachedTo) {
-      const parent = ctx.state.cards[card.attachedTo];
-      if (parent) {
-        parent.attachments = parent.attachments.filter((a) => a !== card.id);
-      }
-      card.attachedTo = undefined;
-    }
-
-    if (card.shadowOf) {
-      const parent = ctx.state.cards[card.shadowOf];
-      if (parent) {
-        parent.shadows = parent.shadows.filter((a) => a !== card.id);
-      }
-      card.shadowOf = undefined;
-    }
-
     const owner = card.owner;
 
     ctx.state.next.unshift({
@@ -315,15 +290,6 @@ export function executeCardAction(
   }
 
   if (action === 'explore') {
-    card.tapped = false;
-    card.token = { damage: 0, progress: 0, resources: 0 };
-    card.mark = {
-      attacked: false,
-      attacking: false,
-      defending: false,
-      questing: false,
-    };
-
     ctx.state.next.unshift(
       {
         event: {
@@ -440,15 +406,6 @@ export function executeCardAction(
   }
 
   if (action === 'destroy' || action.destroy) {
-    card.tapped = false;
-    card.token = { damage: 0, progress: 0, resources: 0 };
-    card.mark = {
-      attacked: false,
-      attacking: false,
-      defending: false,
-      questing: false,
-    };
-
     const owner = card.owner;
 
     ctx.state.next.unshift(
@@ -653,9 +610,6 @@ export function executeCardAction(
   }
 
   if (action.move) {
-    // TODO move also attachments
-    // TODO remove tokens/marks here
-
     const moveCtx = card.controller
       ? { ...ctx, player: { ...ctx.player, controller: card.controller } }
       : ctx;
@@ -696,13 +650,41 @@ export function executeCardAction(
     }
 
     if (sourceInGame && !destInGame) {
+      card.tapped = false;
+      card.mark = {};
+      card.token = {
+        damage: 0,
+        progress: 0,
+        resources: 0,
+      };
+
       ctx.state.next.unshift({
         card: { target: card.attachments, action: 'discard' },
+      });
+
+      ctx.state.next.unshift({
+        card: { target: card.shadows, action: 'discard' },
       });
 
       ctx.state.modifiers = ctx.state.modifiers.filter(
         (m) => m.source !== card.id
       );
+
+      if (card.attachedTo) {
+        const parent = ctx.state.cards[card.attachedTo];
+        if (parent) {
+          parent.attachments = parent.attachments.filter((a) => a !== card.id);
+        }
+        card.attachedTo = undefined;
+      }
+
+      if (card.shadowOf) {
+        const parent = ctx.state.cards[card.shadowOf];
+        if (parent) {
+          parent.shadows = parent.shadows.filter((a) => a !== card.id);
+        }
+        card.shadowOf = undefined;
+      }
 
       ctx.state.next.unshift({ event: { type: 'leftPlay', card: card.id } });
     }
