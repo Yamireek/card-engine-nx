@@ -10,18 +10,7 @@ export const testDeck: PlayerDeck = {
   name: 'Test',
   heroes: [hero.aragorn, hero.eowyn, hero.denethor, hero.legolas],
   library: [
-    events.gandalfsSearch,
-    events.gandalfsSearch,
-    events.gandalfsSearch,
-    events.gandalfsSearch,
-    ally.silverlodeArcher,
-    ally.veteranAxehand,
-    ally.beorn,
-    ally.brokIronfist,
-    ally.gondorianSpearman,
-    ally.gleowine,
-    ally.lorienGuide,
-    ally.faramir,
+    ally.wanderingTook,
     // event(
     //   { name: 'Dwarven Tomb', cost: 0, sphere: 'leadership' },
     //   {

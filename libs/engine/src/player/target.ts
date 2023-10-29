@@ -1,4 +1,4 @@
-import { PlayerId, values } from '@card-engine-nx/basic';
+import { PlayerId, keys, values } from '@card-engine-nx/basic';
 import { PlayerTarget } from '@card-engine-nx/state';
 import { intersection, isArray, last, uniq } from 'lodash';
 import { ViewContext } from '../context';
@@ -54,6 +54,11 @@ export function getTargetPlayers(
     if (target.and) {
       const lists = target.and.map((t) => getTargetPlayers(t, ctx));
       return uniq(intersection(...lists));
+    }
+
+    if (target.not) {
+      const not = getTargetPlayers(target.not, ctx);
+      return keys(ctx.state.players).filter((key) => !not.includes(key));
     }
 
     if (target.controllerOf) {

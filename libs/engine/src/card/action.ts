@@ -887,6 +887,12 @@ export function executeCardAction(
     return;
   }
 
+  if (action.setController) {
+    const controller = getTargetPlayer(action.setController, ctx);
+    card.controller = controller;
+    return;
+  }
+
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
 }
 

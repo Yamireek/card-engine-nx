@@ -127,7 +127,9 @@ export const GameSetupDialog = (props: {
           console.log(data);
           localStorage.setItem('setup', JSON.stringify(data));
           props.onSubmit({
-            players: data.players.map((key) => decks[key]),
+            players: data.players
+              .filter((p, i) => i < Number(data.playerCount))
+              .map((key) => decks[key]),
             scenario: core.scenario[data.scenario],
             difficulty: data.difficulty,
             extra: data.extra,

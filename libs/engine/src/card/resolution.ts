@@ -214,8 +214,8 @@ export function canCardExecute(
     return card.zone.player !== player;
   }
 
-  if (inPlay && action.placeProgress) {
-    return true;
+  if (action.placeProgress) {
+    return inPlay;
   }
 
   if (action.putInPlay) {
@@ -244,6 +244,10 @@ export function canCardExecute(
 
   if (action.controller && card.controller) {
     return canPlayerExecute(action.controller, card.controller, ctx);
+  }
+
+  if (action.setController) {
+    return inPlay;
   }
 
   return false;

@@ -52,8 +52,8 @@ export type Action =
       action: CardAction;
     }
   | {
-      player?: { action: PlayerAction; target: PlayerTarget };
-      card?: { action: CardAction; target: CardTarget };
+      player?: { action: PlayerAction; target: PlayerTarget }; // TODO remove
+      card?: { action: CardAction; target: CardTarget }; // TODO remove
       addPlayer?: PlayerDeck;
       setupScenario?: {
         scenario: Scenario;
@@ -215,7 +215,7 @@ export type CardAction =
       move?: {
         from?: ZoneTarget;
         to: ZoneTarget;
-        side: Side;
+        side: Side; // TODO optional
       };
       modify?: CardModifier | CardModifier[];
       until?: Until;
@@ -227,6 +227,7 @@ export type CardAction =
       };
       putInPlay?: PlayerTarget;
       controller?: PlayerAction;
+      setController?: PlayerTarget;
     };
 
 export type PropertyIncrement = Partial<
@@ -508,6 +509,7 @@ export type PlayerTarget =
   | 'defending'
   | {
       and?: PlayerTarget[];
+      not?: PlayerTarget;
       controllerOf?: CardTarget;
       var?: string;
     };
