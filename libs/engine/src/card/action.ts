@@ -168,16 +168,10 @@ export function executeCardAction(
 
     const next = getTargetCards(
       {
-        and: [
-          {
-            zone: 'questDeck',
-          },
-          {
-            sequence: {
-              plus: [{ card: { target: quest.id, value: 'sequence' } }, 1],
-            },
-          },
-        ],
+        zone: 'questDeck',
+        sequence: {
+          plus: [{ card: { target: quest.id, value: 'sequence' } }, 1],
+        },
       },
       ctx
     );

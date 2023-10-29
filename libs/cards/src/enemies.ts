@@ -23,14 +23,10 @@ export const kingSpider = enemy(
               chooseCardActions: {
                 title: 'Choose character to exhaust',
                 target: {
-                  and: [
-                    {
-                      controller: {
-                        var: 'choosen',
-                      },
-                    },
-                    'character',
-                  ],
+                  simple: 'character',
+                  controller: {
+                    var: 'choosen',
+                  },
                 },
                 action: 'exhaust',
               },
@@ -380,9 +376,7 @@ export const hummerhorns = enemy(
           action: {
             chooseCardActions: {
               title: 'Choose hero to deal 5 damage',
-              target: {
-                and: [{ type: 'hero' }, { controller: 'event' }],
-              },
+              target: { type: 'hero', controller: 'event' },
               action: {
                 dealDamage: 5,
               },

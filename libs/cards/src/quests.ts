@@ -156,7 +156,8 @@ export const achosenPath2 = quest({
           advance: {
             not: {
               someCard: {
-                and: ['inAPlay', { name: "Ungoliant's Spawn" }],
+                simple: 'inAPlay',
+                name: "Ungoliant's Spawn",
               },
             },
           },

@@ -355,7 +355,8 @@ export const longbeardOrcSlayer = ally(
       action: {
         card: {
           target: {
-            and: [{ type: 'enemy' }, { trait: 'orc' }],
+            type: 'enemy',
+            trait: 'orc',
           },
           action: {
             dealDamage: 1,
@@ -383,7 +384,9 @@ export const brokIronfist = ally(
       'Response: After a Dwarf hero you control leaves play, put Brok Ironfist into play from your hand.',
     zone: 'hand',
     target: {
-      and: [{ type: 'hero' }, { trait: 'dwarf' }, { controller: 'controller' }],
+      type: 'hero',
+      trait: 'dwarf',
+      controller: 'controller',
     },
     response: {
       event: 'leftPlay',
@@ -500,7 +503,7 @@ export const northernTracker = ally(
       event: 'commits',
       action: {
         card: {
-          target: { and: [{ type: 'location' }, { zoneType: 'stagingArea' }] },
+          target: { zoneType: 'stagingArea', type: 'location' },
           action: { placeProgress: 1 },
         },
       },
@@ -643,7 +646,7 @@ export const minerOfTheIronHills = ally(
         action: {
           chooseCardActions: {
             title: 'Choose attachment',
-            target: { and: [{ type: 'attachment' }, { trait: 'condition' }] },
+            target: { type: 'attachment', trait: 'condition' },
             action: 'discard',
           },
         },

@@ -283,13 +283,10 @@ export function executeAction(
   if (action === 'stateCheck') {
     const destroy = getTargetCards('destroyed', ctx);
     const explore = getTargetCards(
-      { and: [{ type: 'location' }, 'explored'] },
+      { simple: 'explored', type: 'location' },
       ctx
     );
-    const advance = getTargetCards(
-      { and: [{ type: 'quest' }, 'explored'] },
-      ctx
-    );
+    const advance = getTargetCards({ simple: 'explored', type: 'quest' }, ctx);
 
     if (destroy.length > 0 || explore.length > 0 || advance.length > 0) {
       ctx.state.next.unshift('stateCheck');
@@ -925,7 +922,7 @@ export const phaseResource: Action = [
   { player: { target: 'each', action: { draw: 1 } } },
   {
     card: {
-      target: { and: ['inAPlay', { type: 'hero' }] },
+      target: { simple: 'inAPlay', type: 'hero' },
       action: { generateResources: 1 },
     },
   },

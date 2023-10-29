@@ -51,7 +51,7 @@ export function executePlayerAction(
             title: 'Choose characters commiting to quest',
             multi: true,
             optional: true,
-            target: { and: ['character', { controller: player.id }] },
+            target: { simple: 'character', controller: player.id },
             action: 'commitToQuest',
           },
         },
@@ -63,9 +63,7 @@ export function executePlayerAction(
   if (action === 'engagementCheck') {
     const threat = player.thread;
     const enemies = getTargetCards(
-      {
-        and: [{ type: 'enemy' }, { zone: 'stagingArea' }],
-      },
+      { zone: 'stagingArea', type: 'enemy' },
       ctx
     ).map((id) => ctx.view.cards[id]);
 
@@ -109,9 +107,7 @@ export function executePlayerAction(
           chooseCardActions: {
             title: 'Choose enemy to optionally engage',
             optional: true,
-            target: {
-              and: [{ type: 'enemy' }, { zone: 'stagingArea' }],
-            },
+            target: { zone: 'stagingArea', type: 'enemy' },
             action: {
               engagePlayer: player.id,
             },
@@ -276,10 +272,8 @@ export function executePlayerAction(
             chooseCardActions: {
               title: 'Choose hero for undefended attack',
               target: {
-                and: [
-                  { type: 'hero' },
-                  { zone: { player: player.id, type: 'playerArea' } },
-                ],
+                type: 'hero',
+                zone: { player: player.id, type: 'playerArea' },
               },
               action: {
                 dealDamage: attack,
@@ -384,15 +378,7 @@ export function executePlayerAction(
       ? 'any'
       : action.payResources.sphere;
 
-    const target: CardTarget = {
-      and: [
-        { type: 'hero' },
-        { owner: player.id },
-        {
-          sphere,
-        },
-      ],
-    };
+    const target: CardTarget = { type: 'hero', owner: player.id, sphere };
 
     const targets = getTargetCards(target, ctx);
 

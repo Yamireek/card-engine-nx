@@ -87,9 +87,7 @@ export const bladeOfGondolin = attachment(
                 },
               },
               {
-                someCard: {
-                  and: [{ mark: 'defending' }, { trait: 'orc' }],
-                },
+                someCard: { mark: 'defending', trait: 'orc' },
               },
             ],
           },

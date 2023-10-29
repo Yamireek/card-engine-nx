@@ -7,7 +7,7 @@ export const eyesOfTheForest = treachery(
       'When Revealed: Each player discards all event cards in his hand.',
     whenRevealed: {
       card: {
-        target: { and: [{ type: 'event' }, { zoneType: 'hand' }] },
+        target: { type: 'event', zoneType: 'hand' },
         action: 'discard',
       },
     },
@@ -29,9 +29,7 @@ export const caughtInAWeb = treachery(
               {
                 chooseCardActions: {
                   title: 'Choose hero',
-                  target: {
-                    and: [{ type: 'hero', controller: 'highestThreat' }],
-                  },
+                  target: { type: 'hero', controller: 'highestThreat' },
                   action: [{ attachCard: 'self' }],
                 },
               },
@@ -77,9 +75,7 @@ export const drivenByShadow = treachery(
       'When Revealed: Each enemy and each location currently in the staging area gets +1 Threat until the end of the phase.',
     whenRevealed: {
       card: {
-        target: {
-          and: [{ type: ['location', 'enemy'] }, { zoneType: 'stagingArea' }],
-        },
+        target: { type: ['location', 'enemy'], zoneType: 'stagingArea' },
         action: {
           modify: {
             increment: {
@@ -141,7 +137,7 @@ export const theNecromancersReach = treachery(
     description: 'When Revealed: Deal 1 damage to each exhausted character.',
     whenRevealed: {
       card: {
-        target: { and: ['character', 'exhausted'] },
+        target: { simple: ['character', 'exhausted'] },
         action: {
           dealDamage: 1,
         },

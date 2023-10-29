@@ -138,7 +138,8 @@ export function canCardExecute(
 
     const exising = getTargetCards(
       {
-        and: [{ name: cv.props.name ?? '' }, 'inAPlay'],
+        simple: 'inAPlay',
+        name: cv.props.name ?? '',
       },
       ctx
     );
@@ -156,7 +157,8 @@ export function canCardExecute(
 
     const exising = getTargetCards(
       {
-        and: [{ name: cv.props.name ?? '' }, 'inAPlay'],
+        simple: 'inAPlay',
+        name: cv.props.name ?? '',
       },
       ctx
     );
@@ -230,7 +232,8 @@ export function canCardExecute(
 
     const exising = getTargetCards(
       {
-        and: [{ name: cv.props.name ?? '' }, 'inAPlay'],
+        simple: 'inAPlay',
+        name: cv.props.name ?? '',
       },
       ctx
     );

@@ -77,9 +77,7 @@ export const feint = event(
               until: 'end_of_phase',
             },
             title: 'Choose enemy',
-            target: {
-              and: [{ type: 'enemy' }, { zoneType: 'engaged' }],
-            },
+            target: { type: 'enemy', zoneType: 'engaged' },
           },
         },
       },
@@ -105,7 +103,8 @@ export const quickStrike = event(
             chooseCardActions: {
               title: 'Choose character as attacker',
               target: {
-                and: [{ controller: 'controller' }, 'character'],
+                simple: 'character',
+                controller: 'controller',
               },
               action: [
                 'exhaust',
@@ -326,7 +325,7 @@ export const commonCause = event(
           action: {
             chooseCardActions: {
               title: 'Choose hero to exhaust',
-              target: { and: [{ type: 'hero' }, { controller: 'controller' }] },
+              target: { type: 'hero', controller: 'controller' },
               action: [
                 {
                   setAsVar: 'exhausted',
@@ -409,7 +408,7 @@ export const sneakAttack = event(
           action: {
             chooseCardActions: {
               title: 'Choose ally to put in play',
-              target: { and: [{ type: 'ally' }, { zoneType: 'hand' }] },
+              target: { type: 'ally', zoneType: 'hand' },
               action: [
                 {
                   putInPlay: 'controller',
@@ -557,7 +556,10 @@ export const strengthOfWill = event(
             action: {
               chooseCardActions: {
                 title: 'Choose character',
-                target: { and: ['character', { sphere: 'spirit' }] },
+                target: {
+                  simple: 'character',
+                  sphere: 'spirit',
+                },
                 action: 'exhaust',
               },
             },
@@ -612,14 +614,7 @@ export const willOfTheWest = event(
             target: 'each',
             action: {
               card: {
-                target: {
-                  and: [
-                    { zoneType: 'discardPile' },
-                    {
-                      owner: 'target',
-                    },
-                  ],
-                },
+                target: { zoneType: 'discardPile', owner: 'target' },
                 action: {
                   move: {
                     side: 'back',
@@ -712,7 +707,7 @@ export const aLightInIheDark = event(
         action: {
           chooseCardActions: {
             title: 'Choose enemy',
-            target: { and: [{ type: 'enemy' }, { zoneType: 'engaged' }] },
+            target: { type: 'enemy', zoneType: 'engaged' },
             action: {
               move: {
                 side: 'front',
@@ -742,11 +737,9 @@ export const dwarvenTomb = event(
           chooseCardActions: {
             title: 'Choose card',
             target: {
-              and: [
-                { zoneType: 'discardPile' },
-                { owner: 'controller' },
-                { sphere: 'spirit' },
-              ],
+              zoneType: 'discardPile',
+              owner: 'controller',
+              sphere: 'spirit',
             },
             action: {
               move: {
@@ -779,7 +772,7 @@ export const fortuneOrFate = event(
         action: {
           chooseCardActions: {
             title: 'Choose hero',
-            target: { and: [{ type: 'hero' }, { zoneType: 'discardPile' }] },
+            target: { type: 'hero', zoneType: 'discardPile' },
             action: {
               putInPlay: {
                 controllerOf: 'self',

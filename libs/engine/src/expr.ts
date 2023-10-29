@@ -135,7 +135,8 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
 
     const enemies = getTargetCards(
       {
-        and: [{ type: 'enemy' }, { zone: 'stagingArea' }],
+        type: 'enemy',
+        zone: 'stagingArea',
       },
       ctx
     );
