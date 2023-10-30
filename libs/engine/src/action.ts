@@ -907,7 +907,6 @@ export function beginScenario(data: ScenarioSetupData): Action {
           move: {
             from: 'questDeck',
             to: 'questArea',
-            side: 'front',
           },
         },
       },

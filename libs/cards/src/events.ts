@@ -432,7 +432,6 @@ export const sneakAttack = event(
             action: [
               {
                 move: {
-                  side: 'front',
                   to: {
                     player: { controllerOf: 'target' },
                     type: 'hand',
@@ -600,6 +599,7 @@ export const hastyStroke = event(
   }
 );
 
+// TODO shuffle
 export const willOfTheWest = event(
   {
     name: 'Will of the West',
@@ -633,7 +633,7 @@ export const willOfTheWest = event(
           },
         },
       },
-      { card: 'self', action: { move: { side: 'front', to: 'removed' } } },
+      { card: 'self', action: { move: { to: 'removed' } } },
     ],
   }
 );
@@ -714,7 +714,6 @@ export const aLightInIheDark = event(
             target: { type: 'enemy', zoneType: 'engaged' },
             action: {
               move: {
-                side: 'front',
                 to: 'stagingArea',
               },
             },
@@ -747,7 +746,6 @@ export const dwarvenTomb = event(
             },
             action: {
               move: {
-                side: 'front',
                 to: {
                   player: 'controller',
                   type: 'hand',

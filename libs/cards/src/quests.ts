@@ -96,7 +96,6 @@ export const achosenPath1 = quest({
                   action: {
                     move: {
                       to: 'stagingArea',
-                      side: 'front',
                     },
                   },
                 },

@@ -55,7 +55,6 @@ export function executeCardAction(
             move: {
               from: 'stagingArea',
               to: 'activeLocation',
-              side: 'front',
             },
           },
         },
@@ -92,7 +91,6 @@ export function executeCardAction(
             move: {
               from: 'encounterDeck',
               to: props.type === 'treachery' ? 'discardPile' : 'stagingArea',
-              side: 'front',
             },
           },
         },
@@ -160,7 +158,6 @@ export function executeCardAction(
           move: {
             from: 'questArea',
             to: 'removed',
-            side: 'front',
           },
         },
       },
@@ -201,7 +198,6 @@ export function executeCardAction(
                 move: {
                   from: 'questDeck',
                   to: 'questArea',
-                  side: 'front',
                 },
               },
               { flip: 'back' },
@@ -297,7 +293,6 @@ export function executeCardAction(
           action: {
             move: {
               to: 'discardPile',
-              side: 'front',
             },
           },
         },
@@ -411,7 +406,6 @@ export function executeCardAction(
               to: !owner
                 ? 'discardPile'
                 : { type: 'discardPile', player: owner },
-              side: 'front',
             },
           },
         },
@@ -525,7 +519,6 @@ export function executeCardAction(
             move: {
               from: 'stagingArea',
               to: { player, type: 'engaged' },
-              side: 'front',
             },
           },
         },
@@ -626,7 +619,7 @@ export function executeCardAction(
 
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);
     destinationZone.cards.push(card.id);
-    card.sideUp = action.move.side;
+    card.sideUp = action.move.side ?? card.sideUp;
     const destZoneId = getTargetZoneId(action.move.to, moveCtx);
     card.zone = destZoneId;
 
@@ -635,7 +628,7 @@ export function executeCardAction(
         cardId: card.id,
         source: fromId,
         destination: destZoneId,
-        side: action.move.side,
+        side: action.move.side ?? card.sideUp,
       })
     );
 

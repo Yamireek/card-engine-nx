@@ -438,7 +438,6 @@ export const wanderingTook = ally(
                           player: 'target',
                           type: 'playerArea',
                         },
-                        side: 'front',
                       },
                     },
                     {
@@ -582,7 +581,6 @@ export const ereborHammersmith = ally(
                 },
                 action: {
                   move: {
-                    side: 'front',
                     to: {
                       player: 'target',
                       type: 'hand',

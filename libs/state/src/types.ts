@@ -215,7 +215,7 @@ export type CardAction =
       move?: {
         from?: ZoneTarget;
         to: ZoneTarget;
-        side: Side; // TODO optional
+        side?: Side;
       };
       modify?: CardModifier | CardModifier[];
       until?: Until;
@@ -465,7 +465,7 @@ export type CardTarget =
         | { zone: ZoneTarget; amount: NumberExpr; filter?: CardTarget };
       sphere?: Sphere | Sphere[] | 'any';
       controller?: PlayerTarget;
-      mark?: Mark;      
+      mark?: Mark;
       trait?: Trait;
       zone?: ZoneId;
       zoneType?:

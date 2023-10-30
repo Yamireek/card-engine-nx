@@ -34,7 +34,6 @@ export function createPlayAllyAction(
         move: {
           from: { player: owner, type: 'hand' },
           to: { player: owner, type: 'playerArea' },
-          side: 'front',
         },
       },
     },
@@ -100,7 +99,6 @@ export function createPlayAttachmentAction(
         move: {
           from: { player: owner, type: 'hand' },
           to: { player: owner, type: 'playerArea' },
-          side: 'front',
         },
       },
     },
@@ -194,7 +192,6 @@ export function createModifiers(
                             target: self,
                             action: {
                               move: {
-                                side: 'front',
                                 from: {
                                   player: 'controller',
                                   type: 'hand',
@@ -295,7 +292,6 @@ export function createModifiers(
                               target: self,
                               action: {
                                 move: {
-                                  side: 'front',
                                   from: {
                                     player: 'controller',
                                     type: 'hand',

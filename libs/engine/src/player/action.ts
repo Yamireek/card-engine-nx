@@ -580,7 +580,6 @@ export function executePlayerAction(
       move: {
         from: { player: player.id, type: 'hand' },
         to: { player: player.id, type: 'discardPile' },
-        side: 'front',
       },
     };
 
