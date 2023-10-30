@@ -72,7 +72,9 @@ export const feint = event(
           chooseCardActions: {
             action: {
               modify: {
-                disable: 'attacking',
+                rule: {
+                  cantAttack: true,
+                },
               },
               until: 'end_of_phase',
             },
@@ -274,7 +276,9 @@ export const thicketOfSpears = event(
             action: {
               engaged: {
                 modify: {
-                  disable: 'attacking',
+                  rule: {
+                    cantAttack: true,
+                  },
                 },
                 until: 'end_of_phase',
               },

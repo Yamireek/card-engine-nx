@@ -179,10 +179,6 @@ export function checkCardPredicate(
     return targets.includes(state.shadowOf);
   }
 
-  if (target.enabled) {
-    return !view.disabled || !view.disabled[target.enabled];
-  }
-
   if (target.keyword) {
     return (
       (view.props.keywords && view.props.keywords[target.keyword]) ?? false

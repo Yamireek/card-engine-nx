@@ -10,7 +10,7 @@ export function canEnemyAttack(
 ): boolean {
   const enemy = getCard(enemyId, ctx);
 
-  if (enemy.view.disabled?.attacking || enemy.state.mark.attacked) {
+  if (enemy.view.rules.cantAttack || enemy.state.mark.attacked) {
     return false;
   }
 

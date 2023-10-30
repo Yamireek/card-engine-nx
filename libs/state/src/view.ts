@@ -59,6 +59,7 @@ export type AbilityView = {
 export type CardRules = {
   attacksStagingArea?: true;
   noThreatContribution?: true;
+  cantAttack?: true;
 };
 
 export type CardView = {
@@ -67,8 +68,7 @@ export type CardView = {
   props: PrintedProps;
   zone: ZoneId;
   attachesTo?: CardTarget;
-  nextStage?: NextStage;
-  disabled?: Partial<Record<Mark, boolean>>;
+  nextStage?: NextStage;  
   effects: string[];
   whenRevealed: Array<{ description: string; action: Action }>;
   travel: Action[];

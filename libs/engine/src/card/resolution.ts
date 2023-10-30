@@ -96,8 +96,7 @@ export function canCardExecute(
   }
 
   if (action.mark) {
-    const disabled = ctx.view.cards[cardId].disabled?.[action.mark];
-    return !disabled;
+    return true;
   }
 
   if (action.clear) {

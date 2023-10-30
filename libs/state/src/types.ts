@@ -309,9 +309,6 @@ export type CardModifier =
       increment: PropertyIncrement;
     }
   | {
-      disable: Mark; // TODO move to rules
-    }
-  | {
       refreshCost: CardAction;
     }
   | { travel: Action }
@@ -468,8 +465,7 @@ export type CardTarget =
         | { zone: ZoneTarget; amount: NumberExpr; filter?: CardTarget };
       sphere?: Sphere | Sphere[] | 'any';
       controller?: PlayerTarget;
-      mark?: Mark;
-      enabled?: Mark;
+      mark?: Mark;      
       trait?: Trait;
       zone?: ZoneId;
       zoneType?:

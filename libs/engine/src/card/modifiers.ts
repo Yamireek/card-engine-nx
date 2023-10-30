@@ -40,14 +40,6 @@ export function applyModifier(
     return;
   }
 
-  if ('disable' in modifier) {
-    if (!self.disabled) {
-      self.disabled = {};
-    }
-    self.disabled[modifier.disable] = true;
-    return;
-  }
-
   if ('setup' in modifier) {
     ctx.view.setup.push(modifier.setup);
     return;

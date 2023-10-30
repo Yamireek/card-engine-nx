@@ -11,7 +11,7 @@ export const testDeck: PlayerDeck = {
   heroes: [hero.aragorn, hero.eowyn, hero.denethor, hero.legolas],
   library: [
     ally.ereborHammersmith,
-    attachment.selfPreservation,
+    events.sneakAttack,
     event(
       { name: 'Dwarven Tomb', cost: 0, sphere: 'leadership' },
       {

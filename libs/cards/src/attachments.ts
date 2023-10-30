@@ -337,7 +337,9 @@ export const forestSnare = attachment(
       hasAttachment: 'self',
     },
     card: {
-      disable: 'attacking',
+      rule: {
+        cantAttack: true,
+      },
     },
   }
 );
