@@ -11,24 +11,15 @@ export const greatForestWeb = location(
     description:
       'Travel: Each player must exhaust 1 hero he controls to travel here.',
     travel: {
-      player: {
-        target: 'each',
-        action: {
-          useVar: {
-            name: 'choosen',
-            action: {
-              chooseCardActions: {
-                title: 'Choose hero to exhaust',
-                target: {
-                  type: 'hero',
-                  controller: {
-                    var: 'choosen',
-                  },
-                },
-                action: 'exhaust',
-              },
-            },
+      player: 'each',
+      action: {
+        chooseCardActions: {
+          title: 'Choose hero to exhaust',
+          target: {
+            type: 'hero',
+            controller: 'target',
           },
+          action: 'exhaust',
         },
       },
     },
@@ -115,40 +106,31 @@ export const mountainsOfMirkwood = location(
     response: {
       event: 'explored',
       action: {
-        player: {
-          target: 'each',
-          action: [
-            {
-              useVar: {
-                name: 'choosing',
-                action: [
-                  {
-                    deck: { flip: 'front' },
+        player: 'each',
+        action: [
+          {
+            deck: { flip: 'front' },
+          },
+          {
+            chooseCardActions: {
+              title: 'Choose card to draw',
+              target: {
+                top: {
+                  amount: 5,
+                  zone: {
+                    player: 'target',
+                    type: 'library',
                   },
-                  {
-                    chooseCardActions: {
-                      title: 'Choose card to draw',
-                      target: {
-                        top: {
-                          amount: 5,
-                          zone: {
-                            player: { var: 'choosing' },
-                            type: 'library',
-                          },
-                        },
-                      },
-                      action: 'draw',
-                    },
-                  },
-                  {
-                    deck: { flip: 'back' },
-                  },
-                ],
+                },
               },
+              action: 'draw',
             },
-            'shuffleLibrary',
-          ],
-        },
+          },
+          {
+            deck: { flip: 'back' },
+          },
+          'shuffleLibrary',
+        ],
       },
     },
   }

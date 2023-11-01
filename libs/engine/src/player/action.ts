@@ -127,17 +127,18 @@ export function executePlayerAction(
     if (enemies.length > 0) {
       ctx.state.next.unshift(
         {
-          player: player.id,
+          useScope: {
+            var: 'defending',
+            player: player.id,
+          },
           action: {
-            useVar: {
-              name: 'defending',
-              action: {
-                chooseCardActions: {
-                  title: 'Choose enemy attacker',
-                  target: enemies,
-                  action: {
-                    resolveEnemyAttacking: player.id,
-                  },
+            player: player.id,
+            action: {
+              chooseCardActions: {
+                title: 'Choose enemy attacker',
+                target: enemies,
+                action: {
+                  resolveEnemyAttacking: player.id,
                 },
               },
             },
@@ -691,27 +692,6 @@ export function executePlayerAction(
       modifier: action.modify,
       until: action.until,
     });
-    return;
-  }
-
-  if (action.useVar) {
-    ctx.state.next.unshift(
-      {
-        setPlayerVar: {
-          name: action.useVar.name,
-          value: player.id,
-        },
-      },
-      {
-        player: {
-          target: player.id,
-          action: action.useVar.action,
-        },
-      },
-      {
-        setPlayerVar: { name: action.useVar.name, value: undefined },
-      }
-    );
     return;
   }
 

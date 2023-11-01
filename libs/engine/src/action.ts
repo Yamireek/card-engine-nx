@@ -402,11 +402,23 @@ export function executeAction(
   }
 
   if ('player' in action && 'action' in action) {
-    return executeAction(
-      { player: { target: action.player, action: action.action } },
-
-      ctx
-    );
+    const ids = getTargetPlayers(action.player, ctx);
+    for (const id of ids) {
+      const player = ctx.state.players[id];
+      if (player) {
+        if (action.scooped) {
+          executePlayerAction(action.action, player, ctx);
+        } else {
+          ctx.state.next.unshift({
+            useScope: { var: 'target', player: id },
+            action: { player: id, action: action.action, scooped: true },
+          });
+        }
+      } else {
+        throw new Error('player not found');
+      }
+    }
+    return;
   }
 
   if ('card' in action && 'action' in action) {
@@ -499,19 +511,13 @@ export function executeAction(
   }
 
   if (action.player) {
-    const ids = getTargetPlayers(action.player.target, ctx);
-    for (const id of ids) {
-      const player = ctx.state.players[id];
-      if (player) {
-        const playerAction: PlayerAction = !ctx.state.vars.player.target
-          ? { useVar: { name: 'target', action: action.player.action } }
-          : action.player.action;
-        executePlayerAction(playerAction, player, ctx);
-      } else {
-        throw new Error('player not found');
-      }
-    }
-    return;
+    return executeAction(
+      {
+        player: action.player.target,
+        action: action.player.action,
+      },
+      ctx
+    );
   }
 
   if (action.card) {
@@ -603,11 +609,6 @@ export function executeAction(
 
   if (action.setCardVar) {
     ctx.state.vars.card[action.setCardVar.name] = action.setCardVar.value;
-    return;
-  }
-
-  if (action.setPlayerVar) {
-    ctx.state.vars.player[action.setPlayerVar.name] = action.setPlayerVar.value;
     return;
   }
 

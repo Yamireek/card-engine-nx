@@ -54,6 +54,7 @@ export type Action =
   | {
       player: PlayerTarget;
       action: PlayerAction;
+      scooped?: boolean;
     }
   | {
       card: CardTarget;
@@ -71,7 +72,6 @@ export type Action =
       playerActions?: string;
       choice?: Choice;
       setCardVar?: { name: string; value: CardId | undefined };
-      setPlayerVar?: { name: string; value: PlayerId | undefined };
       useCardVar?: {
         name: string;
         value: CardId;
@@ -169,10 +169,6 @@ export type PlayerAction =
       controlled?: CardAction;
       modify?: PlayerModifier;
       until?: Until;
-      useVar?: {
-        name: string;
-        action: PlayerAction;
-      };
       deck?: CardAction;
       card?: {
         target: CardTarget;
@@ -181,6 +177,7 @@ export type PlayerAction =
       player?: {
         target: PlayerTarget;
         action: PlayerAction;
+        scooped?: boolean;
       };
     };
 

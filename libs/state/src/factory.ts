@@ -34,7 +34,6 @@ export function createState(initState?: SimpleState, program?: Action): State {
     cards: {},
     vars: {
       card: {},
-      player: {},
     },
     actionLimits: [],
     modifiers: [],

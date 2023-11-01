@@ -85,10 +85,6 @@ export function canExecute(
       return true;
     }
 
-    if (action.setPlayerVar) {
-      return true;
-    }
-
     if (action.payment) {
       const payment = canExecute(action.payment.cost, true, ctx);
       const effect = canExecute(action.payment.effect, false, ctx);
@@ -271,13 +267,6 @@ export function canPlayerExecute(
 
     if (action.incrementThreat) {
       return true;
-    }
-
-    if (action.useVar) {
-      return canPlayerExecute(action.useVar.action, player.id, {
-        ...ctx,
-        player: { ...ctx.player, [action.useVar.name]: player.id },
-      });
     }
 
     if (action.deck) {

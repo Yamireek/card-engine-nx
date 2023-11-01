@@ -124,7 +124,6 @@ export type State = {
   nextId: CardId;
   vars: {
     card: Record<string, CardId | undefined>;
-    player: Record<string, PlayerId | undefined>;
   };
   // TODO move to cards
   actionLimits: Array<{

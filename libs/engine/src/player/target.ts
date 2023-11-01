@@ -55,11 +55,6 @@ export function getTargetPlayers(
     const inCtx = ctx.player[target];
     if (inCtx) {
       return [inCtx];
-    } else {
-      const inVar = ctx.state.vars.player[target];
-      if (inVar) {
-        return [inVar];
-      }
     }
 
     const inScope = getPlayerFromScope(
@@ -98,15 +93,6 @@ export function getTargetPlayers(
         return [card.controller];
       } else {
         return [];
-      }
-    }
-
-    if (target.var) {
-      const inVar = ctx.player[target.var] ?? ctx.state.vars.player[target.var];
-      if (inVar) {
-        return [inVar];
-      } else {
-        throw new Error('player var not found');
       }
     }
 

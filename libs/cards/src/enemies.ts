@@ -14,24 +14,15 @@ export const kingSpider = enemy(
     description:
       'When Revealed: Each player must choose and exhaust 1 character he controls.',
     whenRevealed: {
-      player: {
-        target: 'each',
-        action: {
-          useVar: {
-            name: 'choosen',
-            action: {
-              chooseCardActions: {
-                title: 'Choose character to exhaust',
-                target: {
-                  simple: 'character',
-                  controller: {
-                    var: 'choosen',
-                  },
-                },
-                action: 'exhaust',
-              },
-            },
+      player: 'each',
+      action: {
+        chooseCardActions: {
+          title: 'Choose character to exhaust',
+          target: {
+            simple: 'character',
+            controller: 'target',
           },
+          action: 'exhaust',
         },
       },
     },

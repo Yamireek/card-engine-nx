@@ -26,7 +26,7 @@ export const testScenario: Scenario = {
   sets: [
     {
       easy: [],
-      normal: [enemy.kingSpider, enemy.kingSpider, treachery.drivenByShadow],
+      normal: [enemy.kingSpider],
     },
   ],
 };
