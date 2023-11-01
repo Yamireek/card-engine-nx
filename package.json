@@ -70,6 +70,7 @@
     "js-combinatorics": "^2.1.1",
     "jsdom": "22.1.0",
     "lodash": "^4.17.21",
+    "mobx": "^6.10.2",
     "nx": "16.10.0",
     "nx-cloud": "16.5.2",
     "patch-package": "^7.0.0",
