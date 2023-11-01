@@ -135,6 +135,15 @@ export type State = {
   event: Event[];
   modifiers: GameModifier[];
   x?: number;
+  scopes: Scope[];
+};
+
+export type Scope = {
+  x?: number;
+  card?: Record<string, CardId[]>;
+  player?: Record<string, PlayerId[]>;
+  event?: Event;
+  effect?: PendingEffect;
 };
 
 export type GameModifier =

@@ -40,6 +40,7 @@ export function createState(initState?: SimpleState, program?: Action): State {
     modifiers: [],
     event: [],
     stack: [],
+    scopes: [],
   };
 
   if (initState) {

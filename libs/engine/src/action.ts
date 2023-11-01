@@ -2,6 +2,8 @@ import {
   Action,
   Choice,
   PlayerAction,
+  Scope,
+  ScopeAction,
   createPlayerState,
 } from '@card-engine-nx/state';
 import { getTargetPlayer, getTargetPlayers } from './player/target';
@@ -11,9 +13,44 @@ import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard } from './utils';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
-import { ExecutionContext } from './context';
+import { ExecutionContext, ViewContext } from './context';
 import { ScenarioSetupData } from './GameSetupData';
 import { canExecute } from './resolution';
+
+export function executeScopeAction(
+  action: ScopeAction,
+  scope: Scope,
+  ctx: ViewContext
+) {
+  if (isArray(action)) {
+    for (const item of action) {
+      executeScopeAction(item, scope, ctx);
+    }
+    return;
+  }
+
+  if ('setVar' in action && 'card' in action) {
+    const target = getTargetCards(action.card, ctx);
+
+    if (!scope.card) {
+      scope.card = {};
+    }
+    scope.card[action.setVar] = target;
+    return;
+  }
+
+  if ('setVar' in action && 'player' in action) {
+    const target = getTargetPlayers(action.player, ctx);
+
+    if (!scope.player) {
+      scope.player = {};
+    }
+    scope.player[action.setVar] = target;
+    return;
+  }
+
+  throw new Error(JSON.stringify(action, null, 1));
+}
 
 export function executeAction(
   action: Action,
@@ -359,6 +396,11 @@ export function executeAction(
     return;
   }
 
+  if (action === 'endScope') {
+    ctx.state.scopes.pop();
+    return;
+  }
+
   if ('player' in action && 'action' in action) {
     return executeAction(
       { player: { target: action.player, action: action.action } },
@@ -372,6 +414,14 @@ export function executeAction(
       { card: { target: action.card, action: action.action } },
       ctx
     );
+  }
+
+  if ('useScope' in action) {
+    const scope: Scope = {};
+    executeScopeAction(action.useScope, scope, ctx);
+    ctx.state.scopes.push(scope);
+    ctx.state.next.unshift(action.action, 'endScope');
+    return;
   }
 
   if (action.stackPush) {

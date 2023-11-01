@@ -1,10 +1,27 @@
-import { PlayerId, keys, values } from '@card-engine-nx/basic';
-import { PlayerTarget } from '@card-engine-nx/state';
+import { CardId, PlayerId, keys, values } from '@card-engine-nx/basic';
+import { PlayerTarget, Scope } from '@card-engine-nx/state';
 import { intersection, isArray, last, uniq } from 'lodash';
 import { ViewContext } from '../context';
 import { getTargetCard } from '../card';
-import { maxBy } from 'lodash';
-import { max } from 'lodash/fp';
+import { max, reverse } from 'lodash/fp';
+
+export function getPlayerFromScope(
+  scopes: Scope[],
+  name: string
+): PlayerId[] | undefined {
+  const reversed = reverse(scopes);
+  const scope = reversed.find((s) => s.player && s.player[name]);
+  return scope?.player?.[name];
+}
+
+export function getCardFromScope(
+  scopes: Scope[],
+  name: string
+): CardId[] | undefined {
+  const reversed = reverse(scopes);
+  const scope = reversed.find((s) => s.card && s.card[name]);
+  return scope?.card?.[name];
+}
 
 export function getTargetPlayer(target: PlayerTarget, ctx: ViewContext) {
   const results = getTargetPlayers(target, ctx);
@@ -43,6 +60,11 @@ export function getTargetPlayers(
       if (inVar) {
         return [inVar];
       }
+    }
+
+    const inScope = getPlayerFromScope(ctx.state.scopes, target);
+    if (inScope) {
+      return inScope;
     }
 
     throw new Error(`no ${target} player in context`);

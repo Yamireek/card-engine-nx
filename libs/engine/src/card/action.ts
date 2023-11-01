@@ -806,10 +806,11 @@ export function executeCardAction(
   }
 
   if (action.modify) {
+    const source = getTargetCard({ var: 'self' }, ctx);
     if (isArray(action.modify)) {
       for (const modifier of action.modify) {
         ctx.state.modifiers.push({
-          source: ctx.state.vars.card.self || 0,
+          source,
           card: card.id,
           modifier,
           until: action.until,
@@ -817,7 +818,7 @@ export function executeCardAction(
       }
     } else {
       ctx.state.modifiers.push({
-        source: ctx.state.vars.card.self || 0,
+        source,
         card: card.id,
         modifier: action.modify,
         until: action.until,

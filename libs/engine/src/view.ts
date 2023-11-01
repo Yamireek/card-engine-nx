@@ -62,7 +62,7 @@ export function createView(state: State): View {
 
       if ('card' in modifier.modifier) {
         const sourceCard = state.cards[modifier.modifier.source];
-
+     
         const targets = getTargetCards(modifier.modifier.card, {
           state,
           view,

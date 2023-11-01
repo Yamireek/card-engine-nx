@@ -24,8 +24,15 @@ export type Limit = { type: LimitType; max: number };
 
 export type Until = 'end_of_phase' | 'end_of_round';
 
+export type ScopeAction =
+  | ScopeAction[]
+  | { setVar: string; card: CardTarget }
+  | { setVar: string; player: PlayerTarget }
+  | { event: Event };
+
 export type Action =
   | Action[]
+  | 'endScope'
   | 'empty'
   | 'shuffleEncounterDeck'
   | 'setup'
@@ -43,6 +50,7 @@ export type Action =
   | 'stateCheck'
   | 'incX'
   | 'clearX'
+  | { useScope: ScopeAction; action: Action }
   | {
       player: PlayerTarget;
       action: PlayerAction;

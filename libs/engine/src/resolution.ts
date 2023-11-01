@@ -27,6 +27,10 @@ export function canExecute(
       return true;
     }
 
+    if (action === 'endScope') {
+      return true;
+    }
+
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
     if ('player' in action && 'action' in action) {
@@ -43,6 +47,10 @@ export function canExecute(
         payment,
         ctx
       );
+    }
+
+    if ('useScope' in action) {
+      return true;
     }
 
     if (action.player) {

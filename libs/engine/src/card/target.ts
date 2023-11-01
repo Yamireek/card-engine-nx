@@ -5,7 +5,11 @@ import { ViewContext, cardIds } from '../context';
 import { getTargetZones, getZoneType } from '../zone/target';
 import { isArray, takeRight } from 'lodash/fp';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
-import { getTargetPlayers } from '../player/target';
+import {
+  getCardFromScope,
+  getPlayerFromScope,
+  getTargetPlayers,
+} from '../player/target';
 import { asArray, isInPlay } from '../utils';
 
 export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId {
@@ -270,6 +274,25 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   if (typeof target !== 'string' && target.take) {
     const all = getTargetCards({ ...target, take: undefined }, ctx);
     return all.slice(0, target.take);
+  }
+
+  if (typeof target !== 'string' && target.var) {
+    const inScope = getCardFromScope(ctx.state.scopes, target.var);
+    if (inScope) {
+      return inScope;
+    }
+
+    const inCtx = ctx.card[target.var];
+    if (inCtx) {
+      return [inCtx];
+    }
+
+    const inState = ctx.state.vars.card[target.var];
+    if (inState) {
+      return [inState];
+    }
+
+    return [];
   }
 
   return cardIds(ctx).flatMap((id) => {

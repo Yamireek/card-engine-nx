@@ -40,22 +40,20 @@ export function createPlayAllyAction(
   };
 
   return {
-    useCardVar: {
-      name: 'self',
-      value: self,
-      action: {
-        usePlayerVar: {
-          name: 'controller',
-          value: owner,
-          action: [
-            {
-              payment: {
-                cost: payment,
-                effect: [moveToPlay, { event: { type: 'played', card: self } }],
-              },
-            },
-          ],
-        },
+    useScope: [
+      {
+        setVar: 'self',
+        card: self,
+      },
+      {
+        setVar: 'controller',
+        player: owner,
+      },
+    ],
+    action: {
+      payment: {
+        cost: payment,
+        effect: [moveToPlay, { event: { type: 'played', card: self } }],
       },
     },
   };
@@ -105,24 +103,24 @@ export function createPlayAttachmentAction(
   };
 
   return {
-    useCardVar: {
-      name: 'self',
-      value: self,
-      action: {
-        usePlayerVar: {
-          name: 'controller',
-          value: owner,
-          action: [
-            {
-              payment: {
-                cost: payment,
-                effect: [attachTo, moveToPlay],
-              },
-            },
-          ],
+    useScope: [
+      {
+        setVar: 'self',
+        card: self,
+      },
+      {
+        setVar: 'controller',
+        player: owner,
+      },
+    ],
+    action: [
+      {
+        payment: {
+          cost: payment,
+          effect: [attachTo, moveToPlay],
         },
       },
-    },
+    ],
   };
 }
 
@@ -166,48 +164,48 @@ export function createModifiers(
               description: ability.description,
               cost: ability.cost,
               action: {
-                useCardVar: {
-                  name: 'self',
-                  value: self,
-                  action: {
-                    usePlayerVar: {
-                      name: 'controller',
-                      value: controller,
-                      action: [
-                        {
-                          payment: {
-                            cost: {
-                              card: {
-                                target: self,
-                                action: {
-                                  payCost: ability.cost ?? {},
-                                },
-                              },
-                            },
-                            effect: ability.action,
+                useScope: [
+                  {
+                    setVar: 'self',
+                    card: self,
+                  },
+                  {
+                    setVar: 'controller',
+                    player: controller,
+                  },
+                ],
+                action: [
+                  {
+                    payment: {
+                      cost: {
+                        card: {
+                          target: self,
+                          action: {
+                            payCost: ability.cost ?? {},
                           },
                         },
-                        {
-                          card: {
-                            target: self,
-                            action: {
-                              move: {
-                                from: {
-                                  player: 'controller',
-                                  type: 'hand',
-                                },
-                                to: {
-                                  player: 'controller',
-                                  type: 'discardPile',
-                                },
-                              },
-                            },
-                          },
-                        },
-                      ],
+                      },
+                      effect: ability.action,
                     },
                   },
-                },
+                  {
+                    card: {
+                      target: self,
+                      action: {
+                        move: {
+                          from: {
+                            player: 'controller',
+                            type: 'hand',
+                          },
+                          to: {
+                            player: 'controller',
+                            type: 'discardPile',
+                          },
+                        },
+                      },
+                    },
+                  },
+                ],
               },
             },
           },
