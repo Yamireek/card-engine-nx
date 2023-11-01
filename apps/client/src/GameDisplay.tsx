@@ -137,7 +137,6 @@ export const LotrLCGInfo = () => {
     view,
     scopes: [],
     card: {},
-    player: {},
   });
 
   const currentProgress = sum(

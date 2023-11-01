@@ -71,7 +71,6 @@ export function crateExecutionContext(
     random,
     scopes: [],
     card: {},
-    player: {},
     get view() {
       if (view) {
         return view;
@@ -194,7 +193,11 @@ export function isInPlay(zone: PlayerZoneType | GameZoneType): boolean {
   }
 }
 
-export function asArray<T>(item: T | T[]): T[] {
+export function asArray<T>(item?: T | T[]): T[] {
+  if (!item) {
+    return [];
+  }
+
   if (isArray(item)) {
     return item;
   } else {

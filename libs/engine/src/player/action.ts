@@ -17,6 +17,7 @@ import {
   canCharacterDefend,
   canEnemyAttack,
 } from '../utils/combat';
+import { asArray } from '../utils';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -509,7 +510,7 @@ export function executePlayerAction(
           .filter((p) =>
             canPlayerExecute(playerAction, p, {
               ...ctx,
-              player: { ...ctx.player, target: p },
+              scopes: [{ player: { target: asArray(p) } }],
             })
           )
           .map((id) => ({

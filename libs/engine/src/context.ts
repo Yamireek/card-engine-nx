@@ -9,7 +9,6 @@ export type ExecutionContext = {
   events: UIEvents;
   scopes: Scope[];
   card: Record<string, CardId>;
-  player: Record<string, PlayerId>;
   random: Random;
 };
 
@@ -18,7 +17,6 @@ export type ViewContext = {
   view: View;
   scopes: Scope[];
   card: Record<string, CardId | undefined>;
-  player: Record<string, PlayerId | undefined>;
 };
 
 export function cardIds(ctx: ViewContext) {

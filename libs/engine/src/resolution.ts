@@ -9,6 +9,7 @@ import { canCardExecute } from './card/resolution';
 import { getZoneType } from './zone/target';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { executeScopeAction } from './action';
+import { asArray } from './utils';
 
 export function canExecute(
   action: Action,
@@ -65,7 +66,7 @@ export function canExecute(
       return players.some((p) =>
         canPlayerExecute(playerAction.action, p, {
           ...ctx,
-          player: { ...ctx.player, target: p },
+          scopes: [...ctx.scopes, { player: { target: asArray(p) } }],
         })
       );
     }
@@ -76,7 +77,7 @@ export function canExecute(
       return cards.some((card) =>
         canCardExecute(cardAction.action, card, {
           ...ctx,
-          card: { ...ctx.player, target: card },
+          card: { ...ctx.card, target: card },
         })
       );
     }

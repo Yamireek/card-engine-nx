@@ -1,5 +1,5 @@
 import { CardState, CardAction, Action } from '@card-engine-nx/state';
-import { ExecutionContext } from '../context';
+import { ExecutionContext, ViewContext } from '../context';
 import { uiEvent } from '../eventFactories';
 import {
   getCardZoneId,
@@ -20,6 +20,7 @@ import {
 import { getTargetCard, getTargetCards } from './target';
 import { createPayCostAction } from '../resolution';
 import { getTargetPlayer } from '../player/target';
+import { asArray } from '../utils';
 
 export function executeCardAction(
   action: CardAction,
@@ -597,8 +598,11 @@ export function executeCardAction(
   }
 
   if (action.move) {
-    const moveCtx = card.controller
-      ? { ...ctx, player: { ...ctx.player, controller: card.controller } }
+    const moveCtx: ViewContext = card.controller
+      ? {
+          ...ctx,
+          scopes: [{ player: { controller: asArray(card.controller) } }],
+        }
       : ctx;
 
     const fromId = action.move.from

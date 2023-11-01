@@ -52,20 +52,18 @@ export function getTargetPlayers(
     target === 'target' ||
     target === 'defending'
   ) {
-    const inCtx = ctx.player[target];
-    if (inCtx) {
-      return [inCtx];
-    }
-
-    const inScope = getPlayerFromScope(
+    const player = getPlayerFromScope(
       [...ctx.state.scopes, ...ctx.scopes],
       target
     );
-    if (inScope) {
-      return inScope;
+
+    if (player) {
+      return player;
     }
 
-    throw new Error(`no ${target} player in context`);
+    debugger;
+
+    throw new Error(`no ${target} player in scope`);
   }
 
   if (target === 'first') {

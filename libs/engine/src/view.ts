@@ -15,6 +15,7 @@ import { getTargetPlayers } from './player/target';
 import { calculateBoolExpr } from './expr';
 import { ViewContext } from './context';
 import { getZoneType } from './zone/target';
+import { asArray } from './utils';
 
 export function createView(state: State): View {
   const view: View = {
@@ -66,12 +67,9 @@ export function createView(state: State): View {
         const targets = getTargetCards(modifier.modifier.card, {
           state,
           view,
-          scopes: [],
+          scopes: [{ player: { controller: asArray(sourceCard.controller) } }],
           card: {
             self: modifier.modifier.source,
-          },
-          player: {
-            controller: sourceCard.controller,
           },
         });
 
@@ -81,7 +79,6 @@ export function createView(state: State): View {
             view,
             scopes: [],
             card: { target: target, self: modifier.modifier.source },
-            player: {},
           };
           const condition = modifier.modifier.condition
             ? calculateBoolExpr(modifier.modifier.condition, ctx)
@@ -103,7 +100,6 @@ export function createView(state: State): View {
           view,
           scopes: [],
           card: { self: modifier.modifier.source },
-          player: {},
         };
 
         const condition = modifier.modifier.condition
@@ -178,9 +174,8 @@ export function createView(state: State): View {
     const enabled = canExecute(a.action, true, {
       state: state,
       view: view,
-      scopes: [],
+      scopes: [{ player: { controller: controller ? [controller] : [] } }],
       card: { self: a.card },
-      player: { controller },
     });
     return { ...a, enabled: enabled ? true : undefined };
   });
