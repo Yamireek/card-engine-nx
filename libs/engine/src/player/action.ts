@@ -514,14 +514,14 @@ export function executePlayerAction(
           .map((id) => ({
             title: id.toString(),
             action: {
-              usePlayerVar: {
-                value: id,
-                name: 'target',
-                action: {
-                  player: {
-                    target: id,
-                    action: playerAction,
-                  },
+              useScope: {
+                var: 'target',
+                player: id,
+              },
+              action: {
+                player: {
+                  target: id,
+                  action: playerAction,
                 },
               },
             },

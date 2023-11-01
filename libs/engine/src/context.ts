@@ -1,4 +1,4 @@
-import { State, View } from '@card-engine-nx/state';
+import { Scope, State, View } from '@card-engine-nx/state';
 import { UIEvents } from './uiEvents';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
 import { Random } from './utils/random';
@@ -7,6 +7,7 @@ export type ExecutionContext = {
   state: State;
   view: View;
   events: UIEvents;
+  scopes: Scope[];
   card: Record<string, CardId>;
   player: Record<string, PlayerId>;
   random: Random;
@@ -15,6 +16,7 @@ export type ExecutionContext = {
 export type ViewContext = {
   state: State;
   view: View;
+  scopes: Scope[];
   card: Record<string, CardId | undefined>;
   player: Record<string, PlayerId | undefined>;
 };

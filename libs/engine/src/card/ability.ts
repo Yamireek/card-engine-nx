@@ -42,11 +42,11 @@ export function createPlayAllyAction(
   return {
     useScope: [
       {
-        setVar: 'self',
+        var: 'self',
         card: self,
       },
       {
-        setVar: 'controller',
+        var: 'controller',
         player: owner,
       },
     ],
@@ -105,11 +105,11 @@ export function createPlayAttachmentAction(
   return {
     useScope: [
       {
-        setVar: 'self',
+        var: 'self',
         card: self,
       },
       {
-        setVar: 'controller',
+        var: 'controller',
         player: owner,
       },
     ],
@@ -166,11 +166,11 @@ export function createModifiers(
               action: {
                 useScope: [
                   {
-                    setVar: 'self',
+                    var: 'self',
                     card: self,
                   },
                   {
-                    setVar: 'controller',
+                    var: 'controller',
                     player: controller,
                   },
                 ],
@@ -224,22 +224,22 @@ export function createModifiers(
                   name: 'self',
                   value: self,
                   action: {
-                    usePlayerVar: {
-                      name: 'controller',
-                      value: controller,
-                      action: ability.limit
-                        ? [
-                            {
-                              useLimit: {
-                                card: self,
-                                type: ability.limit.type,
-                                max: ability.limit.max,
-                              },
-                            },
-                            ability.action,
-                          ]
-                        : ability.action,
+                    useScope: {
+                      var: 'controller',
+                      player: controller,
                     },
+                    action: ability.limit
+                      ? [
+                          {
+                            useLimit: {
+                              card: self,
+                              type: ability.limit.type,
+                              max: ability.limit.max,
+                            },
+                          },
+                          ability.action,
+                        ]
+                      : ability.action,
                   },
                 },
               },
@@ -268,42 +268,39 @@ export function createModifiers(
                     name: 'self',
                     value: self,
                     action: {
-                      usePlayerVar: {
-                        name: 'controller',
-                        value: controller,
-                        action: [
-                          {
-                            payment: {
-                              cost: {
-                                card: {
-                                  target: self,
-                                  action: {
-                                    payCost: ability.cost ?? {},
-                                  },
+                      useScope: { var: 'controller', player: controller },
+                      action: [
+                        {
+                          payment: {
+                            cost: {
+                              card: {
+                                target: self,
+                                action: {
+                                  payCost: ability.cost ?? {},
                                 },
                               },
-                              effect: ability.response.action,
                             },
+                            effect: ability.response.action,
                           },
-                          {
-                            card: {
-                              target: self,
-                              action: {
-                                move: {
-                                  from: {
-                                    player: 'controller',
-                                    type: 'hand',
-                                  },
-                                  to: {
-                                    player: 'controller',
-                                    type: 'discardPile',
-                                  },
+                        },
+                        {
+                          card: {
+                            target: self,
+                            action: {
+                              move: {
+                                from: {
+                                  player: 'controller',
+                                  type: 'hand',
+                                },
+                                to: {
+                                  player: 'controller',
+                                  type: 'discardPile',
                                 },
                               },
                             },
                           },
-                        ],
-                      },
+                        },
+                      ],
                     },
                   },
                 },
@@ -325,11 +322,11 @@ export function createModifiers(
                 forced: false,
                 action: controller
                   ? {
-                      usePlayerVar: {
-                        name: 'controller',
-                        value: controller,
-                        action: ability.response.action,
+                      useScope: {
+                        var: 'controller',
+                        player: controller,
                       },
+                      action: ability.response.action,
                     }
                   : ability.response.action,
               },

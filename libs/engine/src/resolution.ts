@@ -8,6 +8,7 @@ import { isArray } from 'lodash/fp';
 import { canCardExecute } from './card/resolution';
 import { getZoneType } from './zone/target';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
+import { executeScopeAction } from './action';
 
 export function canExecute(
   action: Action,
@@ -50,7 +51,12 @@ export function canExecute(
     }
 
     if ('useScope' in action) {
-      return true;
+      const scope = {};
+      executeScopeAction(action.useScope, scope, ctx);
+      return canExecute(action.action, payment, {
+        ...ctx,
+        scopes: [...ctx.scopes, scope],
+      });
     }
 
     if (action.player) {
@@ -113,16 +119,6 @@ export function canExecute(
         card: {
           ...ctx.card,
           [action.useCardVar.name]: action.useCardVar.value,
-        },
-      });
-    }
-
-    if (action.usePlayerVar) {
-      return canExecute(action.usePlayerVar.action, payment, {
-        ...ctx,
-        player: {
-          ...ctx.player,
-          [action.usePlayerVar.name]: action.usePlayerVar.value,
         },
       });
     }

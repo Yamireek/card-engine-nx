@@ -26,8 +26,8 @@ export type Until = 'end_of_phase' | 'end_of_round';
 
 export type ScopeAction =
   | ScopeAction[]
-  | { setVar: string; card: CardTarget }
-  | { setVar: string; player: PlayerTarget }
+  | { var: string; card: CardTarget }
+  | { var: string; player: PlayerTarget }
   | { event: Event };
 
 export type Action =

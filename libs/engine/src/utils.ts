@@ -69,6 +69,7 @@ export function crateExecutionContext(
     state,
     events,
     random,
+    scopes: [],
     card: {},
     player: {},
     get view() {

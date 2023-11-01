@@ -135,6 +135,7 @@ export const LotrLCGInfo = () => {
   const totalThreat = calculateNumberExpr('totalThreat', {
     state,
     view,
+    scopes: [],
     card: {},
     player: {},
   });

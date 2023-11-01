@@ -29,23 +29,23 @@ export function executeScopeAction(
     return;
   }
 
-  if ('setVar' in action && 'card' in action) {
+  if ('var' in action && 'card' in action) {
     const target = getTargetCards(action.card, ctx);
 
     if (!scope.card) {
       scope.card = {};
     }
-    scope.card[action.setVar] = target;
+    scope.card[action.var] = target;
     return;
   }
 
-  if ('setVar' in action && 'player' in action) {
+  if ('var' in action && 'player' in action) {
     const target = getTargetPlayers(action.player, ctx);
 
     if (!scope.player) {
       scope.player = {};
     }
-    scope.player[action.setVar] = target;
+    scope.player[action.var] = target;
     return;
   }
 
@@ -889,22 +889,6 @@ export function executeAction(
       action.useCardVar.action,
       {
         setCardVar: { name: action.useCardVar.name, value: undefined },
-      }
-    );
-    return;
-  }
-
-  if (action.usePlayerVar) {
-    ctx.state.next.unshift(
-      {
-        setPlayerVar: {
-          name: action.usePlayerVar.name,
-          value: action.usePlayerVar.value,
-        },
-      },
-      action.usePlayerVar.action,
-      {
-        setPlayerVar: { name: action.usePlayerVar.name, value: undefined },
       }
     );
     return;

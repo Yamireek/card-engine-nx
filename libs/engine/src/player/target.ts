@@ -62,7 +62,10 @@ export function getTargetPlayers(
       }
     }
 
-    const inScope = getPlayerFromScope(ctx.state.scopes, target);
+    const inScope = getPlayerFromScope(
+      [...ctx.state.scopes, ...ctx.scopes],
+      target
+    );
     if (inScope) {
       return inScope;
     }

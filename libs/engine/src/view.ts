@@ -62,10 +62,11 @@ export function createView(state: State): View {
 
       if ('card' in modifier.modifier) {
         const sourceCard = state.cards[modifier.modifier.source];
-     
+
         const targets = getTargetCards(modifier.modifier.card, {
           state,
           view,
+          scopes: [],
           card: {
             self: modifier.modifier.source,
           },
@@ -78,6 +79,7 @@ export function createView(state: State): View {
           const ctx: ViewContext = {
             state,
             view,
+            scopes: [],
             card: { target: target, self: modifier.modifier.source },
             player: {},
           };
@@ -99,6 +101,7 @@ export function createView(state: State): View {
         const ctx: ViewContext = {
           state,
           view,
+          scopes: [],
           card: { self: modifier.modifier.source },
           player: {},
         };
@@ -175,6 +178,7 @@ export function createView(state: State): View {
     const enabled = canExecute(a.action, true, {
       state: state,
       view: view,
+      scopes: [],
       card: { self: a.card },
       player: { controller },
     });
