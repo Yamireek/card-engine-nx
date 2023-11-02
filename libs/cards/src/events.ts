@@ -97,50 +97,60 @@ export const quickStrike = event(
   {
     description:
       'Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.',
-    action: [
-      // {
-      //   player: {
-      //     target: 'controller',
-      //     action: {
-      //       chooseCardActions: {
-      //         title: 'Choose character as attacker',
-      //         target: {
-      //           simple: 'character',
-      //           controller: 'controller',
-      //         },
-      //         action: [
-      //           'exhaust',
-      //           {
-      //             setAsVar: 'attacker',
-      //           },
-      //         ],
-      //       },
-      //     },
-      //   },
-      // },
-      // {
-      //   player: {
-      //     target: 'controller',
-      //     action: {
-      //       chooseCardActions: {
-      //         title: 'Choose enemy to attack',
-      //         target: { zoneType: 'engaged' },
-      //         action: {
-      //           setAsVar: 'defender',
-      //         },
-      //       },
-      //     },
-      //   },
-      // },
-      // {
-      //   resolveAttack: {
-      //     attackers: {
-      //       var: 'attacker',
-      //     },
-      //     defender: { var: 'defender' },
-      //   },
-      // },
-    ],
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose character as attacker',
+            target: {
+              simple: 'character',
+              controller: 'controller',
+            },
+            action: [
+              'exhaust',
+              {
+                action: {
+                  useScope: {
+                    var: 'attacker',
+                    card: 'target',
+                  },
+                  action: [
+                    {
+                      player: {
+                        target: 'controller',
+                        action: {
+                          chooseCardActions: {
+                            title: 'Choose enemy to attack',
+                            target: { zoneType: 'engaged' },
+                            action: {
+                              action: {
+                                useScope: {
+                                  var: 'defender',
+                                  card: 'target',
+                                },
+                                action: {
+                                  resolveAttack: {
+                                    attackers: {
+                                      var: 'attacker',
+                                    },
+                                    defender: { var: 'defender' },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
   }
 );
 
@@ -311,37 +321,40 @@ export const commonCause = event(
   {
     description:
       'Action: Exhaust 1 hero you control to choose and ready a different hero.',
-    action: [
-      // {
-      //   player: {
-      //     target: 'controller',
-      //     action: {
-      //       chooseCardActions: {
-      //         title: 'Choose hero to exhaust',
-      //         target: { type: 'hero', controller: 'controller' },
-      //         action: [
-      //           {
-      //             setAsVar: 'exhausted',
-      //           },
-      //           'exhaust',
-      //         ],
-      //       },
-      //     },
-      //   },
-      // },
-      // {
-      //   player: {
-      //     target: 'controller',
-      //     action: {
-      //       chooseCardActions: {
-      //         title: 'Choose hero to ready',
-      //         target: { type: 'hero', not: { var: 'exhausted' } },
-      //         action: 'ready',
-      //       },
-      //     },
-      //   },
-      // },
-    ],
+    action: {
+      player: {
+        target: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose hero to exhaust',
+            target: { type: 'hero', controller: 'controller' },
+            action: [
+              {
+                action: {
+                  useScope: {
+                    var: 'exhaused',
+                    card: 'target',
+                  },
+                  action: {
+                    player: {
+                      target: 'controller',
+                      action: {
+                        chooseCardActions: {
+                          title: 'Choose hero to ready',
+                          target: { type: 'hero', not: { var: 'exhausted' } },
+                          action: 'ready',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              'exhaust',
+            ],
+          },
+        },
+      },
+    },
   }
 );
 

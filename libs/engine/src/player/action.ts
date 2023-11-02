@@ -428,20 +428,22 @@ export function executePlayerAction(
 
     const amount = calculateNumberExpr(action.payResources.amount, ctx);
 
-    ctx.state.next.unshift('stateCheck', {
-      choice: {
-        id: ctx.state.nextId++,
-        player: player.id,
-        type: 'split',
-        min: amount,
-        max: amount,
-        title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
-        options,
-        count: {
-          min: action.payResources.heroes ?? 1,
+    if (amount > 0) {
+      ctx.state.next.unshift('stateCheck', {
+        choice: {
+          id: ctx.state.nextId++,
+          player: player.id,
+          type: 'split',
+          min: amount,
+          max: amount,
+          title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
+          options,
+          count: {
+            min: action.payResources.heroes ?? 0,
+          },
         },
-      },
-    });
+      });
+    }
 
     return;
   }

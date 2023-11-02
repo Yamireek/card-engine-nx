@@ -221,6 +221,7 @@ export type CardAction =
       putInPlay?: PlayerTarget;
       controller?: PlayerAction;
       setController?: PlayerTarget;
+      action?: Action;
     };
 
 export type PropertyIncrement = Partial<

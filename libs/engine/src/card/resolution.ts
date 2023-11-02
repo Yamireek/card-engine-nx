@@ -3,7 +3,11 @@ import { CardId } from '@card-engine-nx/basic';
 import { isArray } from 'lodash';
 import { ViewContext } from '../context';
 import { getTargetPlayer } from '../player/target';
-import { createPayCostAction, canPlayerExecute } from '../resolution';
+import {
+  createPayCostAction,
+  canPlayerExecute,
+  canExecute,
+} from '../resolution';
 import { isInPlay } from '../utils';
 import { getZoneType } from '../zone/target';
 import { getTargetCard, getTargetCards } from './target';
@@ -246,6 +250,10 @@ export function canCardExecute(
 
   if (action.setController) {
     return inPlay;
+  }
+
+  if (action.action) {
+    return canExecute(action.action, false, ctx);
   }
 
   return false;

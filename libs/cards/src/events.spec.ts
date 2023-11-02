@@ -214,3 +214,31 @@ it('Swift Strike', () => {
   game.chooseOption(response);
   expect(enemy.token.damage).toBe(2);
 });
+
+it('Common Cause', () => {
+  const action =
+    'Action: Exhaust 1 hero you control to choose and ready a different hero.';
+
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.gloin,
+            exhausted: true,
+          },
+          core.hero.aragorn,
+        ],
+        hand: [core.event.commonCause],
+      },
+    ],
+  });
+
+  const aragorn = game.getCard('Aragorn');
+  const gloin = game.getCard('Glóin');
+
+  expect(game.actions.length).toBe(1);
+  game.chooseAction(action);
+  expect(aragorn.state.tapped).toBe(true);
+  expect(gloin.state.tapped).toBe(false);
+});

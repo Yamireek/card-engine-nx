@@ -223,6 +223,14 @@ export function checkCardPredicate(
     return targets.includes(state.attachedTo);
   }
 
+  if (target.var) {
+    const vars = getCardFromScope(
+      [...ctx.state.scopes, ...ctx.scopes],
+      target.var
+    );
+    return (vars && vars.includes(state.id)) ?? false;
+  }
+
   throw new Error(`unknown card predicate: ${JSON.stringify(target)}`);
 }
 

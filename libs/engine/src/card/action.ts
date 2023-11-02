@@ -21,6 +21,7 @@ import { getTargetCard, getTargetCards } from './target';
 import { createPayCostAction } from '../resolution';
 import { getTargetPlayer } from '../player/target';
 import { asArray } from '../utils';
+import { executeAction } from '../action';
 
 export function executeCardAction(
   action: CardAction,
@@ -863,6 +864,10 @@ export function executeCardAction(
     const controller = getTargetPlayer(action.setController, ctx);
     card.controller = controller;
     return;
+  }
+
+  if (action.action) {
+    return executeAction(action.action, ctx);
   }
 
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);
