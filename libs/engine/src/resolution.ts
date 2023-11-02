@@ -77,13 +77,9 @@ export function canExecute(
       return cards.some((card) =>
         canCardExecute(cardAction.action, card, {
           ...ctx,
-          card: { ...ctx.card, target: card },
+          scopes: [...ctx.scopes, { card: { target: asArray(card) } }],
         })
       );
-    }
-
-    if (action.setCardVar) {
-      return true;
     }
 
     if (action.payment) {
@@ -108,16 +104,6 @@ export function canExecute(
 
     if (action.placeProgress) {
       return true;
-    }
-
-    if (action.useCardVar) {
-      return canExecute(action.useCardVar.action, payment, {
-        ...ctx,
-        card: {
-          ...ctx.card,
-          [action.useCardVar.name]: action.useCardVar.value,
-        },
-      });
     }
 
     if (action.cancel) {
@@ -184,7 +170,7 @@ export function canPlayerExecute(
       return targets.some((id) =>
         canCardExecute(cardAction, id, {
           ...ctx,
-          card: { ...ctx.card, target: id },
+          scopes: [...ctx.scopes, { card: { target: asArray(id) } }],
         })
       );
     }

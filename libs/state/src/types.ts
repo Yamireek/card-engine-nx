@@ -71,17 +71,6 @@ export type Action =
       beginPhase?: Phase;
       playerActions?: string;
       choice?: Choice;
-      setCardVar?: { name: string; value: CardId | undefined };
-      useCardVar?: {
-        name: string;
-        value: CardId;
-        action: Action;
-      };
-      usePlayerVar?: {
-        name: string;
-        value: PlayerId;
-        action: Action;
-      };
       clearMarks?: Mark;
       while?: { condition: BoolExpr; action: Action };
       repeat?: { amount: NumberExpr; action: Action };
@@ -224,7 +213,6 @@ export type CardAction =
       };
       modify?: CardModifier | CardModifier[];
       until?: Until;
-      setAsVar?: string;
       responses?: Event;
       whenRevealed?: {
         description: string;

@@ -354,11 +354,11 @@ export function executeCardAction(
               type: 'shadow',
               description: shadow.description,
               shadow: {
-                useCardVar: {
-                  name: 'self',
-                  value: card.id,
-                  action: shadow.action,
+                useScope: {
+                  var: 'self',
+                  card: card.id,
                 },
+                action: shadow.action,
               },
             },
           },
@@ -431,11 +431,11 @@ export function executeCardAction(
           type: 'whenRevealed',
           description: action.whenRevealed.description,
           whenRevealed: {
-            useCardVar: {
-              name: 'self',
-              value: card.id,
-              action: action.whenRevealed.action,
+            useScope: {
+              var: 'self',
+              card: card.id,
             },
+            action: action.whenRevealed.action,
           },
         },
       },
@@ -601,7 +601,10 @@ export function executeCardAction(
     const moveCtx: ViewContext = card.controller
       ? {
           ...ctx,
-          scopes: [{ player: { controller: asArray(card.controller) } }],
+          scopes: [
+            ...ctx.scopes,
+            { player: { controller: asArray(card.controller) } },
+          ],
         }
       : ctx;
 
@@ -829,11 +832,6 @@ export function executeCardAction(
       });
     }
     return true;
-  }
-
-  if (action.setAsVar) {
-    ctx.state.vars.card[action.setAsVar] = card.id;
-    return;
   }
 
   if (action.clear) {

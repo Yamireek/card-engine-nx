@@ -169,10 +169,6 @@ export function canCardExecute(
     return true;
   }
 
-  if (action.setAsVar) {
-    return true;
-  }
-
   if (inPlay && action.generateResources) {
     return true;
   }

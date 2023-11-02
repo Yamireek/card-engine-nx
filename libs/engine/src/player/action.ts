@@ -462,15 +462,13 @@ export function executePlayerAction(
         optional: action.chooseCardActions.optional ?? false,
         options: cardIds.flatMap((id) => {
           const action: Action = {
-            useCardVar: {
-              name: 'target',
-              action: {
-                card: {
-                  target: id,
-                  action: cardAction,
-                },
-              },
-              value: id,
+            useScope: {
+              var: 'target',
+              card: id,
+            },
+            action: {
+              card: id,
+              action: cardAction,
             },
           };
 
@@ -510,7 +508,7 @@ export function executePlayerAction(
           .filter((p) =>
             canPlayerExecute(playerAction, p, {
               ...ctx,
-              scopes: [{ player: { target: asArray(p) } }],
+              scopes: [...ctx.scopes, { player: { target: asArray(p) } }],
             })
           )
           .map((id) => ({

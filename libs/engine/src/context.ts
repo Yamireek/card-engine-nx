@@ -7,16 +7,14 @@ export type ExecutionContext = {
   state: State;
   view: View;
   events: UIEvents;
-  scopes: Scope[];
-  card: Record<string, CardId>;
   random: Random;
+  scopes: Scope[];
 };
 
 export type ViewContext = {
   state: State;
   view: View;
   scopes: Scope[];
-  card: Record<string, CardId | undefined>;
 };
 
 export function cardIds(ctx: ViewContext) {

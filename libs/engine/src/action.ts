@@ -10,7 +10,7 @@ import { getTargetPlayer, getTargetPlayers } from './player/target';
 import { executePlayerAction } from './player/action';
 import { isArray, keys, last, reverse, sum } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
-import { addPlayerCard, addGameCard } from './utils';
+import { addPlayerCard, addGameCard, asArray } from './utils';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext, ViewContext } from './context';
@@ -467,17 +467,17 @@ export function executeAction(
                     actions: responses.map((r) => ({
                       title: r.description,
                       action: {
-                        useCardVar: {
-                          name: 'target',
-                          value: r.card,
-                          action: {
-                            useCardVar: {
-                              name: 'self',
-                              value: r.source,
-                              action: r.action,
-                            },
+                        useScope: [
+                          {
+                            var: 'target',
+                            card: r.card,
                           },
-                        },
+                          {
+                            var: 'self',
+                            card: r.source,
+                          },
+                        ],
+                        action: r.action,
                       },
                     })),
                     optional: true,
@@ -529,7 +529,7 @@ export function executeAction(
         results.push(
           executeCardAction(action.card.action, card, {
             ...ctx,
-            card: { ...ctx.card, target: id },
+            scopes: [...ctx.scopes, { card: { target: asArray(id) } }],
           }) ?? false
         );
       } else {
@@ -604,11 +604,6 @@ export function executeAction(
         type: 'actions',
       },
     });
-    return;
-  }
-
-  if (action.setCardVar) {
-    ctx.state.vars.card[action.setCardVar.name] = action.setCardVar.value;
     return;
   }
 
@@ -754,7 +749,10 @@ export function executeAction(
           !r.condition ||
           calculateBoolExpr(r.condition, {
             ...ctx,
-            card: { ...ctx.card, target: r.card, self: r.source },
+            scopes: [
+              ...ctx.scopes,
+              { card: { target: asArray(r.card), self: asArray(r.source) } },
+            ],
           })
       );
 
@@ -766,7 +764,10 @@ export function executeAction(
           !r.condition ||
           calculateBoolExpr(r.condition, {
             ...ctx,
-            card: { ...ctx.card, target: r.card, self: r.source },
+            scopes: [
+              ...ctx.scopes,
+              { card: { target: asArray(r.card), self: asArray(r.source) } },
+            ],
           })
       );
 
@@ -780,17 +781,17 @@ export function executeAction(
               actions: optional.map((r) => ({
                 title: r.description,
                 action: {
-                  useCardVar: {
-                    name: 'target',
-                    value: r.card,
-                    action: {
-                      useCardVar: {
-                        name: 'self',
-                        value: r.source,
-                        action: r.action,
-                      },
+                  useScope: [
+                    {
+                      var: 'target',
+                      card: r.card,
                     },
-                  },
+                    {
+                      var: 'self',
+                      card: r.source,
+                    },
+                  ],
+                  action: r.action,
                 },
               })),
               optional: true,
@@ -804,17 +805,17 @@ export function executeAction(
     if (forced.length > 0) {
       ctx.state.next.unshift(
         ...forced.map((r) => ({
-          useCardVar: {
-            name: 'self',
-            value: r.card,
-            action: {
-              useCardVar: {
-                name: 'self',
-                value: r.source,
-                action: r.action,
-              },
+          useScope: [
+            {
+              var: 'target',
+              card: r.card,
             },
-          },
+            {
+              var: 'self',
+              card: r.source,
+            },
+          ],
+          action: r.action,
         }))
       );
     }
@@ -876,22 +877,6 @@ export function executeAction(
 
   if (action.atEndOfPhase) {
     ctx.state.triggers.end_of_phase.push(action.atEndOfPhase);
-    return;
-  }
-
-  if (action.useCardVar) {
-    ctx.state.next.unshift(
-      {
-        setCardVar: {
-          name: action.useCardVar.name,
-          value: action.useCardVar.value,
-        },
-      },
-      action.useCardVar.action,
-      {
-        setCardVar: { name: action.useCardVar.name, value: undefined },
-      }
-    );
     return;
   }
 

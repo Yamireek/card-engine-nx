@@ -67,18 +67,24 @@ export function createView(state: State): View {
         const targets = getTargetCards(modifier.modifier.card, {
           state,
           view,
-          scopes: [{ player: { controller: asArray(sourceCard.controller) } }],
-          card: {
-            self: modifier.modifier.source,
-          },
+          scopes: [
+            { player: { controller: asArray(sourceCard.controller) } },
+            { card: { self: asArray(modifier.modifier.source) } },
+          ],
         });
 
         for (const target of targets) {
           const ctx: ViewContext = {
             state,
             view,
-            scopes: [],
-            card: { target: target, self: modifier.modifier.source },
+            scopes: [
+              {
+                card: {
+                  target: asArray(target),
+                  self: asArray(modifier.modifier.source),
+                },
+              },
+            ],
           };
           const condition = modifier.modifier.condition
             ? calculateBoolExpr(modifier.modifier.condition, ctx)
@@ -98,8 +104,7 @@ export function createView(state: State): View {
         const ctx: ViewContext = {
           state,
           view,
-          scopes: [],
-          card: { self: modifier.modifier.source },
+          scopes: [{ card: { self: asArray(modifier.modifier.source) } }],
         };
 
         const condition = modifier.modifier.condition
@@ -174,8 +179,12 @@ export function createView(state: State): View {
     const enabled = canExecute(a.action, true, {
       state: state,
       view: view,
-      scopes: [{ player: { controller: controller ? [controller] : [] } }],
-      card: { self: a.card },
+      scopes: [
+        {
+          player: { controller: controller ? [controller] : [] },
+          card: { self: asArray(a.card) },
+        },
+      ],
     });
     return { ...a, enabled: enabled ? true : undefined };
   });

@@ -70,7 +70,6 @@ export function crateExecutionContext(
     events,
     random,
     scopes: [],
-    card: {},
     get view() {
       if (view) {
         return view;
