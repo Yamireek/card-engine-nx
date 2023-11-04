@@ -1,7 +1,6 @@
 import {
   Action,
   Choice,
-  PlayerAction,
   Scope,
   ScopeAction,
   createPlayerState,
@@ -10,7 +9,7 @@ import { getTargetPlayer, getTargetPlayers } from './player/target';
 import { executePlayerAction } from './player/action';
 import { isArray, keys, last, reverse, sum } from 'lodash/fp';
 import { values } from '@card-engine-nx/basic';
-import { addPlayerCard, addGameCard, asArray } from './utils';
+import { addPlayerCard, addGameCard } from './utils';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
 import { ExecutionContext, ViewContext, updatedCtx } from './context';

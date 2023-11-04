@@ -8,8 +8,6 @@ import { isArray } from 'lodash/fp';
 import { canCardExecute } from './card/resolution';
 import { getZoneType } from './zone/target';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
-import { executeScopeAction } from './action';
-import { asArray } from './utils';
 
 export function canExecute(
   action: Action,

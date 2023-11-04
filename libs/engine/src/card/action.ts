@@ -20,7 +20,6 @@ import {
 import { getTargetCard, getTargetCards } from './target';
 import { createPayCostAction } from '../resolution';
 import { getTargetPlayer } from '../player/target';
-import { asArray } from '../utils';
 import { executeAction } from '../action';
 
 export function executeCardAction(

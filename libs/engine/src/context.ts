@@ -1,6 +1,6 @@
 import { Scope, ScopeAction, State, View } from '@card-engine-nx/state';
 import { UIEvents } from './uiEvents';
-import { CardId, PlayerId } from '@card-engine-nx/basic';
+import { CardId } from '@card-engine-nx/basic';
 import { Random } from './utils/random';
 import { executeScopeAction } from './action';
 

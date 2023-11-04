@@ -1,4 +1,3 @@
-import { isArray } from 'lodash/fp';
 import { PlayerId } from '.';
 
 export function values<TK extends string | number, TI>(
@@ -43,10 +42,4 @@ export function validPlayerId(id?: number | string | null): PlayerId {
 
 export function capitalizeFirst(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-export function arrayCustomizer(objValue: any, srcValue: any) {
-  if (isArray(objValue)) {
-    return objValue.concat(srcValue);
-  }
 }

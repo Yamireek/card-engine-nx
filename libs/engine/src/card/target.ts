@@ -5,11 +5,7 @@ import { ViewContext, cardIds } from '../context';
 import { getTargetZones, getZoneType } from '../zone/target';
 import { isArray, takeRight } from 'lodash/fp';
 import { calculateBoolExpr, calculateNumberExpr } from '../expr';
-import {
-  getCardFromScope,
-  getPlayerFromScope,
-  getTargetPlayers,
-} from '../player/target';
+import { getCardFromScope, getTargetPlayers } from '../player/target';
 import { asArray, isInPlay } from '../utils';
 
 export function getTargetCard(target: CardTarget, ctx: ViewContext): CardId {

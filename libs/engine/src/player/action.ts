@@ -17,7 +17,6 @@ import {
   canCharacterDefend,
   canEnemyAttack,
 } from '../utils/combat';
-import { asArray } from '../utils';
 
 export function executePlayerAction(
   action: PlayerAction,

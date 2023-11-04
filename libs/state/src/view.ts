@@ -1,10 +1,4 @@
-import {
-  CardId,
-  Mark,
-  PlayerId,
-  PrintedProps,
-  ZoneId,
-} from '@card-engine-nx/basic';
+import { CardId, PlayerId, PrintedProps, ZoneId } from '@card-engine-nx/basic';
 import {
   CardModifier,
   Action,
@@ -68,7 +62,7 @@ export type CardView = {
   props: PrintedProps;
   zone: ZoneId;
   attachesTo?: CardTarget;
-  nextStage?: NextStage;  
+  nextStage?: NextStage;
   effects: string[];
   whenRevealed: Array<{ description: string; action: Action }>;
   travel: Action[];

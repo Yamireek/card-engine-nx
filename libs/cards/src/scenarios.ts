@@ -2,7 +2,7 @@ import { Scenario } from '@card-engine-nx/state';
 import * as quest from './quests';
 import * as set from './sets';
 import * as enemy from './enemies';
-import * as treachery from './treacheries';
+//import * as treachery from './treacheries';
 
 export const passageThroughMirkwood: Scenario = {
   name: 'Passage Through Mirkwood',

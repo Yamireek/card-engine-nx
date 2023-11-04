@@ -1,5 +1,5 @@
 import { CardId, PlayerId, keys, values } from '@card-engine-nx/basic';
-import { PlayerTarget, Scope } from '@card-engine-nx/state';
+import { PlayerTarget } from '@card-engine-nx/state';
 import { intersection, isArray, last, uniq } from 'lodash';
 import { ViewContext } from '../context';
 import { getTargetCard } from '../card';
