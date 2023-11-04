@@ -1,9 +1,9 @@
-import { HeroProps } from '@card-engine-nx/basic';
-import { CardDefinition } from '../card';
-import { Ability } from '../types';
+import { AllyProps } from '@card-engine-nx/basic';
+import { CardDefinition } from './types';
+import { Ability } from '../card/ability/types';
 
-export function hero(
-  props: Omit<HeroProps, 'type' | 'unique'>,
+export function ally(
+  props: Omit<AllyProps, 'type'>,
   ...abilities: Ability[]
 ): CardDefinition {
   return {
@@ -11,8 +11,7 @@ export function hero(
       ...props,
       sphere: [props.sphere],
       abilities,
-      type: 'hero',
-      unique: true,
+      type: 'ally',
     },
     back: {
       type: 'player_back',

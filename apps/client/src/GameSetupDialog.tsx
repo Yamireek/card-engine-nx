@@ -1,4 +1,4 @@
-import { keys } from '@card-engine-nx/basic';
+import { Difficulty, keys } from '@card-engine-nx/basic';
 import { core, decks } from '@card-engine-nx/cards';
 import {
   Button,
@@ -17,7 +17,6 @@ import {
   useFormContext,
 } from 'react-hook-form-mui';
 import { GameSetupData } from '@card-engine-nx/engine';
-import { Difficulty } from '@card-engine-nx/state';
 
 const GameSetupForm = () => {
   const form = useFormContext();

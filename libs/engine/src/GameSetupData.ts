@@ -1,4 +1,5 @@
-import { Difficulty, PlayerDeck, Scenario, State } from '@card-engine-nx/state';
+import { Difficulty } from '@card-engine-nx/basic';
+import { PlayerDeck, Scenario, State } from '@card-engine-nx/state';
 
 export type GameSetupData = ScenarioSetupData | { state: State };
 

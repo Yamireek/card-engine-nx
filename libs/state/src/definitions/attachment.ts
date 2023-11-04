@@ -1,9 +1,9 @@
-import { EventProps } from '@card-engine-nx/basic';
-import { CardDefinition } from '../card';
-import { Ability } from '../types';
+import { AttachmentProps } from '@card-engine-nx/basic';
+import { CardDefinition } from './types';
+import { Ability } from '../card/ability/types';
 
-export function event(
-  props: Omit<EventProps, 'type'>,
+export function attachment(
+  props: Omit<AttachmentProps, 'type'>,
   ...abilities: Ability[]
 ): CardDefinition {
   return {
@@ -11,8 +11,7 @@ export function event(
       ...props,
       sphere: [props.sphere],
       abilities,
-      type: 'event',
-      traits: [],
+      type: 'attachment',
     },
     back: {
       type: 'player_back',

@@ -88,3 +88,11 @@ export type Trait =
 export type Sphere = 'tactics' | 'spirit' | 'lore' | 'leadership' | 'neutral';
 
 export type Orientation = 'landscape' | 'portrait';
+
+export type CardNumProp = 'attack' | 'defense' | 'willpower';
+
+export type Difficulty = 'easy' | 'normal';
+
+export type LimitType = 'round' | 'phase';
+
+export type Until = 'end_of_phase' | 'end_of_round';

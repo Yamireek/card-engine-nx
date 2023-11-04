@@ -1,25 +1,24 @@
-import { TreacheryProps } from '@card-engine-nx/basic';
-import { CardDefinition } from '../card';
-import { Ability } from '../types';
+import { EnemyProps } from '@card-engine-nx/basic';
+import { CardDefinition } from './types';
+import { Ability } from '../card/ability/types';
 import { getShadowAbility } from './utils';
 
-export function treachery(
-  props: Omit<TreacheryProps, 'type'>,
+export function enemy(
+  props: Omit<EnemyProps, 'type'>,
   ...abilities: Ability[]
 ): CardDefinition {
   return {
     front: {
       ...props,
       abilities,
-      type: 'treachery',
       sphere: [],
-      traits: [],
+      type: 'enemy',
     },
     back: {
       type: 'encounter_back',
       abilities: [],
-      sphere: [],
       traits: [],
+      sphere: [],
     },
     shadow: getShadowAbility(abilities),
     orientation: 'portrait',

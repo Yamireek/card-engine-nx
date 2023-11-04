@@ -1,5 +1,5 @@
-import { CardDefinition } from '../card';
-import { Ability } from '../types';
+import { CardDefinition } from './types';
+import { Ability } from '../card/ability/types';
 
 export type QuestDefinition =
   | {

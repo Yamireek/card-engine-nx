@@ -1,6 +1,5 @@
-import { PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
-import { ZoneState } from './zone';
-import { LimitType } from './types';
+import { LimitType, PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
+import { ZoneState } from '../zone/state';
 
 export type PlayerState = {
   id: PlayerId;

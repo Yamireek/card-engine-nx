@@ -1,107 +1,19 @@
 import {
   CardId,
   GameZoneType,
+  LimitType,
   Phase,
   PlayerId,
-  PlayerZoneType,
 } from '@card-engine-nx/basic';
-import { CardDefinition, CardState } from './card';
-import { PlayerState } from './player';
-import { ZoneState } from './zone';
-import {
-  Action,
-  CardTarget,
-  CardModifier,
-  PlayerTarget,
-  Until,
-  BoolExpr,
-  LimitType,
-} from './types';
-import { PlayerModifier } from './view';
-
-export type Event =
-  | {
-      type: 'receivedDamage';
-      card: CardId;
-      damage: number;
-    }
-  | {
-      type: 'destroyed';
-      card: CardId;
-      attackers: CardId[];
-    }
-  | { type: 'declaredAsDefender'; card: CardId; attacker: CardId }
-  | { type: 'enteredPlay'; card: CardId }
-  | { type: 'played'; card: CardId }
-  | { type: 'leftPlay'; card: CardId }
-  | { type: 'revealed'; card: CardId }
-  | { type: 'commits'; card: CardId }
-  | { type: 'traveled'; card: CardId }
-  | { type: 'engaged'; card: CardId; player: PlayerId }
-  | { type: 'end_of_round' }
-  | { type: 'attacked'; card: CardId }
-  | { type: 'explored'; card: CardId }
-  | { type: 'attacks'; card: CardId }
-  | { type: 'shadow' }
-  | { type: 'whenRevealed' };
-
-export type PendingEffect =
-  | {
-      type: 'whenRevealed';
-      description: string;
-      whenRevealed: Action;
-      canceled?: true;
-    }
-  | {
-      type: 'shadow';
-      description: string;
-      shadow: Action;
-      canceled?: boolean;
-    };
-
-export type Choice =
-  | {
-      id: number;
-      title: string;
-      type: 'show';
-      cardId: CardId;
-    }
-  | {
-      id: number;
-      title: string;
-      type: 'actions';
-    }
-  | {
-      id: number;
-      player: PlayerId;
-      title: string;
-      type: 'single';
-      optional: boolean;
-      options: Array<{ title: string; action: Action; cardId?: CardId }>;
-    }
-  | {
-      id: number;
-      player: PlayerId;
-      title: string;
-      type: 'multi';
-      options: Array<{ title: string; action: Action; cardId?: CardId }>;
-    }
-  | {
-      id: number;
-      player: PlayerId;
-      title: string;
-      type: 'split';
-      min: number;
-      max: number;
-      count?: { min?: number; max?: number };
-      options: Array<{
-        title: string;
-        action: Action;
-        cardId: CardId;
-        min: number;
-        max: number;
-      }>;
-    };
+import { CardState } from './card/state';
+import { PlayerState } from './player/state';
+import { ZoneState } from './zone/state';
+import { Action } from './action';
+import { Choice } from './choice';
+import { GameModifier } from './modifier';
+import { PendingEffect } from './effect';
+import { Scope } from './scope/type';
+import { Event } from './event';
 
 export type State = {
   round: number;
@@ -133,42 +45,3 @@ export type State = {
   x?: number;
   scopes: Scope[];
 };
-
-export type Scope = {
-  x?: number;
-  card?: Record<string, CardId[]>;
-  player?: Record<string, PlayerId[]>;
-  event?: Event;
-  effect?: PendingEffect;
-};
-
-export type GameModifier =
-  | {
-      source: CardId;
-      card: CardTarget;
-      modifier: CardModifier;
-      condition?: BoolExpr;
-      until?: Until;
-    }
-  | {
-      source: CardId;
-      player: PlayerTarget;
-      modifier: PlayerModifier;
-      condition?: BoolExpr;
-      until?: Until;
-    };
-
-export type SimpleCardState =
-  | CardDefinition
-  | {
-      card: CardDefinition;
-      resources?: number;
-      progress?: number;
-      damage?: number;
-      exhausted?: boolean;
-      attachments?: CardDefinition[];
-    };
-
-export type SimpleState = {
-  players: Array<Partial<Record<PlayerZoneType, SimpleCardState[]>>>;
-} & Partial<Record<GameZoneType, SimpleCardState[]>>;

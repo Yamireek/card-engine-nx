@@ -1,5 +1,5 @@
-import { Shadow } from '../card';
-import { Ability } from '../types';
+import { Shadow } from '../card/ability/shadow';
+import { Ability } from '../card/ability/types';
 
 export function getShadowAbility(abilities: Ability[]): Shadow | undefined {
   const shadow = abilities.flatMap((a) => {

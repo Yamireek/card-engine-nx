@@ -60,6 +60,7 @@
     "@vitest/coverage-v8": "^0.34.4",
     "@vitest/ui": "0.32.0",
     "boardgame.io": "^0.50.2",
+    "create-ts-index": "^1.14.0",
     "esbuild": "0.19.2",
     "eslint": "8.46.0",
     "eslint-config-prettier": "8.1.0",

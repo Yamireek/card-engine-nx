@@ -1,6 +1,6 @@
 import { LocationProps } from '@card-engine-nx/basic';
-import { CardDefinition } from '../card';
-import { Ability } from '../types';
+import { CardDefinition } from './types';
+import { Ability } from '../card/ability/types';
 
 export function location(
   props: Omit<LocationProps, 'type'>,

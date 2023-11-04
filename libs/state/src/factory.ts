@@ -1,16 +1,10 @@
-import {
-  CardId,
-  GameZoneType,
-  PlayerId,
-  PlayerZoneType,
-  Side,
-  ZoneId,
-} from '@card-engine-nx/basic';
-import { SimpleCardState, SimpleState, State } from './state';
-import { Action } from './types';
-import { PlayerState } from './player';
-import { CardDefinition, CardState } from './card';
-import { ZoneState } from './zone';
+import { GameZoneType, PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
+import { State } from './state';
+import { SimpleCardState, SimpleState } from './simple';
+import { Action } from './action';
+import { ZoneState } from './zone/state';
+import { createCardState } from './card/factory';
+import { createPlayerState } from './player/factory';
 
 export function createState(initState?: SimpleState, program?: Action): State {
   const state: State = {
@@ -120,57 +114,4 @@ function addCard(
       }
     }
   }
-}
-
-export function createCardState(
-  id: CardId,
-  side: Side,
-  definition: CardDefinition,
-  owner: PlayerId | undefined,
-  zone: ZoneId
-): CardState {
-  return {
-    id,
-    token: {
-      damage: 0,
-      progress: 0,
-      resources: 0,
-    },
-    mark: {
-      questing: false,
-      attacking: false,
-      defending: false,
-      attacked: false,
-    },
-    sideUp: side,
-    tapped: false,
-    definition: definition,
-    attachments: [],
-    shadows: [],
-    owner: owner,
-    controller: owner,
-    limitUses: {
-      phase: {},
-      round: {},
-    },
-    keywords: {},
-    zone,
-  };
-}
-
-export function createPlayerState(playerId: PlayerId): PlayerState {
-  return {
-    id: playerId,
-    thread: 0,
-    zones: {
-      hand: { cards: [] },
-      library: { cards: [] },
-      playerArea: { cards: [] },
-      discardPile: { cards: [] },
-      engaged: { cards: [] },
-    },
-    flags: {},
-    eliminated: false,
-    limits: {},
-  };
 }

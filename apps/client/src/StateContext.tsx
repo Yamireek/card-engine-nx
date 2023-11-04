@@ -1,12 +1,11 @@
 import {
   Action,
-  Difficulty,
   PlayerDeck,
   Scenario,
   State,
   View,
 } from '@card-engine-nx/state';
-import { PlayerId } from '@card-engine-nx/basic';
+import { Difficulty, PlayerId } from '@card-engine-nx/basic';
 import { createContext, useContext } from 'react';
 
 export type Moves = {

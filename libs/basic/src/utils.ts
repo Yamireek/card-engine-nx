@@ -1,4 +1,4 @@
-import { PlayerId } from '.';
+import { PlayerId, ZoneId } from '.';
 
 export function values<TK extends string | number, TI>(
   records?: Partial<Record<TK, TI>>
@@ -42,4 +42,24 @@ export function validPlayerId(id?: number | string | null): PlayerId {
 
 export function capitalizeFirst(string: string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function getZoneIdString(zoneId: ZoneId) {
+  if (typeof zoneId === 'string') {
+    return zoneId;
+  } else {
+    return `${zoneId.player}-${zoneId.type}`;
+  }
+}
+
+export function zonesEqual(a: ZoneId, b: ZoneId) {
+  if (a === b) {
+    return true;
+  }
+
+  if (typeof a !== 'string' && typeof b !== 'string') {
+    return a.player === b.player && a.type === b.type;
+  }
+
+  return false;
 }
