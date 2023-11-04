@@ -42,7 +42,7 @@ export function checkCardPredicate(
   }
 
   if (target === 'self' || target === 'target') {
-    const ids = getCardFromScope([...ctx.state.scopes, ...ctx.scopes], target);
+    const ids = getCardFromScope(ctx, target);
     return (ids && ids.includes(state.id)) ?? false;
   }
 
@@ -224,10 +224,7 @@ export function checkCardPredicate(
   }
 
   if (target.var) {
-    const vars = getCardFromScope(
-      [...ctx.state.scopes, ...ctx.scopes],
-      target.var
-    );
+    const vars = getCardFromScope(ctx, target.var);
     return (vars && vars.includes(state.id)) ?? false;
   }
 
@@ -280,7 +277,7 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   }
 
   if (typeof target !== 'string' && target.var) {
-    const inScope = getCardFromScope(ctx.state.scopes, target.var);
+    const inScope = getCardFromScope(ctx, target.var);
     if (inScope) {
       return inScope;
     }

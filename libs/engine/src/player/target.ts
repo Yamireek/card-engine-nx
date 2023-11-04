@@ -6,18 +6,20 @@ import { getTargetCard } from '../card';
 import { max, reverse } from 'lodash/fp';
 
 export function getPlayerFromScope(
-  scopes: Scope[],
+  ctx: ViewContext,
   name: string
 ): PlayerId[] | undefined {
+  const scopes = [...ctx.state.scopes, ...ctx.scopes];
   const reversed = reverse(scopes);
   const scope = reversed.find((s) => s.player && s.player[name]);
   return scope?.player?.[name];
 }
 
 export function getCardFromScope(
-  scopes: Scope[],
+  ctx: ViewContext,
   name: string
 ): CardId[] | undefined {
+  const scopes = [...ctx.state.scopes, ...ctx.scopes];
   const reversed = reverse(scopes);
   const scope = reversed.find((s) => s.card && s.card[name]);
   return scope?.card?.[name];
@@ -52,16 +54,11 @@ export function getTargetPlayers(
     target === 'target' ||
     target === 'defending'
   ) {
-    const player = getPlayerFromScope(
-      [...ctx.state.scopes, ...ctx.scopes],
-      target
-    );
+    const player = getPlayerFromScope(ctx, target);
 
     if (player) {
       return player;
     }
-
-    debugger;
 
     throw new Error(`no ${target} player in scope`);
   }

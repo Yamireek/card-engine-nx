@@ -1,5 +1,5 @@
 import { CardState, CardAction, Action } from '@card-engine-nx/state';
-import { ExecutionContext, ViewContext } from '../context';
+import { ExecutionContext, ViewContext, updatedCtx } from '../context';
 import { uiEvent } from '../eventFactories';
 import {
   getCardZoneId,
@@ -600,13 +600,10 @@ export function executeCardAction(
 
   if (action.move) {
     const moveCtx: ViewContext = card.controller
-      ? {
-          ...ctx,
-          scopes: [
-            ...ctx.scopes,
-            { player: { controller: asArray(card.controller) } },
-          ],
-        }
+      ? updatedCtx(ctx, {
+          var: 'controller',
+          player: card.controller,
+        })
       : ctx;
 
     const fromId = action.move.from

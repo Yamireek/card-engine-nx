@@ -1,5 +1,5 @@
 import { Action, CostModifier, PlayerAction } from '@card-engine-nx/state';
-import { ViewContext } from './context';
+import { ViewContext, updatedCtx } from './context';
 import { getTargetCards } from './card';
 import { sumBy } from 'lodash';
 import { CardId, PlayerId } from '@card-engine-nx/basic';
@@ -52,22 +52,22 @@ export function canExecute(
     }
 
     if ('useScope' in action) {
-      const scope = {};
-      executeScopeAction(action.useScope, scope, ctx);
-      return canExecute(action.action, payment, {
-        ...ctx,
-        scopes: [...ctx.scopes, scope],
-      });
+      return canExecute(
+        action.action,
+        payment,
+        updatedCtx(ctx, action.useScope)
+      );
     }
 
     if (action.player) {
       const playerAction = action.player;
       const players = getTargetPlayers(playerAction.target, ctx);
       return players.some((p) =>
-        canPlayerExecute(playerAction.action, p, {
-          ...ctx,
-          scopes: [...ctx.scopes, { player: { target: asArray(p) } }],
-        })
+        canPlayerExecute(
+          playerAction.action,
+          p,
+          updatedCtx(ctx, { var: 'target', player: p })
+        )
       );
     }
 
@@ -75,10 +75,11 @@ export function canExecute(
       const cardAction = action.card;
       const cards = getTargetCards(cardAction.target, ctx);
       return cards.some((card) =>
-        canCardExecute(cardAction.action, card, {
-          ...ctx,
-          scopes: [...ctx.scopes, { card: { target: asArray(card) } }],
-        })
+        canCardExecute(
+          cardAction.action,
+          card,
+          updatedCtx(ctx, { var: 'target', card })
+        )
       );
     }
 
@@ -168,10 +169,11 @@ export function canPlayerExecute(
       const targets = getTargetCards(action.chooseCardActions.target, ctx);
       const cardAction = action.chooseCardActions.action;
       return targets.some((id) =>
-        canCardExecute(cardAction, id, {
-          ...ctx,
-          scopes: [...ctx.scopes, { card: { target: asArray(id) } }],
-        })
+        canCardExecute(
+          cardAction,
+          id,
+          updatedCtx(ctx, { var: 'target', card: id })
+        )
       );
     }
 

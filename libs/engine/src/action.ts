@@ -13,7 +13,7 @@ import { values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard, asArray } from './utils';
 import { executeCardAction, getTargetCard, getTargetCards } from './card';
 import { calculateBoolExpr, calculateNumberExpr } from './expr';
-import { ExecutionContext, ViewContext } from './context';
+import { ExecutionContext, ViewContext, updatedCtx } from './context';
 import { ScenarioSetupData } from './GameSetupData';
 import { canExecute } from './resolution';
 
@@ -527,10 +527,11 @@ export function executeAction(
       const card = ctx.state.cards[id];
       if (card) {
         results.push(
-          executeCardAction(action.card.action, card, {
-            ...ctx,
-            scopes: [...ctx.scopes, { card: { target: asArray(id) } }],
-          }) ?? false
+          executeCardAction(
+            action.card.action,
+            card,
+            updatedCtx(ctx, { var: 'target', card: id })
+          ) ?? false
         );
       } else {
         throw new Error('card not found');
@@ -747,13 +748,13 @@ export function executeAction(
       .filter(
         (r) =>
           !r.condition ||
-          calculateBoolExpr(r.condition, {
-            ...ctx,
-            scopes: [
-              ...ctx.scopes,
-              { card: { target: asArray(r.card), self: asArray(r.source) } },
-            ],
-          })
+          calculateBoolExpr(
+            r.condition,
+            updatedCtx(ctx, [
+              { var: 'target', card: r.card },
+              { var: 'self', card: r.source },
+            ])
+          )
       );
 
     const optional = reponses
@@ -762,13 +763,13 @@ export function executeAction(
       .filter(
         (r) =>
           !r.condition ||
-          calculateBoolExpr(r.condition, {
-            ...ctx,
-            scopes: [
-              ...ctx.scopes,
-              { card: { target: asArray(r.card), self: asArray(r.source) } },
-            ],
-          })
+          calculateBoolExpr(
+            r.condition,
+            updatedCtx(ctx, [
+              { var: 'target', card: r.card },
+              { var: 'self', card: r.source },
+            ])
+          )
       );
 
     if (optional.length > 0) {

@@ -7,7 +7,7 @@ import {
   Event,
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../expr';
-import { ExecutionContext } from '../context';
+import { ExecutionContext, updatedCtx } from '../context';
 import { getTargetCard, getTargetCards } from '../card';
 import { isArray, max, sum, values } from 'lodash/fp';
 import { getTargetPlayers } from './target';
@@ -508,10 +508,11 @@ export function executePlayerAction(
         optional: action.choosePlayerActions.optional ?? false,
         options: playerIds
           .filter((p) =>
-            canPlayerExecute(playerAction, p, {
-              ...ctx,
-              scopes: [...ctx.scopes, { player: { target: asArray(p) } }],
-            })
+            canPlayerExecute(
+              playerAction,
+              p,
+              updatedCtx(ctx, { var: 'target', player: p })
+            )
           )
           .map((id) => ({
             title: id.toString(),
