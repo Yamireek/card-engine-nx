@@ -1,7 +1,7 @@
-import * as ally from '../allies';
-import * as attachment from '../attachments';
-import * as events from '../events';
-import * as hero from '../heroes';
+import * as ally from '../cards/allies';
+import * as attachment from '../cards/attachments';
+import * as events from '../cards/events';
+import * as hero from '../cards/heroes';
 import { PlayerDeck, event } from '@card-engine-nx/state';
 
 // https://www.youtube.com/watch?v=Pyk_PrY58g8

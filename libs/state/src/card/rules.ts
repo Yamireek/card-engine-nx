@@ -1,4 +1,3 @@
-
 export type CardRules = {
   attacksStagingArea?: true;
   noThreatContribution?: true;

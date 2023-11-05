@@ -1,4 +1,4 @@
-import { useTextures } from "@card-engine-nx/ui";
+import { useTextures } from '@card-engine-nx/ui';
 
 export const Board3d = () => {
   const { material } = useTextures();

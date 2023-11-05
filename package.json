@@ -11,6 +11,7 @@
     "storybook": "nx run ui:storybook",
     "test": "npx vitest",
     "test-ui": "npx vitest --coverage --ui",
+    "prettier": "npx prettier -cw .",
     "postinstall": "patch-package"
   },
   "private": true,

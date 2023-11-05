@@ -1,12 +1,12 @@
-import * as ally from './allies';
-import * as attachment from './attachments';
-import * as enemy from './enemies';
-import * as event from './events';
-import * as hero from './heroes';
-import * as location from './locations';
-import * as quest from './quests';
+import * as ally from './cards/allies';
+import * as attachment from './cards/attachments';
+import * as enemy from './cards/enemies';
+import * as event from './cards/events';
+import * as hero from './cards/heroes';
+import * as location from './cards/locations';
+import * as quest from './cards/quests';
 import * as scenario from './scenarios';
-import * as treachery from './treacheries';
+import * as treachery from './cards/treacheries';
 import * as set from './sets';
 export * as decks from './decks/index';
 
