@@ -5,16 +5,15 @@ import {
   createCardState,
 } from '@card-engine-nx/state';
 import {
-  CardId,
   GameZoneType,
   PlayerId,
   PlayerZoneType,
   Side,
 } from '@card-engine-nx/basic';
-import { executeAction } from './action';
-import { ExecutionContext, ViewContext } from './context';
-import { uiEvent } from './eventFactories';
-import { UIEvents } from './uiEvents';
+import { executeAction } from './action/execute';
+import { ExecutionContext } from './context/execution';
+import { uiEvent } from './events/eventFactories';
+import { UIEvents } from './events/uiEvents';
 import { createView } from './view';
 import { Random } from './utils/random';
 import { isArray } from 'lodash/fp';
@@ -59,7 +58,7 @@ export function nextStep(ctx: ExecutionContext): boolean {
   }
 }
 
-export function crateExecutionContext(
+export function createExecutionContext(
   state: State,
   events: UIEvents,
   random: Random
@@ -149,7 +148,7 @@ export function advanceToChoiceState(
     }
 
     try {
-      const ctx = crateExecutionContext(state, events, random);
+      const ctx = createExecutionContext(state, events, random);
       while (ctx !== undefined) {
         const newView = nextStep(ctx);
         if (newView || ctx.state.choice || ctx.state.next.length === 0) {
@@ -179,18 +178,6 @@ export function single<T>(items: T[]): T {
     throw new Error('expecting 1 item');
   }
 }
-export function isInPlay(zone: PlayerZoneType | GameZoneType): boolean {
-  switch (zone) {
-    case 'activeLocation':
-    case 'engaged':
-    case 'playerArea':
-    case 'questArea':
-    case 'stagingArea':
-      return true;
-    default:
-      return false;
-  }
-}
 
 export function asArray<T>(item?: T | T[]): T[] {
   if (!item) {
@@ -202,16 +189,4 @@ export function asArray<T>(item?: T | T[]): T[] {
   } else {
     return [item];
   }
-}
-
-export function getCard(id: CardId, ctx: ViewContext) {
-  const state = ctx.state.cards[id];
-  const view = ctx.view.cards[id];
-  return { id, state, view };
-}
-
-export function getPlayer(id: PlayerId, ctx: ViewContext) {
-  const state = ctx.state.players[id];
-  const view = ctx.view.players[id];
-  return { id, state, view };
 }

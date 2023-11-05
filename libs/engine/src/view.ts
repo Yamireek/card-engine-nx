@@ -1,21 +1,19 @@
 import { State, View } from '@card-engine-nx/state';
 import { mapValues, values } from 'lodash';
-import {
-  createModifiers,
-  createPlayAllyAction,
-  createPlayAttachmentAction,
-} from './card/ability';
-import { applyModifier } from './card/modifiers';
+import { createModifiers } from './card/modifier/create';
+import { createPlayAttachmentAction } from './card/action/play/attachment';
+import { createPlayAllyAction } from './card/action/play/ally';
+import { applyModifier } from './card/modifier/apply';
 import { createCardView } from './card/view';
-import { canExecute } from './resolution';
+import { canExecute } from './action/executable';
 import { createPlayerView } from './player/view';
-import { applyPlayerModifier } from './player/modifier';
-import { getTargetCards } from './card';
-import { getTargetPlayers } from './player/target';
-import { calculateBoolExpr } from './expr';
-import { ViewContext } from './context';
-import { getZoneType } from './zone/target';
+import { applyPlayerModifier } from './player/modifier/apply';
+import { getTargetPlayers } from './player/target/multi';
+import { calculateBoolExpr } from './expression/bool/calculate';
+import { ViewContext } from './context/view';
+import { getZoneType } from './zone/utils';
 import { asArray } from './utils';
+import { getTargetCards } from './card/target/multi';
 
 export function createView(state: State): View {
   const view: View = {
