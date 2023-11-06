@@ -559,23 +559,16 @@ export function executePlayerAction(
   if (action.chooseX) {
     const min = calculateNumberExpr(action.chooseX.min, ctx);
     const max = calculateNumberExpr(action.chooseX.max, ctx);
-    ctx.state.next.unshift(
-      'stateCheck',
-      'clearX',
-      {
-        choice: {
-          id: ctx.state.nextId++,
-          player: player.id,
-          title: 'Choose X',
-          type: 'split',
-          min,
-          max,
-          options: [{ min, max, title: 'X', cardId: 1, action: 'incX' }], // TODO optional cardId
-        },
+    ctx.state.next.unshift('stateCheck', {
+      choice: {
+        id: ctx.state.nextId++,
+        player: player.id,
+        type: 'X',
+        min,
+        max,
+        action: action.chooseX.action,
       },
-      action.chooseX.action,
-      'clearX'
-    );
+    });
     return;
   }
 

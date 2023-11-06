@@ -43,4 +43,12 @@ export type Choice =
         min: number;
         max: number;
       }>;
+    }
+  | {
+      id: number;
+      player: PlayerId;
+      type: 'X';
+      min: number;
+      max: number;
+      action: Action;
     };

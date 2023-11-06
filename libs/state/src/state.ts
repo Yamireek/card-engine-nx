@@ -41,7 +41,6 @@ export type State = {
     type: LimitType;
   }>;
   event: Event[];
-  modifiers: GameModifier[];
-  x?: number;
+  modifiers: GameModifier[];  
   scopes: Scope[];
 };

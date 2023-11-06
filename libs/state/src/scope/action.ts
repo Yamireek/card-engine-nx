@@ -5,4 +5,5 @@ export type ScopeAction =
   | ScopeAction[]
   | { var: string; card: CardTarget }
   | { var: string; player: PlayerTarget }
-  | { event: Event };
+  | { event: Event }
+  | { x: number };

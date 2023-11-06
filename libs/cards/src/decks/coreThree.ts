@@ -12,6 +12,22 @@ export const testDeck: PlayerDeck = {
   library: [
     ally.ereborHammersmith,
     events.sneakAttack,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
+    events.gandalfsSearch,
     event(
       { name: 'Dwarven Tomb', cost: 0, sphere: 'leadership' },
       {

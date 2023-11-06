@@ -162,5 +162,26 @@ export const GameDialogs = () => {
     );
   }
 
+  if (state.choice.type === 'X') {
+    return (
+      <ChooseDistributionDialog
+        key={state.choice.id.toString()}
+        title="Choose X"
+        total={{ min: state.choice.min, max: state.choice.max }}
+        choices={[
+          {
+            id: 0,
+            min: state.choice.min,
+            max: state.choice.max,
+            title: 'X',
+          },
+        ]}
+        onSubmit={(amounts) => {
+          moves.split(...amounts);
+        }}
+      />
+    );
+  }
+
   return null;
 };

@@ -36,5 +36,10 @@ export function executeScopeAction(
     return;
   }
 
-  throw new Error(JSON.stringify(action, null, 1));
+  if ('x' in action) {
+    scope.x = action.x;
+    return;
+  }
+
+  throw new Error(`unknown scope action: ${JSON.stringify(action, null, 1)}`);
 }

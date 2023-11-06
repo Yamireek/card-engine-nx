@@ -7,6 +7,7 @@ import { last, min, multiply } from 'lodash/fp';
 import { getTargetPlayers } from '../../player/target/multi';
 import { calculatePlayerExpr } from '../../player/expression/calculate';
 import { calculateBoolExpr } from '../bool/calculate';
+import { getFromScope } from '../../scope/utils';
 
 export function calculateNumberExpr(
   expr: NumberExpr,
@@ -28,10 +29,11 @@ export function calculateNumberExpr(
   }
 
   if (expr === 'X') {
-    if (ctx.state.x === undefined) {
+    const x = getFromScope(ctx, (s) => s.x);
+    if (x === undefined) {
       throw new Error('no x value');
     }
-    return ctx.state.x;
+    return x;
   }
 
   if (expr.card) {

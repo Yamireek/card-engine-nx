@@ -354,17 +354,6 @@ export function executeAction(
     return;
   }
 
-  if (action === 'incX') {
-    const x = ctx.state.x ?? 0;
-    ctx.state.x = x + 1;
-    return;
-  }
-
-  if (action === 'clearX') {
-    ctx.state.x = undefined;
-    return;
-  }
-
   if (action === 'endScope') {
     ctx.state.scopes.pop();
     return;

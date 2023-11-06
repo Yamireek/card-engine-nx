@@ -30,8 +30,6 @@ export type Action =
   | 'loose'
   | 'stackPop'
   | 'stateCheck'
-  | 'incX'
-  | 'clearX'
   | { useScope: ScopeAction; action: Action }
   | {
       player: PlayerTarget;

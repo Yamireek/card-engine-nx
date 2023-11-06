@@ -35,6 +35,10 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
       return INVALID_MOVE;
     }
 
+    if (G.choice.type === 'X') {
+      return INVALID_MOVE;
+    }
+
     const options = G.choice.options;
     const choices = choosen.map((index) => options[index]);
     G.choice = undefined;
@@ -59,29 +63,39 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
   };
 
   const split: Move<State> = ({ G, random }, ...amounts: number[]) => {
-    if (!G.choice || G.choice.type !== 'split') {
+    if (!G.choice || (G.choice.type !== 'split' && G.choice.type !== 'X')) {
       return INVALID_MOVE;
     }
 
-    const options = G.choice.options;
-    G.choice = undefined;
-    G.next.unshift(
-      ...options.flatMap((o, i) => {
-        const amount = amounts[i];
-        if (amount > 0) {
-          return [
-            {
-              repeat: {
-                amount,
-                action: o.action,
+    if (G.choice.type === 'X') {
+      const action: Action = {
+        useScope: { x: amounts[0] },
+        action: G.choice.action,
+      };
+      G.choice = undefined;
+      G.next.unshift(action);
+    } else {
+      const options = G.choice.options;
+      G.choice = undefined;
+      G.next.unshift(
+        ...options.flatMap((o, i) => {
+          const amount = amounts[i];
+          if (amount > 0) {
+            return [
+              {
+                repeat: {
+                  amount,
+                  action: o.action,
+                },
               },
-            },
-          ];
-        } else {
-          return [];
-        }
-      })
-    );
+            ];
+          } else {
+            return [];
+          }
+        })
+      );
+    }
+
     advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
   };
 
@@ -92,7 +106,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
 
     const view = createView(G);
     const action = view.actions[index];
-    const title = G.choice.title;
+    const title = 'title' in G.choice ? G.choice.title : '';
     G.choice = undefined;
     G.next.unshift({ playerActions: title });
     G.next.unshift(action.action);
