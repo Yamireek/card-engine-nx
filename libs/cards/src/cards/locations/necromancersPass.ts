@@ -11,13 +11,11 @@ export const necromancersPass = location(
     description:
       'Travel: The first player must discard 2 cards from his hand at random to travel here.',
     travel: {
-      player: {
-        target: 'first',
-        action: {
-          discard: {
-            amount: 2,
-            target: 'random',
-          },
+      player: 'first',
+      action: {
+        discard: {
+          amount: 2,
+          target: 'random',
         },
       },
     },

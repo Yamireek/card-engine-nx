@@ -10,16 +10,14 @@ export const beornsHospitality = event(
     description:
       'Action: Choose a player. Heal all damage on each hero controlled by that player.',
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          choosePlayerActions: {
-            title: 'Choose player',
-            target: 'each',
-            action: {
-              controlled: {
-                heal: 'all',
-              },
+      player: 'controller',
+      action: {
+        choosePlayerActions: {
+          title: 'Choose player',
+          target: 'each',
+          action: {
+            controlled: {
+              heal: 'all',
             },
           },
         },

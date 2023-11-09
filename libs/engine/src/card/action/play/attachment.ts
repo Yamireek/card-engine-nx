@@ -9,24 +9,20 @@ export function createPlayAttachmentAction(
   self: CardId
 ): Action {
   const payment: Action = {
-    player: {
-      target: owner,
-      action: { payResources: { amount: cost, sphere } },
-    },
+    player: owner,
+    action: { payResources: { amount: cost, sphere } },
   };
 
   const attachTo: Action = {
-    player: {
-      target: owner,
-      action: {
-        chooseCardActions: {
-          title: 'Choose target for attachment',
-          target: {
-            and: [attachesTo, 'inAPlay'],
-          },
-          action: {
-            attachCard: self,
-          },
+    player: owner,
+    action: {
+      chooseCardActions: {
+        title: 'Choose target for attachment',
+        target: {
+          and: [attachesTo, 'inAPlay'],
+        },
+        action: {
+          attachCard: self,
         },
       },
     },

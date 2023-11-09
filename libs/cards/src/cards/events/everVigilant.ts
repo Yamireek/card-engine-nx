@@ -9,14 +9,12 @@ export const everVigilant = event(
   {
     description: 'Action: Choose and ready 1 ally card.',
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          chooseCardActions: {
-            title: 'Choose ally to ready',
-            target: { type: 'ally' },
-            action: 'ready',
-          },
+      player: 'controller',
+      action: {
+        chooseCardActions: {
+          title: 'Choose ally to ready',
+          target: { type: 'ally' },
+          action: 'ready',
         },
       },
     },

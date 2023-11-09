@@ -14,17 +14,15 @@ export const blackForestBats = enemy(
     description:
       'When Revealed: Each player must choose 1 character currently committed to a quest, and remove that character from the quest. (The chosen character does not ready.)',
     whenRevealed: {
-      player: {
-        target: 'each',
-        action: {
-          chooseCardActions: {
-            title: 'Choose character to remove from quest',
-            target: {
-              mark: 'questing',
-            },
-            action: {
-              clear: 'questing',
-            },
+      player: 'each',
+      action: {
+        chooseCardActions: {
+          title: 'Choose character to remove from quest',
+          target: {
+            mark: 'questing',
+          },
+          action: {
+            clear: 'questing',
           },
         },
       },

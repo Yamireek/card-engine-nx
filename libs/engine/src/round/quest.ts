@@ -3,10 +3,8 @@ import { Action } from '@card-engine-nx/state';
 export const phaseQuest: Action = [
   { beginPhase: 'quest' },
   {
-    player: {
-      target: 'each',
-      action: 'commitCharactersToQuest',
-    },
+    player: 'each',
+    action: 'commitCharactersToQuest',
   },
   'sendCommitedEvents',
   { playerActions: 'Staging' },

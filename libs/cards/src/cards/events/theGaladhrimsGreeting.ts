@@ -10,42 +10,36 @@ export const theGaladhrimsGreeting = event(
     description:
       "Action: Reduce one player's threat by 6, or reduce each player's threat by 2.",
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          chooseActions: {
-            title: 'Choose one',
-            actions: [
-              {
-                title: "Reduce one player's threat by 6",
+      player: 'controller',
+      action: {
+        chooseActions: {
+          title: 'Choose one',
+          actions: [
+            {
+              title: "Reduce one player's threat by 6",
+              action: {
+                player: 'controller',
                 action: {
-                  player: {
-                    target: 'controller',
-                    action: {
-                      choosePlayerActions: {
-                        title: 'Choose player',
-                        target: 'each',
-                        action: {
-                          incrementThreat: -6,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-              {
-                title: "Reduce each player's threat by 2.",
-                action: {
-                  player: {
+                  choosePlayerActions: {
+                    title: 'Choose player',
                     target: 'each',
                     action: {
-                      incrementThreat: -2,
+                      incrementThreat: -6,
                     },
                   },
                 },
               },
-            ],
-          },
+            },
+            {
+              title: "Reduce each player's threat by 2.",
+              action: {
+                player: 'each',
+                action: {
+                  incrementThreat: -2,
+                },
+              },
+            },
+          ],
         },
       },
     },

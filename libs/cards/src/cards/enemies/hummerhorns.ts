@@ -18,15 +18,13 @@ export const hummerhorns = enemy(
     forced: {
       event: 'engaged',
       action: {
-        player: {
-          target: 'event',
-          action: {
-            chooseCardActions: {
-              title: 'Choose hero to deal 5 damage',
-              target: { type: 'hero', controller: 'event' },
-              action: {
-                dealDamage: 5,
-              },
+        player: 'event',
+        action: {
+          chooseCardActions: {
+            title: 'Choose hero to deal 5 damage',
+            target: { type: 'hero', controller: 'event' },
+            action: {
+              dealDamage: 5,
             },
           },
         },

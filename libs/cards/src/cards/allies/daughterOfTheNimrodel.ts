@@ -18,14 +18,12 @@ export const daughterOfTheNimrodel = ally(
     action: [
       { card: { target: 'self', action: 'exhaust' } },
       {
-        player: {
-          target: 'controller',
-          action: {
-            chooseCardActions: {
-              title: 'Choose hero to heal',
-              target: { type: 'hero' },
-              action: { heal: 2 },
-            },
+        player: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose hero to heal',
+            target: { type: 'hero' },
+            action: { heal: 2 },
           },
         },
       },

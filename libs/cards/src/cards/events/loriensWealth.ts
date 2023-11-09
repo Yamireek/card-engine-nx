@@ -9,15 +9,13 @@ export const loriensWealth = event(
   {
     description: 'Action: Choose a player. That player draws 3 cards.',
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          choosePlayerActions: {
-            title: 'Choose player',
-            target: 'each',
-            action: {
-              draw: 3,
-            },
+      player: 'controller',
+      action: {
+        choosePlayerActions: {
+          title: 'Choose player',
+          target: 'each',
+          action: {
+            draw: 3,
           },
         },
       },

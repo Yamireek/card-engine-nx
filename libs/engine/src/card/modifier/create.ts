@@ -346,28 +346,26 @@ export function createModifiers(
             modifier: {
               description: `Play attachment ${name}`,
               action: {
-                player: {
-                  target: controller,
-                  action: [
-                    {
-                      card: {
-                        target: self,
-                        action: {
-                          payCost: {},
-                        },
+                player: controller,
+                action: [
+                  {
+                    card: {
+                      target: self,
+                      action: {
+                        payCost: {},
                       },
                     },
-                    {
-                      chooseCardActions: {
-                        title: 'Choose target for attachment',
-                        target: ability.attachesTo,
-                        action: {
-                          attachCard: self,
-                        },
+                  },
+                  {
+                    chooseCardActions: {
+                      title: 'Choose target for attachment',
+                      target: ability.attachesTo,
+                      action: {
+                        attachCard: self,
                       },
                     },
-                  ],
-                },
+                  },
+                ],
               },
             },
           },

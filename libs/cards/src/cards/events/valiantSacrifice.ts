@@ -13,11 +13,9 @@ export const valiantSacrifice = event(
     response: {
       event: 'leftPlay',
       action: {
-        player: {
-          target: { controllerOf: 'target' },
-          action: {
-            draw: 2,
-          },
+        player: { controllerOf: 'target' },
+        action: {
+          draw: 2,
         },
       },
     },

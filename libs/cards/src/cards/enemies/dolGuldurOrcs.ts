@@ -14,15 +14,13 @@ export const dolGuldurOrcs = enemy(
     description:
       'When Revealed: The first player chooses 1 character currently committed to a quest. Deal 2 damage to that character.',
     whenRevealed: {
-      player: {
-        target: 'first',
-        action: {
-          chooseCardActions: {
-            title: 'Choose character for 2 damage',
-            target: { mark: 'questing' },
-            action: {
-              dealDamage: 2,
-            },
+      player: 'first',
+      action: {
+        chooseCardActions: {
+          title: 'Choose character for 2 damage',
+          target: { mark: 'questing' },
+          action: {
+            dealDamage: 2,
           },
         },
       },

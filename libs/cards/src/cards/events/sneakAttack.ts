@@ -11,21 +11,19 @@ export const sneakAttack = event(
       'Action: Put 1 ally card into play from your hand. At the end of the phase, if that ally is still in play, return it to your hand.',
     action: [
       {
-        player: {
-          target: 'controller',
-          action: {
-            chooseCardActions: {
-              title: 'Choose ally to put in play',
-              target: { type: 'ally', zoneType: 'hand' },
-              action: [
-                {
-                  putInPlay: 'controller',
-                },
-                {
-                  mark: 'sneak.attack',
-                },
-              ],
-            },
+        player: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose ally to put in play',
+            target: { type: 'ally', zoneType: 'hand' },
+            action: [
+              {
+                putInPlay: 'controller',
+              },
+              {
+                mark: 'sneak.attack',
+              },
+            ],
           },
         },
       },

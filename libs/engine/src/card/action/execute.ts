@@ -118,10 +118,8 @@ export function executeCardAction(
           },
         },
         {
-          player: {
-            target: card.owner,
-            action: 'shuffleLibrary',
-          },
+          player: card.owner,
+          action: 'shuffleLibrary',
         }
       );
     }
@@ -452,10 +450,8 @@ export function executeCardAction(
     const payCostAction = createPayCostAction(card.id, action.payCost, ctx);
     if (payCostAction) {
       ctx.state.next.unshift({
-        player: {
-          target: controller,
-          action: payCostAction,
-        },
+        player: controller,
+        action: payCostAction,
       });
     }
     return;
@@ -469,24 +465,22 @@ export function executeCardAction(
     } else {
       if (card.controller) {
         ctx.state.next.unshift({
-          player: {
-            target: card.controller,
-            action: {
-              chooseActions: {
-                title: 'Pay for refresh?',
-                actions: [
-                  {
-                    title: 'Yes',
-                    action: {
-                      card: {
-                        target: card.id,
-                        action: [...cv.refreshCost, 'ready'],
-                      },
+          player: card.controller,
+          action: {
+            chooseActions: {
+              title: 'Pay for refresh?',
+              actions: [
+                {
+                  title: 'Yes',
+                  action: {
+                    card: {
+                      target: card.id,
+                      action: [...cv.refreshCost, 'ready'],
                     },
                   },
-                ],
-                optional: true,
-              },
+                },
+              ],
+              optional: true,
             },
           },
         });
@@ -729,20 +723,16 @@ export function executeCardAction(
       },
       { playerActions: 'Declare defender' },
       {
-        player: {
-          target: action.resolveEnemyAttacking,
-          action: 'declareDefender',
-        },
+        player: action.resolveEnemyAttacking,
+        action: 'declareDefender',
       },
       {
         card: card.id,
         action: 'resolveShadowEffects',
       },
       {
-        player: {
-          target: action.resolveEnemyAttacking,
-          action: 'determineCombatDamage',
-        },
+        player: action.resolveEnemyAttacking,
+        action: 'determineCombatDamage',
       },
       { clearMarks: 'attacking' },
       { clearMarks: 'defending' },
@@ -762,19 +752,15 @@ export function executeCardAction(
       { card: { target: enemy, action: { mark: 'defending' } } },
       { playerActions: 'Declare attackers' },
       {
-        player: {
-          target: action.resolvePlayerAttacking,
-          action: {
-            declareAttackers: enemy,
-          },
+        player: action.resolvePlayerAttacking,
+        action: {
+          declareAttackers: enemy,
         },
       },
       { playerActions: 'Determine combat damage' },
       {
-        player: {
-          target: action.resolvePlayerAttacking,
-          action: 'determineCombatDamage',
-        },
+        player: action.resolvePlayerAttacking,
+        action: 'determineCombatDamage',
       },
       { clearMarks: 'attacking' },
       { clearMarks: 'defending' },

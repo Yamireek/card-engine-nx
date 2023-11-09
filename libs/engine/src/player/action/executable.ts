@@ -150,10 +150,8 @@ export function canPlayerExecute(
     if (action.player) {
       return canExecute(
         {
-          player: {
-            target: action.player.target,
-            action: action.player.action,
-          },
+          player: action.player.target,
+          action: action.player.action,
         },
         false,
         ctx

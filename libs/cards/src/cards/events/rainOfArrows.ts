@@ -25,15 +25,13 @@ export const rainOfArrows = event(
           },
         },
         effect: {
-          player: {
-            target: 'controller',
-            action: {
-              choosePlayerActions: {
-                title: 'Choose player',
-                target: 'each',
-                action: {
-                  engaged: { dealDamage: 1 },
-                },
+          player: 'controller',
+          action: {
+            choosePlayerActions: {
+              title: 'Choose player',
+              target: 'each',
+              action: {
+                engaged: { dealDamage: 1 },
               },
             },
           },

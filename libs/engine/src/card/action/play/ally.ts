@@ -8,10 +8,8 @@ export function createPlayAllyAction(
   self: CardId
 ): Action {
   const payment: Action = {
-    player: {
-      target: owner,
-      action: { payResources: { amount: cost, sphere } },
-    },
+    player: owner,
+    action: { payResources: { amount: cost, sphere } },
   };
 
   const moveToPlay: Action = {

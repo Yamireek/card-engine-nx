@@ -19,14 +19,12 @@ export const snowbournScout = ally(
     response: {
       event: 'enteredPlay',
       action: {
-        player: {
-          target: 'controller',
-          action: {
-            chooseCardActions: {
-              title: 'Choose location',
-              target: { type: 'location' },
-              action: { placeProgress: 1 },
-            },
+        player: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose location',
+            target: { type: 'location' },
+            action: { placeProgress: 1 },
           },
         },
       },

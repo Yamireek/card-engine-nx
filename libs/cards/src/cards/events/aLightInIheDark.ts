@@ -10,16 +10,14 @@ export const aLightInIheDark = event(
     description:
       'Action: Choose an enemy engaged with a player. Return that enemy to the staging area.',
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          chooseCardActions: {
-            title: 'Choose enemy',
-            target: { type: 'enemy', zoneType: 'engaged' },
-            action: {
-              move: {
-                to: 'stagingArea',
-              },
+      player: 'controller',
+      action: {
+        chooseCardActions: {
+          title: 'Choose enemy',
+          target: { type: 'enemy', zoneType: 'engaged' },
+          action: {
+            move: {
+              to: 'stagingArea',
             },
           },
         },

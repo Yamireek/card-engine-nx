@@ -22,19 +22,17 @@ export const achosenPath1 = quest({
             },
           },
           {
-            player: {
-              target: 'each',
-              action: {
-                chooseCardActions: {
-                  title: 'Choose 1 Spider',
-                  target: {
-                    zoneType: ['encounterDeck', 'discardPile'],
-                    trait: 'spider',
-                  },
-                  action: {
-                    move: {
-                      to: 'stagingArea',
-                    },
+            player: 'each',
+            action: {
+              chooseCardActions: {
+                title: 'Choose 1 Spider',
+                target: {
+                  zoneType: ['encounterDeck', 'discardPile'],
+                  trait: 'spider',
+                },
+                action: {
+                  move: {
+                    to: 'stagingArea',
                   },
                 },
               },

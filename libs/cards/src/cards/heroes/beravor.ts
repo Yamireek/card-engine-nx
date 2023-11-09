@@ -27,15 +27,13 @@ export const beravor = hero(
           },
         },
         effect: {
-          player: {
-            target: 'controller',
-            action: {
-              choosePlayerActions: {
-                title: 'Choose player to draw 2 cards',
-                target: 'each',
-                action: {
-                  draw: 2,
-                },
+          player: 'controller',
+          action: {
+            choosePlayerActions: {
+              title: 'Choose player to draw 2 cards',
+              target: 'each',
+              action: {
+                draw: 2,
               },
             },
           },

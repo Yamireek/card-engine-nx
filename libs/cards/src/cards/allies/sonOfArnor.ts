@@ -19,14 +19,12 @@ export const sonOfArnor = ally(
     response: {
       event: 'enteredPlay',
       action: {
-        player: {
-          target: 'controller',
-          action: {
-            chooseCardActions: {
-              title: 'Choose enemy to engage',
-              target: { type: 'enemy' },
-              action: { engagePlayer: 'controller' },
-            },
+        player: 'controller',
+        action: {
+          chooseCardActions: {
+            title: 'Choose enemy to engage',
+            target: { type: 'enemy' },
+            action: { engagePlayer: 'controller' },
           },
         },
       },

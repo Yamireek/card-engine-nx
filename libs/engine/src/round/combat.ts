@@ -5,18 +5,14 @@ export const phaseCombat: Action = [
   'dealShadowCards',
   { playerActions: 'Resolve enemy attacks' },
   {
-    player: {
-      target: 'each',
-      action: 'resolveEnemyAttacks',
-    },
+    player: 'each',
+    action: 'resolveEnemyAttacks',
   },
   { clearMarks: 'attacked' },
   { playerActions: 'Resolve player attacks' },
   {
-    player: {
-      target: 'each',
-      action: 'resolvePlayerAttacks',
-    },
+    player: 'each',
+    action: 'resolvePlayerAttacks',
   },
   { clearMarks: 'attacked' },
   { playerActions: 'End combat phase' },

@@ -10,17 +10,15 @@ export const fortuneOrFate = event(
     description:
       "Action: Choose a hero in any player's discard pile. Put that card into play, under its owner's control.",
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          chooseCardActions: {
-            title: 'Choose hero',
-            target: { type: 'hero', zoneType: 'discardPile' },
-            action: {
-              putInPlay: {
-                controllerOf: 'self',
-              }, // TODO 2 player test
-            },
+      player: 'controller',
+      action: {
+        chooseCardActions: {
+          title: 'Choose hero',
+          target: { type: 'hero', zoneType: 'discardPile' },
+          action: {
+            putInPlay: {
+              controllerOf: 'self',
+            }, // TODO 2 player test
           },
         },
       },

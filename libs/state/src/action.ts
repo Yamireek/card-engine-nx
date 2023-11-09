@@ -41,7 +41,6 @@ export type Action =
       action: CardAction;
     }
   | {
-      player?: { action: PlayerAction; target: PlayerTarget }; // TODO remove
       card?: { action: CardAction; target: CardTarget }; // TODO remove
       addPlayer?: PlayerDeck;
       setupScenario?: {

@@ -28,7 +28,8 @@ export function executePlayerAction(
 ) {
   if (isArray(action)) {
     const actions: Action[] = action.map((a) => ({
-      player: { target: player.id, action: a },
+      player: player.id,
+      action: a,
     }));
 
     ctx.state.next.unshift(...actions);
@@ -47,16 +48,14 @@ export function executePlayerAction(
 
   if (action === 'commitCharactersToQuest') {
     ctx.state.next.unshift({
-      player: {
-        target: player.id,
-        action: {
-          chooseCardActions: {
-            title: 'Choose characters commiting to quest',
-            multi: true,
-            optional: true,
-            target: { simple: 'character', controller: player.id },
-            action: 'commitToQuest',
-          },
+      player: player.id,
+      action: {
+        chooseCardActions: {
+          title: 'Choose characters commiting to quest',
+          multi: true,
+          optional: true,
+          target: { simple: 'character', controller: player.id },
+          action: 'commitToQuest',
         },
       },
     });
@@ -86,15 +85,13 @@ export function executePlayerAction(
     );
 
     ctx.state.next.unshift({
-      player: {
-        target: player.id,
-        action: {
-          chooseCardActions: {
-            title: 'Choose enemy to engage',
-            target: enemyChoices.map((e) => e.id),
-            action: {
-              engagePlayer: player.id,
-            },
+      player: player.id,
+      action: {
+        chooseCardActions: {
+          title: 'Choose enemy to engage',
+          target: enemyChoices.map((e) => e.id),
+          action: {
+            engagePlayer: player.id,
           },
         },
       },
@@ -104,16 +101,14 @@ export function executePlayerAction(
 
   if (action === 'optionalEngagement') {
     ctx.state.next.unshift({
-      player: {
-        target: player.id,
-        action: {
-          chooseCardActions: {
-            title: 'Choose enemy to optionally engage',
-            optional: true,
-            target: { zone: 'stagingArea', type: 'enemy' },
-            action: {
-              engagePlayer: player.id,
-            },
+      player: player.id,
+      action: {
+        chooseCardActions: {
+          title: 'Choose enemy to optionally engage',
+          optional: true,
+          target: { zone: 'stagingArea', type: 'enemy' },
+          action: {
+            engagePlayer: player.id,
           },
         },
       },
@@ -171,31 +166,27 @@ export function executePlayerAction(
 
     if (attackable.length > 0) {
       ctx.state.next.unshift({
-        player: {
-          target: player.id,
-          action: {
-            chooseActions: {
-              title: 'Choose enemy to attack',
-              actions: attackable.map((e) => ({
-                title: e.toString(),
-                cardId: e,
-                action: [
-                  {
-                    card: {
-                      target: e,
-                      action: { resolvePlayerAttacking: player.id },
-                    },
+        player: player.id,
+        action: {
+          chooseActions: {
+            title: 'Choose enemy to attack',
+            actions: attackable.map((e) => ({
+              title: e.toString(),
+              cardId: e,
+              action: [
+                {
+                  card: {
+                    target: e,
+                    action: { resolvePlayerAttacking: player.id },
                   },
-                  {
-                    player: {
-                      target: player.id,
-                      action: 'resolvePlayerAttacks',
-                    },
-                  },
-                ],
-                optional: true,
-              })),
-            },
+                },
+                {
+                  player: player.id,
+                  action: 'resolvePlayerAttacks',
+                },
+              ],
+              optional: true,
+            })),
           },
         },
       });
@@ -216,18 +207,16 @@ export function executePlayerAction(
 
       if (defenders.length > 0) {
         ctx.state.next.unshift({
-          player: {
-            target: player.id,
-            action: {
-              chooseCardActions: {
-                title: !multiple ? 'Declare defender' : 'Declare defenders',
-                target: defenders,
-                multi: multiple,
-                optional: true,
-                action: {
-                  declareAsDefender: {
-                    attacker,
-                  },
+          player: player.id,
+          action: {
+            chooseCardActions: {
+              title: !multiple ? 'Declare defender' : 'Declare defenders',
+              target: defenders,
+              multi: multiple,
+              optional: true,
+              action: {
+                declareAsDefender: {
+                  attacker,
                 },
               },
             },
@@ -270,18 +259,16 @@ export function executePlayerAction(
       attacking.some((a) => a.props.type === 'enemy')
     ) {
       ctx.state.next.unshift({
-        player: {
-          target: player.id,
-          action: {
-            chooseCardActions: {
-              title: 'Choose hero for undefended attack',
-              target: {
-                type: 'hero',
-                zone: { player: player.id, type: 'playerArea' },
-              },
-              action: {
-                dealDamage: attack,
-              },
+        player: player.id,
+        action: {
+          chooseCardActions: {
+            title: 'Choose hero for undefended attack',
+            target: {
+              type: 'hero',
+              zone: { player: player.id, type: 'playerArea' },
+            },
+            action: {
+              dealDamage: attack,
             },
           },
         },
@@ -300,15 +287,13 @@ export function executePlayerAction(
 
         if (defending.length > 1) {
           ctx.state.next.unshift({
-            player: {
-              target: player.id,
-              action: {
-                chooseCardActions: {
-                  title: 'Choose character for damage',
-                  target: defending.map((c) => c.id),
-                  action: {
-                    dealDamage: damage,
-                  },
+            player: player.id,
+            action: {
+              chooseCardActions: {
+                title: 'Choose character for damage',
+                target: defending.map((c) => c.id),
+                action: {
+                  dealDamage: damage,
                 },
               },
             },
@@ -524,10 +509,8 @@ export function executePlayerAction(
                 player: id,
               },
               action: {
-                player: {
-                  target: id,
-                  action: playerAction,
-                },
+                player: id,
+                action: playerAction,
               },
             },
           })),
@@ -586,14 +569,12 @@ export function executePlayerAction(
         repeat: {
           amount: action.discard.amount,
           action: {
-            player: {
-              target: player.id,
-              action: {
-                chooseCardActions: {
-                  title: 'Choose card to discard',
-                  target,
-                  action: discard,
-                },
+            player: player.id,
+            action: {
+              chooseCardActions: {
+                title: 'Choose card to discard',
+                target,
+                action: discard,
               },
             },
           },
@@ -625,16 +606,14 @@ export function executePlayerAction(
 
     if (characters.length > 0) {
       ctx.state.next.unshift({
-        player: {
-          target: player.id,
-          action: {
-            chooseCardActions: {
-              title: 'Declare attackers',
-              target: characters,
-              action: [{ mark: 'attacking' }, 'exhaust'],
-              multi: true,
-              optional: true,
-            },
+        player: player.id,
+        action: {
+          chooseCardActions: {
+            title: 'Declare attackers',
+            target: characters,
+            action: [{ mark: 'attacking' }, 'exhaust'],
+            multi: true,
+            optional: true,
           },
         },
       });
@@ -704,10 +683,8 @@ export function executePlayerAction(
 
   if (action.player) {
     ctx.state.next.unshift({
-      player: {
-        target: action.player.target,
-        action: action.player.action,
-      },
+      player: action.player.target,
+      action: action.player.action,
     });
     return;
   }

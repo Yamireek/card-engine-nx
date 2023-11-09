@@ -14,21 +14,19 @@ export const thicketOfSpears = event(
     },
     phase: 'combat',
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          choosePlayerActions: {
-            title: 'Choose player',
-            target: 'each',
-            action: {
-              engaged: {
-                modify: {
-                  rule: {
-                    cantAttack: true,
-                  },
+      player: 'controller',
+      action: {
+        choosePlayerActions: {
+          title: 'Choose player',
+          target: 'each',
+          action: {
+            engaged: {
+              modify: {
+                rule: {
+                  cantAttack: true,
                 },
-                until: 'end_of_phase',
               },
+              until: 'end_of_phase',
             },
           },
         },

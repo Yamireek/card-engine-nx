@@ -54,17 +54,15 @@ export const gandalf = ally(
               {
                 title: 'Deal 4 damage to 1 enemy in play',
                 action: {
-                  player: {
-                    target: 'controller',
-                    action: {
-                      chooseCardActions: {
-                        title: 'Choose enemy',
-                        target: {
-                          type: 'enemy',
-                        },
-                        action: {
-                          dealDamage: 4,
-                        },
+                  player: 'controller',
+                  action: {
+                    chooseCardActions: {
+                      title: 'Choose enemy',
+                      target: {
+                        type: 'enemy',
+                      },
+                      action: {
+                        dealDamage: 4,
                       },
                     },
                   },

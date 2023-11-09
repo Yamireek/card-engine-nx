@@ -12,56 +12,52 @@ export const quickStrike = event(
     description:
       'Action: Exhaust a character you control to immediately declare it as an attacker (and resolve its attack) against any eligible enemy target.',
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          chooseCardActions: {
-            title: 'Choose character as attacker',
-            target: {
-              simple: 'character',
-              controller: 'controller',
-            },
-            action: [
-              'exhaust',
-              {
-                action: {
-                  useScope: {
-                    var: 'attacker',
-                    card: 'target',
-                  },
-                  action: [
-                    {
-                      player: {
-                        target: 'controller',
+      player: 'controller',
+      action: {
+        chooseCardActions: {
+          title: 'Choose character as attacker',
+          target: {
+            simple: 'character',
+            controller: 'controller',
+          },
+          action: [
+            'exhaust',
+            {
+              action: {
+                useScope: {
+                  var: 'attacker',
+                  card: 'target',
+                },
+                action: [
+                  {
+                    player: 'controller',
+                    action: {
+                      chooseCardActions: {
+                        title: 'Choose enemy to attack',
+                        target: { zoneType: 'engaged' },
                         action: {
-                          chooseCardActions: {
-                            title: 'Choose enemy to attack',
-                            target: { zoneType: 'engaged' },
+                          action: {
+                            useScope: {
+                              var: 'defender',
+                              card: 'target',
+                            },
                             action: {
-                              action: {
-                                useScope: {
-                                  var: 'defender',
-                                  card: 'target',
+                              resolveAttack: {
+                                attackers: {
+                                  var: 'attacker',
                                 },
-                                action: {
-                                  resolveAttack: {
-                                    attackers: {
-                                      var: 'attacker',
-                                    },
-                                    defender: { var: 'defender' },
-                                  },
-                                },
+                                defender: { var: 'defender' },
                               },
                             },
                           },
                         },
                       },
                     },
-                  ],
-                },
+                  },
+                ],
               },
-            ],
-          },
+            },
+          ],
         },
       },
     },

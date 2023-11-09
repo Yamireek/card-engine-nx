@@ -18,14 +18,12 @@ export const gleowine = ally(
     action: [
       { card: { target: 'self', action: 'exhaust' } },
       {
-        player: {
-          target: 'controller',
-          action: {
-            choosePlayerActions: {
-              title: 'Choose player to draw 1 card',
-              target: 'each',
-              action: { draw: 1 },
-            },
+        player: 'controller',
+        action: {
+          choosePlayerActions: {
+            title: 'Choose player to draw 1 card',
+            target: 'each',
+            action: { draw: 1 },
           },
         },
       },

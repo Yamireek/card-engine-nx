@@ -126,18 +126,16 @@ export function executeAction(
     }
 
     ctx.state.next.unshift({
-      player: {
-        target: 'first',
-        action: {
-          chooseCardActions: {
-            title: 'Choose location for travel',
-            target: {
-              zone: 'stagingArea',
-              type: 'location',
-            },
-            action: 'travel',
-            optional: true,
+      player: 'first',
+      action: {
+        chooseCardActions: {
+          title: 'Choose location for travel',
+          target: {
+            zone: 'stagingArea',
+            type: 'location',
           },
+          action: 'travel',
+          optional: true,
         },
       },
     });
@@ -178,7 +176,7 @@ export function executeAction(
     }
     if (diff < 0) {
       ctx.state.next = [
-        { player: { target: 'each', action: { incrementThreat: -diff } } },
+        { player: 'each', action: { incrementThreat: -diff } },
         ...ctx.state.next,
       ];
     }
@@ -417,30 +415,28 @@ export function executeAction(
       responses.length > 0
         ? [
             {
-              player: {
-                target: 'first',
-                action: {
-                  chooseActions: {
-                    title: `Choose responses for: ${action.stackPush.description}`,
-                    actions: responses.map((r) => ({
-                      title: r.description,
-                      action: {
-                        useScope: [
-                          {
-                            var: 'target',
-                            card: r.card,
-                          },
-                          {
-                            var: 'self',
-                            card: r.source,
-                          },
-                        ],
-                        action: r.action,
-                      },
-                    })),
-                    optional: true,
-                    multi: true,
-                  },
+              player: 'first',
+              action: {
+                chooseActions: {
+                  title: `Choose responses for: ${action.stackPush.description}`,
+                  actions: responses.map((r) => ({
+                    title: r.description,
+                    action: {
+                      useScope: [
+                        {
+                          var: 'target',
+                          card: r.card,
+                        },
+                        {
+                          var: 'self',
+                          card: r.source,
+                        },
+                      ],
+                      action: r.action,
+                    },
+                  })),
+                  optional: true,
+                  multi: true,
                 },
               },
             },
@@ -466,16 +462,6 @@ export function executeAction(
       effect.canceled = true;
     }
     return;
-  }
-
-  if (action.player) {
-    return executeAction(
-      {
-        player: action.player.target,
-        action: action.player.action,
-      },
-      ctx
-    );
   }
 
   if (action.card) {
@@ -732,30 +718,28 @@ export function executeAction(
 
     if (optional.length > 0) {
       ctx.state.next.unshift({
-        player: {
-          target: 'first',
-          action: {
-            chooseActions: {
-              title: 'Choose responses for event ' + event.type,
-              actions: optional.map((r) => ({
-                title: r.description,
-                action: {
-                  useScope: [
-                    {
-                      var: 'target',
-                      card: r.card,
-                    },
-                    {
-                      var: 'self',
-                      card: r.source,
-                    },
-                  ],
-                  action: r.action,
-                },
-              })),
-              optional: true,
-              multi: true,
-            },
+        player: 'first',
+        action: {
+          chooseActions: {
+            title: 'Choose responses for event ' + event.type,
+            actions: optional.map((r) => ({
+              title: r.description,
+              action: {
+                useScope: [
+                  {
+                    var: 'target',
+                    card: r.card,
+                  },
+                  {
+                    var: 'self',
+                    card: r.source,
+                  },
+                ],
+                action: r.action,
+              },
+            })),
+            optional: true,
+            multi: true,
           },
         },
       });

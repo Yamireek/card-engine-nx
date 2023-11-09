@@ -14,11 +14,9 @@ export const forestGate = location(
     response: {
       event: 'traveled',
       action: {
-        player: {
-          target: 'first',
-          action: {
-            draw: 2,
-          },
+        player: 'first',
+        action: {
+          draw: 2,
         },
       },
     },

@@ -10,17 +10,13 @@ export function beginScenario(data: ScenarioSetupData): Action {
     },
     'shuffleEncounterDeck',
     {
-      player: {
-        target: 'each',
-        action: 'shuffleLibrary',
-      },
+      player: 'each',
+      action: 'shuffleLibrary',
     },
     {
-      player: {
-        target: 'each',
-        action: {
-          draw: 6 + data.extra.cards,
-        },
+      player: 'each',
+      action: {
+        draw: 6 + data.extra.cards,
       },
     },
     {

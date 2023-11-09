@@ -39,7 +39,7 @@ it('Gondorian Spearman', () => {
   });
 
   const enemy = game.getCard('Forest Spider');
-  game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
+  game.do({ player: '0', action: 'resolveEnemyAttacks' });
   game.chooseOption('2');
   game.chooseOption(response);
   expect(enemy.token.damage).toBe(1);

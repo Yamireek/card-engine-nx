@@ -17,30 +17,28 @@ export const eowyn = hero(
     action: {
       payment: {
         cost: {
-          player: {
-            target: 'controller',
-            action: {
-              choosePlayerActions: {
-                target: 'each',
-                title: 'Choose player to discard card',
-                action: [
-                  {
-                    discard: {
-                      amount: 1,
-                      target: 'choice',
+          player: 'controller',
+          action: {
+            choosePlayerActions: {
+              target: 'each',
+              title: 'Choose player to discard card',
+              action: [
+                {
+                  discard: {
+                    amount: 1,
+                    target: 'choice',
+                  },
+                },
+                {
+                  useLimit: {
+                    key: 'eowyn_action',
+                    limit: {
+                      max: 1,
+                      type: 'round',
                     },
                   },
-                  {
-                    useLimit: {
-                      key: 'eowyn_action',
-                      limit: {
-                        max: 1,
-                        type: 'round',
-                      },
-                    },
-                  },
-                ],
-              },
+                },
+              ],
             },
           },
         },

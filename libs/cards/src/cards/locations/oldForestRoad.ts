@@ -14,14 +14,12 @@ export const oldForestRoad = location(
     response: {
       event: 'traveled',
       action: {
-        player: {
-          target: 'first',
-          action: {
-            chooseCardActions: {
-              title: 'Ready 1 character',
-              target: 'character',
-              action: 'ready',
-            },
+        player: 'first',
+        action: {
+          chooseCardActions: {
+            title: 'Ready 1 character',
+            target: 'character',
+            action: 'ready',
           },
         },
       },

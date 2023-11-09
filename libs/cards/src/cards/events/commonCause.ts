@@ -1,7 +1,5 @@
 import { event } from '@card-engine-nx/state';
 
-// TODO fix
-
 export const commonCause = event(
   {
     name: 'Common Cause',
@@ -12,36 +10,32 @@ export const commonCause = event(
     description:
       'Action: Exhaust 1 hero you control to choose and ready a different hero.',
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          chooseCardActions: {
-            title: 'Choose hero to exhaust',
-            target: { type: 'hero', controller: 'controller' },
-            action: [
-              {
+      player: 'controller',
+      action: {
+        chooseCardActions: {
+          title: 'Choose hero to exhaust',
+          target: { type: 'hero', controller: 'controller' },
+          action: [
+            {
+              action: {
+                useScope: {
+                  var: 'exhaused',
+                  card: 'target',
+                },
                 action: {
-                  useScope: {
-                    var: 'exhaused',
-                    card: 'target',
-                  },
+                  player: 'controller',
                   action: {
-                    player: {
-                      target: 'controller',
-                      action: {
-                        chooseCardActions: {
-                          title: 'Choose hero to ready',
-                          target: { type: 'hero', not: { var: 'exhausted' } },
-                          action: 'ready',
-                        },
-                      },
+                    chooseCardActions: {
+                      title: 'Choose hero to ready',
+                      target: { type: 'hero', not: { var: 'exhausted' } },
+                      action: 'ready',
                     },
                   },
                 },
               },
-              'exhaust',
-            ],
-          },
+            },
+            'exhaust',
+          ],
         },
       },
     },

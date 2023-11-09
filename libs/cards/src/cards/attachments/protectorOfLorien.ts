@@ -22,61 +22,57 @@ export const protectorOfLorien = attachment(
     action: {
       payment: {
         cost: {
-          player: {
-            target: 'controller',
-            action: {
-              discard: {
-                target: 'choice',
-                amount: 1,
-              },
+          player: 'controller',
+          action: {
+            discard: {
+              target: 'choice',
+              amount: 1,
             },
           },
         },
         effect: {
-          player: {
-            target: 'controller',
-            action: {
-              chooseActions: {
-                title: 'Choose bonus',
-                actions: [
-                  {
-                    title: '+1 [defense]',
-                    action: {
-                      card: {
-                        target: {
-                          hasAttachment: 'self',
-                        },
-                        action: {
-                          modify: {
-                            increment: {
-                              defense: 1,
-                            },
+          player: 'controller',
+          action: {
+            chooseActions: {
+              title: 'Choose bonus',
+              actions: [
+                {
+                  title: '+1 [defense]',
+                  action: {
+                    card: {
+                      target: {
+                        hasAttachment: 'self',
+                      },
+                      action: {
+                        modify: {
+                          increment: {
+                            defense: 1,
                           },
-                          until: 'end_of_phase',
                         },
+                        until: 'end_of_phase',
                       },
                     },
                   },
-                  {
-                    title: '+1 [willpower]',
-                    action: {
-                      card: {
-                        target: {
-                          hasAttachment: 'self',
-                        },
-                        action: {
-                          modify: {
-                            increment: {
-                              willpower: 1,
-                            },
+                },
+                {
+                  title: '+1 [willpower]',
+                  action: {
+                    card: {
+                      target: {
+                        hasAttachment: 'self',
+                      },
+                      action: {
+                        modify: {
+                          increment: {
+                            willpower: 1,
                           },
-                          until: 'end_of_phase',
                         },
+                        until: 'end_of_phase',
                       },
                     },
                   },
-                ],
-              },
+                },
+              ],
             },
           },
         },

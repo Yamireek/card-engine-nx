@@ -9,18 +9,16 @@ export const caughtInAWeb = treachery(
       {
         description: '',
         whenRevealed: {
-          player: {
-            target: 'highestThreat',
-            action: [
-              {
-                chooseCardActions: {
-                  title: 'Choose hero',
-                  target: { type: 'hero', controller: 'highestThreat' },
-                  action: [{ attachCard: 'self' }],
-                },
+          player: 'highestThreat',
+          action: [
+            {
+              chooseCardActions: {
+                title: 'Choose hero',
+                target: { type: 'hero', controller: 'highestThreat' },
+                action: [{ attachCard: 'self' }],
               },
-            ],
-          },
+            },
+          ],
         },
       },
       {

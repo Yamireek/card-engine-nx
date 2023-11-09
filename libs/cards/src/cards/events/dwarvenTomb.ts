@@ -10,22 +10,20 @@ export const dwarvenTomb = event(
     description:
       'Action: Return 1 [spirit] card from your discard pile to your hand.',
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          chooseCardActions: {
-            title: 'Choose card',
-            target: {
-              zoneType: 'discardPile',
-              owner: 'controller',
-              sphere: 'spirit',
-            },
-            action: {
-              move: {
-                to: {
-                  player: 'controller',
-                  type: 'hand',
-                },
+      player: 'controller',
+      action: {
+        chooseCardActions: {
+          title: 'Choose card',
+          target: {
+            zoneType: 'discardPile',
+            owner: 'controller',
+            sphere: 'spirit',
+          },
+          action: {
+            move: {
+              to: {
+                player: 'controller',
+                type: 'hand',
               },
             },
           },

@@ -10,15 +10,13 @@ export const loreOfImladris = event(
     description:
       'Action: Choose a character. Heal all damage from that character.',
     action: {
-      player: {
-        target: 'controller',
-        action: {
-          chooseCardActions: {
-            title: 'Choose character to heal',
-            target: 'character',
-            action: {
-              heal: 'all',
-            },
+      player: 'controller',
+      action: {
+        chooseCardActions: {
+          title: 'Choose character to heal',
+          target: 'character',
+          action: {
+            heal: 'all',
           },
         },
       },

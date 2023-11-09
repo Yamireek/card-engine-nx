@@ -33,10 +33,13 @@ export function canExecute(
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
     if ('player' in action && 'action' in action) {
-      return canExecute(
-        { player: { target: action.player, action: action.action } },
-        payment,
-        ctx
+      const players = getTargetPlayers(action.player, ctx);
+      return players.some((p) =>
+        canPlayerExecute(
+          action.action,
+          p,
+          updatedCtx(ctx, { var: 'target', player: p })
+        )
       );
     }
 
@@ -53,18 +56,6 @@ export function canExecute(
         action.action,
         payment,
         updatedCtx(ctx, action.useScope)
-      );
-    }
-
-    if (action.player) {
-      const playerAction = action.player;
-      const players = getTargetPlayers(playerAction.target, ctx);
-      return players.some((p) =>
-        canPlayerExecute(
-          playerAction.action,
-          p,
-          updatedCtx(ctx, { var: 'target', player: p })
-        )
       );
     }
 

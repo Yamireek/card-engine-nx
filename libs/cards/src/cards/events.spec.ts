@@ -55,10 +55,10 @@ it('Feint', () => {
   game.do({ beginPhase: 'combat' });
   expect(game.actions.length).toBe(1);
   game.chooseAction(action);
-  game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
+  game.do({ player: '0', action: 'resolveEnemyAttacks' });
   expect(game.state.choice).toBeUndefined();
   game.do('endPhase');
-  game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
+  game.do({ player: '0', action: 'resolveEnemyAttacks' });
   expect(game.state.choice?.title).toBe('Declare defender');
 });
 
@@ -119,10 +119,10 @@ it('Thicket of Spears', () => {
   game.do({ beginPhase: 'combat' });
   expect(game.actions.length).toBe(1);
   game.chooseAction(action);
-  game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
+  game.do({ player: '0', action: 'resolveEnemyAttacks' });
   expect(game.state.choice).toBeUndefined();
   game.do('endPhase');
-  game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
+  game.do({ player: '0', action: 'resolveEnemyAttacks' });
   expect(game.state.choice?.title).toBe('Declare defender');
 });
 
@@ -209,7 +209,7 @@ it('Swift Strike', () => {
   });
 
   const enemy = game.getCard('Forest Spider');
-  game.do({ player: { target: '0', action: 'resolveEnemyAttacks' } });
+  game.do({ player: '0', action: 'resolveEnemyAttacks' });
   game.chooseOption('1');
   game.chooseOption(response);
   expect(enemy.token.damage).toBe(2);

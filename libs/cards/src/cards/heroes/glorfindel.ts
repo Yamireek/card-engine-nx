@@ -22,14 +22,12 @@ export const glorfindel = hero(
       payment: {
         cost: { card: { target: 'self', action: { payResources: 1 } } },
         effect: {
-          player: {
-            target: 'controller',
-            action: {
-              chooseCardActions: {
-                title: 'Choose character to heal',
-                target: 'character',
-                action: { heal: 1 },
-              },
+          player: 'controller',
+          action: {
+            chooseCardActions: {
+              title: 'Choose character to heal',
+              target: 'character',
+              action: { heal: 1 },
             },
           },
         },

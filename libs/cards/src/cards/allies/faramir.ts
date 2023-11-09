@@ -23,21 +23,19 @@ export const faramir = ally(
         },
       },
       {
-        player: {
-          target: 'controller',
-          action: {
-            choosePlayerActions: {
-              target: 'each',
-              action: {
-                controlled: {
-                  modify: {
-                    increment: { willpower: 1 },
-                  },
-                  until: 'end_of_phase',
+        player: 'controller',
+        action: {
+          choosePlayerActions: {
+            target: 'each',
+            action: {
+              controlled: {
+                modify: {
+                  increment: { willpower: 1 },
                 },
+                until: 'end_of_phase',
               },
-              title: 'Choose player',
             },
+            title: 'Choose player',
           },
         },
       },
