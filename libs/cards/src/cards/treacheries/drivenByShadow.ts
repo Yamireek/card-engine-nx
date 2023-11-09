@@ -8,16 +8,14 @@ export const drivenByShadow = treachery(
     description:
       'When Revealed: Each enemy and each location currently in the staging area gets +1 Threat until the end of the phase.',
     whenRevealed: {
-      card: {
-        target: { type: ['location', 'enemy'], zoneType: 'stagingArea' },
-        action: {
-          modify: {
-            increment: {
-              threat: 1,
-            },
+      card: { type: ['location', 'enemy'], zoneType: 'stagingArea' },
+      action: {
+        modify: {
+          increment: {
+            threat: 1,
           },
-          until: 'end_of_phase',
         },
+        until: 'end_of_phase',
       },
     },
   },

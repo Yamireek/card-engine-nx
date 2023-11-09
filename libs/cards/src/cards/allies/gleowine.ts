@@ -16,7 +16,7 @@ export const gleowine = ally(
     description:
       'Action: Exhaust Gléowine to choose a player. That player draws 1 card.',
     action: [
-      { card: { target: 'self', action: 'exhaust' } },
+      { card: 'self', action: 'exhaust' },
       {
         player: 'controller',
         action: {

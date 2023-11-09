@@ -177,10 +177,8 @@ it('Stand Together', () => {
   expect(game.actions.length).toBe(1);
   game.chooseAction(action);
   game.do({
-    card: {
-      target: enemy.id,
-      action: { resolveEnemyAttacking: '0' },
-    },
+    card: enemy.id,
+    action: { resolveEnemyAttacking: '0' },
   });
   game.chooseOptions(['1', '2']);
   game.chooseOption('1');

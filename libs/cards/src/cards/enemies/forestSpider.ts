@@ -17,16 +17,14 @@ export const forestSpider = enemy(
     forced: {
       event: 'engaged',
       action: {
-        card: {
-          target: 'self',
-          action: {
-            modify: {
-              increment: {
-                attack: 1,
-              },
+        card: 'self',
+        action: {
+          modify: {
+            increment: {
+              attack: 1,
             },
-            until: 'end_of_round',
           },
+          until: 'end_of_round',
         },
       },
     },

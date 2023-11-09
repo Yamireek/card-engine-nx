@@ -28,12 +28,10 @@ export const hornOfGondor = attachment(
       },
       action: {
         card: {
-          target: {
-            hasAttachment: 'self',
-          },
-          action: {
-            generateResources: 1,
-          },
+          hasAttachment: 'self',
+        },
+        action: {
+          generateResources: 1,
         },
       },
     },

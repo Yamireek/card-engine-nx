@@ -17,13 +17,12 @@ export const unexpectedCourage = attachment(
     action: {
       payment: {
         cost: {
-          card: { target: 'self', action: 'exhaust' },
+          card: 'self',
+          action: 'exhaust',
         },
         effect: {
-          card: {
-            target: { hasAttachment: 'self' },
-            action: 'ready',
-          },
+          card: { hasAttachment: 'self' },
+          action: 'ready',
         },
       },
     },

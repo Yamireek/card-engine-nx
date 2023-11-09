@@ -63,29 +63,25 @@ export function createModifiers(
                   {
                     payment: {
                       cost: {
-                        card: {
-                          target: self,
-                          action: {
-                            payCost: ability.cost ?? {},
-                          },
+                        card: self,
+                        action: {
+                          payCost: ability.cost ?? {},
                         },
                       },
                       effect: ability.action,
                     },
                   },
                   {
-                    card: {
-                      target: self,
-                      action: {
-                        move: {
-                          from: {
-                            player: 'controller',
-                            type: 'hand',
-                          },
-                          to: {
-                            player: 'controller',
-                            type: 'discardPile',
-                          },
+                    card: self,
+                    action: {
+                      move: {
+                        from: {
+                          player: 'controller',
+                          type: 'hand',
+                        },
+                        to: {
+                          player: 'controller',
+                          type: 'discardPile',
                         },
                       },
                     },
@@ -159,29 +155,25 @@ export function createModifiers(
                       {
                         payment: {
                           cost: {
-                            card: {
-                              target: self,
-                              action: {
-                                payCost: ability.cost ?? {},
-                              },
+                            card: self,
+                            action: {
+                              payCost: ability.cost ?? {},
                             },
                           },
                           effect: ability.response.action,
                         },
                       },
                       {
-                        card: {
-                          target: self,
-                          action: {
-                            move: {
-                              from: {
-                                player: 'controller',
-                                type: 'hand',
-                              },
-                              to: {
-                                player: 'controller',
-                                type: 'discardPile',
-                              },
+                        card: self,
+                        action: {
+                          move: {
+                            from: {
+                              player: 'controller',
+                              type: 'hand',
+                            },
+                            to: {
+                              player: 'controller',
+                              type: 'discardPile',
                             },
                           },
                         },

@@ -14,12 +14,10 @@ export const swiftStrike = event(
       event: 'declaredAsDefender',
       action: {
         card: {
-          target: {
-            event: 'attacking',
-          },
-          action: {
-            dealDamage: 2,
-          },
+          event: 'attacking',
+        },
+        action: {
+          dealDamage: 2,
         },
       },
     },

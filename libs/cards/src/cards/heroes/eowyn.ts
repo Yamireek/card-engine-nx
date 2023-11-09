@@ -43,16 +43,14 @@ export const eowyn = hero(
           },
         },
         effect: {
-          card: {
-            target: 'self',
-            action: {
-              modify: {
-                increment: {
-                  willpower: 1,
-                },
+          card: 'self',
+          action: {
+            modify: {
+              increment: {
+                willpower: 1,
               },
-              until: 'end_of_phase',
             },
+            until: 'end_of_phase',
           },
         },
       },

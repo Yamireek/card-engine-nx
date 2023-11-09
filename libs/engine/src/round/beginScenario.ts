@@ -24,13 +24,11 @@ export function beginScenario(data: ScenarioSetupData): Action {
       action: { generateResources: data.extra.resources },
     },
     {
-      card: {
-        target: { top: 'questDeck' },
-        action: {
-          move: {
-            from: 'questDeck',
-            to: 'questArea',
-          },
+      card: { top: 'questDeck' },
+      action: {
+        move: {
+          from: 'questDeck',
+          to: 'questArea',
         },
       },
     },

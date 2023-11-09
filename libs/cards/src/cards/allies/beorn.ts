@@ -18,27 +18,23 @@ export const beorn = ally(
     limit: { max: 1, type: 'round' },
     action: [
       {
-        card: {
-          target: 'self',
-          action: {
-            modify: {
-              increment: {
-                attack: 5,
-              },
+        card: 'self',
+        action: {
+          modify: {
+            increment: {
+              attack: 5,
             },
-            until: 'end_of_phase',
           },
+          until: 'end_of_phase',
         },
       },
       {
         atEndOfPhase: {
           card: {
-            target: {
-              name: 'Beorn',
-              simple: 'inAPlay',
-            },
-            action: 'shuffleToDeck',
+            name: 'Beorn',
+            simple: 'inAPlay',
           },
+          action: 'shuffleToDeck',
         },
       },
     ],

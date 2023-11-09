@@ -16,7 +16,7 @@ export const daughterOfTheNimrodel = ally(
     description:
       'Action: Exhaust Daughter of the Nimrodel to heal up to 2 damage on any 1 hero.',
     action: [
-      { card: { target: 'self', action: 'exhaust' } },
+      { card: 'self', action: 'exhaust' },
       {
         player: 'controller',
         action: {

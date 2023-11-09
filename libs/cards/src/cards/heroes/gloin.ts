@@ -17,12 +17,10 @@ export const gloin = hero(
     response: {
       event: 'receivedDamage',
       action: {
-        card: {
-          target: 'self',
-          action: {
-            generateResources: {
-              event: { type: 'receivedDamage', value: 'damage' },
-            },
+        card: 'self',
+        action: {
+          generateResources: {
+            event: { type: 'receivedDamage', value: 'damage' },
           },
         },
       },

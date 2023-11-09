@@ -20,13 +20,11 @@ export const longbeardOrcSlayer = ally(
       event: 'enteredPlay',
       action: {
         card: {
-          target: {
-            type: 'enemy',
-            trait: 'orc',
-          },
-          action: {
-            dealDamage: 1,
-          },
+          type: 'enemy',
+          trait: 'orc',
+        },
+        action: {
+          dealDamage: 1,
         },
       },
     },

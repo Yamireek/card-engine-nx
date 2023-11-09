@@ -18,13 +18,12 @@ export const selfPreservation = attachment(
     action: {
       payment: {
         cost: {
-          card: { target: 'self', action: 'exhaust' },
+          card: 'self',
+          action: 'exhaust',
         },
         effect: {
-          card: {
-            target: { hasAttachment: 'self' },
-            action: { heal: 2 },
-          },
+          card: { hasAttachment: 'self' },
+          action: { heal: 2 },
         },
       },
     },

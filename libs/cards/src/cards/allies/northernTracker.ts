@@ -19,10 +19,8 @@ export const northernTracker = ally(
     response: {
       event: 'commits',
       action: {
-        card: {
-          target: { zoneType: 'stagingArea', type: 'location' },
-          action: { placeProgress: 1 },
-        },
+        card: { zoneType: 'stagingArea', type: 'location' },
+        action: { placeProgress: 1 },
       },
     },
   }

@@ -14,11 +14,9 @@ export const achosenPath1 = quest({
           'When Revealed: Each player must search the encounter deck and discard pile for 1 Spider card of his choice, and add it to the staging area.',
         whenRevealed: [
           {
-            card: {
-              target: { zoneType: 'encounterDeck' },
-              action: {
-                flip: 'front',
-              },
+            card: { zoneType: 'encounterDeck' },
+            action: {
+              flip: 'front',
             },
           },
           {
@@ -39,11 +37,9 @@ export const achosenPath1 = quest({
             },
           },
           {
-            card: {
-              target: { zoneType: 'encounterDeck' },
-              action: {
-                flip: 'back',
-              },
+            card: { zoneType: 'encounterDeck' },
+            action: {
+              flip: 'back',
             },
           },
           'shuffleEncounterDeck',

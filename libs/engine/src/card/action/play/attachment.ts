@@ -29,13 +29,11 @@ export function createPlayAttachmentAction(
   };
 
   const moveToPlay: Action = {
-    card: {
-      target: self,
-      action: {
-        move: {
-          from: { player: owner, type: 'hand' },
-          to: { player: owner, type: 'playerArea' },
-        },
+    card: self,
+    action: {
+      move: {
+        from: { player: owner, type: 'hand' },
+        to: { player: owner, type: 'playerArea' },
       },
     },
   };

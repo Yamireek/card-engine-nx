@@ -40,17 +40,15 @@ export const protectorOfLorien = attachment(
                   title: '+1 [defense]',
                   action: {
                     card: {
-                      target: {
-                        hasAttachment: 'self',
-                      },
-                      action: {
-                        modify: {
-                          increment: {
-                            defense: 1,
-                          },
+                      hasAttachment: 'self',
+                    },
+                    action: {
+                      modify: {
+                        increment: {
+                          defense: 1,
                         },
-                        until: 'end_of_phase',
                       },
+                      until: 'end_of_phase',
                     },
                   },
                 },
@@ -58,17 +56,15 @@ export const protectorOfLorien = attachment(
                   title: '+1 [willpower]',
                   action: {
                     card: {
-                      target: {
-                        hasAttachment: 'self',
-                      },
-                      action: {
-                        modify: {
-                          increment: {
-                            willpower: 1,
-                          },
+                      hasAttachment: 'self',
+                    },
+                    action: {
+                      modify: {
+                        increment: {
+                          willpower: 1,
                         },
-                        until: 'end_of_phase',
                       },
+                      until: 'end_of_phase',
                     },
                   },
                 },

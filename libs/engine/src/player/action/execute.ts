@@ -175,10 +175,8 @@ export function executePlayerAction(
               cardId: e,
               action: [
                 {
-                  card: {
-                    target: e,
-                    action: { resolvePlayerAttacking: player.id },
-                  },
+                  card: e,
+                  action: { resolvePlayerAttacking: player.id },
                 },
                 {
                   player: player.id,
@@ -278,10 +276,8 @@ export function executePlayerAction(
       if (damage > 0) {
         if (defending.length === 1) {
           ctx.state.next.unshift({
-            card: {
-              target: defending.map((c) => c.id),
-              action: { dealDamage: damage },
-            },
+            card: defending.map((c) => c.id),
+            action: { dealDamage: damage },
           });
         }
 
@@ -314,7 +310,8 @@ export function executePlayerAction(
 
     // TODO return engaged
     ctx.state.next.unshift({
-      card: { target: { owner: player.id }, action: 'destroy' },
+      card: { owner: player.id },
+      action: 'destroy',
     });
 
     return;
@@ -331,15 +328,13 @@ export function executePlayerAction(
         amount: action.draw,
         action: {
           card: {
-            target: {
-              top: { player: player.id, type: 'library' },
-            },
-            action: {
-              move: {
-                from: { player: player.id, type: 'library' },
-                to: { player: player.id, type: 'hand' },
-                side: 'front',
-              },
+            top: { player: player.id, type: 'library' },
+          },
+          action: {
+            move: {
+              from: { player: player.id, type: 'library' },
+              to: { player: player.id, type: 'hand' },
+              side: 'front',
             },
           },
         },
@@ -351,7 +346,8 @@ export function executePlayerAction(
 
   if (action.deck) {
     ctx.state.next.unshift({
-      card: { target: player.zones.library.cards, action: action.deck },
+      card: player.zones.library.cards,
+      action: action.deck,
     });
     return;
   }
@@ -382,20 +378,16 @@ export function executePlayerAction(
         min: 0,
         max: card.token.resources,
         action: {
-          card: {
-            target: t,
-            action: { payResources: 1 },
-          },
+          card: t,
+          action: { payResources: 1 },
         },
       };
     });
 
     if (options.length === 1) {
       ctx.state.next.unshift({
-        card: {
-          target: options[0].cardId,
-          action: { payResources: action.payResources.amount },
-        },
+        card: options[0].cardId,
+        action: { payResources: action.payResources.amount },
       });
       return;
     }
@@ -405,10 +397,8 @@ export function executePlayerAction(
       options.length === action.payResources.amount
     ) {
       ctx.state.next.unshift({
-        card: {
-          target: options.map((o) => o.cardId),
-          action: { payResources: 1 },
-        },
+        card: options.map((o) => o.cardId),
+        action: { payResources: 1 },
       });
       return;
     }
@@ -587,10 +577,8 @@ export function executePlayerAction(
       const cards = getTargetCards(target, ctx);
       const choosen = ctx.random.shuffle(cards).slice(0, action.discard.amount);
       ctx.state.next.unshift({
-        card: {
-          target: choosen,
-          action: discard,
-        },
+        card: choosen,
+        action: discard,
       });
 
       return;
@@ -637,14 +625,12 @@ export function executePlayerAction(
   if (action.engaged) {
     ctx.state.next.unshift({
       card: {
-        target: {
-          zone: {
-            player: player.id,
-            type: 'engaged',
-          },
+        zone: {
+          player: player.id,
+          type: 'engaged',
         },
-        action: action.engaged,
       },
+      action: action.engaged,
     });
     return;
   }
@@ -652,11 +638,9 @@ export function executePlayerAction(
   if (action.controlled) {
     ctx.state.next.unshift({
       card: {
-        target: {
-          controller: player.id,
-        },
-        action: action.controlled,
+        controller: player.id,
       },
+      action: action.controlled,
     });
     return;
   }
@@ -673,10 +657,8 @@ export function executePlayerAction(
 
   if (action.card) {
     ctx.state.next.unshift({
-      card: {
-        target: action.card.target,
-        action: action.card.action,
-      },
+      card: action.card.target,
+      action: action.card.action,
     });
     return;
   }

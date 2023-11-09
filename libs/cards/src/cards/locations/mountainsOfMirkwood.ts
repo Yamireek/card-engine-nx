@@ -12,11 +12,9 @@ export const mountainsOfMirkwood = location(
       'Travel: Reveal the top card of the encounter deck and add it to the staging area to travel here.',
     travel: {
       card: {
-        target: {
-          top: 'encounterDeck',
-        },
-        action: 'reveal',
+        top: 'encounterDeck',
       },
+      action: 'reveal',
     },
   },
   {

@@ -104,13 +104,11 @@ it('Blade of Gondolin - response', async () => {
   const location = game.getCard('Mountains of Mirkwood');
   const enemy = game.getCard('Dol Guldur Orcs');
   game.do({
-    card: {
-      target: enemy.id,
-      action: {
-        dealDamage: {
-          amount: 5,
-          attackers: [hero.id],
-        },
+    card: enemy.id,
+    action: {
+      dealDamage: {
+        amount: 5,
+        attackers: [hero.id],
       },
     },
   });

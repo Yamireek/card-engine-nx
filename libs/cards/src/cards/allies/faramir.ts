@@ -17,10 +17,8 @@ export const faramir = ally(
       'Action: Exhaust Faramir to choose a player. Each character controlled by that player gets +1 [willpower] until the end of the phase.',
     action: [
       {
-        card: {
-          target: 'self',
-          action: 'exhaust',
-        },
+        card: 'self',
+        action: 'exhaust',
       },
       {
         player: 'controller',

@@ -20,7 +20,7 @@ export const glorfindel = hero(
     },
     action: {
       payment: {
-        cost: { card: { target: 'self', action: { payResources: 1 } } },
+        cost: { card: 'self', action: { payResources: 1 } },
         effect: {
           player: 'controller',
           action: {

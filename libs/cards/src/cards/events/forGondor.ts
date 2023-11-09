@@ -11,29 +11,25 @@ export const forGondor = event(
       'Action: Until the end of the phase, all characters get +1 [attack]. All Gondor characters also get +1 [defense] until the end of the phase.',
     action: [
       {
-        card: {
-          target: 'character',
-          action: {
-            modify: {
-              increment: {
-                attack: 1,
-              },
+        card: 'character',
+        action: {
+          modify: {
+            increment: {
+              attack: 1,
             },
-            until: 'end_of_phase',
           },
+          until: 'end_of_phase',
         },
       },
       {
-        card: {
-          target: { trait: 'gondor' },
-          action: {
-            modify: {
-              increment: {
-                defense: 1,
-              },
+        card: { trait: 'gondor' },
+        action: {
+          modify: {
+            increment: {
+              defense: 1,
             },
-            until: 'end_of_phase',
           },
+          until: 'end_of_phase',
         },
       },
     ],

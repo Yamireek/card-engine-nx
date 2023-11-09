@@ -44,10 +44,13 @@ export function canExecute(
     }
 
     if ('card' in action && 'action' in action) {
-      return canExecute(
-        { card: { target: action.card, action: action.action } },
-        payment,
-        ctx
+      const cards = getTargetCards(action.card, ctx);
+      return cards.some((id) =>
+        canCardExecute(
+          action.action,
+          id,
+          updatedCtx(ctx, { var: 'target', card: id })
+        )
       );
     }
 
@@ -56,18 +59,6 @@ export function canExecute(
         action.action,
         payment,
         updatedCtx(ctx, action.useScope)
-      );
-    }
-
-    if (action.card) {
-      const cardAction = action.card;
-      const cards = getTargetCards(cardAction.target, ctx);
-      return cards.some((card) =>
-        canCardExecute(
-          cardAction.action,
-          card,
-          updatedCtx(ctx, { var: 'target', card })
-        )
       );
     }
 

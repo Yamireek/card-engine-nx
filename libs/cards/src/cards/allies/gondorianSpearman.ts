@@ -23,12 +23,10 @@ export const gondorianSpearman = ally(
       event: 'declaredAsDefender',
       action: {
         card: {
-          target: {
-            event: 'attacking',
-          },
-          action: {
-            dealDamage: 1,
-          },
+          event: 'attacking',
+        },
+        action: {
+          dealDamage: 1,
         },
       },
     },

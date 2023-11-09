@@ -7,11 +7,9 @@ export const theNecromancersReach = treachery(
   {
     description: 'When Revealed: Deal 1 damage to each exhausted character.',
     whenRevealed: {
-      card: {
-        target: { simple: ['character', 'exhausted'] },
-        action: {
-          dealDamage: 1,
-        },
+      card: { simple: ['character', 'exhausted'] },
+      action: {
+        dealDamage: 1,
       },
     },
   }

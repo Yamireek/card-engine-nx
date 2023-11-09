@@ -28,7 +28,8 @@ export function executeCardAction(
 ): undefined | boolean {
   if (isArray(action)) {
     const actions: Action[] = action.map((a) => ({
-      card: { target: card.id, action: a },
+      card: card.id,
+      action: a,
     }));
 
     ctx.state.next.unshift(...actions);
@@ -49,13 +50,11 @@ export function executeCardAction(
     ctx.state.next.unshift(
       ...travelCost,
       {
-        card: {
-          target: card.id,
-          action: {
-            move: {
-              from: 'stagingArea',
-              to: 'activeLocation',
-            },
+        card: card.id,
+        action: {
+          move: {
+            from: 'stagingArea',
+            to: 'activeLocation',
           },
         },
       },
@@ -72,10 +71,8 @@ export function executeCardAction(
   if (action === 'reveal') {
     if (card.sideUp === 'back') {
       ctx.state.next.unshift({
-        card: {
-          target: card.id,
-          action: [{ flip: 'front' }, 'reveal'],
-        },
+        card: card.id,
+        action: [{ flip: 'front' }, 'reveal'],
       });
       return;
     }
@@ -85,13 +82,11 @@ export function executeCardAction(
     ctx.state.next.unshift(
       { event: { type: 'revealed', card: card.id } },
       {
-        card: {
-          target: card.id,
-          action: {
-            move: {
-              from: 'encounterDeck',
-              to: props.type === 'treachery' ? 'discardPile' : 'stagingArea',
-            },
+        card: card.id,
+        action: {
+          move: {
+            from: 'encounterDeck',
+            to: props.type === 'treachery' ? 'discardPile' : 'stagingArea',
           },
         },
       }
@@ -104,16 +99,14 @@ export function executeCardAction(
     if (card.owner) {
       ctx.state.next.unshift(
         {
-          card: {
-            target: card.id,
-            action: {
-              move: {
-                to: {
-                  player: card.owner,
-                  type: 'library',
-                },
-                side: 'back',
+          card: card.id,
+          action: {
+            move: {
+              to: {
+                player: card.owner,
+                type: 'library',
               },
+              side: 'back',
             },
           },
         },
@@ -131,13 +124,11 @@ export function executeCardAction(
     const owner = card.owner;
 
     ctx.state.next.unshift({
-      card: {
-        target: card.id,
-        action: {
-          move: {
-            to: !owner ? 'discardPile' : { type: 'discardPile', player: owner },
-            side: 'front',
-          },
+      card: card.id,
+      action: {
+        move: {
+          to: !owner ? 'discardPile' : { type: 'discardPile', player: owner },
+          side: 'front',
         },
       },
     });
@@ -150,13 +141,11 @@ export function executeCardAction(
     card.token.progress = 0;
 
     const removedExplored: Action = {
-      card: {
-        target: card.id,
-        action: {
-          move: {
-            from: 'questArea',
-            to: 'removed',
-          },
+      card: card.id,
+      action: {
+        move: {
+          from: 'questArea',
+          to: 'removed',
         },
       },
     };
@@ -189,18 +178,16 @@ export function executeCardAction(
           },
         },
         {
-          card: {
-            target: next,
-            action: [
-              {
-                move: {
-                  from: 'questDeck',
-                  to: 'questArea',
-                },
+          card: next,
+          action: [
+            {
+              move: {
+                from: 'questDeck',
+                to: 'questArea',
               },
-              { flip: 'back' },
-            ],
-          },
+            },
+            { flip: 'back' },
+          ],
         },
         {
           event: {
@@ -223,19 +210,17 @@ export function executeCardAction(
             },
           },
           {
-            card: {
-              target: rnd,
-              action: [
-                {
-                  move: {
-                    from: 'questDeck',
-                    to: 'questArea',
-                    side: 'front',
-                  },
+            card: rnd,
+            action: [
+              {
+                move: {
+                  from: 'questDeck',
+                  to: 'questArea',
+                  side: 'front',
                 },
-                { flip: 'back' },
-              ],
-            },
+              },
+              { flip: 'back' },
+            ],
           },
           {
             event: {
@@ -264,13 +249,11 @@ export function executeCardAction(
     }
 
     ctx.state.next.unshift({
-      card: {
-        target: card.id,
-        action: {
-          move: {
-            to: { type: 'hand', player: owner },
-            side: 'front',
-          },
+      card: card.id,
+      action: {
+        move: {
+          to: { type: 'hand', player: owner },
+          side: 'front',
         },
       },
     });
@@ -286,12 +269,10 @@ export function executeCardAction(
         },
       },
       {
-        card: {
-          target: card.id,
-          action: {
-            move: {
-              to: 'discardPile',
-            },
+        card: card.id,
+        action: {
+          move: {
+            to: 'discardPile',
           },
         },
       }
@@ -301,10 +282,8 @@ export function executeCardAction(
 
   if (action === 'commitToQuest') {
     ctx.state.next.unshift({
-      card: {
-        target: card.id,
-        action: ['exhaust', { mark: 'questing' }],
-      },
+      card: card.id,
+      action: ['exhaust', { mark: 'questing' }],
     });
     return;
   }
@@ -397,14 +376,10 @@ export function executeCardAction(
 
     ctx.state.next.unshift(
       {
-        card: {
-          target: card.id,
-          action: {
-            move: {
-              to: !owner
-                ? 'discardPile'
-                : { type: 'discardPile', player: owner },
-            },
+        card: card.id,
+        action: {
+          move: {
+            to: !owner ? 'discardPile' : { type: 'discardPile', player: owner },
           },
         },
       },
@@ -461,7 +436,7 @@ export function executeCardAction(
     const cv = ctx.view.cards[card.id];
     const free = cv.refreshCost.length === 0;
     if (free) {
-      ctx.state.next.unshift({ card: { target: card.id, action: 'ready' } });
+      ctx.state.next.unshift({ card: card.id, action: 'ready' });
     } else {
       if (card.controller) {
         ctx.state.next.unshift({
@@ -473,10 +448,8 @@ export function executeCardAction(
                 {
                   title: 'Yes',
                   action: {
-                    card: {
-                      target: card.id,
-                      action: [...cv.refreshCost, 'ready'],
-                    },
+                    card: card.id,
+                    action: [...cv.refreshCost, 'ready'],
                   },
                 },
               ],
@@ -507,13 +480,11 @@ export function executeCardAction(
     const player = getTargetPlayer(action.engagePlayer, ctx);
     ctx.state.next.unshift(
       {
-        card: {
-          target: card.id,
-          action: {
-            move: {
-              from: 'stagingArea',
-              to: { player, type: 'engaged' },
-            },
+        card: card.id,
+        action: {
+          move: {
+            from: 'stagingArea',
+            to: { player, type: 'engaged' },
           },
         },
       },
@@ -643,11 +614,13 @@ export function executeCardAction(
       };
 
       ctx.state.next.unshift({
-        card: { target: card.attachments, action: 'discard' },
+        card: card.attachments,
+        action: 'discard',
       });
 
       ctx.state.next.unshift({
-        card: { target: card.shadows, action: 'discard' },
+        card: card.shadows,
+        action: 'discard',
       });
 
       ctx.state.modifiers = ctx.state.modifiers.filter(
@@ -710,10 +683,8 @@ export function executeCardAction(
   if (action.resolveEnemyAttacking) {
     ctx.state.next.unshift(
       {
-        card: {
-          target: card.id,
-          action: { mark: 'attacking' },
-        },
+        card: card.id,
+        action: { mark: 'attacking' },
       },
       {
         event: {
@@ -737,10 +708,8 @@ export function executeCardAction(
       { clearMarks: 'attacking' },
       { clearMarks: 'defending' },
       {
-        card: {
-          target: card.id,
-          action: { mark: 'attacked' },
-        },
+        card: card.id,
+        action: { mark: 'attacked' },
       }
     );
     return;
@@ -749,7 +718,7 @@ export function executeCardAction(
   if (action.resolvePlayerAttacking) {
     const enemy = card.id;
     ctx.state.next.unshift(
-      { card: { target: enemy, action: { mark: 'defending' } } },
+      { card: enemy, action: { mark: 'defending' } },
       { playerActions: 'Declare attackers' },
       {
         player: action.resolvePlayerAttacking,
@@ -764,7 +733,7 @@ export function executeCardAction(
       },
       { clearMarks: 'attacking' },
       { clearMarks: 'defending' },
-      { card: { target: enemy, action: { mark: 'attacked' } } }
+      { card: enemy, action: { mark: 'attacked' } }
     );
     return;
   }
@@ -780,13 +749,11 @@ export function executeCardAction(
       card.attachments.push(target);
       ctx.state.cards[target].attachedTo = card.id;
       ctx.state.next.unshift({
-        card: {
-          target,
-          action: {
-            move: {
-              side: 'front',
-              to: card.zone,
-            },
+        card: target,
+        action: {
+          move: {
+            side: 'front',
+            to: card.zone,
           },
         },
       });
@@ -824,10 +791,8 @@ export function executeCardAction(
   if (action.putInPlay) {
     const player = getTargetPlayer(action.putInPlay, ctx);
     ctx.state.next.unshift({
-      card: {
-        target: card.id,
-        action: { move: { to: { player, type: 'playerArea' }, side: 'front' } },
-      },
+      card: card.id,
+      action: { move: { to: { player, type: 'playerArea' }, side: 'front' } },
     });
     return;
   }

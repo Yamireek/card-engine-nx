@@ -6,10 +6,8 @@ export const eyesOfTheForest = treachery(
     description:
       'When Revealed: Each player discards all event cards in his hand.',
     whenRevealed: {
-      card: {
-        target: { type: 'event', zoneType: 'hand' },
-        action: 'discard',
-      },
+      card: { type: 'event', zoneType: 'hand' },
+      action: 'discard',
     },
   }
 );

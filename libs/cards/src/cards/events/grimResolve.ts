@@ -9,10 +9,8 @@ export const grimResolve = event(
   {
     description: 'Action: Ready all character cards in play.',
     action: {
-      card: {
-        target: 'character',
-        action: 'ready',
-      },
+      card: 'character',
+      action: 'ready',
     },
   }
 );

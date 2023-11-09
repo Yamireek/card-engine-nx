@@ -21,10 +21,8 @@ export const beravor = hero(
     action: {
       payment: {
         cost: {
-          card: {
-            target: 'self',
-            action: 'exhaust',
-          },
+          card: 'self',
+          action: 'exhaust',
         },
         effect: {
           player: 'controller',

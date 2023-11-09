@@ -26,11 +26,9 @@ export const thalin = hero(
         },
       },
       action: {
-        card: {
-          target: 'target',
-          action: {
-            dealDamage: 1,
-          },
+        card: 'target',
+        action: {
+          dealDamage: 1,
         },
       },
     },

@@ -15,17 +15,15 @@ export const ungoliantsSpawn = enemy(
       'When Revealed: Each character currently committed to a quest gets -1 Willpower until the end of the phase.',
     whenRevealed: {
       card: {
-        target: {
-          mark: 'questing',
-        },
-        action: {
-          modify: {
-            increment: {
-              willpower: -1,
-            },
+        mark: 'questing',
+      },
+      action: {
+        modify: {
+          increment: {
+            willpower: -1,
           },
-          until: 'end_of_phase',
         },
+        until: 'end_of_phase',
       },
     },
   },

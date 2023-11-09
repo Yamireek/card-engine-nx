@@ -137,10 +137,8 @@ export function canPlayerExecute(
     if (action.card) {
       return canExecute(
         {
-          card: {
-            target: action.card.target,
-            action: action.card.action,
-          },
+          card: action.card.target,
+          action: action.card.action,
         },
         false,
         ctx

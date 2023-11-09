@@ -54,12 +54,10 @@ export function executeAction(
       ...ctx.view.setup,
       {
         card: {
-          action: {
-            flip: 'back',
-          },
-          target: {
-            zone: 'questArea',
-          },
+          zone: 'questArea',
+        },
+        action: {
+          flip: 'back',
         },
       },
       {
@@ -209,10 +207,8 @@ export function executeAction(
     }
 
     ctx.state.next.unshift({
-      card: {
-        target: card,
-        action: 'reveal',
-      },
+      card: card,
+      action: 'reveal',
     });
 
     return;
@@ -298,28 +294,22 @@ export function executeAction(
 
     if (destroy.length > 0) {
       ctx.state.next.unshift({
-        card: {
-          target: destroy,
-          action: 'destroy',
-        },
+        card: destroy,
+        action: 'destroy',
       });
     }
 
     if (explore.length > 0) {
       ctx.state.next.unshift({
-        card: {
-          target: explore,
-          action: 'explore',
-        },
+        card: explore,
+        action: 'explore',
       });
     }
 
     if (advance.length > 0) {
       ctx.state.next.unshift({
-        card: {
-          target: advance,
-          action: 'advance',
-        },
+        card: advance,
+        action: 'advance',
       });
     }
 
@@ -378,10 +368,23 @@ export function executeAction(
   }
 
   if ('card' in action && 'action' in action) {
-    return executeAction(
-      { card: { target: action.card, action: action.action } },
-      ctx
-    );
+    const ids = getTargetCards(action.card, ctx);
+    const results: boolean[] = [];
+    for (const id of ids) {
+      const card = ctx.state.cards[id];
+      if (card) {
+        results.push(
+          executeCardAction(
+            action.action,
+            card,
+            updatedCtx(ctx, { var: 'target', card: id })
+          ) ?? false
+        );
+      } else {
+        throw new Error('card not found');
+      }
+    }
+    return results.some((r) => r);
   }
 
   if ('useScope' in action) {
@@ -462,26 +465,6 @@ export function executeAction(
       effect.canceled = true;
     }
     return;
-  }
-
-  if (action.card) {
-    const ids = getTargetCards(action.card.target, ctx);
-    const results: boolean[] = [];
-    for (const id of ids) {
-      const card = ctx.state.cards[id];
-      if (card) {
-        results.push(
-          executeCardAction(
-            action.card.action,
-            card,
-            updatedCtx(ctx, { var: 'target', card: id })
-          ) ?? false
-        );
-      } else {
-        throw new Error('card not found');
-      }
-    }
-    return results.some((r) => r);
   }
 
   if (action.addPlayer) {
@@ -588,10 +571,8 @@ export function executeAction(
     if (activeLocation.length === 0) {
       ctx.state.next = [
         {
-          card: {
-            target: { top: 'questArea' },
-            action: { placeProgress: action.placeProgress },
-          },
+          card: { top: 'questArea' },
+          action: { placeProgress: action.placeProgress },
         },
         ...ctx.state.next,
       ];
@@ -610,16 +591,12 @@ export function executeAction(
 
         ctx.state.next.unshift(
           {
-            card: {
-              target: activeLocation,
-              action: { placeProgress: progressLocation },
-            },
+            card: activeLocation,
+            action: { placeProgress: progressLocation },
           },
           {
-            card: {
-              target: { top: 'questArea' },
-              action: { placeProgress: progressQuest },
-            },
+            card: { top: 'questArea' },
+            action: { placeProgress: progressQuest },
           }
         );
       }
@@ -769,11 +746,9 @@ export function executeAction(
         const target = action.event.card;
         ctx.state.next.unshift(
           card.whenRevealed.map((effect) => ({
-            card: {
-              target,
-              action: {
-                whenRevealed: effect,
-              },
+            card: target,
+            action: {
+              whenRevealed: effect,
             },
           }))
         );
@@ -800,13 +775,11 @@ export function executeAction(
     if (damage > 0) {
       if (defender.length === 1) {
         ctx.state.next.unshift({
-          card: {
-            target: defender.map((c) => c.id),
-            action: {
-              dealDamage: {
-                amount: damage,
-                attackers: attacking.map((a) => a.id),
-              },
+          card: defender.map((c) => c.id),
+          action: {
+            dealDamage: {
+              amount: damage,
+              attackers: attacking.map((a) => a.id),
             },
           },
         });

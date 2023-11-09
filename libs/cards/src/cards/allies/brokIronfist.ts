@@ -24,11 +24,9 @@ export const brokIronfist = ally(
     response: {
       event: 'leftPlay',
       action: {
-        card: {
-          target: 'self',
-          action: {
-            putInPlay: 'controller',
-          },
+        card: 'self',
+        action: {
+          putInPlay: 'controller',
         },
       },
     },

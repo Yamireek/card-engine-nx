@@ -27,11 +27,9 @@ export const strengthOfWill = event(
           },
         },
         {
-          card: {
-            target: 'target',
-            action: {
-              placeProgress: 2,
-            },
+          card: 'target',
+          action: {
+            placeProgress: 2,
           },
         },
       ],

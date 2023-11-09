@@ -37,11 +37,9 @@ export const chieftanUfthak = enemy(
     forced: {
       event: 'attacked',
       action: {
-        card: {
-          target: 'event',
-          action: {
-            generateResources: 1,
-          },
+        card: 'event',
+        action: {
+          generateResources: 1,
         },
       },
     },

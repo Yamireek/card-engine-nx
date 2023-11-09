@@ -19,17 +19,13 @@ export const eleanor = hero(
       event: 'whenRevealed',
       action: [
         {
-          card: {
-            target: 'self',
-            action: 'exhaust',
-          },
+          card: 'self',
+          action: 'exhaust',
         },
         { cancel: 'when.revealed' },
         {
-          card: {
-            target: 'target',
-            action: 'discard',
-          },
+          card: 'target',
+          action: 'discard',
         },
         'revealEncounterCard',
       ],

@@ -27,17 +27,13 @@ export const stewardOfGondor = attachment(
     action: {
       payment: {
         cost: {
-          card: {
-            target: 'self',
-            action: 'exhaust',
-          },
+          card: 'self',
+          action: 'exhaust',
         },
         effect: {
-          card: {
-            target: { hasAttachment: 'self' },
-            action: {
-              generateResources: 2,
-            },
+          card: { hasAttachment: 'self' },
+          action: {
+            generateResources: 2,
           },
         },
       },

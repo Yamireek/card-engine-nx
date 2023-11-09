@@ -19,10 +19,8 @@ export const lorienGuide = ally(
     response: {
       event: 'commits',
       action: {
-        card: {
-          target: { zoneType: 'activeLocation' },
-          action: { placeProgress: 1 },
-        },
+        card: { zoneType: 'activeLocation' },
+        action: { placeProgress: 1 },
       },
     },
   }

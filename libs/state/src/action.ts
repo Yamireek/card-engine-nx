@@ -39,9 +39,9 @@ export type Action =
   | {
       card: CardTarget;
       action: CardAction;
+      scooped?: boolean;
     }
   | {
-      card?: { action: CardAction; target: CardTarget }; // TODO remove
       addPlayer?: PlayerDeck;
       setupScenario?: {
         scenario: Scenario;

@@ -23,10 +23,8 @@ export const gandalf = ally(
         },
       },
       action: {
-        card: {
-          target: 'self',
-          action: 'discard',
-        },
+        card: 'self',
+        action: 'discard',
       },
     },
   },

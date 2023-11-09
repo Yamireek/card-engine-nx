@@ -11,29 +11,25 @@ export const fliesAndSpiders = quest({
         setup: [
           {
             card: {
-              target: {
-                name: 'Forest Spider',
-                take: 1,
-              },
-              action: {
-                move: {
-                  to: 'stagingArea',
-                  side: 'front',
-                },
+              name: 'Forest Spider',
+              take: 1,
+            },
+            action: {
+              move: {
+                to: 'stagingArea',
+                side: 'front',
               },
             },
           },
           {
             card: {
-              target: {
-                name: 'Old Forest Road',
-                take: 1,
-              },
-              action: {
-                move: {
-                  to: 'stagingArea',
-                  side: 'front',
-                },
+              name: 'Old Forest Road',
+              take: 1,
+            },
+            action: {
+              move: {
+                to: 'stagingArea',
+                side: 'front',
               },
             },
           },

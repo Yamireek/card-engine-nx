@@ -170,7 +170,7 @@ export class CardProxy {
   ) {}
 
   update(cardAction: CardAction) {
-    this.game.do({ card: { target: this.id, action: cardAction } });
+    this.game.do({ card: this.id, action: cardAction });
   }
 
   get props() {
