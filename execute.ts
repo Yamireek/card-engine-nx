@@ -369,7 +369,7 @@ export function executeAction(
 
   if ('card' in action && 'action' in action) {
     const ids = getTargetCards(action.card, ctx);
-
+    
     if (action.scooped) {
       const results = ids.map((id) => {
         const card = ctx.state.cards[id];

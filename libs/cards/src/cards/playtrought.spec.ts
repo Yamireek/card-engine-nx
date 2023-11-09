@@ -3,7 +3,6 @@ import { Scenario } from '@card-engine-nx/state';
 import { core } from '../index';
 import { it } from 'vitest';
 import { coreThree } from '../decks/coreThree';
-import * as fs from 'fs';
 
 const testScenario: Scenario = {
   name: 'Test',
@@ -26,9 +25,9 @@ const testScenario: Scenario = {
         core.enemy.dolGuldurBeastmaster,
         core.location.mountainsOfMirkwood,
         core.enemy.dolGuldurOrcs,
-        core.treachery.drivenByShadow,
         core.treachery.caughtInAWeb,
         core.treachery.theNecromancersReach,
+        core.treachery.drivenByShadow,
         core.location.enchantedStream,
         core.location.oldForestRoad,
         core.enemy.blackForestBats,
