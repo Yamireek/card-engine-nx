@@ -59,7 +59,7 @@ it('Feint', () => {
   expect(game.state.choice).toBeUndefined();
   game.do('endPhase');
   game.do({ player: '0', action: 'resolveEnemyAttacks' });
-  expect(game.state.choice?.title).toBe('Declare defender');
+  expect(game.choiceTitle).toBe('Declare defender');
 });
 
 it('Rain of Arrows', () => {
@@ -123,7 +123,7 @@ it('Thicket of Spears', () => {
   expect(game.state.choice).toBeUndefined();
   game.do('endPhase');
   game.do({ player: '0', action: 'resolveEnemyAttacks' });
-  expect(game.state.choice?.title).toBe('Declare defender');
+  expect(game.choiceTitle).toBe('Declare defender');
 });
 
 it('Quick Strike', () => {
@@ -239,4 +239,33 @@ it('Common Cause', () => {
   game.chooseAction(action);
   expect(aragorn.state.tapped).toBe(true);
   expect(gloin.state.tapped).toBe(false);
+});
+
+it('Fortune or Fate', () => {
+  const action =
+    "Action: Choose a hero in any player's discard pile. Put that card into play, under its owner's control.";
+
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.eleanor,
+            resources: 5,
+          },
+        ],
+        hand: [core.event.fortuneOrFate],
+      },
+      {
+        playerArea: [core.hero.gimli],
+        discardPile: [core.hero.legolas],
+      },
+    ],
+  });
+
+  const legolas = game.getCard('Legolas');
+
+  expect(game.actions.length).toBe(1);
+  game.chooseAction(action);
+  expect(legolas.state.zone).toEqual({ player: '1', type: 'playerArea' });
 });

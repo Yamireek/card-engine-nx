@@ -39,6 +39,12 @@ export class TestEngine {
     return this.view.actions.filter((a) => a.enabled);
   }
 
+  get choiceTitle() {
+    if (this.state.choice && 'title' in this.state.choice) {
+      return this.state.choice.title;
+    }
+  }
+
   do(...action: Action[]) {
     this.state.next.unshift(...action, 'stateCheck');
     advanceToChoiceState(

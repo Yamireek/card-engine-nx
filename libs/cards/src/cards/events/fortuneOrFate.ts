@@ -17,8 +17,8 @@ export const fortuneOrFate = event(
           target: { type: 'hero', zoneType: 'discardPile' },
           action: {
             putInPlay: {
-              controllerOf: 'self',
-            }, // TODO 2 player test
+              controllerOf: 'target',
+            },
           },
         },
       },
