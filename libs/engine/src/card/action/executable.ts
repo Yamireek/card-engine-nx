@@ -75,7 +75,7 @@ export function canCardExecute(
       }
 
       const owner = ctx.view.players[card.owner];
-      return zone === 'library' && !owner?.disableDraw;
+      return zone === 'library' && !owner?.rules.disableDraw;
     }
 
     if (zone === 'playerArea' && action === 'commitToQuest') {

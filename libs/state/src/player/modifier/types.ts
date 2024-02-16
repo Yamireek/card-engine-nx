@@ -1,1 +1,3 @@
-export type PlayerModifier = 'can_declate_multiple_defenders' | 'disable_draw';
+import { PlayerRules } from '../rules';
+
+export type PlayerModifier = { rules: PlayerRules };

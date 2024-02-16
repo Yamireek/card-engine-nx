@@ -194,7 +194,7 @@ export function executePlayerAction(
   }
 
   if (action === 'declareDefender') {
-    const multiple = !!ctx.view.players[player.id]?.multipleDefenders;
+    const multiple = !!ctx.view.players[player.id]?.rules.multipleDefenders;
     const attacker = getTargetCard({ mark: 'attacking' }, ctx);
 
     if (attacker) {
@@ -319,7 +319,7 @@ export function executePlayerAction(
 
   if (action.draw) {
     const owner = ctx.view.players[player.id];
-    if (owner?.disableDraw) {
+    if (owner?.rules.disableDraw) {
       return;
     }
 

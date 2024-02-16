@@ -85,7 +85,7 @@ export function canPlayerExecute(
 
     if (action.draw) {
       const pv = ctx.view.players[player.id];
-      return player.zones.library.cards.length > 0 && !pv?.disableDraw;
+      return player.zones.library.cards.length > 0 && !pv?.rules.disableDraw;
     }
 
     if (action.discard) {
@@ -111,7 +111,7 @@ export function canPlayerExecute(
     }
 
     if (action.modify) {
-      if (action.modify === 'can_declate_multiple_defenders') {
+      if (action.modify.rules.multipleDefenders) {
         return player.zones.engaged.cards.length > 0;
       }
 

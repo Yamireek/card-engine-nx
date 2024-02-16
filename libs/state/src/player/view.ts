@@ -1,7 +1,7 @@
 import { PlayerId } from '@card-engine-nx/basic';
+import { PlayerRules } from './rules';
 
 export type PlayerView = {
   id: PlayerId;
-  multipleDefenders?: boolean; // TODO move to rules
-  disableDraw?: boolean; // TODO move to rules
+  rules: PlayerRules;
 };

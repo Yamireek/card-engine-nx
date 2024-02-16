@@ -19,6 +19,10 @@ export const enchantedStream = location(
       },
     },
     target: 'each',
-    player: 'disable_draw',
+    player: {
+      rules: {
+        disableDraw: true,
+      },
+    },
   }
 );

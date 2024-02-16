@@ -209,7 +209,7 @@ export function executeCardAction(
     }
 
     const ow = ctx.view.players[owner];
-    if (ow?.disableDraw) {
+    if (ow?.rules.disableDraw) {
       return;
     }
 
