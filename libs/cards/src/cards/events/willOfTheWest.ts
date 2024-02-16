@@ -1,7 +1,5 @@
 import { event } from '@card-engine-nx/state';
 
-// TODO shuffle
-
 export const willOfTheWest = event(
   {
     name: 'Will of the West',
@@ -18,20 +16,23 @@ export const willOfTheWest = event(
           choosePlayerActions: {
             title: 'Choose player',
             target: 'each',
-            action: {
-              card: {
-                target: { zoneType: 'discardPile', owner: 'target' },
-                action: {
-                  move: {
-                    side: 'back',
-                    to: {
-                      player: 'target',
-                      type: 'library',
+            action: [
+              {
+                card: {
+                  target: { zoneType: 'discardPile', owner: 'target' },
+                  action: {
+                    move: {
+                      side: 'back',
+                      to: {
+                        player: 'target',
+                        type: 'library',
+                      },
                     },
                   },
                 },
               },
-            },
+              'shuffleLibrary',
+            ],
           },
         },
       },

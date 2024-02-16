@@ -165,74 +165,39 @@ export function executeCardAction(
       return;
     }
 
-    // TODO merge conditions
-    if (next.length === 1) {
-      ctx.state.next.unshift(
-        removedExplored,
-        {
-          choice: {
-            id: ctx.state.nextId++,
-            type: 'show',
-            title: 'Next quest card',
-            cardId: next[0],
-          },
+    const nextId = next.length === 1 ? next[0] : ctx.random.item(next);
+
+    ctx.state.next.unshift(
+      removedExplored,
+      {
+        choice: {
+          id: ctx.state.nextId++,
+          type: 'show',
+          title: 'Next quest card',
+          cardId: nextId,
         },
-        {
-          card: next,
-          action: [
-            {
-              move: {
-                from: 'questDeck',
-                to: 'questArea',
-              },
+      },
+      {
+        card: nextId,
+        action: [
+          {
+            move: {
+              from: 'questDeck',
+              to: 'questArea',
+              side: 'front',
             },
-            { flip: 'back' },
-          ],
+          },
+          { flip: 'back' },
+        ],
+      },
+      {
+        event: {
+          type: 'revealed',
+          card: nextId,
         },
-        {
-          event: {
-            type: 'revealed',
-            card: next[0],
-          },
-        }
-      );
-    } else {
-      if (quest.nextStage === 'random') {
-        const rnd = ctx.random.item(next);
-        ctx.state.next.unshift(
-          removedExplored,
-          {
-            choice: {
-              id: ctx.state.nextId++,
-              type: 'show',
-              title: 'Next quest card',
-              cardId: rnd,
-            },
-          },
-          {
-            card: rnd,
-            action: [
-              {
-                move: {
-                  from: 'questDeck',
-                  to: 'questArea',
-                  side: 'front',
-                },
-              },
-              { flip: 'back' },
-            ],
-          },
-          {
-            event: {
-              type: 'revealed',
-              card: rnd,
-            },
-          }
-        );
-      } else {
-        throw new Error('found multiple stages');
       }
-    }
+    );
+
     return;
   }
 
