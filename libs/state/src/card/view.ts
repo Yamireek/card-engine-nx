@@ -12,17 +12,17 @@ export type CardView = {
   printed: PrintedProps;
   props: PrintedProps;
   zone: ZoneId;
-  attachesTo?: CardTarget;
-  nextStage?: NextStage;
-  effects: string[];
-  whenRevealed: Array<{ description: string; action: Action }>;
-  travel: Action[];
+  attachesTo?: CardTarget; // TODO move to rules
+  nextStage?: NextStage; // TODO move to rules
+  effects: string[]; // TODO delete?
+  whenRevealed: Array<{ description: string; action: Action }>; // TODO move to rules
+  travel: Action[]; // TODO move to rules
   conditional: {
-    advance: BoolExpr[];
-    travel: BoolExpr[];
+    advance: BoolExpr[]; // TODO move to rules
+    travel: BoolExpr[]; // TODO move to rules
   };
-  refreshCost: CardAction[];
-  cost?: CostModifier;
+  refreshCost: CardAction[]; // TODO move to rules
+  cost?: CostModifier; // TODO move to rules
   rules: CardRules;
-  shadows: Array<{ description: string; action: Action }>;
+  shadows: Array<{ description: string; action: Action }>; // TODO move to rules
 };

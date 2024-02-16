@@ -1,4 +1,4 @@
-import { CardView, CardModifier } from '@card-engine-nx/state';
+import { CardView, CardModifier, mergeCardRules } from '@card-engine-nx/state';
 import { ViewContext } from '../../context/view';
 import { CardId, keys } from '@card-engine-nx/basic';
 import { calculateCardBoolExpr } from '../expression/bool/calculate';
@@ -103,7 +103,7 @@ export function applyModifier(
   }
 
   if ('rule' in modifier) {
-    self.rules = { ...self.rules, ...modifier.rule }; // TODO better merge with arrays
+    self.rules = mergeCardRules(self.rules, modifier.rule);
     return;
   }
 
