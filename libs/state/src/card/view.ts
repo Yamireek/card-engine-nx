@@ -24,5 +24,4 @@ export type CardView = {
   refreshCost: CardAction[]; // TODO move to rules
   cost?: CostModifier; // TODO move to rules
   rules: CardRules;
-  shadows: Array<{ description: string; action: Action }>; // TODO move to rules
 };

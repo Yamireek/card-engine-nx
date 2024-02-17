@@ -48,7 +48,7 @@ export const CardDetail = (props: { cardId?: CardId }) => {
               ),
               ...card.view.effects,
             ]
-          : card.view.shadows.map((s) => s.description)
+          : card.view.rules.shadows?.map((s) => s.description) ?? []
       }
       attachments={[]}
       traits={card.view.props.traits ?? []}

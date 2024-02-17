@@ -277,7 +277,7 @@ export function executeCardAction(
   }
 
   if (action === 'resolveShadow') {
-    const shadows = ctx.view.cards[card.id].shadows;
+    const shadows = ctx.view.cards[card.id].rules.shadows ?? [];
 
     if (shadows.length > 0) {
       for (const shadow of shadows) {
