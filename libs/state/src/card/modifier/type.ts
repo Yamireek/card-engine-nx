@@ -42,7 +42,7 @@ export type CardModifier =
     }
   | { addSphere: Sphere }
   | {
-      rule: CardRules;
+      rules: CardRules;
     }
   | {
       description: string;

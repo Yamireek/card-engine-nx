@@ -18,7 +18,7 @@ export const radagastsCunning = event(
           target: { type: 'enemy', zoneType: 'stagingArea' },
           action: {
             modify: {
-              rule: {
+              rules: {
                 noThreatContribution: true,
               },
             },

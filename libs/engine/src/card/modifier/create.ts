@@ -238,7 +238,7 @@ export function createModifiers(
             source: self,
             card: self,
             modifier: {
-              rule: {
+              rules: {
                 whenRevealed: [
                   {
                     description: ability.description,
@@ -265,7 +265,7 @@ export function createModifiers(
           card: self,
           modifier: {
             description: ability.description,
-            rule: ability.rule,
+            rules: ability.rule,
           },
         },
       ];
@@ -279,7 +279,7 @@ export function createModifiers(
             card: self,
             modifier: {
               description: ability.description,
-              rule: {
+              rules: {
                 travel: [ability.travel],
               },
             },

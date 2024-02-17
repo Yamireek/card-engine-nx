@@ -16,7 +16,7 @@ export const dunhere = hero(
       'Dúnhere can target enemies in the staging area when he attacks alone. When doing so, he gets +1 Attack.',
     card: [
       {
-        rule: {
+        rules: {
           attacksStagingArea: true,
         },
       },

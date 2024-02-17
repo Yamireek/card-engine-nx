@@ -16,7 +16,7 @@ export const feint = event(
         chooseCardActions: {
           action: {
             modify: {
-              rule: {
+              rules: {
                 cantAttack: true,
               },
             },

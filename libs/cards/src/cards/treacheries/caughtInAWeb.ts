@@ -43,7 +43,7 @@ export const caughtInAWeb = treachery(
           hasAttachment: 'self',
         },
         card: {
-          rule: {
+          rules: {
             refreshCost: [{ payResources: 2 }],
           },
         },

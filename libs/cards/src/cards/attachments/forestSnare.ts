@@ -18,7 +18,7 @@ export const forestSnare = attachment(
       hasAttachment: 'self',
     },
     card: {
-      rule: {
+      rules: {
         cantAttack: true,
       },
     },

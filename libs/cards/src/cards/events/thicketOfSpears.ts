@@ -22,7 +22,7 @@ export const thicketOfSpears = event(
           action: {
             engaged: {
               modify: {
-                rule: {
+                rules: {
                   cantAttack: true,
                 },
               },

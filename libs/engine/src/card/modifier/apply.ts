@@ -77,8 +77,8 @@ export function applyModifier(
     return;
   }
 
-  if ('rule' in modifier) {
-    self.rules = mergeCardRules(self.rules, modifier.rule);
+  if ('rules' in modifier) {
+    self.rules = mergeCardRules(self.rules, modifier.rules);
     return;
   }
 

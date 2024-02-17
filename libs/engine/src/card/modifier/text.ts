@@ -35,12 +35,12 @@ export function getCardModifierText(modifier: CardModifier): string {
     return `gains [${modifier.addSphere}] resource icon`;
   }
 
-  if ('rule' in modifier) {
-    if (modifier.rule.attacksStagingArea) {
+  if ('rules' in modifier) {
+    if (modifier.rules.attacksStagingArea) {
       return 'can attack enemies in stagin area';
     }
 
-    if (modifier.rule.noThreatContribution) {
+    if (modifier.rules.noThreatContribution) {
       return "does not contribute it's threat";
     }
   }

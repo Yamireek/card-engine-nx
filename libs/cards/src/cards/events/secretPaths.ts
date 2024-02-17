@@ -18,7 +18,7 @@ export const secretPaths = event(
           target: { type: 'location', zoneType: 'stagingArea' },
           action: {
             modify: {
-              rule: {
+              rules: {
                 noThreatContribution: true,
               },
             },
