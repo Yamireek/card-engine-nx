@@ -51,8 +51,10 @@ export const achosenPath1 = quest({
         multi: [
           {
             description: '',
-            conditional: {
-              advance: false,
+            rule: {
+              conditional: {
+                advance: [false],
+              },
             },
           },
           {

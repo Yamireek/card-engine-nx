@@ -73,11 +73,10 @@ export function checkCardPredicate(
 
   if (target === 'explored') {
     const need = view.props.questPoints;
-    const condition =
-      view.conditional.advance.length > 0
-        ? calculateBoolExpr({ and: view.conditional.advance }, ctx)
-        : true;
-    return need !== undefined && condition && need <= state.token.progress;
+    const expr = view.rules.conditional?.advance ?? [];
+    const allowed =
+      expr.length > 0 ? calculateBoolExpr({ and: expr }, ctx) : true;
+    return need !== undefined && allowed && need <= state.token.progress;
   }
 
   if (target === 'isAttached') {

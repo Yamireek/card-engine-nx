@@ -258,6 +258,19 @@ export function createModifiers(
       return [];
     }
 
+    case 'rule' in ability: {
+      return [
+        {
+          source: self,
+          card: self,
+          modifier: {
+            description: ability.description,
+            rule: ability.rule,
+          },
+        },
+      ];
+    }
+
     case 'travel' in ability: {
       if (zone === 'stagingArea') {
         return [
@@ -301,22 +314,6 @@ export function createModifiers(
             modifier: {
               description: ability.description,
               nextStage: ability.nextStage,
-            },
-          },
-        ];
-      }
-
-      return [];
-    }
-
-    case 'conditional' in ability: {
-      if (zone === 'questArea') {
-        return [
-          {
-            source: self,
-            card: self,
-            modifier: {
-              conditional: ability.conditional,
             },
           },
         ];

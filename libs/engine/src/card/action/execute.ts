@@ -624,12 +624,11 @@ export function executeCardAction(
     if (cw.props.type === 'quest') {
       const qp = cw.props.questPoints;
       if (qp && card.token.progress >= qp) {
-        const canAdvance =
-          cw.conditional.advance.length > 0
-            ? calculateBoolExpr({ and: cw.conditional.advance }, ctx)
-            : true;
+        const expr = cw.rules.conditional?.advance ?? [];
+        const allowed =
+          expr.length > 0 ? calculateBoolExpr({ and: expr }, ctx) : true;
 
-        if (canAdvance) {
+        if (allowed) {
           executeCardAction('advance', card, ctx);
         }
       }

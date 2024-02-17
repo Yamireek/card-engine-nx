@@ -16,10 +16,6 @@ export function createCardView(state: CardState): CardView {
         sphere: [],
       },
       zone: state.zone,
-      conditional: {
-        advance: [],
-        travel: [],
-      },
       travel: [],
       refreshCost: [],
       rules: {
@@ -36,10 +32,6 @@ export function createCardView(state: CardState): CardView {
     printed,
     props: cloneDeep(printed),
     zone: state.zone,
-    conditional: {
-      advance: [],
-      travel: [],
-    },
     travel: [],
     refreshCost: [],
     rules: {},

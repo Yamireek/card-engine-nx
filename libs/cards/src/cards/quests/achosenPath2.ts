@@ -12,14 +12,18 @@ export const achosenPath2 = quest({
       {
         description:
           "Players cannot defeat this stage while Ungoliant's Spawn is in play. If players defeat this stage, they have won the game.",
-        conditional: {
-          advance: {
-            not: {
-              someCard: {
-                simple: 'inAPlay',
-                name: "Ungoliant's Spawn",
+        rule: {
+          conditional: {
+            advance: [
+              {
+                not: {
+                  someCard: {
+                    simple: 'inAPlay',
+                    name: "Ungoliant's Spawn",
+                  },
+                },
               },
-            },
+            ],
           },
         },
       },

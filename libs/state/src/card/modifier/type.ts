@@ -32,11 +32,6 @@ export type CardModifier =
   | { setup: Action }
   | { nextStage: 'random' }
   | {
-      conditional: {
-        advance: BoolExpr;
-      };
-    }
-  | {
       cost: CostModifier;
     }
   | { keywords: Keywords }

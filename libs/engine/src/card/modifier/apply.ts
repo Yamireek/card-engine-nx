@@ -58,13 +58,6 @@ export function applyModifier(
     return;
   }
 
-  if ('conditional' in modifier) {
-    if (modifier.conditional.advance !== undefined) {
-      self.conditional.advance.push(modifier.conditional.advance);
-    }
-    return;
-  }
-
   if ('action' in modifier) {
     ctx.view.actions.push({
       card: self.id,

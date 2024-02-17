@@ -38,8 +38,9 @@ export function canCardExecute(
       }
 
       const cv = ctx.view.cards[cardId];
-      if (cv.conditional.travel) {
-        return calculateBoolExpr({ and: cv.conditional.travel }, ctx);
+      const expr = cv.rules.conditional?.travel ?? [];
+      if (expr.length > 0) {
+        return calculateBoolExpr({ and: expr }, ctx);
       }
 
       return true;

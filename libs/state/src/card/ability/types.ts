@@ -9,6 +9,7 @@ import { CostModifier } from '../modifier/cost';
 import { CardModifier } from '../modifier/type';
 import { Limit } from './limit';
 import { PropertyIncrement } from '../modifier/increment';
+import { CardRules } from '../rules';
 
 export type Ability = { description: string } & (
   | {
@@ -30,6 +31,7 @@ export type Ability = { description: string } & (
       increment: PropertyIncrement;
       target?: CardTarget;
     }
+  | { rule: CardRules }
   | {
       player: PlayerModifier;
       target: PlayerTarget;
@@ -51,11 +53,6 @@ export type Ability = { description: string } & (
   | { attachesTo: CardTarget }
   | {
       multi: Array<Ability>;
-    }
-  | {
-      conditional: {
-        advance: BoolExpr;
-      };
     }
   | { nextStage: 'random' }
 );
