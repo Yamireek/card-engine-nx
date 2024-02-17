@@ -238,8 +238,14 @@ export function createModifiers(
             source: self,
             card: self,
             modifier: {
-              description: ability.description,
-              whenRevealed: ability.whenRevealed,
+              rule: {
+                whenRevealed: [
+                  {
+                    description: ability.description,
+                    action: ability.whenRevealed,
+                  },
+                ],
+              },
             },
           },
         ];

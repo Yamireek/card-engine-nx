@@ -23,10 +23,6 @@ export type CardModifier =
       action: Action;
     }
   | {
-      description: string;
-      whenRevealed: Action;
-    }
-  | {
       increment: PropertyIncrement;
     }
   | {

@@ -6,6 +6,7 @@ export type CardRules = {
   noThreatContribution?: true;
   cantAttack?: true;
   shadows?: Array<{ description: string; action: Action }>;
+  whenRevealed?: Array<{ description: string; action: Action }>;
 };
 
 export function mergeCardRules(r1: CardRules, r2: CardRules): CardRules {

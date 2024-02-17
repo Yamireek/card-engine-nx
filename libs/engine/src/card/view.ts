@@ -16,8 +16,7 @@ export function createCardView(state: CardState): CardView {
         sphere: [],
       },
       zone: state.zone,
-      effects: [],
-      whenRevealed: [],
+      effects: [],      
       conditional: {
         advance: [],
         travel: [],
@@ -39,7 +38,6 @@ export function createCardView(state: CardState): CardView {
     props: cloneDeep(printed),
     zone: state.zone,
     effects: [],
-    whenRevealed: [],
     conditional: {
       advance: [],
       travel: [],

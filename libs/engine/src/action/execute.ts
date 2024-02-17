@@ -751,11 +751,12 @@ export function executeAction(
     }
 
     if (action.event.type === 'revealed') {
-      const card = ctx.view.cards[action.event.card];
-      if (card.whenRevealed.length > 0) {
+      const releaved =
+        ctx.view.cards[action.event.card].rules.whenRevealed ?? [];
+      if (releaved.length > 0) {
         const target = action.event.card;
         ctx.state.next.unshift(
-          card.whenRevealed.map((effect) => ({
+          releaved.map((effect) => ({
             card: target,
             action: {
               whenRevealed: effect,

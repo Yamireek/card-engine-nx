@@ -58,14 +58,6 @@ export function applyModifier(
     return;
   }
 
-  if ('whenRevealed' in modifier) {
-    self.whenRevealed.push({
-      description: modifier.description,
-      action: modifier.whenRevealed,
-    });
-    return;
-  }
-
   if ('conditional' in modifier) {
     if (modifier.conditional.advance !== undefined) {
       self.conditional.advance.push(modifier.conditional.advance);
