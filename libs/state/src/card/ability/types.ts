@@ -18,7 +18,7 @@ export type Ability = { description: string } & (
   | { shadow: Action }
   | {
       action: Action;
-      cost?: CostModifier;
+      payment?: CostModifier;
       phase?: Phase;
       limit?: Limit;
     }
@@ -47,7 +47,7 @@ export type Ability = { description: string } & (
       response: ResponseAction;
       target?: CardTarget;
       zone?: GameZoneType | PlayerZoneType;
-      cost?: CostModifier;
+      payment?: CostModifier;
     }
   | { forced: ResponseAction; target?: CardTarget }
   | { attachesTo: CardTarget }

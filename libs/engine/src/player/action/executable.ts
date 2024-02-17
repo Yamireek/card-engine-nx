@@ -69,8 +69,8 @@ export function canPlayerExecute(
         .filter((c) => ctx.state.cards[c.id].token.resources > 0);
 
       if (
-        action.payResources.heroes &&
-        heroes.length < action.payResources.heroes
+        action.payResources.needHeroes &&
+        heroes.length < action.payResources.needHeroes
       ) {
         return false;
       }

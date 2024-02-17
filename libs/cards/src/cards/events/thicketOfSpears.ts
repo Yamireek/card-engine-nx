@@ -9,8 +9,8 @@ export const thicketOfSpears = event(
   {
     description:
       "You must use resources from 3 different heroes' pools to pay for this card. Action: Choose a player. That player's engaged enemies cannot attack that player this phase.",
-    cost: {
-      heroes: 3,
+    payment: {
+      needHeroes: 3,
     },
     phase: 'combat',
     action: {

@@ -393,7 +393,7 @@ export function executePlayerAction(
     }
 
     if (
-      options.length === action.payResources.heroes &&
+      options.length === action.payResources.needHeroes &&
       options.length === action.payResources.amount
     ) {
       ctx.state.next.unshift({
@@ -416,7 +416,7 @@ export function executePlayerAction(
           title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
           options,
           count: {
-            min: action.payResources.heroes ?? 0,
+            min: action.payResources.needHeroes ?? 0,
           },
         },
       });

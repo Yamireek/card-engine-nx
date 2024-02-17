@@ -30,7 +30,7 @@ export type PlayerAction =
       payResources?: {
         amount: NumberExpr;
         sphere: Sphere | Sphere[];
-        heroes?: number;
+        needHeroes?: number;
       };
       declareAttackers?: CardId;
       chooseCardActions?: {

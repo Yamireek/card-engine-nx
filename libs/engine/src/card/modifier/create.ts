@@ -47,7 +47,7 @@ export function createModifiers(
             card: self,
             modifier: {
               description: ability.description,
-              cost: ability.cost,
+              cost: ability.payment,
               action: {
                 useScope: [
                   {
@@ -65,7 +65,7 @@ export function createModifiers(
                       cost: {
                         card: self,
                         action: {
-                          payCost: ability.cost ?? {},
+                          payCost: ability.payment ?? {},
                         },
                       },
                       effect: ability.action,
@@ -157,7 +157,7 @@ export function createModifiers(
                           cost: {
                             card: self,
                             action: {
-                              payCost: ability.cost ?? {},
+                              payCost: ability.payment ?? {},
                             },
                           },
                           effect: ability.response.action,

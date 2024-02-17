@@ -1,3 +1,3 @@
 export type CostModifier = {
-  heroes?: number;
+  needHeroes?: number;
 };
