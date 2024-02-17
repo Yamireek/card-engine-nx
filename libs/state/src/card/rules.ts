@@ -1,6 +1,7 @@
 import { merge } from 'ts-deepmerge';
 import { Action } from '../action';
 import { BoolExpr } from '../expression';
+import { CardAction } from './action';
 
 export type CardRules = {
   attacksStagingArea?: true;
@@ -12,6 +13,7 @@ export type CardRules = {
     advance?: BoolExpr[];
     travel?: BoolExpr[];
   };
+  refreshCost?: CardAction[];
 };
 
 export function mergeCardRules(r1: CardRules, r2: CardRules): CardRules {

@@ -1,7 +1,6 @@
 import { CardType, Keywords, Sphere, Trait } from '@card-engine-nx/basic';
 import { CardRules } from '../rules';
 import { Action } from '../../action';
-import { CardAction } from '../action';
 import { CardBoolExpr } from '../expression/bool';
 import { BoolExpr } from '../../expression/bool';
 import { EventType } from '../../event/type';
@@ -24,9 +23,6 @@ export type CardModifier =
     }
   | {
       increment: PropertyIncrement;
-    }
-  | {
-      refreshCost: CardAction;
     }
   | { travel: Action }
   | { setup: Action }

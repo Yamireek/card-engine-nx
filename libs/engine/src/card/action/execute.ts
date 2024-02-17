@@ -399,7 +399,8 @@ export function executeCardAction(
 
   if (action.ready === 'refresh') {
     const cv = ctx.view.cards[card.id];
-    const free = cv.refreshCost.length === 0;
+    const cost = cv.rules.refreshCost ?? [];
+    const free = cost.length === 0;
     if (free) {
       ctx.state.next.unshift({ card: card.id, action: 'ready' });
     } else {
@@ -414,7 +415,7 @@ export function executeCardAction(
                   title: 'Yes',
                   action: {
                     card: card.id,
-                    action: [...cv.refreshCost, 'ready'],
+                    action: [...cost, 'ready'],
                   },
                 },
               ],

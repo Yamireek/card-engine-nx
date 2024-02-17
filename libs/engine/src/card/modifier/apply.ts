@@ -67,11 +67,6 @@ export function applyModifier(
     return;
   }
 
-  if ('refreshCost' in modifier) {
-    self.refreshCost.push(modifier.refreshCost);
-    return;
-  }
-
   if ('replaceType' in modifier) {
     self.props.type = modifier.replaceType;
     return;
