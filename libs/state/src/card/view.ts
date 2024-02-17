@@ -14,7 +14,6 @@ export type CardView = {
   zone: ZoneId;
   attachesTo?: CardTarget; // TODO move to rules
   nextStage?: NextStage; // TODO move to rules
-  effects: string[]; // TODO delete?  
   travel: Action[]; // TODO move to rules
   conditional: {
     advance: BoolExpr[]; // TODO move to rules

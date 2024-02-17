@@ -42,12 +42,9 @@ export const CardDetail = (props: { cardId?: CardId }) => {
       sphere={card.view.props.sphere}
       text={
         card.state.sideUp !== 'shadow'
-          ? [
-              ...card.state.definition[card.state.sideUp].abilities.map(
-                (a) => a.description ?? ''
-              ),
-              ...card.view.effects,
-            ]
+          ? card.state.definition[card.state.sideUp].abilities.map(
+              (a) => a.description ?? ''
+            )
           : card.view.rules.shadows?.map((s) => s.description) ?? []
       }
       attachments={[]}
