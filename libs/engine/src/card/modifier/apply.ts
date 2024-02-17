@@ -77,11 +77,6 @@ export function applyModifier(
     return;
   }
 
-  if ('travel' in modifier) {
-    self.travel.push(modifier.travel);
-    return;
-  }
-
   if ('rule' in modifier) {
     self.rules = mergeCardRules(self.rules, modifier.rule);
     return;

@@ -16,7 +16,6 @@ export function createCardView(state: CardState): CardView {
         sphere: [],
       },
       zone: state.zone,
-      travel: [],      
       rules: {
         shadows: state.definition.shadow
           ? [state.definition.shadow]
@@ -31,7 +30,6 @@ export function createCardView(state: CardState): CardView {
     printed,
     props: cloneDeep(printed),
     zone: state.zone,
-    travel: [],    
     rules: {},
   };
 }

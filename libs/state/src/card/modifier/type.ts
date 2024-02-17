@@ -23,8 +23,7 @@ export type CardModifier =
     }
   | {
       increment: PropertyIncrement;
-    }
-  | { travel: Action }
+    }  
   | { setup: Action }
   | { nextStage: 'random' }
   | {

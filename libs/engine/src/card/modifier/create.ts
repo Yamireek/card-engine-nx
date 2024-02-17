@@ -279,7 +279,9 @@ export function createModifiers(
             card: self,
             modifier: {
               description: ability.description,
-              travel: ability.travel,
+              rule: {
+                travel: [ability.travel],
+              },
             },
           },
         ];
