@@ -25,7 +25,6 @@ export type CardModifier =
       increment: PropertyIncrement;
     }  
   | { setup: Action }
-  | { nextStage: 'random' }
   | {
       cost: CostModifier;
     }

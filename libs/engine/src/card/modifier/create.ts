@@ -307,23 +307,6 @@ export function createModifiers(
       return [];
     }
 
-    case 'nextStage' in ability: {
-      if (zone === 'questArea') {
-        return [
-          {
-            source: self,
-            card: self,
-            modifier: {
-              description: ability.description,
-              nextStage: ability.nextStage,
-            },
-          },
-        ];
-      }
-
-      return [];
-    }
-
     case 'multi' in ability:
       return ability.multi.flatMap((a) =>
         createModifiers(self, controller, a, phase, zone, type, name)

@@ -32,11 +32,6 @@ export function applyModifier(
     return;
   }
 
-  if ('nextStage' in modifier) {
-    self.nextStage = modifier.nextStage;
-    return;
-  }
-
   if ('setup' in modifier) {
     ctx.view.setup.push(modifier.setup);
     return;

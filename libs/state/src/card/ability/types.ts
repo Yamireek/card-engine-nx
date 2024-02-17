@@ -11,6 +11,7 @@ import { Limit } from './limit';
 import { PropertyIncrement } from '../modifier/increment';
 import { CardRules } from '../rules';
 
+// TODO morf to rules modifiers
 export type Ability = { description: string } & (
   | {
       whenRevealed: Action;
@@ -54,5 +55,4 @@ export type Ability = { description: string } & (
   | {
       multi: Array<Ability>;
     }
-  | { nextStage: 'random' }
 );
