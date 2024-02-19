@@ -22,16 +22,18 @@ export type CardModifier =
       action: Action;
     }
   | {
+      description: string;
+      shadow: Action;
+    }
+  | {
       increment: PropertyIncrement;
-    }  
+    }
+  | { add: { trait: Trait } | { sphere: Sphere } | { keyword: Keywords } }
   | { setup: Action }
   | {
       cost: CostModifier;
     }
-  | { keywords: Keywords }
   | { replaceType: CardType }
-  | { replaceType: CardType }
-  | { addTrait: Trait }
   | {
       if: {
         condition: CardBoolExpr;
@@ -39,11 +41,6 @@ export type CardModifier =
         false?: CardModifier | CardModifier[];
       };
     }
-  | { addSphere: Sphere }
   | {
       rules: CardRules;
-    }
-  | {
-      description: string;
-      shadow: Action;
     };

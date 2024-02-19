@@ -1,6 +1,11 @@
 import { CardView, CardModifier, mergeCardRules } from '@card-engine-nx/state';
 import { ViewContext } from '../../context/view';
-import { CardId, keys } from '@card-engine-nx/basic';
+import {
+  CardId,
+  keys,
+  mergeArrays as appendToArray,
+  mergeKeywords,
+} from '@card-engine-nx/basic';
 import { calculateCardBoolExpr } from '../expression/bool/calculate';
 import { calculateNumberExpr } from '../../expression/number/calculate';
 import { isArray } from 'lodash/fp';
@@ -67,11 +72,6 @@ export function applyModifier(
     return;
   }
 
-  if ('addTrait' in modifier) {
-    self.props.traits.push(modifier.addTrait);
-    return;
-  }
-
   if ('rules' in modifier) {
     self.rules = mergeCardRules(self.rules, modifier.rules);
     return;
@@ -96,12 +96,22 @@ export function applyModifier(
     return;
   }
 
-  if ('addSphere' in modifier) {
-    if (!self.props.sphere) {
-      self.props.sphere = [modifier.addSphere];
-    } else {
-      self.props.sphere.push(modifier.addSphere);
+  if ('add' in modifier) {
+    if ('sphere' in modifier.add) {
+      self.props.sphere = appendToArray(self.props.sphere, modifier.add.sphere);
     }
+
+    if ('trait' in modifier.add) {
+      self.props.traits = appendToArray(self.props.traits, modifier.add.trait);
+    }
+
+    if ('keyword' in modifier.add) {
+      self.props.keywords = mergeKeywords(
+        self.props.keywords,
+        modifier.add.keyword
+      );
+    }
+
     return;
   }
 

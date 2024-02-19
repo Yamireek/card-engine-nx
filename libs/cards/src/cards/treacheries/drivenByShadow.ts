@@ -27,8 +27,10 @@ export const drivenByShadow = treachery(
     },
     card: {
       description: 'Surge',
-      keywords: {
-        surge: true,
+      add: {
+        keyword: {
+          surge: true,
+        },
       },
     },
   },

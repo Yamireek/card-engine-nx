@@ -18,7 +18,9 @@ export const stewardOfGondor = attachment(
       hasAttachment: 'self',
     },
     card: {
-      addTrait: 'gondor',
+      add: {
+        trait: 'gondor',
+      },
     },
   },
   {

@@ -63,3 +63,11 @@ export function zonesEqual(a: ZoneId, b: ZoneId) {
 
   return false;
 }
+
+export function mergeArrays<T>(array: T[] | undefined, item: T): T[] {
+  if (!array) {
+    return [item];
+  }
+
+  return [...array, item];
+}

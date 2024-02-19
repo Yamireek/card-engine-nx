@@ -30,7 +30,9 @@ export const celebriansStone = attachment(
             name: 'Aragorn',
           },
           true: {
-            addSphere: 'spirit',
+            add: {
+              sphere: 'spirit',
+            },
           },
         },
       },

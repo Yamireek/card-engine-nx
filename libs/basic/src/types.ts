@@ -1,3 +1,4 @@
+import { merge } from 'ts-deepmerge';
 import { GameZoneType, PlayerId, PlayerZoneType } from './enums';
 import { Flavor } from './flavors';
 
@@ -10,3 +11,19 @@ export type Keywords = {
   sentinel?: boolean;
   surge?: boolean;
 };
+
+export function mergeKeywords(k1?: Keywords, k2?: Keywords): Keywords {
+  if (k1 && k2) {
+    return merge(k1, k2);
+  }
+
+  if (!k1 && k2) {
+    return k2;
+  }
+
+  if (k1 && !k2) {
+    return k1;
+  }
+
+  return {};
+}

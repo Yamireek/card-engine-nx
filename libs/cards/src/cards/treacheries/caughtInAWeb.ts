@@ -32,7 +32,11 @@ export const caughtInAWeb = treachery(
               {
                 replaceType: 'attachment',
               },
-              { addTrait: 'condition' },
+              {
+                add: {
+                  trait: 'condition',
+                },
+              },
             ],
           },
         },
