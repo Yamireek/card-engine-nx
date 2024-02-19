@@ -28,7 +28,13 @@ export type CardModifier =
   | {
       increment: PropertyIncrement;
     }
-  | { add: { trait: Trait } | { sphere: Sphere } | { keyword: Keywords } }
+  | {
+      add: {
+        trait?: Trait | Trait[];
+        sphere?: Sphere | Sphere[];
+        keyword?: Keywords;
+      };
+    }
   | { setup: Action }
   | {
       cost: CostModifier;

@@ -1,4 +1,4 @@
-import { keys, zonesEqual } from '@card-engine-nx/basic';
+import { asArray, keys, zonesEqual } from '@card-engine-nx/basic';
 import { CardState, CardTarget, CardView } from '@card-engine-nx/state';
 import { intersection, last } from 'lodash';
 import { ViewContext } from '../../context/view';
@@ -8,7 +8,6 @@ import { calculateBoolExpr } from '../../expression/bool/calculate';
 import { calculateNumberExpr } from '../../expression/number/calculate';
 import { getCardFromScope } from '../../scope/getCard';
 import { getTargetPlayers } from '../../player/target/multi';
-import { asArray } from '../../utils';
 import { isInPlay } from '../../zone/utils';
 import { getTargetCards } from '../target/multi';
 

@@ -5,8 +5,8 @@ import {
   Phase,
   PlayerId,
   ZoneType,
+  asArray,
 } from '@card-engine-nx/basic';
-import { asArray } from '../../utils';
 import { isInPlay } from '../../zone/utils';
 
 export function createModifiers(

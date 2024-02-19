@@ -97,15 +97,15 @@ export function applyModifier(
   }
 
   if ('add' in modifier) {
-    if ('sphere' in modifier.add) {
+    if (modifier.add.sphere) {
       self.props.sphere = appendToArray(self.props.sphere, modifier.add.sphere);
     }
 
-    if ('trait' in modifier.add) {
+    if (modifier.add.trait) {
       self.props.traits = appendToArray(self.props.traits, modifier.add.trait);
     }
 
-    if ('keyword' in modifier.add) {
+    if (modifier.add.keyword) {
       self.props.keywords = mergeKeywords(
         self.props.keywords,
         modifier.add.keyword

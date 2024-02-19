@@ -12,8 +12,8 @@ import { getTargetPlayers } from './player/target/multi';
 import { calculateBoolExpr } from './expression/bool/calculate';
 import { ViewContext } from './context/view';
 import { getZoneType } from './zone/utils';
-import { asArray } from './utils';
 import { getTargetCards } from './card/target/multi';
+import { asArray } from '@card-engine-nx/basic';
 
 export function createView(state: State): View {
   const view: View = {

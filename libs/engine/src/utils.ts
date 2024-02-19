@@ -16,7 +16,6 @@ import { uiEvent } from './events/eventFactories';
 import { UIEvents } from './events/uiEvents';
 import { createView } from './view';
 import { Random } from './utils/random';
-import { isArray } from 'lodash/fp';
 
 export function addPlayerCard(
   state: State,
@@ -176,17 +175,5 @@ export function single<T>(items: T[]): T {
     return items[0];
   } else {
     throw new Error('expecting 1 item');
-  }
-}
-
-export function asArray<T>(item?: T | T[]): T[] {
-  if (!item) {
-    return [];
-  }
-
-  if (isArray(item)) {
-    return item;
-  } else {
-    return [item];
   }
 }

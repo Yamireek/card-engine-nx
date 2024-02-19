@@ -1,3 +1,4 @@
+import { isArray } from 'lodash';
 import { PlayerId, ZoneId } from '.';
 
 export function values<TK extends string | number, TI>(
@@ -64,10 +65,22 @@ export function zonesEqual(a: ZoneId, b: ZoneId) {
   return false;
 }
 
-export function mergeArrays<T>(array: T[] | undefined, item: T): T[] {
+export function mergeArrays<T>(array: T[] | undefined, item: T | T[]): T[] {
   if (!array) {
-    return [item];
+    return asArray(item);
   }
 
-  return [...array, item];
+  return [...array, ...asArray(item)];
+}
+
+export function asArray<T>(item?: T | T[]): T[] {
+  if (!item) {
+    return [];
+  }
+
+  if (isArray(item)) {
+    return item;
+  } else {
+    return [item];
+  }
 }
