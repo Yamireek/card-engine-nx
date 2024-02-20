@@ -31,9 +31,7 @@ it('Glorfindel', () => {
   expect(game.actions.length).toEqual(1);
   game.chooseAction(action);
   expect(glorfindel.token.resources).toEqual(1);
-  expect(glorfindel.token.damage).toEqual(1);
-  console.log(game.actions);
-  console.log(game.state.cards[1]);
+  expect(glorfindel.token.damage).toEqual(1);  
   expect(game.actions.length).toEqual(0);
   game.do('endRound');
   expect(game.actions.length).toEqual(1);
@@ -128,8 +126,7 @@ it('Thalin', async () => {
   const enemy = game.getCard('Forest Spider');
   thalin.update({ mark: 'questing' });
   game.do('revealEncounterCard');
-  game.chooseOption(response);
-  console.log(enemy.state);
+  game.chooseOption(response);  
   expect(enemy.token.damage).toEqual(1);
 });
 

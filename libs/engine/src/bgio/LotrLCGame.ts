@@ -15,7 +15,14 @@ const skipOptions = { actions: false, show: false };
 function createMoves(events: UIEvents): Record<string, Move<State>> {
   const skip: Move<State> = ({ G, random }) => {
     G.choice = undefined;
-    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
+    advanceToChoiceState(
+      G,
+      events,
+      skipOptions,
+      false,
+      randomBgIO(random),
+      console.log
+    );
   };
 
   const load: Move<State> = (_, state: State) => {
@@ -43,7 +50,14 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     const choices = choosen.map((index) => options[index]);
     G.choice = undefined;
     G.next.unshift(...choices.map((c) => c.action));
-    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
+    advanceToChoiceState(
+      G,
+      events,
+      skipOptions,
+      false,
+      randomBgIO(random),
+      console.log
+    );
   };
 
   const json: Move<State> = ({ G, random }, action: Action) => {
@@ -53,7 +67,14 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     G.choice = undefined;
     G.next = [action];
 
-    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
+    advanceToChoiceState(
+      G,
+      events,
+      skipOptions,
+      false,
+      randomBgIO(random),
+      console.log
+    );
 
     if (!G.choice) {
       G.choice = choice;
@@ -96,7 +117,14 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
       );
     }
 
-    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
+    advanceToChoiceState(
+      G,
+      events,
+      skipOptions,
+      false,
+      randomBgIO(random),
+      console.log
+    );
   };
 
   const action: Move<State> = ({ G, random }, index: number) => {
@@ -110,7 +138,14 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
     G.choice = undefined;
     G.next.unshift({ playerActions: title });
     G.next.unshift(action.action);
-    advanceToChoiceState(G, events, skipOptions, false, randomBgIO(random));
+    advanceToChoiceState(
+      G,
+      events,
+      skipOptions,
+      false,
+      randomBgIO(random),
+      console.log
+    );
   };
 
   return {

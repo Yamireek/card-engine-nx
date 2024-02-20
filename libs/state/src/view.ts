@@ -10,7 +10,7 @@ import { UserCardAction } from './card/ability/action';
 export type View = {
   cards: Record<CardId, CardView>;
   players: Partial<Record<PlayerId, PlayerView>>;
-  setup: Action[];
+  setup: Action[]; // TODO move to cards
   actions: UserCardAction[];
   modifiers: GameModifierState[];
   responses: Partial<

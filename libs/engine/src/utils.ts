@@ -46,12 +46,15 @@ export function addGameCard(
   state.nextId++;
 }
 
-export function nextStep(ctx: ExecutionContext): boolean {
+export function nextStep(
+  ctx: ExecutionContext,
+  log: (...args: any[]) => void
+): boolean {
   const action = ctx.state.next.shift();
   if (!action) {
     return false;
   } else {
-    console.log('executing ', JSON.parse(JSON.stringify(action)));
+    log('executing ', JSON.parse(JSON.stringify(action)));
     const result = executeAction(action, ctx);
     return result ?? false;
   }
@@ -132,7 +135,8 @@ export function advanceToChoiceState(
   events: UIEvents,
   skip: { show: boolean; actions: boolean },
   stopOnError: boolean,
-  random: Random
+  random: Random,
+  log: (...args: any[]) => void
 ) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -149,7 +153,7 @@ export function advanceToChoiceState(
     try {
       const ctx = createExecutionContext(state, events, random);
       while (ctx !== undefined) {
-        const newView = nextStep(ctx);
+        const newView = nextStep(ctx, log);
         if (newView || ctx.state.choice || ctx.state.next.length === 0) {
           break;
         }

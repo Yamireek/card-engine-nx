@@ -50,7 +50,6 @@ it('Feint', () => {
     ],
   });
 
-  console.log(game.actions);
   expect(game.actions.length).toBe(0);
   game.do({ beginPhase: 'combat' });
   expect(game.actions.length).toBe(1);

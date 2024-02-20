@@ -7,7 +7,7 @@ import {
   createState,
 } from '@card-engine-nx/state';
 import { CardId, PlayerId, values } from '@card-engine-nx/basic';
-import { consoleEvents } from '../events/uiEvents';
+import { emptyEvents } from '../events/uiEvents';
 import { advanceToChoiceState } from '../utils';
 import { noRandom } from '../utils/random';
 import { createView } from '../view';
@@ -16,16 +16,23 @@ const random = noRandom();
 
 export class TestEngine {
   state: State;
+  log: (...args: any[]) => void;
 
-  constructor(state: SimpleState) {
+  constructor(state: SimpleState, log?: true) {
     this.state = createState(state);
+    this.log = log
+      ? console.log
+      : () => {
+          return;
+        };
 
     advanceToChoiceState(
       this.state,
-      consoleEvents,
+      emptyEvents,
       { actions: true, show: true },
       true,
-      random
+      random,
+      this.log
     );
     this.state.choice = undefined;
     this.state.next = [];
@@ -49,20 +56,21 @@ export class TestEngine {
     this.state.next.unshift(...action, 'stateCheck');
     advanceToChoiceState(
       this.state,
-      consoleEvents,
+      emptyEvents,
       { actions: true, show: true },
       true,
-      random
+      random,
+      this.log
     );
 
     if (this.state.choice) {
       if (this.state.choice.type === 'actions') {
-        console.log(
+        this.log(
           'actions',
           this.view.actions.filter((a) => a.enabled)
         );
       } else {
-        console.log('choice', this.state.choice);
+        this.log('choice', this.state.choice);
       }
     }
   }
