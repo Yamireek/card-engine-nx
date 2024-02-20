@@ -183,7 +183,7 @@ it('Stand Together', () => {
   game.chooseOption('1');
   expect(hero.token.damage).toBe(3);
   game.do('endPhase');
-  expect(game.view.players[0]?.multipleDefenders).toBeUndefined();
+  expect(game.view.players[0]?.rules.multipleDefenders).toBeUndefined();
 });
 
 it('Swift Strike', () => {
