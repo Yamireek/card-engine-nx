@@ -1,4 +1,4 @@
-import { GameZoneType, PlayerZoneType } from '@card-engine-nx/basic';
+import { GameZoneType, PlayerZoneType, Side } from '@card-engine-nx/basic';
 import { CardDefinition } from './definitions/types';
 
 export type SimpleState = {
@@ -14,4 +14,5 @@ export type SimpleCardState =
       damage?: number;
       exhausted?: boolean;
       attachments?: CardDefinition[];
+      side?: Side;
     };

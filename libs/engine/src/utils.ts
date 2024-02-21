@@ -48,7 +48,7 @@ export function addGameCard(
 
 export function nextStep(
   ctx: ExecutionContext,
-  log: (...args: any[]) => void
+  log: (...args: unknown[]) => void
 ): boolean {
   const action = ctx.state.next.shift();
   if (!action) {
@@ -136,7 +136,7 @@ export function advanceToChoiceState(
   skip: { show: boolean; actions: boolean },
   stopOnError: boolean,
   random: Random,
-  log: (...args: any[]) => void
+  log: (...args: unknown[]) => void
 ) {
   // eslint-disable-next-line no-constant-condition
   while (true) {

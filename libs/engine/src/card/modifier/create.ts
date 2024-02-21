@@ -129,6 +129,36 @@ export function createModifiers(
         ];
       }
 
+      if (zone === 'activeLocation' || zone === 'questArea') {
+        return [
+          {
+            source: self,
+            card: self,
+            modifier: {
+              description: ability.description,
+              action: {
+                useScope: {
+                  var: 'self',
+                  card: self,
+                },
+                action: ability.limit
+                  ? [
+                      {
+                        useLimit: {
+                          card: self,
+                          type: ability.limit.type,
+                          max: ability.limit.max,
+                        },
+                      },
+                      ability.action,
+                    ]
+                  : ability.action,
+              },
+            },
+          },
+        ];
+      }
+
       return [];
     }
 

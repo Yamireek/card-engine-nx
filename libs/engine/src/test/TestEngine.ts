@@ -16,7 +16,7 @@ const random = noRandom();
 
 export class TestEngine {
   state: State;
-  log: (...args: any[]) => void;
+  log: (...args: unknown[]) => void;
 
   constructor(state: SimpleState, log?: true) {
     this.state = createState(state);

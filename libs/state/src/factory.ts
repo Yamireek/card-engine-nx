@@ -97,6 +97,7 @@ function addCard(
     card.token.damage = definition.damage ?? 0;
     card.token.progress = definition.progress ?? 0;
     card.tapped = definition.exhausted ?? false;
+    card.sideUp = definition.side ?? 'front';
     if (definition.attachments) {
       for (const a of definition.attachments) {
         const attachment = createCardState(
