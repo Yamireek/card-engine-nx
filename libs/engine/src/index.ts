@@ -14,3 +14,4 @@ export * from './zone';
 export * from './GameSetupData';
 export * from './utils';
 export * from './view';
+export * from './logger';

@@ -9,10 +9,15 @@ import { ActivePlayers } from 'boardgame.io/core';
 import { PowerSet } from 'js-combinatorics';
 import { randomBgIO } from '../utils/random';
 import { GameSetupData } from '../GameSetupData';
+import { Logger } from '../logger/types';
+import { consoleLogger } from '../logger/console';
 
 const skipOptions = { actions: false, show: false };
 
-function createMoves(events: UIEvents): Record<string, Move<State>> {
+function createMoves(
+  events: UIEvents,
+  logger: Logger
+): Record<string, Move<State>> {
   const skip: Move<State> = ({ G, random }) => {
     G.choice = undefined;
     advanceToChoiceState(
@@ -21,7 +26,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
       skipOptions,
       false,
       randomBgIO(random),
-      console.log
+      logger
     );
   };
 
@@ -56,7 +61,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
       skipOptions,
       false,
       randomBgIO(random),
-      console.log
+      logger
     );
   };
 
@@ -73,7 +78,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
       skipOptions,
       false,
       randomBgIO(random),
-      console.log
+      logger
     );
 
     if (!G.choice) {
@@ -123,7 +128,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
       skipOptions,
       false,
       randomBgIO(random),
-      console.log
+      logger
     );
   };
 
@@ -144,7 +149,7 @@ function createMoves(events: UIEvents): Record<string, Move<State>> {
       skipOptions,
       false,
       randomBgIO(random),
-      console.log
+      logger
     );
   };
 
@@ -196,7 +201,7 @@ export function LotrLCGame(
     },
     minPlayers: 1,
     maxPlayers: 4,
-    moves: createMoves(events),
+    moves: createMoves(events, consoleLogger),
     turn: {
       activePlayers: ActivePlayers.ALL,
     },

@@ -10,7 +10,7 @@
     "lint": "nx run-many -t lint --max-warnings=0",
     "storybook": "nx run ui:storybook",
     "test": "npx vitest",
-    "test-ui": "npx vitest --coverage --ui --api 9527",
+    "test-ui": "npx vitest --ui",
     "prettier": "npx prettier -cw .",
     "postinstall": "patch-package"
   },

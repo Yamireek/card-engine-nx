@@ -16,6 +16,7 @@ import { uiEvent } from './events/eventFactories';
 import { UIEvents } from './events/uiEvents';
 import { createView } from './view';
 import { Random } from './utils/random';
+import { Logger } from './logger/types';
 
 export function addPlayerCard(
   state: State,
@@ -46,15 +47,12 @@ export function addGameCard(
   state.nextId++;
 }
 
-export function nextStep(
-  ctx: ExecutionContext,
-  log: (...args: unknown[]) => void
-): boolean {
+export function nextStep(ctx: ExecutionContext, logger: Logger): boolean {
   const action = ctx.state.next.shift();
   if (!action) {
     return false;
   } else {
-    log('executing ', JSON.parse(JSON.stringify(action)));
+    logger.log('executing ', JSON.parse(JSON.stringify(action)));
     const result = executeAction(action, ctx);
     return result ?? false;
   }
@@ -136,7 +134,7 @@ export function advanceToChoiceState(
   skip: { show: boolean; actions: boolean },
   stopOnError: boolean,
   random: Random,
-  log: (...args: unknown[]) => void
+  logger: Logger
 ) {
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -153,7 +151,7 @@ export function advanceToChoiceState(
     try {
       const ctx = createExecutionContext(state, events, random);
       while (ctx !== undefined) {
-        const newView = nextStep(ctx, log);
+        const newView = nextStep(ctx, logger);
         if (newView || ctx.state.choice || ctx.state.next.length === 0) {
           break;
         }

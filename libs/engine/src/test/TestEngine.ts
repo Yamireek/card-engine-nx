@@ -11,20 +11,19 @@ import { emptyEvents } from '../events/uiEvents';
 import { advanceToChoiceState } from '../utils';
 import { noRandom } from '../utils/random';
 import { createView } from '../view';
+import { Logger } from '../logger/types';
+import { nullLogger } from '../logger/null';
+import { consoleLogger } from '../logger/console';
 
 const random = noRandom();
 
 export class TestEngine {
   state: State;
-  log: (...args: unknown[]) => void;
+  logger: Logger;
 
-  constructor(state: SimpleState, log?: true) {
+  constructor(state: SimpleState, console?: boolean) {
     this.state = createState(state);
-    this.log = log
-      ? console.log
-      : () => {
-          return;
-        };
+    this.logger = console ? consoleLogger : nullLogger;
 
     advanceToChoiceState(
       this.state,
@@ -32,7 +31,7 @@ export class TestEngine {
       { actions: true, show: true },
       true,
       random,
-      this.log
+      this.logger
     );
     this.state.choice = undefined;
     this.state.next = [];
@@ -60,17 +59,17 @@ export class TestEngine {
       { actions: true, show: true },
       true,
       random,
-      this.log
+      this.logger
     );
 
     if (this.state.choice) {
       if (this.state.choice.type === 'actions') {
-        this.log(
+        this.logger.log(
           'actions',
           this.view.actions.filter((a) => a.enabled)
         );
       } else {
-        this.log('choice', this.state.choice);
+        this.logger.log('choice', this.state.choice);
       }
     }
   }
