@@ -154,10 +154,6 @@ it('Event action', () => {
   expect(game.actions[0].description).toBe(drawAbility.description);
 });
 
-it('Objective action', () => {
-  // TODO
-});
-
 it('Quest action', () => {
   const game = new TestEngine({
     players: [
@@ -220,6 +216,6 @@ it('Location action', () => {
   expect(game.actions[0].description).toBe(drawAbility.description);
 });
 
-it('Out of play action', () => {
-  // TODO
-});
+it.todo('Out of play action');
+
+it.todo('Objective action');
