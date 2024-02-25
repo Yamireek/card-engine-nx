@@ -14,6 +14,8 @@ export default defineConfig({
         'apps/*',
         '**/index.ts',
       ],
+      enabled: true,
+      reporter: ['html'],
     },
   },
 });
