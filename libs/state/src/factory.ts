@@ -3,7 +3,6 @@ import { State } from './state';
 import { SimpleCardState, SimpleState } from './simple';
 import { Action } from './action';
 import { ZoneState } from './zone/state';
-import { createCardState } from './card/factory';
 import { createPlayerState } from './player/factory';
 
 export function createState(initState?: SimpleState, program?: Action): State {
@@ -46,7 +45,7 @@ export function createState(initState?: SimpleState, program?: Action): State {
         const zoneInit = initState.players?.[playerKey]?.[zoneKey];
         if (zoneInit) {
           for (const definition of zoneInit) {
-            addCard(state, zone, zoneKey, player.id, definition);
+            state.next.push(addCard(definition, player.id, zoneKey));
           }
         }
       }
@@ -64,7 +63,7 @@ export function createState(initState?: SimpleState, program?: Action): State {
       const zoneInit = initState[zoneKey];
       if (zoneInit) {
         for (const definition of zoneInit) {
-          addCard(state, zone, zoneKey, undefined, definition);
+          state.next.push(addCard(definition, undefined, zoneKey));
         }
       }
     }
@@ -74,45 +73,35 @@ export function createState(initState?: SimpleState, program?: Action): State {
 }
 
 function addCard(
-  state: State,
-  zone: ZoneState,
-  zoneType: GameZoneType | PlayerZoneType,
+  definition: SimpleCardState,
   player: PlayerId | undefined,
-  definition: SimpleCardState
-) {
-  const card = createCardState(
-    state.nextId++,
-    zoneType === 'library' || zoneType === 'encounterDeck' ? 'back' : 'front',
-    'card' in definition ? definition.card : definition,
-    player,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    player ? { player, type: zoneType } : (zoneType as any)
-  );
-
-  zone.cards.push(card.id);
-  state.cards[card.id] = card;
+  zoneType: GameZoneType | PlayerZoneType // TODO remove
+): Action {
+  const side =
+    zoneType === 'library' || zoneType === 'encounterDeck' ? 'back' : 'front';
 
   if ('card' in definition) {
-    card.token.resources = definition.resources ?? 0;
-    card.token.damage = definition.damage ?? 0;
-    card.token.progress = definition.progress ?? 0;
-    card.tapped = definition.exhausted ?? false;
-    card.sideUp = definition.side ?? 'front';
-    if (definition.attachments) {
-      for (const a of definition.attachments) {
-        const attachment = createCardState(
-          state.nextId++,
-          'front',
-          a,
-          player,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          player ? { player, type: zoneType } : (zoneType as any)
-        );
+    const action: Action = {
+      addCard: {
+        definition: definition.card,
+        zone: player ? { player, type: zoneType } : (zoneType as any),
+        side: definition.side ?? side,
+        damage: definition.damage,
+        progress: definition.progress,
+        resources: definition.resources,
+        exhausted: definition.exhausted,
+        attachments: definition.attachments,
+      },
+    };
 
-        zone.cards.push(attachment.id);
-        state.cards[attachment.id] = attachment;
-        card.attachments.push(attachment.id);
-      }
-    }
+    return action;
+  } else {
+    return {
+      addCard: {
+        definition,
+        zone: player ? { player, type: zoneType } : (zoneType as any),
+        side,
+      },
+    };
   }
 }

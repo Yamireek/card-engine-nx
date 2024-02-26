@@ -1,4 +1,11 @@
-import { CardId, LimitType, Mark, Phase } from '@card-engine-nx/basic';
+import {
+  CardId,
+  LimitType,
+  Mark,
+  Phase,
+  Side,
+  ZoneId,
+} from '@card-engine-nx/basic';
 import { Scenario } from './deck/scenario';
 import { PlayerDeck } from './deck/player';
 import { PendingEffect } from './effect';
@@ -11,6 +18,7 @@ import { PlayerTarget } from './player/target';
 import { CardAction } from './card/action';
 import { PlayerAction } from './player/action';
 import { ScopeAction } from './scope/action';
+import { CardDefinition } from './definitions';
 
 export type Action =
   | Action[]
@@ -43,6 +51,16 @@ export type Action =
     }
   | {
       addPlayer?: PlayerDeck;
+      addCard?: {
+        definition: CardDefinition;
+        zone: ZoneId;
+        side: Side;
+        resources?: number;
+        progress?: number;
+        damage?: number;
+        exhausted?: boolean;
+        attachments?: CardDefinition[];
+      };
       setupScenario?: {
         scenario: Scenario;
         difficulty: 'easy' | 'normal';

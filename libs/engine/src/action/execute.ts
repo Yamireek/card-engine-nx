@@ -2,13 +2,14 @@ import {
   Action,
   Choice,
   Scope,
+  createCardState,
   createPlayerState,
 } from '@card-engine-nx/state';
 import { getTargetPlayer } from '../player/target/single';
 import { getTargetPlayers } from '../player/target/multi';
 import { executePlayerAction } from '../player/action/execute';
 import { isArray, keys, last, reverse, sum } from 'lodash/fp';
-import { values } from '@card-engine-nx/basic';
+import { CardId, values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard } from '../utils';
 import { calculateBoolExpr } from '../expression/bool/calculate';
 import { calculateNumberExpr } from '../expression/number/calculate';
@@ -20,6 +21,8 @@ import { getTargetCards } from '../card/target/multi';
 import { getTargetCard } from '../card/target/single';
 import { executeScopeAction } from '../scope/execute';
 import { gameRound } from '../round/gameRound';
+import { getZoneState } from '../zone';
+import { abilityToModifiers, createModifiers } from '../card';
 
 export function executeAction(
   action: Action,
@@ -815,6 +818,72 @@ export function executeAction(
     if (!result && action.if.false) {
       ctx.state.next.unshift(action.if.false);
     }
+    return;
+  }
+
+  if (action.addCard) {
+    const zone = getZoneState(action.addCard.zone, ctx.state);
+    const owner =
+      typeof action.addCard.zone !== 'string'
+        ? action.addCard.zone.player
+        : undefined;
+    const cardId = ctx.state.nextId++;
+    zone.cards.push(cardId);
+    const cardState = createCardState(
+      cardId,
+      action.addCard.side,
+      action.addCard.definition,
+      owner,
+      action.addCard.zone
+    );
+    ctx.state.cards[cardId] = cardState;
+
+    // TODO simplify
+    if (action.addCard.damage) {
+      cardState.token.damage = action.addCard.damage;
+    }
+
+    if (action.addCard.progress) {
+      cardState.token.progress = action.addCard.progress;
+    }
+
+    if (action.addCard.resources) {
+      cardState.token.resources = action.addCard.resources;
+    }
+
+    if (action.addCard.exhausted) {
+      cardState.tapped = true;
+    }
+
+    // TODO add modifiers
+
+    // const modifiers = action.addCard.definition.front.abilities.flatMap((a) =>
+    //   abilityToModifiers(id, a)
+    // );
+
+    // ctx.state.modifiers.push(...modifiers);
+
+    if (action.addCard.attachments) {
+      const ids: CardId[] = [];
+      for (const atachDef of action.addCard.attachments) {
+        const attachmenId = ctx.state.nextId++;
+        ids.push(attachmenId);
+        const attachmentState = createCardState(
+          attachmenId,
+          'front',
+          atachDef,
+          owner,
+          action.addCard.zone
+        );
+
+        zone.cards.push(attachmenId);
+        ctx.state.cards[attachmenId] = attachmentState;
+        attachmentState.attachedTo = attachmenId;
+      }
+
+      cardState.attachments = ids;
+    }
+
     return;
   }
 

@@ -9,6 +9,26 @@ import {
 } from '@card-engine-nx/basic';
 import { isInPlay } from '../../zone/utils';
 
+export function abilityToModifiers(
+  self: CardId,
+  ability: Ability
+): GameModifier[] {
+  if ('increment' in ability) {
+    return [
+      {
+        source: self,
+        card: ability.target ?? self,
+        modifier: {
+          description: ability.description,
+          increment: ability.increment,
+        },
+      },
+    ];
+  }
+
+  throw new Error(`unknown ability: ${JSON.stringify(ability, null, 1)}`);
+}
+
 export function createModifiers(
   self: CardId,
   controller: PlayerId | undefined,
