@@ -1,37 +1,16 @@
-import { core } from '@card-engine-nx/cards';
-import {
-  advanceToChoiceState,
-  consoleLogger,
-  createView,
-  emptyEvents,
-} from '@card-engine-nx/engine';
-import { createState } from '@card-engine-nx/state';
+import { StrictMode } from 'react';
+import * as ReactDOM from 'react-dom/client';
+import { App } from './App';
 
-const state = createState({ players: [{}] });
-
-state.next = [
-  {
-    addCard: {
-      definition: core.hero.gimli,
-      zone: { player: '0', type: 'playerArea' },
-      side: 'front',
-    },
-  },
-];
-
-advanceToChoiceState(
-  state,
-  emptyEvents,
-  { actions: true, show: true },
-  true,
-  null as any,
-  consoleLogger
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
 );
 
-state.cards[1].token.damage = 1;
-
-console.log(state);
-console.log(createView(state));
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
 
 /*import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
