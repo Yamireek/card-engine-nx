@@ -1,4 +1,9 @@
-import { State, View } from '@card-engine-nx/state';
+import {
+  CardGlobalModifier,
+  PlayerGlobalModifier,
+  State,
+  View,
+} from '@card-engine-nx/state';
 import { mapValues, values } from 'lodash';
 import { createModifiers } from './card/modifier/create';
 import { createPlayAttachmentAction } from './card/action/play/attachment';
@@ -15,8 +20,8 @@ import { getZoneType } from './zone/utils';
 import { getTargetCards } from './card/target/multi';
 import { asArray } from '@card-engine-nx/basic';
 
-export function createView(state: State): View {
-  const view: View = {
+export function createBaseView(state: State): View {
+  return {
     cards: mapValues(state.cards, (c) => createCardView(c)),
     players: mapValues(state.players, (p) =>
       p ? createPlayerView(p) : undefined
@@ -26,8 +31,10 @@ export function createView(state: State): View {
     responses: {},
     setup: [],
   };
+}
 
-  view.modifiers = values(state.cards).flatMap((c) => {
+export function createBaseModifiers(state: State) {
+  return values(state.cards).flatMap((c) => {
     if (c.sideUp === 'shadow') {
       return [];
     }
@@ -47,6 +54,11 @@ export function createView(state: State): View {
       )
       .flatMap((modifier) => ({ applied: false, modifier }));
   });
+}
+
+export function createView(state: State): View {
+  const view = createBaseView(state);
+  view.modifiers = createBaseModifiers(state);
 
   view.modifiers.push(
     ...state.modifiers.map((m) => ({ applied: false, modifier: m }))
@@ -60,65 +72,11 @@ export function createView(state: State): View {
       allApplied = false;
 
       if ('card' in modifier.modifier) {
-        const sourceCard = state.cards[modifier.modifier.source];
-
-        const targets = getTargetCards(modifier.modifier.card, {
-          state,
-          view,
-          scopes: [
-            { player: { controller: asArray(sourceCard.controller) } },
-            { card: { self: asArray(modifier.modifier.source) } },
-          ],
-        });
-
-        for (const target of targets) {
-          const ctx: ViewContext = {
-            state,
-            view,
-            scopes: [
-              {
-                card: {
-                  target: asArray(target),
-                  self: asArray(modifier.modifier.source),
-                },
-              },
-            ],
-          };
-          const condition = modifier.modifier.condition
-            ? calculateBoolExpr(modifier.modifier.condition, ctx)
-            : true;
-          if (condition) {
-            applyModifier(
-              modifier.modifier.modifier,
-              view.cards[target],
-              modifier.modifier.source,
-              ctx
-            );
-          }
-        }
+        applyGlobalCardModifier(state, view, modifier.modifier);
       }
 
       if ('player' in modifier.modifier) {
-        const ctx: ViewContext = {
-          state,
-          view,
-          scopes: [{ card: { self: asArray(modifier.modifier.source) } }],
-        };
-
-        const condition = modifier.modifier.condition
-          ? calculateBoolExpr(modifier.modifier.condition, ctx)
-          : true;
-
-        if (condition) {
-          const targets = getTargetPlayers(modifier.modifier.player, ctx);
-
-          for (const target of targets) {
-            const player = view.players[target];
-            if (player) {
-              applyPlayerModifier(player, modifier.modifier.modifier);
-            }
-          }
-        }
+        applyGlobalPlayerModifier(state, view, modifier.modifier);
       }
 
       modifier.applied = true;
@@ -188,4 +146,74 @@ export function createView(state: State): View {
   });
 
   return view;
+}
+
+export function applyGlobalPlayerModifier(
+  state: State,
+  view: View,
+  modifier: PlayerGlobalModifier
+) {
+  const ctx: ViewContext = {
+    state,
+    view,
+    scopes: [{ card: { self: asArray(modifier.source) } }],
+  };
+
+  const condition = modifier.condition
+    ? calculateBoolExpr(modifier.condition, ctx)
+    : true;
+
+  if (condition) {
+    const targets = getTargetPlayers(modifier.player, ctx);
+
+    for (const target of targets) {
+      const player = view.players[target];
+      if (player) {
+        applyPlayerModifier(player, modifier.modifier);
+      }
+    }
+  }
+}
+
+export function applyGlobalCardModifier(
+  state: State,
+  view: View,
+  modifier: CardGlobalModifier
+) {
+  const sourceCard = state.cards[modifier.source];
+
+  const targets = getTargetCards(modifier.card, {
+    state,
+    view,
+    scopes: [
+      { player: { controller: asArray(sourceCard.controller) } },
+      { card: { self: asArray(modifier.source) } },
+    ],
+  });
+
+  for (const target of targets) {
+    const ctx: ViewContext = {
+      state,
+      view,
+      scopes: [
+        {
+          card: {
+            target: asArray(target),
+            self: asArray(modifier.source),
+          },
+        },
+      ],
+    };
+    const condition = modifier.condition
+      ? calculateBoolExpr(modifier.condition, ctx)
+      : true;
+    if (condition) {
+      applyModifier(
+        modifier.modifier,
+        view.cards[target],
+        modifier.source,
+        ctx
+      );
+    }
+  }
 }
