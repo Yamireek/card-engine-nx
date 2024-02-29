@@ -1,10 +1,20 @@
 import { it, suite, expect } from 'vitest';
 import { TestEngine } from './TestEngine';
-import { location, quest } from '@card-engine-nx/state';
+import { hero, location, quest } from '@card-engine-nx/state';
 import { phaseTravel } from '../round';
 import { calculateNumberExpr } from '../expression';
 
 const cards = {
+  hero: hero({
+    name: 'Hero',
+    attack: 1,
+    defense: 1,
+    willpower: 1,
+    hitPoints: 1,
+    sphere: 'leadership',
+    threatCost: 10,
+    traits: [],
+  }),
   location: location({
     name: 'Location',
     questPoints: 10,
@@ -26,7 +36,7 @@ suite('Active location', () => {
     const game = new TestEngine({
       players: [
         {
-          playerArea: [],
+          playerArea: [cards.hero],
           hand: [],
           engaged: [],
         },
@@ -38,7 +48,7 @@ suite('Active location', () => {
 
     game.do(phaseTravel);
     expect(game.choiceTitle).toBe('Choose location for travel');
-    game.chooseOption('1');
+    game.chooseOption('2');
     expect(locationCard.state.zone).toBe('activeLocation');
   });
 
@@ -46,7 +56,7 @@ suite('Active location', () => {
     const game = new TestEngine({
       players: [
         {
-          playerArea: [],
+          playerArea: [cards.hero],
           hand: [],
           engaged: [],
         },
@@ -56,7 +66,7 @@ suite('Active location', () => {
     });
 
     game.do(phaseTravel);
-    expect(game.choiceTitle).toBe('End travel phase');
+    expect(game.choiceTitle).toBeUndefined();
   });
 
   it('No thread', () => {
@@ -72,11 +82,7 @@ suite('Active location', () => {
       stagingArea: [cards.location],
     });
 
-    const totalThreat = calculateNumberExpr('totalThreat', {
-      state: game.state,
-      view: game.view,
-      scopes: [],
-    });
+    const totalThreat = calculateNumberExpr('totalThreat', game.ctx, []);
 
     expect(totalThreat).toBe(2);
   });
@@ -85,7 +91,7 @@ suite('Active location', () => {
     const game = new TestEngine({
       players: [
         {
-          playerArea: [],
+          playerArea: [cards.hero],
           hand: [],
           engaged: [],
         },
@@ -101,7 +107,7 @@ suite('Active location', () => {
     expect(questCard.token.progress).toBe(5);
     expect(locationCard.token.progress).toBe(0);
     game.do(phaseTravel);
-    game.chooseOption('1');
+    game.chooseOption('2');
     game.do({ placeProgress: 2 });
     expect(questCard.token.progress).toBe(5);
     expect(locationCard.token.progress).toBe(2);
@@ -111,7 +117,7 @@ suite('Active location', () => {
     const game = new TestEngine({
       players: [
         {
-          playerArea: [],
+          playerArea: [cards.hero],
           hand: [],
           engaged: [],
         },

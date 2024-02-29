@@ -42,7 +42,7 @@ const testScenario: Scenario = {
   ],
 };
 
-it.skip('Plays', () => {
+it('Plays', () => {
   const game = new TestEngine({
     players: [],
   });

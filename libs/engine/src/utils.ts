@@ -13,13 +13,13 @@ import {
 } from '@card-engine-nx/basic';
 import { executeAction } from './action/execute';
 import { ExecutionContext } from './context/execution';
-import { uiEvent } from './events/eventFactories';
 import { UIEvents } from './events/uiEvents';
 import { createView } from './view';
 import { Random } from './utils/random';
 import { Logger } from './logger/types';
 import { toJS } from 'mobx';
 
+// TODO replace with action
 export function addPlayerCard(
   state: State,
   definition: CardDefinition,
@@ -37,6 +37,7 @@ export function addPlayerCard(
   return id;
 }
 
+// TODO replace with action
 export function addGameCard(
   state: State,
   definition: CardDefinition,
@@ -126,51 +127,6 @@ export function chooseOnlyOption(state: State, skip: SkipOptions) {
       const actions = createView(state).actions.filter((a) => a.enabled);
       if (actions.length === 0) {
         state.choice = undefined;
-      }
-    }
-  }
-}
-
-// TODO less params
-export function advanceToChoiceState(
-  state: State,
-  events: UIEvents,
-  skip: SkipOptions,
-  stopOnError: boolean,
-  random: Random,
-  logger: Logger
-) {
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    chooseOnlyOption(state, skip);
-
-    if (state.choice) {
-      return;
-    }
-
-    if (state.next.length === 0) {
-      return;
-    }
-
-    try {
-      const ctx = createExecutionContext(state, events, random);
-      while (ctx !== undefined) {
-        const newView = nextStep(ctx, logger, []);
-        if (newView || ctx.state.choice || ctx.state.next.length === 0) {
-          break;
-        }
-      }
-
-      if (state.result) {
-        return;
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.log(error);
-      events.send(uiEvent.error(error.message));
-      if (stopOnError) {
-        throw error;
       }
     }
   }

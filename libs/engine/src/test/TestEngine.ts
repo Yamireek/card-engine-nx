@@ -8,37 +8,40 @@ import {
 } from '@card-engine-nx/state';
 import { CardId, PlayerId, values } from '@card-engine-nx/basic';
 import { emptyEvents } from '../events/uiEvents';
-import { advanceToChoiceState } from '../utils';
 import { noRandom } from '../utils/random';
 import { createView } from '../view';
 import { Logger } from '../logger/types';
 import { nullLogger } from '../logger/null';
 import { consoleLogger } from '../logger/console';
+import { ObservableContext } from '../context';
 
 const random = noRandom();
 
 export class TestEngine {
-  state: State;
   logger: Logger;
 
-  constructor(state: SimpleState, console?: boolean) {
-    this.state = createState(state);
-    this.logger = console ? consoleLogger : nullLogger;
+  ctx: ObservableContext;
 
-    advanceToChoiceState(
-      this.state,
+  constructor(state: SimpleState, console?: boolean) {
+    this.logger = console ? consoleLogger : nullLogger;
+    this.ctx = new ObservableContext(
+      createState(state),
       emptyEvents,
-      { actions: true, show: true },
-      true,
       random,
       this.logger
     );
+
+    this.advance();
     this.state.choice = undefined;
     this.state.next = [];
   }
 
+  get state() {
+    return this.ctx.state;
+  }
+
   get view() {
-    return createView(this.state);
+    return this.ctx.view;
   }
 
   get actions() {
@@ -51,16 +54,13 @@ export class TestEngine {
     }
   }
 
+  advance() {
+    this.ctx.advance({ actions: true, show: true }, true);
+  }
+
   do(...action: Action[]) {
     this.state.next.unshift(...action, 'stateCheck');
-    advanceToChoiceState(
-      this.state,
-      emptyEvents,
-      { actions: true, show: true },
-      true,
-      random,
-      this.logger
-    );
+    this.advance();
 
     if (this.state.choice) {
       if (this.state.choice.type === 'actions') {

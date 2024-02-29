@@ -21,7 +21,6 @@ export class ObservableContext implements ExecutionContext {
     public random: Random,
     public logger: Logger
   ) {
-    console.log('creating ctx');
     makeObservable(this, {
       state: observable,
       view: computed({ keepAlive: true }),
@@ -30,7 +29,6 @@ export class ObservableContext implements ExecutionContext {
   }
 
   get view(): View {
-    console.log('getting view');
     return createView(this.state);
   }
 
@@ -54,7 +52,7 @@ export class ObservableContext implements ExecutionContext {
           this.state.next.length === 0 ||
           this.state.result
         ) {
-          return;
+          continue;
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

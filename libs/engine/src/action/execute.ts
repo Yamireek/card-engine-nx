@@ -865,7 +865,6 @@ export function executeAction(
       owner,
       action.addCard.zone
     );
-    ctx.state.cards[cardId] = cardState;
 
     // TODO simplify
     if (action.addCard.damage) {
@@ -912,6 +911,8 @@ export function executeAction(
 
       cardState.attachments = ids;
     }
+
+    ctx.state.cards[cardId] = cardState;
 
     return;
   }
