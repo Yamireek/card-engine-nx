@@ -1,5 +1,5 @@
 import { PlayerId, keys, values } from '@card-engine-nx/basic';
-import { PlayerTarget } from '@card-engine-nx/state';
+import { PlayerTarget, Scope } from '@card-engine-nx/state';
 import { intersection, isArray, last, uniq } from 'lodash';
 import { ViewContext } from '../../context/view';
 import { max } from 'lodash/fp';
@@ -8,7 +8,8 @@ import { getTargetCard } from '../../card/target/single';
 
 export function getTargetPlayers(
   target: PlayerTarget,
-  ctx: ViewContext
+  ctx: ViewContext,
+  scopes: Scope[]
 ): PlayerId[] {
   if (isArray(target)) {
     return target;
@@ -26,7 +27,7 @@ export function getTargetPlayers(
     target === 'target' ||
     target === 'defending'
   ) {
-    const player = getPlayerFromScope(ctx, target);
+    const player = getPlayerFromScope(ctx, scopes, target);
 
     if (player) {
       return player;
@@ -41,17 +42,17 @@ export function getTargetPlayers(
 
   if (typeof target === 'object') {
     if (target.and) {
-      const lists = target.and.map((t) => getTargetPlayers(t, ctx));
+      const lists = target.and.map((t) => getTargetPlayers(t, ctx, scopes));
       return uniq(intersection(...lists));
     }
 
     if (target.not) {
-      const not = getTargetPlayers(target.not, ctx);
+      const not = getTargetPlayers(target.not, ctx, scopes);
       return keys(ctx.state.players).filter((key) => !not.includes(key));
     }
 
     if (target.controllerOf) {
-      const cardId = getTargetCard(target.controllerOf, ctx);
+      const cardId = getTargetCard(target.controllerOf, ctx, scopes);
       if (!cardId) {
         return [];
       }

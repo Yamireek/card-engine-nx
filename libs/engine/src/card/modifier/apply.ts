@@ -1,4 +1,9 @@
-import { CardView, CardModifier, mergeCardRules } from '@card-engine-nx/state';
+import {
+  CardView,
+  CardModifier,
+  mergeCardRules,
+  Scope,
+} from '@card-engine-nx/state';
 import { ViewContext } from '../../context/view';
 import {
   CardId,
@@ -14,11 +19,12 @@ export function applyModifier(
   modifier: CardModifier | CardModifier[],
   self: CardView,
   source: CardId,
-  ctx: ViewContext
+  ctx: ViewContext,
+  scopes: Scope[]
 ) {
   if (isArray(modifier)) {
     for (const m of modifier) {
-      applyModifier(m, self, source, ctx);
+      applyModifier(m, self, source, ctx, scopes);
     }
     return;
   }
@@ -27,7 +33,7 @@ export function applyModifier(
     for (const property of keys(modifier.increment)) {
       const expr = modifier.increment[property];
       if (expr) {
-        const amount = calculateNumberExpr(expr, ctx);
+        const amount = calculateNumberExpr(expr, ctx, scopes);
         const value = self.props[property];
         if (value !== undefined && amount) {
           self.props[property] = value + amount;
@@ -81,17 +87,18 @@ export function applyModifier(
     const condition = calculateCardBoolExpr(
       modifier.if.condition,
       self.id,
-      ctx
+      ctx,
+      scopes
     );
 
     const ifTrue = modifier.if.true;
     const ifFalse = modifier.if.false;
 
     if (condition && ifTrue) {
-      applyModifier(ifTrue, self, source, ctx);
+      applyModifier(ifTrue, self, source, ctx, scopes);
     }
     if (!condition && ifFalse) {
-      applyModifier(ifFalse, self, source, ctx);
+      applyModifier(ifFalse, self, source, ctx, scopes);
     }
     return;
   }

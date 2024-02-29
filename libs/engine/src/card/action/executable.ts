@@ -1,4 +1,4 @@
-import { CardAction } from '@card-engine-nx/state';
+import { CardAction, Scope } from '@card-engine-nx/state';
 import { CardId } from '@card-engine-nx/basic';
 import { isArray } from 'lodash';
 import { ViewContext } from '../../context/view';
@@ -16,10 +16,11 @@ import { calculateNumberExpr } from '../../expression/number/calculate';
 export function canCardExecute(
   action: CardAction,
   cardId: CardId,
-  ctx: ViewContext
+  ctx: ViewContext,
+  scopes: Scope[]
 ): boolean {
   if (isArray(action)) {
-    const values = action.map((a) => canCardExecute(a, cardId, ctx));
+    const values = action.map((a) => canCardExecute(a, cardId, ctx, scopes));
     return values.every((v) => v);
   }
 
@@ -40,7 +41,7 @@ export function canCardExecute(
       const cv = ctx.view.cards[cardId];
       const expr = cv.rules.conditional?.travel ?? [];
       if (expr.length > 0) {
-        return calculateBoolExpr({ and: expr }, ctx);
+        return calculateBoolExpr({ and: expr }, ctx, scopes);
       }
 
       return true;
@@ -92,7 +93,7 @@ export function canCardExecute(
 
   if (zone === 'playerArea' && action.payResources) {
     const card = ctx.state.cards[cardId];
-    const amount = calculateNumberExpr(action.payResources, ctx);
+    const amount = calculateNumberExpr(action.payResources, ctx, scopes);
     return card.token.resources >= amount;
   }
 
@@ -145,14 +146,15 @@ export function canCardExecute(
         simple: 'inAPlay',
         name: cv.props.name ?? '',
       },
-      ctx
+      ctx,
+      scopes
     );
 
     return exising.length === 0;
   }
 
   if (inPlay && action.attachCard) {
-    const target = getTargetCard(action.attachCard, ctx);
+    const target = getTargetCard(action.attachCard, ctx, scopes);
 
     const cv = ctx.view.cards[target];
     if (!cv.props.unique) {
@@ -164,7 +166,8 @@ export function canCardExecute(
         simple: 'inAPlay',
         name: cv.props.name ?? '',
       },
-      ctx
+      ctx,
+      scopes
     );
 
     return exising.length === 0;
@@ -196,7 +199,7 @@ export function canCardExecute(
       return true;
     }
 
-    return canPlayerExecute(payCostAction, card.controller, ctx);
+    return canPlayerExecute(payCostAction, card.controller, ctx, scopes);
   }
 
   if (zone === 'stagingArea' && action.engagePlayer) {
@@ -212,7 +215,7 @@ export function canCardExecute(
       return false;
     }
 
-    const player = getTargetPlayer(action.engagePlayer, ctx);
+    const player = getTargetPlayer(action.engagePlayer, ctx, scopes);
     return card.zone.player !== player;
   }
 
@@ -235,7 +238,8 @@ export function canCardExecute(
         simple: 'inAPlay',
         name: cv.props.name ?? '',
       },
-      ctx
+      ctx,
+      scopes
     );
 
     return exising.length === 0;
@@ -246,7 +250,7 @@ export function canCardExecute(
   }
 
   if (action.controller && card.controller) {
-    return canPlayerExecute(action.controller, card.controller, ctx);
+    return canPlayerExecute(action.controller, card.controller, ctx, scopes);
   }
 
   if (action.setController) {
@@ -254,7 +258,7 @@ export function canCardExecute(
   }
 
   if (action.action) {
-    return canExecute(action.action, false, ctx);
+    return canExecute(action.action, false, ctx, scopes);
   }
 
   return false;

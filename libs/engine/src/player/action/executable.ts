@@ -1,5 +1,5 @@
-import { PlayerAction } from '@card-engine-nx/state';
-import { updatedCtx } from '../../context/update';
+import { PlayerAction, Scope } from '@card-engine-nx/state';
+import { updatedScopes } from '../../context/update';
 import { ViewContext } from '../../context/view';
 import { sumBy } from 'lodash';
 import { PlayerId } from '@card-engine-nx/basic';
@@ -13,10 +13,11 @@ import { getTargetCards } from '../../card/target/multi';
 export function canPlayerExecute(
   action: PlayerAction,
   playerId: PlayerId,
-  ctx: ViewContext
+  ctx: ViewContext,
+  scopes: Scope[]
 ): boolean {
   if (isArray(action)) {
-    return action.every((a) => canPlayerExecute(a, playerId, ctx));
+    return action.every((a) => canPlayerExecute(a, playerId, ctx, scopes));
   }
 
   const player = ctx.state.players[playerId];
@@ -38,26 +39,37 @@ export function canPlayerExecute(
     );
   } else {
     if (action.chooseCardActions) {
-      const targets = getTargetCards(action.chooseCardActions.target, ctx);
+      const targets = getTargetCards(
+        action.chooseCardActions.target,
+        ctx,
+        scopes
+      );
       const cardAction = action.chooseCardActions.action;
       return targets.some((id) =>
         canCardExecute(
           cardAction,
           id,
-          updatedCtx(ctx, { var: 'target', card: id })
+          ctx,
+          updatedScopes(ctx, scopes, { var: 'target', card: id })
         )
       );
     }
 
     if (action.choosePlayerActions) {
-      const targets = getTargetPlayers(action.choosePlayerActions.target, ctx);
+      const targets = getTargetPlayers(
+        action.choosePlayerActions.target,
+        ctx,
+        scopes
+      );
       const playerAction = action.choosePlayerActions.action;
-      return targets.some((id) => canPlayerExecute(playerAction, id, ctx));
+      return targets.some((id) =>
+        canPlayerExecute(playerAction, id, ctx, scopes)
+      );
     }
 
     if (action.payResources) {
       const sphere = action.payResources.sphere;
-      const cost = calculateNumberExpr(action.payResources.amount, ctx);
+      const cost = calculateNumberExpr(action.payResources.amount, ctx, scopes);
       const heroes = player.zones.playerArea.cards
         .map((c) => ctx.view.cards[c])
         .filter((c) => c.props.type === 'hero')
@@ -100,14 +112,14 @@ export function canPlayerExecute(
     if (action.engaged) {
       const cardAction = action.engaged;
       return player.zones.engaged.cards.some((c) =>
-        canCardExecute(cardAction, c, ctx)
+        canCardExecute(cardAction, c, ctx, scopes)
       );
     }
 
     if (action.controlled) {
       const cardAction = action.controlled;
-      const cards = getTargetCards({ controller: player.id }, ctx);
-      return cards.some((c) => canCardExecute(cardAction, c, ctx));
+      const cards = getTargetCards({ controller: player.id }, ctx, scopes);
+      return cards.some((c) => canCardExecute(cardAction, c, ctx, scopes));
     }
 
     if (action.modify) {
@@ -120,7 +132,7 @@ export function canPlayerExecute(
 
     if (action.chooseActions) {
       const actions = action.chooseActions.actions.filter((a) =>
-        canExecute(a.action, false, ctx)
+        canExecute(a.action, false, ctx, scopes)
       );
 
       return actions.length > 0;
@@ -141,7 +153,8 @@ export function canPlayerExecute(
           action: action.card.action,
         },
         false,
-        ctx
+        ctx,
+        scopes
       );
     }
 
@@ -152,13 +165,14 @@ export function canPlayerExecute(
           action: action.player.action,
         },
         false,
-        ctx
+        ctx,
+        scopes
       );
     }
 
     if (action.chooseX) {
-      const min = calculateNumberExpr(action.chooseX.min, ctx);
-      const max = calculateNumberExpr(action.chooseX.max, ctx);
+      const min = calculateNumberExpr(action.chooseX.min, ctx, scopes);
+      const max = calculateNumberExpr(action.chooseX.max, ctx, scopes);
       return max >= min;
     }
 

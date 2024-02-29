@@ -1,5 +1,5 @@
 import { asArray, keys, zonesEqual } from '@card-engine-nx/basic';
-import { CardState, CardTarget, CardView } from '@card-engine-nx/state';
+import { CardState, CardTarget, CardView, Scope } from '@card-engine-nx/state';
 import { intersection, last } from 'lodash';
 import { ViewContext } from '../../context/view';
 import { getZoneType } from '../../zone/utils';
@@ -15,7 +15,8 @@ export function checkCardPredicate(
   target: CardTarget,
   state: CardState,
   view: CardView,
-  ctx: ViewContext
+  ctx: ViewContext,
+  scopes: Scope[]
 ): boolean {
   if (typeof target === 'number') {
     return state.id === target;
@@ -27,12 +28,12 @@ export function checkCardPredicate(
 
   if (typeof target !== 'string' && Object.keys(target).length > 1) {
     return keys(target).every((key) =>
-      checkCardPredicate({ [key]: target[key] }, state, view, ctx)
+      checkCardPredicate({ [key]: target[key] }, state, view, ctx, scopes)
     );
   }
 
   if (target === 'self' || target === 'target') {
-    const ids = getCardFromScope(ctx, target);
+    const ids = getCardFromScope(ctx, scopes, target);
     return (ids && ids.includes(state.id)) ?? false;
   }
 
@@ -74,7 +75,7 @@ export function checkCardPredicate(
     const need = view.props.questPoints;
     const expr = view.rules.conditional?.advance ?? [];
     const allowed =
-      expr.length > 0 ? calculateBoolExpr({ and: expr }, ctx) : true;
+      expr.length > 0 ? calculateBoolExpr({ and: expr }, ctx, scopes) : true;
     return need !== undefined && allowed && need <= state.token.progress;
   }
 
@@ -88,16 +89,18 @@ export function checkCardPredicate(
 
   if (target.simple) {
     return asArray(target.simple).every((s) =>
-      checkCardPredicate(s, state, view, ctx)
+      checkCardPredicate(s, state, view, ctx, scopes)
     );
   }
 
   if (target.and) {
-    return target.and.every((p) => checkCardPredicate(p, state, view, ctx));
+    return target.and.every((p) =>
+      checkCardPredicate(p, state, view, ctx, scopes)
+    );
   }
 
   if (target.not) {
-    return !checkCardPredicate(target.not, state, view, ctx);
+    return !checkCardPredicate(target.not, state, view, ctx, scopes);
   }
 
   if (target.owner) {
@@ -105,7 +108,7 @@ export function checkCardPredicate(
       return false;
     }
 
-    const players = getTargetPlayers(target.owner, ctx);
+    const players = getTargetPlayers(target.owner, ctx, scopes);
     return players.includes(state.owner);
   }
 
@@ -114,7 +117,7 @@ export function checkCardPredicate(
   }
 
   if (target.sequence) {
-    const value = calculateNumberExpr(target.sequence, ctx);
+    const value = calculateNumberExpr(target.sequence, ctx, scopes);
     return value === view.props.sequence;
   }
 
@@ -137,7 +140,7 @@ export function checkCardPredicate(
       return false;
     }
 
-    const players = getTargetPlayers(target.controller, ctx);
+    const players = getTargetPlayers(target.controller, ctx, scopes);
     return players.includes(state.controller);
   }
 
@@ -159,7 +162,7 @@ export function checkCardPredicate(
   }
 
   if (target.hasAttachment) {
-    const attachments = getTargetCards(target.hasAttachment, ctx);
+    const attachments = getTargetCards(target.hasAttachment, ctx, scopes);
     return intersection(attachments, state.attachments).length > 0;
   }
 
@@ -168,7 +171,7 @@ export function checkCardPredicate(
       return false;
     }
 
-    const targets = getTargetCards(target.shadows, ctx);
+    const targets = getTargetCards(target.shadows, ctx, scopes);
     return targets.includes(state.shadowOf);
   }
 
@@ -199,7 +202,7 @@ export function checkCardPredicate(
   }
 
   if (target.hasShadow) {
-    const shadows = getTargetCards(target.hasShadow, ctx);
+    const shadows = getTargetCards(target.hasShadow, ctx, scopes);
     return state.shadows.some((s) => shadows.includes(s));
   }
 
@@ -208,12 +211,12 @@ export function checkCardPredicate(
       return false;
     }
 
-    const targets = getTargetCards(target.attachmentOf, ctx);
+    const targets = getTargetCards(target.attachmentOf, ctx, scopes);
     return targets.includes(state.attachedTo);
   }
 
   if (target.var) {
-    const vars = getCardFromScope(ctx, target.var);
+    const vars = getCardFromScope(ctx, scopes, target.var);
     return (vars && vars.includes(state.id)) ?? false;
   }
 

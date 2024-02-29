@@ -1,5 +1,5 @@
 import { CardId } from '@card-engine-nx/basic';
-import { CardTarget } from '@card-engine-nx/state';
+import { CardTarget, Scope } from '@card-engine-nx/state';
 import { last } from 'lodash';
 import { cardIds } from '../../context/utils';
 import { ViewContext } from '../../context/view';
@@ -9,7 +9,11 @@ import { calculateNumberExpr } from '../../expression/number/calculate';
 import { getCardFromScope } from '../../scope/getCard';
 import { checkCardPredicate } from '../predicate/check';
 
-export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
+export function getTargetCards(
+  target: CardTarget,
+  ctx: ViewContext,
+  scopes: Scope[]
+): CardId[] {
   if (typeof target === 'number') {
     return [target];
   }
@@ -24,7 +28,7 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
 
   if (typeof target !== 'string' && target.top) {
     if (typeof target.top !== 'string' && 'amount' in target.top) {
-      const zones = getTargetZones(target.top.zone, ctx);
+      const zones = getTargetZones(target.top.zone, ctx, scopes);
       if (zones.length === 1) {
         const cards = zones[0].cards;
         const predicate = target.top.filter;
@@ -34,28 +38,29 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
                 predicate,
                 ctx.state.cards[c],
                 ctx.view.cards[c],
-                ctx
+                ctx,
+                scopes
               )
             )
           : cards;
-        const amount = calculateNumberExpr(target.top.amount, ctx);
+        const amount = calculateNumberExpr(target.top.amount, ctx, scopes);
         return takeRight(amount)(filtered);
       } else {
         throw new Error('need only 1 zone when using amount');
       }
     }
 
-    const zones = getTargetZones(target.top, ctx);
+    const zones = getTargetZones(target.top, ctx, scopes);
     return zones.flatMap((z) => last(z.cards) ?? []);
   }
 
   if (typeof target !== 'string' && target.take) {
-    const all = getTargetCards({ ...target, take: undefined }, ctx);
+    const all = getTargetCards({ ...target, take: undefined }, ctx, scopes);
     return all.slice(0, target.take);
   }
 
   if (typeof target !== 'string' && target.var) {
-    const inScope = getCardFromScope(ctx, target.var);
+    const inScope = getCardFromScope(ctx, scopes, target.var);
     if (inScope) {
       return inScope;
     }
@@ -71,7 +76,7 @@ export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
       return [];
     }
 
-    const checked = checkCardPredicate(target, state, view, ctx);
+    const checked = checkCardPredicate(target, state, view, ctx, scopes);
     return checked ? id : [];
   });
 

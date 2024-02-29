@@ -2,11 +2,12 @@ import { Scope, ScopeAction } from '@card-engine-nx/state';
 import { executeScopeAction } from '../scope/execute';
 import { ViewContext } from './view';
 
-export function updatedCtx<T extends ViewContext>(
-  ctx: T,
+export function updatedScopes(
+  ctx: ViewContext,
+  scopes: Scope[],
   action: ScopeAction
-): T {
+): Scope[] {
   const scope: Scope = {};
-  executeScopeAction(action, scope, ctx);
-  return { ...ctx, scopes: [...ctx.scopes, scope] };
+  executeScopeAction(action, scope, ctx, scopes);
+  return [...scopes, scope];
 }

@@ -84,6 +84,7 @@ function addCard(
     const action: Action = {
       addCard: {
         definition: definition.card,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         zone: player ? { player, type: zoneType } : (zoneType as any),
         side: definition.side ?? side,
         damage: definition.damage,
@@ -99,6 +100,7 @@ function addCard(
     return {
       addCard: {
         definition,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         zone: player ? { player, type: zoneType } : (zoneType as any),
         side,
       },

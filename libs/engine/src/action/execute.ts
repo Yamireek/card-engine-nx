@@ -13,7 +13,7 @@ import { CardId, values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard } from '../utils';
 import { calculateBoolExpr } from '../expression/bool/calculate';
 import { calculateNumberExpr } from '../expression/number/calculate';
-import { updatedCtx } from '../context/update';
+import { updatedScopes } from '../context/update';
 import { ExecutionContext } from '../context/execution';
 import { canExecute } from './executable';
 import { executeCardAction } from '../card/action/execute';
@@ -22,11 +22,11 @@ import { getTargetCard } from '../card/target/single';
 import { executeScopeAction } from '../scope/execute';
 import { gameRound } from '../round/gameRound';
 import { getZoneState } from '../zone';
-import { abilityToModifiers, createModifiers } from '../card';
 
 export function executeAction(
   action: Action,
-  ctx: ExecutionContext
+  ctx: ExecutionContext,
+  scopes: Scope[]
 ): undefined | boolean {
   if (isArray(action)) {
     ctx.state.next.unshift(...action);
@@ -121,7 +121,11 @@ export function executeAction(
   }
 
   if (action === 'chooseTravelDestination') {
-    const existing = getTargetCards({ zoneType: 'activeLocation' }, ctx);
+    const existing = getTargetCards(
+      { zoneType: 'activeLocation' },
+      ctx,
+      scopes
+    );
     if (existing.length > 0) {
       return;
     }
@@ -152,7 +156,7 @@ export function executeAction(
   }
 
   if (action === 'passFirstPlayerToken') {
-    const next = getTargetPlayer('next', ctx);
+    const next = getTargetPlayer('next', ctx, scopes);
     ctx.state.firstPlayer = next;
     return;
   }
@@ -166,10 +170,11 @@ export function executeAction(
           sum: true,
         },
       },
-      ctx
+      ctx,
+      scopes
     );
 
-    const totalThreat = calculateNumberExpr('totalThreat', ctx);
+    const totalThreat = calculateNumberExpr('totalThreat', ctx, scopes);
 
     const diff = totalWillpower - totalThreat;
     if (diff > 0) {
@@ -185,7 +190,7 @@ export function executeAction(
   }
 
   if (action === 'revealEncounterCard') {
-    const card = getTargetCard({ top: 'encounterDeck' }, ctx);
+    const card = getTargetCard({ top: 'encounterDeck' }, ctx, scopes);
 
     if (!card) {
       if (ctx.state.zones.discardPile.cards.length > 0) {
@@ -225,7 +230,8 @@ export function executeAction(
           zone: { player: p.id, type: 'discardPile' },
           type: 'hero',
         },
-        ctx
+        ctx,
+        scopes
       ).map((id) => ctx.state.cards[id]);
 
       const aliveHeroes = getTargetCards(
@@ -233,7 +239,8 @@ export function executeAction(
           zone: { player: p.id, type: 'discardPile' },
           type: 'hero',
         },
-        ctx
+        ctx,
+        scopes
       ).map((id) => ctx.state.cards[id]);
 
       return (
@@ -247,7 +254,8 @@ export function executeAction(
       {
         zoneType: 'victoryDisplay',
       },
-      ctx
+      ctx,
+      scopes
     ).map((id) => ctx.view.cards[id]);
 
     const score =
@@ -284,12 +292,17 @@ export function executeAction(
   }
 
   if (action === 'stateCheck') {
-    const destroy = getTargetCards('destroyed', ctx);
+    const destroy = getTargetCards('destroyed', ctx, scopes);
     const explore = getTargetCards(
       { simple: 'explored', type: 'location' },
-      ctx
+      ctx,
+      scopes
     );
-    const advance = getTargetCards({ simple: 'explored', type: 'quest' }, ctx);
+    const advance = getTargetCards(
+      { simple: 'explored', type: 'quest' },
+      ctx,
+      scopes
+    );
 
     if (destroy.length > 0 || explore.length > 0 || advance.length > 0) {
       ctx.state.next.unshift('stateCheck');
@@ -319,7 +332,8 @@ export function executeAction(
     for (const player of values(ctx.state.players)) {
       const heroes = getTargetCards(
         { simple: 'inAPlay', type: 'hero', controller: player.id },
-        ctx
+        ctx,
+        scopes
       );
       if (heroes.length === 0) {
         ctx.state.next.unshift({ player: player.id, action: 'eliminate' });
@@ -331,7 +345,7 @@ export function executeAction(
   }
 
   if (action === 'sendCommitedEvents') {
-    const questers = getTargetCards({ mark: 'questing' }, ctx);
+    const questers = getTargetCards({ mark: 'questing' }, ctx, scopes);
     if (questers.length > 0) {
       ctx.state.next.unshift(
         questers.map((id) => ({
@@ -351,12 +365,12 @@ export function executeAction(
   }
 
   if ('player' in action && 'action' in action) {
-    const ids = getTargetPlayers(action.player, ctx);
+    const ids = getTargetPlayers(action.player, ctx, scopes);
     for (const id of ids) {
       const player = ctx.state.players[id];
       if (player) {
         if (action.scooped) {
-          executePlayerAction(action.action, player, ctx);
+          executePlayerAction(action.action, player, ctx, scopes);
         } else {
           ctx.state.next.unshift({
             useScope: { var: 'target', player: id },
@@ -371,13 +385,13 @@ export function executeAction(
   }
 
   if ('card' in action && 'action' in action) {
-    const ids = getTargetCards(action.card, ctx);
+    const ids = getTargetCards(action.card, ctx, scopes);
 
     if (action.scooped) {
       const results = ids.map((id) => {
         const card = ctx.state.cards[id];
         if (card) {
-          return executeCardAction(action.action, card, ctx);
+          return executeCardAction(action.action, card, ctx, scopes);
         } else {
           throw new Error('player not found');
         }
@@ -402,7 +416,7 @@ export function executeAction(
 
   if ('useScope' in action) {
     const scope: Scope = {};
-    executeScopeAction(action.useScope, scope, ctx);
+    executeScopeAction(action.useScope, scope, ctx, scopes);
     ctx.state.scopes.push(scope);
     ctx.state.next.unshift(action.action, 'endScope');
     return;
@@ -410,14 +424,19 @@ export function executeAction(
 
   if (action.stackPush) {
     if (action.stackPush.type === 'whenRevealed') {
-      const hasEffect = canExecute(action.stackPush.whenRevealed, false, ctx);
+      const hasEffect = canExecute(
+        action.stackPush.whenRevealed,
+        false,
+        ctx,
+        scopes
+      );
       if (!hasEffect) {
         return;
       }
     }
 
     if (action.stackPush.type === 'shadow') {
-      const hasEffect = canExecute(action.stackPush.shadow, false, ctx);
+      const hasEffect = canExecute(action.stackPush.shadow, false, ctx, scopes);
       if (!hasEffect) {
         return;
       }
@@ -549,7 +568,7 @@ export function executeAction(
   }
 
   if (action.repeat) {
-    const amount = calculateNumberExpr(action.repeat.amount, ctx);
+    const amount = calculateNumberExpr(action.repeat.amount, ctx, scopes);
     if (amount === 0) {
       return;
     } else {
@@ -579,7 +598,11 @@ export function executeAction(
       return;
     }
 
-    const activeLocation = getTargetCards({ top: 'activeLocation' }, ctx);
+    const activeLocation = getTargetCards(
+      { top: 'activeLocation' },
+      ctx,
+      scopes
+    );
 
     if (activeLocation.length === 0) {
       ctx.state.next = [
@@ -620,7 +643,7 @@ export function executeAction(
   }
 
   if (action.while) {
-    const condition = calculateBoolExpr(action.while.condition, ctx);
+    const condition = calculateBoolExpr(action.while.condition, ctx, scopes);
     if (condition) {
       ctx.state.next.unshift(action.while.action, action);
     }
@@ -684,7 +707,8 @@ export function executeAction(
           !r.condition ||
           calculateBoolExpr(
             r.condition,
-            updatedCtx(ctx, [
+            ctx,
+            updatedScopes(ctx, scopes, [
               { var: 'target', card: r.card },
               { var: 'self', card: r.source },
             ])
@@ -699,7 +723,8 @@ export function executeAction(
           !r.condition ||
           calculateBoolExpr(
             r.condition,
-            updatedCtx(ctx, [
+            ctx,
+            updatedScopes(ctx, scopes, [
               { var: 'target', card: r.card },
               { var: 'self', card: r.source },
             ])
@@ -774,13 +799,17 @@ export function executeAction(
   }
 
   if (action.resolveAttack) {
-    const attacking = getTargetCards(action.resolveAttack.attackers, ctx).map(
-      (id) => ctx.view.cards[id]
-    );
+    const attacking = getTargetCards(
+      action.resolveAttack.attackers,
+      ctx,
+      scopes
+    ).map((id) => ctx.view.cards[id]);
 
-    const defender = getTargetCards(action.resolveAttack.defender, ctx).map(
-      (id) => ctx.view.cards[id]
-    );
+    const defender = getTargetCards(
+      action.resolveAttack.defender,
+      ctx,
+      scopes
+    ).map((id) => ctx.view.cards[id]);
 
     const attack = sum(attacking.map((a) => a.props.attack || 0));
     const defense = sum(defender.map((d) => d.props.defense || 0));
@@ -810,7 +839,7 @@ export function executeAction(
   }
 
   if (action.if) {
-    const result = calculateBoolExpr(action.if.condition, ctx);
+    const result = calculateBoolExpr(action.if.condition, ctx, scopes);
     if (result && action.if.true) {
       ctx.state.next.unshift(action.if.true);
     }

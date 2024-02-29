@@ -2,7 +2,6 @@ import { Action, State, createState } from '@card-engine-nx/state';
 import type { Game, Move } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { UIEvents } from '../events/uiEvents';
-import { advanceToChoiceState } from '../utils';
 import { createView } from '../view';
 import { beginScenario } from '../round/beginScenario';
 import { ActivePlayers } from 'boardgame.io/core';
@@ -11,6 +10,8 @@ import { randomBgIO } from '../utils/random';
 import { GameSetupData } from '../GameSetupData';
 import { Logger } from '../logger/types';
 import { consoleLogger } from '../logger/console';
+import { toJS } from 'mobx';
+import { ObservableContext } from '../context';
 
 const skipOptions = { actions: false, show: false };
 
@@ -19,15 +20,10 @@ function createMoves(
   logger: Logger
 ): Record<string, Move<State>> {
   const skip: Move<State> = ({ G, random }) => {
-    G.choice = undefined;
-    advanceToChoiceState(
-      G,
-      events,
-      skipOptions,
-      false,
-      randomBgIO(random),
-      logger
-    );
+    const ctx = new ObservableContext(G, events, randomBgIO(random), logger);
+    ctx.state.choice = undefined;
+    ctx.advance(skipOptions, false);
+    return toJS(ctx.state);
   };
 
   const load: Move<State> = (_, state: State) => {
@@ -51,59 +47,56 @@ function createMoves(
       return INVALID_MOVE;
     }
 
+    const ctx = new ObservableContext(G, events, randomBgIO(random), logger);
     const options = G.choice.options;
     const choices = choosen.map((index) => options[index]);
-    G.choice = undefined;
-    G.next.unshift(...choices.map((c) => c.action));
-    advanceToChoiceState(
-      G,
-      events,
-      skipOptions,
-      false,
-      randomBgIO(random),
-      logger
-    );
+    ctx.state.choice = undefined;
+    ctx.state.next.unshift(...choices.map((c) => c.action));
+    ctx.advance(skipOptions, false);
+    return toJS(ctx.state);
   };
 
   const json: Move<State> = ({ G, random }, action: Action) => {
-    const choice = G.choice;
-    const next = G.next;
+    const ctx = new ObservableContext(G, events, randomBgIO(random), logger);
 
-    G.choice = undefined;
-    G.next = [action];
+    const choice = ctx.state.choice;
+    const next = ctx.state.next;
 
-    advanceToChoiceState(
-      G,
-      events,
-      skipOptions,
-      false,
-      randomBgIO(random),
-      logger
-    );
+    ctx.state.choice = undefined;
+    ctx.state.next = [action];
 
-    if (!G.choice) {
-      G.choice = choice;
+    ctx.advance(skipOptions, false);
+
+    if (!ctx.state.choice) {
+      ctx.state.choice = choice;
     }
 
-    G.next = next;
+    ctx.state.next = next;
+
+    return toJS(ctx.state);
   };
 
   const split: Move<State> = ({ G, random }, ...amounts: number[]) => {
-    if (!G.choice || (G.choice.type !== 'split' && G.choice.type !== 'X')) {
+    const ctx = new ObservableContext(G, events, randomBgIO(random), logger);
+
+    if (
+      !ctx.state.choice ||
+      (ctx.state.choice.type !== 'split' && ctx.state.choice.type !== 'X')
+    ) {
       return INVALID_MOVE;
     }
 
-    if (G.choice.type === 'X') {
+    if (ctx.state.choice.type === 'X') {
       const action: Action = {
         useScope: { x: amounts[0] },
-        action: G.choice.action,
+        action: ctx.state.choice.action,
       };
-      G.choice = undefined;
-      G.next.unshift(action);
+      ctx.state.choice = undefined;
+      ctx.state.next.unshift(action);
     } else {
-      const options = G.choice.options;
-      G.choice = undefined;
-      G.next.unshift(
+      const options = ctx.state.choice.options;
+      ctx.state.choice = undefined;
+      ctx.state.next.unshift(
         ...options.flatMap((o, i) => {
           const amount = amounts[i];
           if (amount > 0) {
@@ -122,14 +115,8 @@ function createMoves(
       );
     }
 
-    advanceToChoiceState(
-      G,
-      events,
-      skipOptions,
-      false,
-      randomBgIO(random),
-      logger
-    );
+    ctx.advance(skipOptions, false);
+    return toJS(ctx.state);
   };
 
   const action: Move<State> = ({ G, random }, index: number) => {
@@ -137,20 +124,14 @@ function createMoves(
       return INVALID_MOVE;
     }
 
-    const view = createView(G);
-    const action = view.actions[index];
     const title = 'title' in G.choice ? G.choice.title : '';
-    G.choice = undefined;
-    G.next.unshift({ playerActions: title });
-    G.next.unshift(action.action);
-    advanceToChoiceState(
-      G,
-      events,
-      skipOptions,
-      false,
-      randomBgIO(random),
-      logger
-    );
+    const ctx = new ObservableContext(G, events, randomBgIO(random), logger);
+    const action = ctx.view.actions[index];
+    ctx.state.choice = undefined;
+    ctx.state.next.unshift({ playerActions: title });
+    ctx.state.next.unshift(action.action);
+    ctx.advance(skipOptions, false);
+    return toJS(ctx.state);
   };
 
   return {

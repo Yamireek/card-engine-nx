@@ -1,11 +1,15 @@
-import { BoolExpr } from '@card-engine-nx/state';
+import { BoolExpr, Scope } from '@card-engine-nx/state';
 import { getTargetCards } from '../../card/target/multi';
 import { ViewContext } from '../../context/view';
 import { last, max, min, values } from 'lodash/fp';
 import { calculateNumberExpr } from '../number/calculate';
 import { calculateCardBoolExpr } from '../../card/expression/bool/calculate';
 
-export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
+export function calculateBoolExpr(
+  expr: BoolExpr,
+  ctx: ViewContext,
+  scopes: Scope[]
+): boolean {
   if (typeof expr === 'boolean') {
     return expr;
   }
@@ -19,7 +23,8 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
         type: 'enemy',
         zone: 'stagingArea',
       },
-      ctx
+      ctx,
+      scopes
     );
 
     const enemyEngagements = enemies
@@ -37,7 +42,7 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
   }
 
   if (expr === 'undefended.attack') {
-    const defenders = getTargetCards({ mark: 'defending' }, ctx);
+    const defenders = getTargetCards({ mark: 'defending' }, ctx, scopes);
     return defenders.length === 0;
   }
 
@@ -46,30 +51,30 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
   }
 
   if (expr.someCard) {
-    const ids = getTargetCards(expr.someCard, ctx);
+    const ids = getTargetCards(expr.someCard, ctx, scopes);
     return ids.length > 0;
   }
 
   if (expr.card) {
-    const target = getTargetCards(expr.card.target, ctx);
+    const target = getTargetCards(expr.card.target, ctx, scopes);
     if (target.length === 0) {
       return false;
     }
 
     if (target.length === 1) {
-      return calculateCardBoolExpr(expr.card.value, target[0], ctx);
+      return calculateCardBoolExpr(expr.card.value, target[0], ctx, scopes);
     }
   }
 
   if (expr.and) {
-    return expr.and.every((e) => calculateBoolExpr(e, ctx));
+    return expr.and.every((e) => calculateBoolExpr(e, ctx, scopes));
   }
 
   if (expr.event) {
     const event = last(ctx.state.event);
     if (expr.event.type === event?.type) {
       if (expr.event.type === 'destroyed') {
-        const target = getTargetCards(expr.event.isAttacker, ctx);
+        const target = getTargetCards(expr.event.isAttacker, ctx, scopes);
         return event.attackers.some((a) => target.includes(a));
       }
     }
@@ -78,12 +83,12 @@ export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
   }
 
   if (expr.not) {
-    return !calculateBoolExpr(expr.not, ctx);
+    return !calculateBoolExpr(expr.not, ctx, scopes);
   }
 
   if (expr.eq) {
-    const a = calculateNumberExpr(expr.eq[0], ctx);
-    const b = calculateNumberExpr(expr.eq[1], ctx);
+    const a = calculateNumberExpr(expr.eq[0], ctx, scopes);
+    const b = calculateNumberExpr(expr.eq[1], ctx, scopes);
     return a === b;
   }
 

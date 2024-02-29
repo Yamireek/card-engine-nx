@@ -5,9 +5,10 @@ import {
   Action,
   CardAction,
   Event,
+  Scope,
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../../expression/number/calculate';
-import { updatedCtx } from '../../context/update';
+import { updatedScopes } from '../../context/update';
 import { ExecutionContext } from '../../context/execution';
 import { isArray, max, sum, values } from 'lodash/fp';
 import { getTargetPlayers } from '../target/multi';
@@ -24,7 +25,8 @@ import { getTargetCard } from '../../card/target/single';
 export function executePlayerAction(
   action: PlayerAction,
   player: PlayerState,
-  ctx: ExecutionContext
+  ctx: ExecutionContext,
+  scopes: Scope[]
 ) {
   if (isArray(action)) {
     const actions: Action[] = action.map((a) => ({
@@ -66,7 +68,8 @@ export function executePlayerAction(
     const threat = player.thread;
     const enemies = getTargetCards(
       { zone: 'stagingArea', type: 'enemy' },
-      ctx
+      ctx,
+      scopes
     ).map((id) => ctx.view.cards[id]);
 
     const maxEngagement = max(
@@ -119,7 +122,8 @@ export function executePlayerAction(
   if (action === 'resolveEnemyAttacks') {
     const enemies = getTargetCards(
       { type: 'enemy', simple: 'inAPlay' },
-      ctx
+      ctx,
+      scopes
     ).filter((enemy) => canEnemyAttack(enemy, player.id, ctx));
 
     if (enemies.length > 0) {
@@ -152,12 +156,17 @@ export function executePlayerAction(
   }
 
   if (action === 'resolvePlayerAttacks') {
-    const enemies = getTargetCards({ type: 'enemy', simple: 'inAPlay' }, ctx);
+    const enemies = getTargetCards(
+      { type: 'enemy', simple: 'inAPlay' },
+      ctx,
+      scopes
+    );
     const characters = getTargetCards(
       {
         simple: ['character', 'ready', 'inAPlay'],
       },
-      ctx
+      ctx,
+      scopes
     );
 
     const attackable = enemies.filter((enemy) =>
@@ -195,12 +204,13 @@ export function executePlayerAction(
 
   if (action === 'declareDefender') {
     const multiple = !!ctx.view.players[player.id]?.rules.multipleDefenders;
-    const attacker = getTargetCard({ mark: 'attacking' }, ctx);
+    const attacker = getTargetCard({ mark: 'attacking' }, ctx, scopes);
 
     if (attacker) {
       const defenders = getTargetCards(
         { simple: ['character', 'inAPlay'] },
-        ctx
+        ctx,
+        scopes
       ).filter((defender) => canCharacterDefend(defender, attacker, ctx));
 
       if (defenders.length > 0) {
@@ -227,11 +237,12 @@ export function executePlayerAction(
   }
 
   if (action === 'determineCombatDamage') {
-    const attacking = getTargetCards({ mark: 'attacking' }, ctx).map(
+    ctx;
+    const attacking = getTargetCards({ mark: 'attacking' }, ctx, scopes).map(
       (id) => ctx.view.cards[id]
     );
 
-    const defending = getTargetCards({ mark: 'defending' }, ctx).map(
+    const defending = getTargetCards({ mark: 'defending' }, ctx, scopes).map(
       (id) => ctx.view.cards[id]
     );
 
@@ -353,7 +364,7 @@ export function executePlayerAction(
   }
 
   if (action.incrementThreat) {
-    const amount = calculateNumberExpr(action.incrementThreat, ctx);
+    const amount = calculateNumberExpr(action.incrementThreat, ctx, scopes);
     player.thread += amount;
     return;
   }
@@ -365,7 +376,7 @@ export function executePlayerAction(
 
     const target: CardTarget = { type: 'hero', owner: player.id, sphere };
 
-    const targets = getTargetCards(target, ctx);
+    const targets = getTargetCards(target, ctx, scopes);
 
     const options = targets.flatMap((t) => {
       const card = ctx.state.cards[t];
@@ -403,7 +414,7 @@ export function executePlayerAction(
       return;
     }
 
-    const amount = calculateNumberExpr(action.payResources.amount, ctx);
+    const amount = calculateNumberExpr(action.payResources.amount, ctx, scopes);
 
     if (amount > 0) {
       ctx.state.next.unshift('stateCheck', {
@@ -426,7 +437,11 @@ export function executePlayerAction(
   }
 
   if (action.chooseCardActions) {
-    const cardIds = getTargetCards(action.chooseCardActions.target, ctx);
+    const cardIds = getTargetCards(
+      action.chooseCardActions.target,
+      ctx,
+      scopes
+    );
     const cardAction = action.chooseCardActions.action;
     if (cardIds.length === 0) {
       return;
@@ -451,7 +466,7 @@ export function executePlayerAction(
             },
           };
 
-          const result = canExecute(action, false, ctx);
+          const result = canExecute(action, false, ctx, scopes);
           if (result) {
             return {
               title: id.toString(),
@@ -469,7 +484,11 @@ export function executePlayerAction(
   }
 
   if (action.choosePlayerActions) {
-    const playerIds = getTargetPlayers(action.choosePlayerActions.target, ctx);
+    const playerIds = getTargetPlayers(
+      action.choosePlayerActions.target,
+      ctx,
+      scopes
+    );
     const playerAction = action.choosePlayerActions.action;
 
     if (playerIds.length == 0) {
@@ -488,7 +507,8 @@ export function executePlayerAction(
             canPlayerExecute(
               playerAction,
               p,
-              updatedCtx(ctx, { var: 'target', player: p })
+              ctx,
+              updatedScopes(ctx, scopes, { var: 'target', player: p })
             )
           )
           .map((id) => ({
@@ -512,7 +532,7 @@ export function executePlayerAction(
 
   if (action.chooseActions) {
     const options = action.chooseActions.actions.filter((a) =>
-      canExecute(a.action, false, ctx)
+      canExecute(a.action, false, ctx, scopes)
     );
 
     ctx.state.next.unshift('stateCheck', {
@@ -530,8 +550,8 @@ export function executePlayerAction(
   }
 
   if (action.chooseX) {
-    const min = calculateNumberExpr(action.chooseX.min, ctx);
-    const max = calculateNumberExpr(action.chooseX.max, ctx);
+    const min = calculateNumberExpr(action.chooseX.min, ctx, scopes);
+    const max = calculateNumberExpr(action.chooseX.max, ctx, scopes);
     ctx.state.next.unshift('stateCheck', {
       choice: {
         id: ctx.state.nextId++,
@@ -574,7 +594,7 @@ export function executePlayerAction(
     }
 
     if (action.discard.target === 'random') {
-      const cards = getTargetCards(target, ctx);
+      const cards = getTargetCards(target, ctx, scopes);
       const choosen = ctx.random.shuffle(cards).slice(0, action.discard.amount);
       ctx.state.next.unshift({
         card: choosen,
@@ -589,7 +609,8 @@ export function executePlayerAction(
     const enemy = action.declareAttackers;
     const characters = getTargetCards(
       { simple: ['character', 'inAPlay'] },
-      ctx
+      ctx,
+      scopes
     ).filter((character) => canCharacterAttack(character, enemy, ctx));
 
     if (characters.length > 0) {

@@ -6,7 +6,7 @@ import {
   ZoneId,
   ZoneType,
 } from '@card-engine-nx/basic';
-import { State, ZoneState, ZoneTarget } from '@card-engine-nx/state';
+import { Scope, State, ZoneState, ZoneTarget } from '@card-engine-nx/state';
 import { keys } from 'lodash/fp';
 import { ViewContext } from '../context/view';
 import { getTargetPlayer } from '../player/target/single';
@@ -38,11 +38,15 @@ export function getZoneState(zoneId: ZoneId, state: State): ZoneState {
   }
 }
 
-export function getTargetZoneId(target: ZoneTarget, ctx: ViewContext): ZoneId {
+export function getTargetZoneId(
+  target: ZoneTarget,
+  ctx: ViewContext,
+  scopes: Scope[]
+): ZoneId {
   if (typeof target === 'string') {
     return target;
   } else {
-    const player = getTargetPlayer(target.player, ctx);
+    const player = getTargetPlayer(target.player, ctx, scopes);
     return {
       player,
       type: target.type,

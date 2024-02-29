@@ -1,4 +1,4 @@
-import { CardBoolExpr } from '@card-engine-nx/state';
+import { CardBoolExpr, Scope } from '@card-engine-nx/state';
 import { checkCardPredicate } from '../../predicate/check';
 import { getTargetCard } from '../../target/single';
 import { ViewContext } from '../../../context/view';
@@ -9,7 +9,8 @@ import { calculateBoolExpr } from '../../../expression/bool/calculate';
 export function calculateCardBoolExpr(
   expr: CardBoolExpr,
   cardId: CardId,
-  ctx: ViewContext
+  ctx: ViewContext,
+  scopes: Scope[]
 ): boolean {
   if (typeof expr === 'boolean') {
     return expr;
@@ -31,7 +32,7 @@ export function calculateCardBoolExpr(
   }
 
   if (expr.is) {
-    const target = getTargetCard(expr.is, ctx);
+    const target = getTargetCard(expr.is, ctx, scopes);
     return target === cardId;
   }
 
@@ -54,11 +55,11 @@ export function calculateCardBoolExpr(
   }
 
   if (expr.and) {
-    return expr.and.every((e) => calculateCardBoolExpr(e, cardId, ctx));
+    return expr.and.every((e) => calculateCardBoolExpr(e, cardId, ctx, scopes));
   }
 
   if (expr.global) {
-    return calculateBoolExpr(expr.global, ctx);
+    return calculateBoolExpr(expr.global, ctx, scopes);
   }
 
   if (expr.predicate) {
@@ -66,7 +67,8 @@ export function calculateCardBoolExpr(
       expr.predicate,
       ctx.state.cards[cardId],
       ctx.view.cards[cardId],
-      ctx
+      ctx,
+      scopes
     );
   }
 

@@ -132,11 +132,14 @@ export const LotrLCGInfo = () => {
       .map((c) => view.cards[c.id].props.willpower ?? 0)
   );
 
-  const totalThreat = calculateNumberExpr('totalThreat', {
-    state,
-    view,
-    scopes: [],
-  });
+  const totalThreat = calculateNumberExpr(
+    'totalThreat',
+    {
+      state,
+      view,
+    },
+    []
+  );
 
   const currentProgress = sum(
     state.zones.questArea.cards.map((id) => state.cards[id].token.progress)

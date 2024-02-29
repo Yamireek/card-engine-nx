@@ -7,17 +7,18 @@ import { getTargetCards } from '../card/target/multi';
 export function executeScopeAction(
   action: ScopeAction,
   scope: Scope,
-  ctx: ViewContext
+  ctx: ViewContext,
+  scopes: Scope[]
 ) {
   if (isArray(action)) {
     for (const item of action) {
-      executeScopeAction(item, scope, ctx);
+      executeScopeAction(item, scope, ctx, scopes);
     }
     return;
   }
 
   if ('var' in action && 'card' in action) {
-    const target = getTargetCards(action.card, ctx);
+    const target = getTargetCards(action.card, ctx, scopes);
 
     if (!scope.card) {
       scope.card = {};
@@ -27,7 +28,7 @@ export function executeScopeAction(
   }
 
   if ('var' in action && 'player' in action) {
-    const target = getTargetPlayers(action.player, ctx);
+    const target = getTargetPlayers(action.player, ctx, scopes);
 
     if (!scope.player) {
       scope.player = {};

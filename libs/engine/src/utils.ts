@@ -1,5 +1,6 @@
 import {
   CardDefinition,
+  Scope,
   State,
   View,
   createCardState,
@@ -17,6 +18,7 @@ import { UIEvents } from './events/uiEvents';
 import { createView } from './view';
 import { Random } from './utils/random';
 import { Logger } from './logger/types';
+import { toJS } from 'mobx';
 
 export function addPlayerCard(
   state: State,
@@ -47,13 +49,17 @@ export function addGameCard(
   state.nextId++;
 }
 
-export function nextStep(ctx: ExecutionContext, logger: Logger): boolean {
+export function nextStep(
+  ctx: ExecutionContext,
+  logger: Logger,
+  scopes: Scope[]
+): boolean {
   const action = ctx.state.next.shift();
   if (!action) {
     return false;
   } else {
-    logger.log('executing ', JSON.parse(JSON.stringify(action)));
-    const result = executeAction(action, ctx);
+    logger.log('executing ', toJS(action), toJS(ctx.state.next));
+    const result = executeAction(action, ctx, scopes);
     return result ?? false;
   }
 }
@@ -68,7 +74,6 @@ export function createExecutionContext(
     state,
     events,
     random,
-    scopes: [],
     get view() {
       if (view) {
         return view;
@@ -80,10 +85,9 @@ export function createExecutionContext(
   };
 }
 
-export function chooseOnlyOption(
-  state: State,
-  skip: { show: boolean; actions: boolean }
-) {
+export type SkipOptions = { show: boolean; actions: boolean };
+
+export function chooseOnlyOption(state: State, skip: SkipOptions) {
   const choice = state.choice;
 
   if (!choice) {
@@ -131,7 +135,7 @@ export function chooseOnlyOption(
 export function advanceToChoiceState(
   state: State,
   events: UIEvents,
-  skip: { show: boolean; actions: boolean },
+  skip: SkipOptions,
   stopOnError: boolean,
   random: Random,
   logger: Logger
@@ -151,7 +155,7 @@ export function advanceToChoiceState(
     try {
       const ctx = createExecutionContext(state, events, random);
       while (ctx !== undefined) {
-        const newView = nextStep(ctx, logger);
+        const newView = nextStep(ctx, logger, []);
         if (newView || ctx.state.choice || ctx.state.next.length === 0) {
           break;
         }
