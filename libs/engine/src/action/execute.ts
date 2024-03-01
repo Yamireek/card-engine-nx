@@ -508,9 +508,7 @@ export function executeAction(
       ? '3'
       : '2';
 
-    const player = createPlayerState(playerId);
-
-    ctx.state.players[playerId] = player;
+    ctx.state.players[playerId] = createPlayerState(playerId);
 
     for (const hero of action.addPlayer.heroes) {
       addPlayerCard(ctx.state, hero, playerId, 'front', 'playerArea');
@@ -520,9 +518,13 @@ export function executeAction(
       addPlayerCard(ctx.state, card, playerId, 'back', 'library');
     }
 
-    player.thread = sum(
-      action.addPlayer.heroes.map((h) => h.front.threatCost ?? 0)
-    );
+    const player = ctx.state.players[playerId];
+
+    if (player) {
+      player.thread = sum(
+        action.addPlayer.heroes.map((h) => h.front.threatCost ?? 0)
+      );
+    }
 
     return;
   }

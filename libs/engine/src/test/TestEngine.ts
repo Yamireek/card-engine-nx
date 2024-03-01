@@ -14,6 +14,7 @@ import { Logger } from '../logger/types';
 import { nullLogger } from '../logger/null';
 import { consoleLogger } from '../logger/console';
 import { ObservableContext } from '../context';
+import { toJS } from 'mobx';
 
 const random = noRandom();
 
@@ -69,7 +70,7 @@ export class TestEngine {
           this.view.actions.filter((a) => a.enabled)
         );
       } else {
-        this.logger.log('choice', this.state.choice);
+        this.logger.log('choice', toJS(this.state.choice));
       }
     }
   }
