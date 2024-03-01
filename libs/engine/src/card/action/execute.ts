@@ -25,7 +25,7 @@ export function executeCardAction(
   card: CardState,
   ctx: ExecutionContext,
   scopes: Scope[]
-): undefined | boolean {
+) {
   if (isArray(action)) {
     const actions: Action[] = action.map((a) => ({
       card: card.id,
@@ -42,7 +42,7 @@ export function executeCardAction(
 
   if (action === 'ready') {
     card.tapped = false;
-    return true;
+    return;
   }
 
   if (action === 'travel') {
@@ -65,7 +65,7 @@ export function executeCardAction(
 
   if (action === 'exhaust') {
     card.tapped = true;
-    return true;
+    return;
   }
 
   if (action === 'reveal') {
@@ -334,7 +334,7 @@ export function executeCardAction(
       ctx.state.cards[shadow].shadowOf = cardId;
       targetZone.cards.push(shadow);
     }
-    return true;
+    return;
   }
 
   if (action === 'destroy' || action.destroy) {
@@ -440,7 +440,7 @@ export function executeCardAction(
         attacker: action.declareAsDefender.attacker,
       },
     });
-    return true;
+    return;
   }
 
   if (action.engagePlayer) {
@@ -473,7 +473,7 @@ export function executeCardAction(
       card.token.damage = Math.max(0, card.token.damage - action.heal);
     }
 
-    return true;
+    return;
   }
 
   if (action.dealDamage) {
@@ -509,12 +509,12 @@ export function executeCardAction(
       },
     });
 
-    return true;
+    return;
   }
 
   if (action.flip) {
     card.sideUp = action.flip;
-    return true;
+    return;
   }
 
   if (action.generateResources !== undefined) {
@@ -614,7 +614,7 @@ export function executeCardAction(
       ctx.state.next.unshift({ event: { type: 'leftPlay', card: card.id } });
     }
 
-    return true;
+    return;
   }
 
   if (action.placeProgress !== undefined) {
@@ -749,7 +749,7 @@ export function executeCardAction(
         until: action.until,
       });
     }
-    return true;
+    return;
   }
 
   if (action.clear) {
@@ -782,7 +782,8 @@ export function executeCardAction(
   }
 
   if (action.action) {
-    return executeAction(action.action, ctx, scopes);
+    executeAction(action.action, ctx, scopes);
+    return;
   }
 
   throw new Error(`unknown card action: ${JSON.stringify(action)}`);

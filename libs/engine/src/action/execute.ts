@@ -27,7 +27,7 @@ export function executeAction(
   action: Action,
   ctx: ExecutionContext,
   scopes: Scope[]
-): undefined | boolean {
+) {
   if (isArray(action)) {
     ctx.state.next.unshift(...action);
     return;
@@ -388,15 +388,15 @@ export function executeAction(
     const ids = getTargetCards(action.card, ctx, scopes);
 
     if (action.scooped) {
-      const results = ids.map((id) => {
+      for (const id of ids) {
         const card = ctx.state.cards[id];
         if (card) {
-          return executeCardAction(action.action, card, ctx, scopes);
+          executeCardAction(action.action, card, ctx, scopes);
         } else {
           throw new Error('player not found');
         }
-      });
-      return results.some((r) => r);
+      }
+      return;
     } else {
       for (const id of ids) {
         const card = ctx.state.cards[id];

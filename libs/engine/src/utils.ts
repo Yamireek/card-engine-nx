@@ -54,14 +54,13 @@ export function nextStep(
   ctx: ExecutionContext,
   logger: Logger,
   scopes: Scope[]
-): boolean {
+) {
   const action = ctx.state.next.shift();
   if (!action) {
     return false;
   } else {
     logger.log('executing ', toJS(action), toJS(ctx.state.next));
-    const result = executeAction(action, ctx, scopes);
-    return result ?? false;
+    executeAction(action, ctx, scopes);
   }
 }
 
