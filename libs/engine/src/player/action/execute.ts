@@ -34,7 +34,7 @@ export function executePlayerAction(
       action: a,
     }));
 
-    ctx.state.next.unshift(...actions);
+    ctx.next(...actions);
     return;
   }
 
@@ -49,7 +49,7 @@ export function executePlayerAction(
   }
 
   if (action === 'commitCharactersToQuest') {
-    ctx.state.next.unshift({
+    ctx.next({
       player: player.id,
       action: {
         chooseCardActions: {
@@ -87,7 +87,7 @@ export function executePlayerAction(
       (e) => e.props.engagement === maxEngagement
     );
 
-    ctx.state.next.unshift({
+    ctx.next({
       player: player.id,
       action: {
         chooseCardActions: {
@@ -103,7 +103,7 @@ export function executePlayerAction(
   }
 
   if (action === 'optionalEngagement') {
-    ctx.state.next.unshift({
+    ctx.next({
       player: player.id,
       action: {
         chooseCardActions: {
@@ -127,7 +127,7 @@ export function executePlayerAction(
     ).filter((enemy) => canEnemyAttack(enemy, player.id, ctx));
 
     if (enemies.length > 0) {
-      ctx.state.next.unshift(
+      ctx.next(
         {
           useScope: {
             var: 'defending',
@@ -174,7 +174,7 @@ export function executePlayerAction(
     );
 
     if (attackable.length > 0) {
-      ctx.state.next.unshift({
+      ctx.next({
         player: player.id,
         action: {
           chooseActions: {
@@ -214,7 +214,7 @@ export function executePlayerAction(
       ).filter((defender) => canCharacterDefend(defender, attacker, ctx));
 
       if (defenders.length > 0) {
-        ctx.state.next.unshift({
+        ctx.next({
           player: player.id,
           action: {
             chooseCardActions: {
@@ -249,15 +249,15 @@ export function executePlayerAction(
     const attack = sum(attacking.map((a) => a.props.attack || 0));
     const defense = sum(defending.map((d) => d.props.defense || 0));
 
-    ctx.state.next.unshift({
+    ctx.next({
       card: {
         shadows: attacking.map((c) => c.id),
       },
       action: 'discard',
     });
 
-    ctx.state.next.unshift(
-      ...attacking.map((a) => {
+    ctx.next(
+      attacking.map((a) => {
         const event: Event = { type: 'attacked', card: a.id };
         return { event };
       })
@@ -267,7 +267,7 @@ export function executePlayerAction(
       defending.length === 0 &&
       attacking.some((a) => a.props.type === 'enemy')
     ) {
-      ctx.state.next.unshift({
+      ctx.next({
         player: player.id,
         action: {
           chooseCardActions: {
@@ -286,14 +286,14 @@ export function executePlayerAction(
       const damage = attack - defense;
       if (damage > 0) {
         if (defending.length === 1) {
-          ctx.state.next.unshift({
+          ctx.next({
             card: defending.map((c) => c.id),
             action: { dealDamage: damage },
           });
         }
 
         if (defending.length > 1) {
-          ctx.state.next.unshift({
+          ctx.next({
             player: player.id,
             action: {
               chooseCardActions: {
@@ -315,12 +315,12 @@ export function executePlayerAction(
     player.eliminated = true;
 
     if (values(ctx.state.players).every((p) => p.eliminated)) {
-      ctx.state.next.unshift('loose');
+      ctx.next('loose');
       return;
     }
 
     // TODO return engaged
-    ctx.state.next.unshift({
+    ctx.next({
       card: { owner: player.id },
       action: 'destroy',
     });
@@ -334,7 +334,7 @@ export function executePlayerAction(
       return;
     }
 
-    ctx.state.next.unshift({
+    ctx.next({
       repeat: {
         amount: action.draw,
         action: {
@@ -356,7 +356,7 @@ export function executePlayerAction(
   }
 
   if (action.deck) {
-    ctx.state.next.unshift({
+    ctx.next({
       card: player.zones.library.cards,
       action: action.deck,
     });
@@ -396,7 +396,7 @@ export function executePlayerAction(
     });
 
     if (options.length === 1) {
-      ctx.state.next.unshift({
+      ctx.next({
         card: options[0].cardId,
         action: { payResources: action.payResources.amount },
       });
@@ -407,7 +407,7 @@ export function executePlayerAction(
       options.length === action.payResources.needHeroes &&
       options.length === action.payResources.amount
     ) {
-      ctx.state.next.unshift({
+      ctx.next({
         card: options.map((o) => o.cardId),
         action: { payResources: 1 },
       });
@@ -417,7 +417,7 @@ export function executePlayerAction(
     const amount = calculateNumberExpr(action.payResources.amount, ctx, scopes);
 
     if (amount > 0) {
-      ctx.state.next.unshift('stateCheck', {
+      ctx.next('stateCheck', {
         choice: {
           id: ctx.state.nextId++,
           player: player.id,
@@ -447,7 +447,7 @@ export function executePlayerAction(
       return;
     }
 
-    ctx.state.next.unshift('stateCheck', {
+    ctx.next('stateCheck', {
       choice: {
         id: ctx.state.nextId++,
         player: player.id,
@@ -495,7 +495,7 @@ export function executePlayerAction(
       return;
     }
 
-    ctx.state.next.unshift('stateCheck', {
+    ctx.next('stateCheck', {
       choice: {
         id: ctx.state.nextId++,
         player: player.id,
@@ -535,7 +535,7 @@ export function executePlayerAction(
       canExecute(a.action, false, ctx, scopes)
     );
 
-    ctx.state.next.unshift('stateCheck', {
+    ctx.next('stateCheck', {
       choice: {
         id: ctx.state.nextId++,
         player: player.id,
@@ -552,7 +552,7 @@ export function executePlayerAction(
   if (action.chooseX) {
     const min = calculateNumberExpr(action.chooseX.min, ctx, scopes);
     const max = calculateNumberExpr(action.chooseX.max, ctx, scopes);
-    ctx.state.next.unshift('stateCheck', {
+    ctx.next('stateCheck', {
       choice: {
         id: ctx.state.nextId++,
         player: player.id,
@@ -575,7 +575,7 @@ export function executePlayerAction(
     };
 
     if (action.discard.target === 'choice') {
-      ctx.state.next.unshift({
+      ctx.next({
         repeat: {
           amount: action.discard.amount,
           action: {
@@ -596,7 +596,7 @@ export function executePlayerAction(
     if (action.discard.target === 'random') {
       const cards = getTargetCards(target, ctx, scopes);
       const choosen = ctx.random.shuffle(cards).slice(0, action.discard.amount);
-      ctx.state.next.unshift({
+      ctx.next({
         card: choosen,
         action: discard,
       });
@@ -614,7 +614,7 @@ export function executePlayerAction(
     ).filter((character) => canCharacterAttack(character, enemy, ctx));
 
     if (characters.length > 0) {
-      ctx.state.next.unshift({
+      ctx.next({
         player: player.id,
         action: {
           chooseCardActions: {
@@ -644,7 +644,7 @@ export function executePlayerAction(
   }
 
   if (action.engaged) {
-    ctx.state.next.unshift({
+    ctx.next({
       card: {
         zone: {
           player: player.id,
@@ -657,7 +657,7 @@ export function executePlayerAction(
   }
 
   if (action.controlled) {
-    ctx.state.next.unshift({
+    ctx.next({
       card: {
         controller: player.id,
       },
@@ -677,7 +677,7 @@ export function executePlayerAction(
   }
 
   if (action.card) {
-    ctx.state.next.unshift({
+    ctx.next({
       card: action.card.target,
       action: action.card.action,
     });
@@ -685,7 +685,7 @@ export function executePlayerAction(
   }
 
   if (action.player) {
-    ctx.state.next.unshift({
+    ctx.next({
       player: action.player.target,
       action: action.player.action,
     });

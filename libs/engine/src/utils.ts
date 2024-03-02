@@ -2,7 +2,6 @@ import {
   CardDefinition,
   Scope,
   State,
-  View,
   createCardState,
 } from '@card-engine-nx/state';
 import {
@@ -13,9 +12,7 @@ import {
 } from '@card-engine-nx/basic';
 import { executeAction } from './action/execute';
 import { ExecutionContext } from './context/execution';
-import { UIEvents } from './events/uiEvents';
 import { createView } from './view';
-import { Random } from './utils/random';
 import { Logger } from './logger/types';
 import { toJS } from 'mobx';
 
@@ -62,27 +59,6 @@ export function nextStep(
     logger.log('executing ', toJS(action), toJS(ctx.state.next));
     executeAction(action, ctx, scopes);
   }
-}
-
-export function createExecutionContext(
-  state: State,
-  events: UIEvents,
-  random: Random
-): ExecutionContext {
-  let view: View | undefined = undefined;
-  return {
-    state,
-    events,
-    random,
-    get view() {
-      if (view) {
-        return view;
-      } else {
-        view = createView(state);
-        return view;
-      }
-    },
-  };
 }
 
 export type SkipOptions = { show: boolean; actions: boolean };

@@ -51,7 +51,7 @@ function createMoves(
     const options = G.choice.options;
     const choices = choosen.map((index) => options[index]);
     ctx.state.choice = undefined;
-    ctx.state.next.unshift(...choices.map((c) => c.action));
+    ctx.next(choices.map((c) => c.action));
     ctx.advance(skipOptions, false);
     return toJS(ctx.state);
   };
@@ -92,12 +92,12 @@ function createMoves(
         action: ctx.state.choice.action,
       };
       ctx.state.choice = undefined;
-      ctx.state.next.unshift(action);
+      ctx.next(action);
     } else {
       const options = ctx.state.choice.options;
       ctx.state.choice = undefined;
-      ctx.state.next.unshift(
-        ...options.flatMap((o, i) => {
+      ctx.next(
+        options.flatMap((o, i) => {
           const amount = amounts[i];
           if (amount > 0) {
             return [
@@ -128,8 +128,8 @@ function createMoves(
     const ctx = new ObservableContext(G, events, randomBgIO(random), logger);
     const action = ctx.view.actions[index];
     ctx.state.choice = undefined;
-    ctx.state.next.unshift({ playerActions: title });
-    ctx.state.next.unshift(action.action);
+    ctx.next({ playerActions: title });
+    ctx.next(action.action);
     ctx.advance(skipOptions, false);
     return toJS(ctx.state);
   };

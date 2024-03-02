@@ -32,7 +32,7 @@ export function executeCardAction(
       action: a,
     }));
 
-    ctx.state.next.unshift(...actions);
+    ctx.next(...actions);
     return;
   }
 
@@ -47,7 +47,7 @@ export function executeCardAction(
 
   if (action === 'travel') {
     const travelCost = ctx.view.cards[card.id].rules.travel ?? [];
-    ctx.state.next.unshift(
+    ctx.next(
       ...travelCost,
       {
         card: card.id,
@@ -70,7 +70,7 @@ export function executeCardAction(
 
   if (action === 'reveal') {
     if (card.sideUp === 'back') {
-      ctx.state.next.unshift({
+      ctx.next({
         card: card.id,
         action: [{ flip: 'front' }, 'reveal'],
       });
@@ -79,7 +79,7 @@ export function executeCardAction(
 
     const props = ctx.view.cards[card.id].props;
 
-    ctx.state.next.unshift(
+    ctx.next(
       { event: { type: 'revealed', card: card.id } },
       {
         card: card.id,
@@ -97,7 +97,7 @@ export function executeCardAction(
 
   if (action === 'shuffleToDeck') {
     if (card.owner) {
-      ctx.state.next.unshift(
+      ctx.next(
         {
           card: card.id,
           action: {
@@ -123,7 +123,7 @@ export function executeCardAction(
   if (action === 'discard') {
     const owner = card.owner;
 
-    ctx.state.next.unshift({
+    ctx.next({
       card: card.id,
       action: {
         move: {
@@ -162,13 +162,13 @@ export function executeCardAction(
     );
 
     if (next.length === 0) {
-      ctx.state.next.unshift('win');
+      ctx.next('win');
       return;
     }
 
     const nextId = next.length === 1 ? next[0] : ctx.random.item(next);
 
-    ctx.state.next.unshift(
+    ctx.next(
       removedExplored,
       {
         choice: {
@@ -214,7 +214,7 @@ export function executeCardAction(
       return;
     }
 
-    ctx.state.next.unshift({
+    ctx.next({
       card: card.id,
       action: {
         move: {
@@ -227,7 +227,7 @@ export function executeCardAction(
   }
 
   if (action === 'explore') {
-    ctx.state.next.unshift(
+    ctx.next(
       {
         event: {
           type: 'explored',
@@ -247,7 +247,7 @@ export function executeCardAction(
   }
 
   if (action === 'commitToQuest') {
-    ctx.state.next.unshift({
+    ctx.next({
       card: card.id,
       action: ['exhaust', { mark: 'questing' }],
     });
@@ -260,7 +260,7 @@ export function executeCardAction(
     );
 
     if (cards.length > 0) {
-      ctx.state.next.unshift(
+      ctx.next(
         {
           card: cards.map((s) => s.id),
           action: {
@@ -282,7 +282,7 @@ export function executeCardAction(
 
     if (shadows.length > 0) {
       for (const shadow of shadows) {
-        ctx.state.next.unshift(
+        ctx.next(
           {
             choice: {
               title: 'Shadow effect',
@@ -340,7 +340,7 @@ export function executeCardAction(
   if (action === 'destroy' || action.destroy) {
     const owner = card.owner;
 
-    ctx.state.next.unshift(
+    ctx.next(
       {
         card: card.id,
         action: {
@@ -363,7 +363,7 @@ export function executeCardAction(
   }
 
   if (action.whenRevealed) {
-    ctx.state.next.unshift(
+    ctx.next(
       {
         stackPush: {
           type: 'whenRevealed',
@@ -390,7 +390,7 @@ export function executeCardAction(
 
     const payCostAction = createPayCostAction(card.id, action.payCost, ctx);
     if (payCostAction) {
-      ctx.state.next.unshift({
+      ctx.next({
         player: controller,
         action: payCostAction,
       });
@@ -403,10 +403,10 @@ export function executeCardAction(
     const cost = cv.rules.refreshCost ?? [];
     const free = cost.length === 0;
     if (free) {
-      ctx.state.next.unshift({ card: card.id, action: 'ready' });
+      ctx.next({ card: card.id, action: 'ready' });
     } else {
       if (card.controller) {
-        ctx.state.next.unshift({
+        ctx.next({
           player: card.controller,
           action: {
             chooseActions: {
@@ -433,7 +433,7 @@ export function executeCardAction(
   if (action.declareAsDefender) {
     card.tapped = true;
     card.mark.defending = true;
-    ctx.state.next.unshift({
+    ctx.next({
       event: {
         type: 'declaredAsDefender',
         card: card.id,
@@ -445,7 +445,7 @@ export function executeCardAction(
 
   if (action.engagePlayer) {
     const player = getTargetPlayer(action.engagePlayer, ctx, scopes);
-    ctx.state.next.unshift(
+    ctx.next(
       {
         card: card.id,
         action: {
@@ -501,7 +501,7 @@ export function executeCardAction(
       );
     }
 
-    ctx.state.next.unshift({
+    ctx.next({
       event: {
         type: 'receivedDamage',
         card: card.id,
@@ -569,7 +569,7 @@ export function executeCardAction(
     );
 
     if (!sourceInGame && destInGame) {
-      ctx.state.next.unshift({ event: { type: 'enteredPlay', card: card.id } });
+      ctx.next({ event: { type: 'enteredPlay', card: card.id } });
     }
 
     if (sourceInGame && !destInGame) {
@@ -581,12 +581,12 @@ export function executeCardAction(
         resources: 0,
       };
 
-      ctx.state.next.unshift({
+      ctx.next({
         card: card.attachments,
         action: 'discard',
       });
 
-      ctx.state.next.unshift({
+      ctx.next({
         card: card.shadows,
         action: 'discard',
       });
@@ -611,7 +611,7 @@ export function executeCardAction(
         card.shadowOf = undefined;
       }
 
-      ctx.state.next.unshift({ event: { type: 'leftPlay', card: card.id } });
+      ctx.next({ event: { type: 'leftPlay', card: card.id } });
     }
 
     return;
@@ -650,7 +650,7 @@ export function executeCardAction(
   }
 
   if (action.resolveEnemyAttacking) {
-    ctx.state.next.unshift(
+    ctx.next(
       {
         card: card.id,
         action: { mark: 'attacking' },
@@ -686,7 +686,7 @@ export function executeCardAction(
 
   if (action.resolvePlayerAttacking) {
     const enemy = card.id;
-    ctx.state.next.unshift(
+    ctx.next(
       { card: enemy, action: { mark: 'defending' } },
       { playerActions: 'Declare attackers' },
       {
@@ -717,7 +717,7 @@ export function executeCardAction(
     if (target) {
       card.attachments.push(target);
       ctx.state.cards[target].attachedTo = card.id;
-      ctx.state.next.unshift({
+      ctx.next({
         card: target,
         action: {
           move: {
@@ -759,7 +759,7 @@ export function executeCardAction(
 
   if (action.putInPlay) {
     const player = getTargetPlayer(action.putInPlay, ctx, scopes);
-    ctx.state.next.unshift({
+    ctx.next({
       card: card.id,
       action: { move: { to: { player, type: 'playerArea' }, side: 'front' } },
     });
@@ -768,7 +768,7 @@ export function executeCardAction(
 
   if (action.controller && card.controller) {
     const controller = card.controller;
-    ctx.state.next.unshift({
+    ctx.next({
       player: controller,
       action: action.controller,
     });

@@ -1,4 +1,4 @@
-import { State, View } from '@card-engine-nx/state';
+import { Action, State, View } from '@card-engine-nx/state';
 import { UIEvents } from '../events/uiEvents';
 import { Random } from '../utils/random';
 import { createView } from '../view';
@@ -12,6 +12,7 @@ export type ExecutionContext = {
   view: View;
   events: UIEvents;
   random: Random;
+  next: (...action: Action[]) => void;
 };
 
 export class ObservableContext implements ExecutionContext {
@@ -26,6 +27,10 @@ export class ObservableContext implements ExecutionContext {
       view: computed({ keepAlive: true }),
       advance: action,
     });
+  }
+
+  next(...action: Action[]) {
+    this.state.next.unshift(...action);
   }
 
   get view(): View {
