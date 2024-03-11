@@ -14,6 +14,7 @@ import { nullLogger } from '../logger/null';
 import { consoleLogger } from '../logger/console';
 import { ObservableContext } from '../context';
 import { toJS } from 'mobx';
+import { invalidateState } from '../utils';
 
 const random = noRandom();
 
@@ -53,6 +54,9 @@ export class TestEngine {
 
   advance() {
     this.ctx.advance({ actions: true, show: true }, true);
+    if (this.ctx.state.invalidate) {
+      invalidateState(this.ctx.state);
+    }
   }
 
   do(...action: Action[]) {

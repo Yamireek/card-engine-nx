@@ -27,6 +27,11 @@ export type PlayerGlobalModifier = {
   applied?: boolean;
 };
 
-export type Dependencies = { game?: GameDependency[] };
+export type Dependencies = {
+  game?: GameDependency[];
+  card?: Record<number, CardDependency>;
+};
 
 export type GameDependency = 'phase' | 'round';
+
+export type CardDependency = 'damage' | 'sideUp';

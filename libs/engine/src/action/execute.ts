@@ -1,6 +1,10 @@
 import {
   Action,
+  CardModifier,
   Choice,
+  Dependencies,
+  GameModifier,
+  NumberExpr,
   Scope,
   createCardState,
   createPlayerState,
@@ -22,6 +26,8 @@ import { getTargetCard } from '../card/target/single';
 import { executeScopeAction } from '../scope/execute';
 import { gameRound } from '../round/gameRound';
 import { getZoneState } from '../zone';
+import { abilityToModifiers } from '../card';
+import { merge } from 'lodash/fp';
 
 export function executeAction(
   action: Action,
@@ -878,13 +884,16 @@ export function executeAction(
       cardState.tapped = true;
     }
 
-    // TODO add modifiers
+    const modifiers = action.addCard.definition.front.abilities.flatMap((a) =>
+      abilityToModifiers(cardId, a)
+    );
 
-    // const modifiers = action.addCard.definition.front.abilities.flatMap((a) =>
-    //   abilityToModifiers(id, a)
-    // );
-
-    // ctx.state.modifiers.push(...modifiers);
+    ctx.state.modifiers.push(...modifiers);
+    ctx.state.invalidate = true;
+    ctx.state.dependencies = mergeDeps(
+      ctx.state.dependencies,
+      getDeps(modifiers)
+    );
 
     if (action.addCard.attachments) {
       const ids: CardId[] = [];
@@ -913,4 +922,48 @@ export function executeAction(
   }
 
   throw new Error(`unknown action: ${JSON.stringify(action)}`);
+}
+export function getDeps(modifiers: GameModifier[]): Dependencies {
+  return modifiers
+    .map((m) => getModifierDeps(m))
+    .reduce((p, c) => mergeDeps(p, c), {});
+}
+
+export function getModifierDeps(modifier: GameModifier): Dependencies {
+  if ('card' in modifier) {
+    const dep1 = getCardModifierDeps(modifier.modifier);
+    return dep1;
+  }
+
+  throw new Error(`getModifierDependencies: ${JSON.stringify(modifier)}`);
+}
+
+export function getCardModifierDeps(modifier: CardModifier): Dependencies {
+  if ('increment' in modifier) {
+    return mergeDeps(
+      ...values(modifier.increment).map((v) => getNumberDeps(v))
+    );
+  }
+
+  throw new Error(`getCardModifierDependencies: ${JSON.stringify(modifier)}`);
+}
+
+export function getNumberDeps(exp: NumberExpr): Dependencies {
+  if (typeof exp === 'number') {
+    return {};
+  }
+
+  if (typeof exp === 'string') {
+    throw new Error(`getNumberDeps: ${JSON.stringify(exp)}`);
+  }
+
+  if ('card' in exp) {
+    return exp.card
+  }
+
+  throw new Error(`getNumberDeps: ${JSON.stringify(exp)}`);
+}
+
+export function mergeDeps(...d: Dependencies[]): Dependencies {
+  return d.reduce((p, c) => merge(p, c), {});
 }

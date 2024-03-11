@@ -3,6 +3,7 @@ import {
   Scope,
   State,
   createCardState,
+  createCardView,
 } from '@card-engine-nx/state';
 import {
   GameZoneType,
@@ -68,6 +69,10 @@ export function nextStep(
 export function invalidateState(state: State) {
   for (const player of values(state.players)) {
     player.view.rules = {};
+  }
+
+  for (const card of values(state.cards)) {
+    card.view = createCardView(card);
   }
 
   for (const modifier of state.modifiers) {

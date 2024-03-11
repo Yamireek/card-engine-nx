@@ -8,7 +8,7 @@ it('Gimli', () => {
   });
 
   const gimli = game.getCard('Gimli');
-  expect(gimli.props.attack).toEqual(2);
+  expect(gimli.props.attack).toEqual(2);  
   gimli.update({ dealDamage: 1 });
   expect(gimli.props.attack).toEqual(3);
   gimli.update({ heal: 1 });
@@ -31,7 +31,7 @@ it('Glorfindel', () => {
   expect(game.actions.length).toEqual(1);
   game.chooseAction(action);
   expect(glorfindel.token.resources).toEqual(1);
-  expect(glorfindel.token.damage).toEqual(1);  
+  expect(glorfindel.token.damage).toEqual(1);
   expect(game.actions.length).toEqual(0);
   game.do('endRound');
   expect(game.actions.length).toEqual(1);
@@ -126,7 +126,7 @@ it('Thalin', async () => {
   const enemy = game.getCard('Forest Spider');
   thalin.update({ mark: 'questing' });
   game.do('revealEncounterCard');
-  game.chooseOption(response);  
+  game.chooseOption(response);
   expect(enemy.token.damage).toEqual(1);
 });
 
