@@ -13,11 +13,7 @@ import {
 } from '@card-engine-nx/basic';
 import { executeAction } from './action/execute';
 import { ExecutionContext } from './context/execution';
-import {
-  applyGlobalCardModifier,
-  applyGlobalPlayerModifier,
-  createView,
-} from './view';
+import { applyGlobalCardModifier, applyGlobalPlayerModifier } from './view';
 import { Logger } from './logger/types';
 import { toJS } from 'mobx';
 
@@ -86,11 +82,11 @@ export function invalidateState(state: State) {
       allApplied = false;
 
       if ('card' in modifier) {
-        applyGlobalCardModifier(state, undefined as any, modifier);
+        applyGlobalCardModifier(state, modifier);
       }
 
       if ('player' in modifier) {
-        applyGlobalPlayerModifier(state, undefined as any, modifier);
+        applyGlobalPlayerModifier(state, modifier);
       }
 
       modifier.applied = true;
@@ -142,10 +138,12 @@ export function chooseOnlyOption(state: State, skip: SkipOptions) {
 
   if (choice.type === 'actions') {
     if (skip.actions) {
-      const actions = createView(state).actions.filter((a) => a.enabled);
-      if (actions.length === 0) {
-        state.choice = undefined;
-      }
+      throw new Error('todo');
+      // TODO
+      // const actions = createView(state).actions.filter((a) => a.enabled);
+      // if (actions.length === 0) {
+      //   state.choice = undefined;
+      // }
     }
   }
 }

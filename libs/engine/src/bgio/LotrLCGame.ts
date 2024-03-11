@@ -2,7 +2,6 @@ import { Action, State, createState } from '@card-engine-nx/state';
 import type { Game, Move } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { UIEvents } from '../events/uiEvents';
-import { createView } from '../view';
 import { beginScenario } from '../round/beginScenario';
 import { ActivePlayers } from 'boardgame.io/core';
 import { PowerSet } from 'js-combinatorics';
@@ -124,14 +123,15 @@ function createMoves(
       return INVALID_MOVE;
     }
 
-    const title = 'title' in G.choice ? G.choice.title : '';
-    const ctx = new ObservableContext(G, events, randomBgIO(random), logger);
-    const action = ctx.view.actions[index];
-    ctx.state.choice = undefined;
-    ctx.next({ playerActions: title });
-    ctx.next(action.action);
-    ctx.advance(skipOptions, false);
-    return toJS(ctx.state);
+    // TODO fix
+    // const title = 'title' in G.choice ? G.choice.title : '';
+    // const ctx = new ObservableContext(G, events, randomBgIO(random), logger);
+    // const action = ctx.view.actions[index];
+    // ctx.state.choice = undefined;
+    // ctx.next({ playerActions: title });
+    // ctx.next(action.action);
+    // ctx.advance(skipOptions, false);
+    // return toJS(ctx.state);
   };
 
   return {
@@ -204,12 +204,13 @@ export function LotrLCGame(
         }
 
         if (choice.type === 'actions') {
-          const view = createView(G);
+          // TODO fix
+          // const view = createView(G);
           return [
             { move: 'skip' },
-            ...view.actions
-              .filter((a) => a.enabled)
-              .map((_, i) => ({ move: 'action', args: [i] })),
+            //   ...view.actions
+            //     .filter((a) => a.enabled)
+            //     .map((_, i) => ({ move: 'action', args: [i] })),
           ];
         }
 

@@ -18,7 +18,7 @@ const cardProperties = [
 ] as const;
 
 export const CardDetail = (props: { cardId?: CardId }) => {
-  const { state, view } = useContext(StateContext);
+  const { state } = useContext(StateContext);
   const detail = useContext(DetailContext);
 
   const cardId = props.cardId ?? detail.cardId;
@@ -29,7 +29,7 @@ export const CardDetail = (props: { cardId?: CardId }) => {
 
   const card = {
     state: state.cards[cardId],
-    view: view.cards[cardId],
+    view: state.cards[cardId].view,
   };
 
   const name = card.view.props.name ?? card.state.definition.front.name ?? '';
@@ -45,7 +45,7 @@ export const CardDetail = (props: { cardId?: CardId }) => {
           ? card.state.definition[card.state.sideUp].abilities.map(
               (a) => a.description ?? ''
             )
-          : card.view.rules.shadows?.map((s) => s.description) ?? []
+          : card.state.view.rules.shadows?.map((s) => s.description) ?? []
       }
       attachments={[]}
       traits={card.view.props.traits ?? []}

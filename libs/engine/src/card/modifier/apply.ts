@@ -44,32 +44,35 @@ export function applyModifier(
   }
 
   if ('setup' in modifier) {
-    ctx.view.setup.push(modifier.setup);
+    // TODO
+    //ctx.view.setup.push(modifier.setup);
     return;
   }
 
   if ('reaction' in modifier) {
-    if (!ctx.view.responses[modifier.reaction.event]) {
-      ctx.view.responses[modifier.reaction.event] = [];
-    }
+    // TODO
+    // if (!ctx.view.responses[modifier.reaction.event]) {
+    //   ctx.view.responses[modifier.reaction.event] = [];
+    // }
 
-    ctx.view.responses[modifier.reaction.event]?.push({
-      source: source,
-      card: self.id,
-      description: modifier.description,
-      action: modifier.reaction.action,
-      condition: modifier.reaction.condition,
-      forced: modifier.reaction.forced,
-    });
+    // ctx.view.responses[modifier.reaction.event]?.push({
+    //   source: source,
+    //   card: self.id,
+    //   description: modifier.description,
+    //   action: modifier.reaction.action,
+    //   condition: modifier.reaction.condition,
+    //   forced: modifier.reaction.forced,
+    // });
     return;
   }
 
   if ('action' in modifier) {
-    ctx.view.actions.push({
-      card: self.id,
-      description: modifier.description,
-      action: modifier.action,
-    });
+    // TODO
+    // ctx.view.actions.push({
+    //   card: self.id,
+    //   description: modifier.description,
+    //   action: modifier.action,
+    // });
     return;
   }
 

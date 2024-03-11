@@ -22,7 +22,7 @@ export function calculateCardBoolExpr(
   }
 
   if (expr.hasTrait) {
-    const traits = ctx.view.cards[cardId].props.traits;
+    const traits = ctx.state.cards[cardId].view.props.traits;
     return traits?.includes(expr.hasTrait) ?? false;
   }
 
@@ -37,7 +37,7 @@ export function calculateCardBoolExpr(
   }
 
   if (expr.isType) {
-    const type = ctx.view.cards[cardId].props.type;
+    const type = ctx.state.cards[cardId].view.props.type;
 
     if (expr.isType === 'character' && (type === 'ally' || type === 'hero')) {
       return true;
@@ -47,7 +47,7 @@ export function calculateCardBoolExpr(
   }
 
   if (expr.name) {
-    return ctx.view.cards[cardId].props.name === expr.name;
+    return ctx.state.cards[cardId].view.props.name === expr.name;
   }
 
   if (expr.zone) {
@@ -66,7 +66,7 @@ export function calculateCardBoolExpr(
     return checkCardPredicate(
       expr.predicate,
       ctx.state.cards[cardId],
-      ctx.view.cards[cardId],
+      ctx.state.cards[cardId].view,
       ctx,
       scopes
     );

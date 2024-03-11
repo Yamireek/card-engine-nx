@@ -1,10 +1,4 @@
-import {
-  Action,
-  PlayerDeck,
-  Scenario,
-  State,
-  View,
-} from '@card-engine-nx/state';
+import { Action, PlayerDeck, Scenario, State } from '@card-engine-nx/state';
 import { Difficulty, PlayerId } from '@card-engine-nx/basic';
 import { createContext, useContext } from 'react';
 
@@ -21,7 +15,6 @@ export type Moves = {
 
 export const StateContext = createContext<{
   state: State;
-  view: View;
   moves: Moves;
   playerId?: PlayerId;
   undo: () => void;

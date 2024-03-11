@@ -9,7 +9,6 @@ import {
 import { CardId, PlayerId, values } from '@card-engine-nx/basic';
 import { emptyEvents } from '../events/uiEvents';
 import { noRandom } from '../utils/random';
-import { createView } from '../view';
 import { Logger } from '../logger/types';
 import { nullLogger } from '../logger/null';
 import { consoleLogger } from '../logger/console';
@@ -41,12 +40,9 @@ export class TestEngine {
     return this.ctx.state;
   }
 
-  get view() {
-    return this.ctx.view;
-  }
-
   get actions() {
-    return this.view.actions.filter((a) => a.enabled);
+    return [];
+    // TODO return this.view.actions.filter((a) => a.enabled);
   }
 
   get choiceTitle() {
@@ -66,8 +62,8 @@ export class TestEngine {
     if (this.state.choice) {
       if (this.state.choice.type === 'actions') {
         this.logger.log(
-          'actions',
-          this.view.actions.filter((a) => a.enabled)
+          'actions'
+          // TODO this.view.actions.filter((a) => a.enabled)
         );
       } else {
         this.logger.log('choice', toJS(this.state.choice));
@@ -76,34 +72,32 @@ export class TestEngine {
   }
 
   chooseAction(description: string) {
-    const action = this.actions.find((a) => a.description === description);
-    if (!action) {
-      throw new Error(
-        `action not found, available: ${this.actions
-          .map((a) => a.description)
-          .join(', ')}`
-      );
-    }
-
-    const next: Choice | undefined =
-      this.state.choice && this.state.choice.type === 'actions'
-        ? {
-            id: this.state.choice.id,
-            type: 'actions',
-            title: this.state.choice.title,
-          }
-        : undefined;
-
-    this.state.choice = undefined;
-
-    this.do([
-      action.action,
-      next
-        ? {
-            choice: next,
-          }
-        : [],
-    ]);
+    // TODO
+    // const action = this.actions.find((a) => a.description === description);
+    // if (!action) {
+    //   throw new Error(
+    //     `action not found, available: ${this.actions
+    //       .map((a) => a.description)
+    //       .join(', ')}`
+    //   );
+    // }
+    // const next: Choice | undefined =
+    //   this.state.choice && this.state.choice.type === 'actions'
+    //     ? {
+    //         id: this.state.choice.id,
+    //         type: 'actions',
+    //         title: this.state.choice.title,
+    //       }
+    //     : undefined;
+    // this.state.choice = undefined;
+    // this.do([
+    //   action.action,
+    //   next
+    //     ? {
+    //         choice: next,
+    //       }
+    //     : [],
+    // ]);
   }
 
   skip() {
@@ -188,8 +182,7 @@ export class CardProxy {
   }
 
   get props() {
-    const view = createView(this._state);
-    return view.cards[this.id].props;
+    return this.state.view.props;
   }
 
   get token() {
@@ -201,7 +194,7 @@ export class CardProxy {
   }
 
   get view() {
-    return this.game.view.cards[this.id];
+    return this.state.view;
   }
 }
 

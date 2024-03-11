@@ -37,7 +37,7 @@ export function getTargetCards(
               checkCardPredicate(
                 predicate,
                 ctx.state.cards[c],
-                ctx.view.cards[c],
+                ctx.state.cards[c].view,
                 ctx,
                 scopes
               )
@@ -70,7 +70,7 @@ export function getTargetCards(
 
   return cardIds(ctx).flatMap((id) => {
     const state = ctx.state.cards[id];
-    const view = ctx.view.cards[id];
+    const view = ctx.state.cards[id].view;
 
     if (!state || !view) {
       return [];

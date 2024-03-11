@@ -38,7 +38,7 @@ export function canCardExecute(
         return false;
       }
 
-      const cv = ctx.view.cards[cardId];
+      const cv = ctx.state.cards[cardId].view;
       const expr = cv.rules.conditional?.travel ?? [];
       if (expr.length > 0) {
         return calculateBoolExpr({ and: expr }, ctx, scopes);
@@ -131,7 +131,7 @@ export function canCardExecute(
       return true;
     }
 
-    const cv = ctx.view.cards[card.id];
+    const cv = ctx.state.cards[card.id]?.view;
     if (!cv) {
       return false;
     }
@@ -156,7 +156,7 @@ export function canCardExecute(
   if (inPlay && action.attachCard) {
     const target = getTargetCard(action.attachCard, ctx, scopes);
 
-    const cv = ctx.view.cards[target];
+    const cv = ctx.state.cards[target].view;
     if (!cv.props.unique) {
       return true;
     }
@@ -228,7 +228,7 @@ export function canCardExecute(
       return false;
     }
 
-    const cv = ctx.view.cards[card.id];
+    const cv = ctx.state.cards[card.id].view;
     if (!cv.props.unique) {
       return true;
     }

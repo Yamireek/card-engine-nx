@@ -6,7 +6,7 @@ export function cardIds(ctx: ViewContext) {
 }
 export function getCard(id: CardId, ctx: ViewContext) {
   const state = ctx.state.cards[id];
-  const view = ctx.view.cards[id];
+  const view = ctx.state.cards[id].view;
   return { id, state, view };
 }
 

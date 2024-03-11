@@ -24,8 +24,10 @@ export function calculateNumberExpr(
 
   if (expr === 'totalThreat') {
     const values = ctx.state.zones.stagingArea.cards
-      .map((c) => ctx.view.cards[c])
-      .map((v) => (v.rules.noThreatContribution ? 0 : v.props.threat ?? 0));
+      .map((c) => ctx.state.cards[c])
+      .map((v) =>
+        v.view.rules.noThreatContribution ? 0 : v.view.props.threat ?? 0
+      );
     return sum(values);
   }
 

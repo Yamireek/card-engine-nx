@@ -1,17 +1,13 @@
-import { CardTarget, State, View } from '@card-engine-nx/state';
+import { CardTarget, State } from '@card-engine-nx/state';
 import { isArray } from 'lodash';
 
-export function getCardTargetText(
-  target: CardTarget,
-  state: State,
-  view: View
-): string {
+export function getCardTargetText(target: CardTarget, state: State): string {
   if (isArray(target)) {
-    return target.map((t) => getCardTargetText(t, state, view)).join(', ');
+    return target.map((t) => getCardTargetText(t, state)).join(', ');
   }
 
   if (typeof target === 'number') {
-    return view.cards[target].props.name ?? '';
+    return state.cards[target].view.props.name ?? '';
   }
 
   return JSON.stringify(target, null, 1);

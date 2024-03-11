@@ -124,19 +124,18 @@ export const ActionEditorButton = () => {
 };
 
 export const LotrLCGInfo = () => {
-  const { state, view, playerId, moves, undo, redo } = useContext(StateContext);
+  const { state, playerId, moves, undo, redo } = useContext(StateContext);
 
   const totalWillpower = sum(
     values(state.cards)
       .filter((c) => c.mark.questing)
-      .map((c) => view.cards[c.id].props.willpower ?? 0)
+      .map((c) => c.view.props.willpower ?? 0)
   );
 
   const totalThreat = calculateNumberExpr(
     'totalThreat',
     {
       state,
-      view,
     },
     []
   );
@@ -146,7 +145,9 @@ export const LotrLCGInfo = () => {
   );
 
   const targetProgress = sum(
-    state.zones.questArea.cards.map((id) => view.cards[id].props.questPoints)
+    state.zones.questArea.cards.map(
+      (id) => state.cards[id].view.props.questPoints
+    )
   );
 
   return (
@@ -211,7 +212,6 @@ export const LotrLCGInfo = () => {
             <IconButton
               onClick={() => {
                 console.log('state', state);
-                console.log('view', view);
               }}
             >
               <Icon>bug_report</Icon>
@@ -240,11 +240,11 @@ export const LotrLCGInfo = () => {
           >
             <Typography variant="caption">Temporary effects</Typography>
             {state.modifiers.map((m, i) => {
-              const title = view.cards[m.source].props.name ?? '';
+              const title = state.cards[m.source].view.props.name ?? '';
               return (
                 <React.Fragment key={title + i}>
                   <Tooltip title={title} placement="left">
-                    <Typography>{getModifierText(m, state, view)}</Typography>
+                    <Typography>{getModifierText(m, state)}</Typography>
                   </Tooltip>
                   <Divider variant="fullWidth" />
                 </React.Fragment>
@@ -254,7 +254,8 @@ export const LotrLCGInfo = () => {
         )}
         <Paper style={{ padding: 4, overflow: 'auto', pointerEvents: 'auto' }}>
           <Typography variant="caption">Possible actions</Typography>
-          {view.actions
+          {/* // TODO */}
+          {/* {view.actions
             .filter((a) => a.enabled)
             .map((a, i) => {
               const title = view.cards[a.card].props.name ?? '';
@@ -266,7 +267,7 @@ export const LotrLCGInfo = () => {
                   <Divider variant="fullWidth" />
                 </React.Fragment>
               );
-            })}
+            })} */}
         </Paper>
       </Stack>
     </div>

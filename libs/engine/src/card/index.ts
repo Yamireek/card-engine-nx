@@ -3,4 +3,3 @@ export * from './expression';
 export * from './modifier';
 export * from './predicate';
 export * from './target';
-export * from './view';

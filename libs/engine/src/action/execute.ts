@@ -53,7 +53,7 @@ export function executeAction(
           cardId: ctx.state.zones.questArea.cards[0] ?? 0,
         },
       },
-      ...ctx.view.setup,
+      // TODO ...ctx.view.setup,
       {
         card: {
           zone: 'questArea',
@@ -254,11 +254,11 @@ export function executeAction(
       },
       ctx,
       scopes
-    ).map((id) => ctx.view.cards[id]);
+    ).map((id) => ctx.state.cards[id]);
 
     const score =
       sum(playerScores) -
-      sum(victoryCards.map((c) => c.props.victory)) +
+      sum(victoryCards.map((c) => c.view.props.victory)) +
       ctx.state.round * 10;
 
     ctx.state.result = {
@@ -421,62 +421,63 @@ export function executeAction(
   }
 
   if (action.stackPush) {
-    if (action.stackPush.type === 'whenRevealed') {
-      const hasEffect = canExecute(
-        action.stackPush.whenRevealed,
-        false,
-        ctx,
-        scopes
-      );
-      if (!hasEffect) {
-        return;
-      }
-    }
+    // TODO
+    // if (action.stackPush.type === 'whenRevealed') {
+    //   const hasEffect = canExecute(
+    //     action.stackPush.whenRevealed,
+    //     false,
+    //     ctx,
+    //     scopes
+    //   );
+    //   if (!hasEffect) {
+    //     return;
+    //   }
+    // }
 
-    if (action.stackPush.type === 'shadow') {
-      const hasEffect = canExecute(action.stackPush.shadow, false, ctx, scopes);
-      if (!hasEffect) {
-        return;
-      }
-    }
+    // if (action.stackPush.type === 'shadow') {
+    //   const hasEffect = canExecute(action.stackPush.shadow, false, ctx, scopes);
+    //   if (!hasEffect) {
+    //     return;
+    //   }
+    // }
 
-    ctx.state.stack.push(action.stackPush);
+    // ctx.state.stack.push(action.stackPush);
 
-    const responses = ctx.view.responses[action.stackPush.type] ?? [];
+    // const responses = ctx.view.responses[action.stackPush.type] ?? [];
 
-    const reponsesAction: Action =
-      responses.length > 0
-        ? [
-            {
-              player: 'first',
-              action: {
-                chooseActions: {
-                  title: `Choose responses for: ${action.stackPush.description}`,
-                  actions: responses.map((r) => ({
-                    title: r.description,
-                    action: {
-                      useScope: [
-                        {
-                          var: 'target',
-                          card: r.card,
-                        },
-                        {
-                          var: 'self',
-                          card: r.source,
-                        },
-                      ],
-                      action: r.action,
-                    },
-                  })),
-                  optional: true,
-                  multi: true,
-                },
-              },
-            },
-          ]
-        : [];
+    // const reponsesAction: Action =
+    //   responses.length > 0
+    //     ? [
+    //         {
+    //           player: 'first',
+    //           action: {
+    //             chooseActions: {
+    //               title: `Choose responses for: ${action.stackPush.description}`,
+    //               actions: responses.map((r) => ({
+    //                 title: r.description,
+    //                 action: {
+    //                   useScope: [
+    //                     {
+    //                       var: 'target',
+    //                       card: r.card,
+    //                     },
+    //                     {
+    //                       var: 'self',
+    //                       card: r.source,
+    //                     },
+    //                   ],
+    //                   action: r.action,
+    //                 },
+    //               })),
+    //               optional: true,
+    //               multi: true,
+    //             },
+    //           },
+    //         },
+    //       ]
+    //     : [];
 
-    ctx.next(reponsesAction);
+    // ctx.next(reponsesAction);
 
     return;
   }
@@ -610,7 +611,7 @@ export function executeAction(
 
     if (activeLocation.length === 1) {
       const id = activeLocation[0];
-      const cardView = ctx.view.cards[id];
+      const cardView = ctx.state.cards[id].view;
       const qp = cardView.props.questPoints;
       if (qp) {
         const cardState = ctx.state.cards[id];
@@ -690,102 +691,103 @@ export function executeAction(
 
     ctx.next({ event: 'none' });
 
-    const reponses = ctx.view.responses[event.type] ?? [];
+    // TODO
+    // const reponses = ctx.view.responses[event.type] ?? [];
 
-    const forced = reponses
-      .filter((r) => r.forced)
-      .filter((r) => ('card' in event ? r.card === event.card : true))
-      .filter(
-        (r) =>
-          !r.condition ||
-          calculateBoolExpr(
-            r.condition,
-            ctx,
-            updatedScopes(ctx, scopes, [
-              { var: 'target', card: r.card },
-              { var: 'self', card: r.source },
-            ])
-          )
-      );
+    // const forced = reponses
+    //   .filter((r) => r.forced)
+    //   .filter((r) => ('card' in event ? r.card === event.card : true))
+    //   .filter(
+    //     (r) =>
+    //       !r.condition ||
+    //       calculateBoolExpr(
+    //         r.condition,
+    //         ctx,
+    //         updatedScopes(ctx, scopes, [
+    //           { var: 'target', card: r.card },
+    //           { var: 'self', card: r.source },
+    //         ])
+    //       )
+    //   );
 
-    const optional = reponses
-      .filter((r) => !r.forced)
-      .filter((r) => ('card' in event ? r.card === event.card : true))
-      .filter(
-        (r) =>
-          !r.condition ||
-          calculateBoolExpr(
-            r.condition,
-            ctx,
-            updatedScopes(ctx, scopes, [
-              { var: 'target', card: r.card },
-              { var: 'self', card: r.source },
-            ])
-          )
-      );
+    // const optional = reponses
+    //   .filter((r) => !r.forced)
+    //   .filter((r) => ('card' in event ? r.card === event.card : true))
+    //   .filter(
+    //     (r) =>
+    //       !r.condition ||
+    //       calculateBoolExpr(
+    //         r.condition,
+    //         ctx,
+    //         updatedScopes(ctx, scopes, [
+    //           { var: 'target', card: r.card },
+    //           { var: 'self', card: r.source },
+    //         ])
+    //       )
+    //   );
 
-    if (optional.length > 0) {
-      ctx.next({
-        player: 'first',
-        action: {
-          chooseActions: {
-            title: 'Choose responses for event ' + event.type,
-            actions: optional.map((r) => ({
-              title: r.description,
-              action: {
-                useScope: [
-                  {
-                    var: 'target',
-                    card: r.card,
-                  },
-                  {
-                    var: 'self',
-                    card: r.source,
-                  },
-                ],
-                action: r.action,
-              },
-            })),
-            optional: true,
-            multi: true,
-          },
-        },
-      });
-    }
+    // if (optional.length > 0) {
+    //   ctx.next({
+    //     player: 'first',
+    //     action: {
+    //       chooseActions: {
+    //         title: 'Choose responses for event ' + event.type,
+    //         actions: optional.map((r) => ({
+    //           title: r.description,
+    //           action: {
+    //             useScope: [
+    //               {
+    //                 var: 'target',
+    //                 card: r.card,
+    //               },
+    //               {
+    //                 var: 'self',
+    //                 card: r.source,
+    //               },
+    //             ],
+    //             action: r.action,
+    //           },
+    //         })),
+    //         optional: true,
+    //         multi: true,
+    //       },
+    //     },
+    //   });
+    // }
 
-    if (forced.length > 0) {
-      ctx.next(
-        ...forced.map((r) => ({
-          useScope: [
-            {
-              var: 'target',
-              card: r.card,
-            },
-            {
-              var: 'self',
-              card: r.source,
-            },
-          ],
-          action: r.action,
-        }))
-      );
-    }
+    // if (forced.length > 0) {
+    //   ctx.next(
+    //     ...forced.map((r) => ({
+    //       useScope: [
+    //         {
+    //           var: 'target',
+    //           card: r.card,
+    //         },
+    //         {
+    //           var: 'self',
+    //           card: r.source,
+    //         },
+    //       ],
+    //       action: r.action,
+    //     }))
+    //   );
+    // }
 
-    if (action.event.type === 'revealed') {
-      const releaved =
-        ctx.view.cards[action.event.card].rules.whenRevealed ?? [];
-      if (releaved.length > 0) {
-        const target = action.event.card;
-        ctx.next(
-          releaved.map((effect) => ({
-            card: target,
-            action: {
-              whenRevealed: effect,
-            },
-          }))
-        );
-      }
-    }
+    // if (action.event.type === 'revealed') {
+    //   const releaved =
+    //     ctx.view.cards[action.event.card].rules.whenRevealed ?? [];
+    //   if (releaved.length > 0) {
+    //     const target = action.event.card;
+    //     ctx.next(
+    //       releaved.map((effect) => ({
+    //         card: target,
+    //         action: {
+    //           whenRevealed: effect,
+    //         },
+    //       }))
+    //     );
+    //   }
+    // }
 
     // TODO surge
     return;
@@ -796,16 +798,16 @@ export function executeAction(
       action.resolveAttack.attackers,
       ctx,
       scopes
-    ).map((id) => ctx.view.cards[id]);
+    ).map((id) => ctx.state.cards[id]);
 
     const defender = getTargetCards(
       action.resolveAttack.defender,
       ctx,
       scopes
-    ).map((id) => ctx.view.cards[id]);
+    ).map((id) => ctx.state.cards[id]);
 
-    const attack = sum(attacking.map((a) => a.props.attack || 0));
-    const defense = sum(defender.map((d) => d.props.defense || 0));
+    const attack = sum(attacking.map((a) => a.view.props.attack || 0));
+    const defense = sum(defender.map((d) => d.view.props.defense || 0));
 
     const damage = attack - defense;
     if (damage > 0) {

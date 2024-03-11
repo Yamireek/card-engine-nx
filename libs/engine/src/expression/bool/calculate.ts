@@ -28,8 +28,10 @@ export function calculateBoolExpr(
     );
 
     const enemyEngagements = enemies
-      .map((e) => ctx.view.cards[e])
-      .flatMap((e) => (e.props.engagement ? [e.props.engagement] : []));
+      .map((e) => ctx.state.cards[e])
+      .flatMap((e) =>
+        e.view.props.engagement ? [e.view.props.engagement] : []
+      );
 
     const minEng = min(enemyEngagements);
     const maxEng = max(playerThreats);

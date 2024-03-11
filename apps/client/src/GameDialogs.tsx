@@ -10,7 +10,7 @@ import { StateContext } from './StateContext';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 export const GameDialogs = () => {
-  const { state, view, moves, playerId } = useContext(StateContext);
+  const { state, moves, playerId } = useContext(StateContext);
 
   if (state.result) {
     if (state.result.win) {
@@ -58,7 +58,7 @@ export const GameDialogs = () => {
           <img
             alt=""
             src={getCardImageUrl(
-              view.cards[state.choice.cardId].props,
+              state.cards[state.choice.cardId].view.props,
               cardState.sideUp,
               cardState.definition.front.name
             )}
@@ -98,7 +98,7 @@ export const GameDialogs = () => {
           },
           image: o.cardId && {
             src: getCardImageUrl(
-              view.cards[o.cardId].props,
+              state.cards[o.cardId].view.props,
               state.cards[o.cardId].sideUp
             ),
             width: 430 / 2,
@@ -124,7 +124,7 @@ export const GameDialogs = () => {
           },
           image: o.cardId && {
             src: getCardImageUrl(
-              view.cards[o.cardId].props,
+              state.cards[o.cardId].view.props,
               state.cards[o.cardId].sideUp
             ),
             width: 430 / 2,
@@ -146,7 +146,7 @@ export const GameDialogs = () => {
           title: o.title,
           image: {
             src: getCardImageUrl(
-              view.cards[o.cardId].props,
+              state.cards[o.cardId].view.props,
               state.cards[o.cardId].sideUp
             ),
             width: 430 / 2,

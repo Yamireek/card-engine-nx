@@ -12,23 +12,23 @@ export function calculateCardExpr(
   }
 
   if (expr === 'threadCost') {
-    return ctx.view.cards[cardId].props.threatCost || 0;
+    return ctx.state.cards[cardId].view.props.threatCost || 0;
   }
 
   if (expr === 'willpower') {
-    return ctx.view.cards[cardId].props.willpower || 0;
+    return ctx.state.cards[cardId].view.props.willpower || 0;
   }
 
   if (expr === 'threat') {
-    return ctx.view.cards[cardId].props.threat || 0;
+    return ctx.state.cards[cardId].view.props.threat || 0;
   }
 
   if (expr === 'sequence') {
-    return ctx.view.cards[cardId].props.sequence || 0;
+    return ctx.state.cards[cardId].view.props.sequence || 0;
   }
 
   if (expr === 'cost') {
-    const cost = ctx.view.cards[cardId].props.cost;
+    const cost = ctx.state.cards[cardId].view.props.cost;
     return typeof cost === 'number' ? cost : 0;
   }
 

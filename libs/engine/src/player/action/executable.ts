@@ -71,12 +71,12 @@ export function canPlayerExecute(
       const sphere = action.payResources.sphere;
       const cost = calculateNumberExpr(action.payResources.amount, ctx, scopes);
       const heroes = player.zones.playerArea.cards
-        .map((c) => ctx.view.cards[c])
-        .filter((c) => c.props.type === 'hero')
+        .map((c) => ctx.state.cards[c])
+        .filter((c) => c.view.props.type === 'hero')
         .filter(
           (c) =>
             sphere.includes('neutral') ||
-            c.props.sphere?.some((s) => sphere.includes(s))
+            c.view.props.sphere?.some((s) => sphere.includes(s))
         )
         .filter((c) => ctx.state.cards[c.id].token.resources > 0);
 

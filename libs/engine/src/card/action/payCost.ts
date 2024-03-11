@@ -8,7 +8,7 @@ export function createPayCostAction(
   modifiers: CostModifier,
   ctx: ViewContext
 ): PlayerAction | undefined {
-  const view = ctx.view.cards[cardId];
+  const view = ctx.state.cards[cardId].view;
   const state = ctx.state.cards[cardId];
   const zone = getZoneType(state.zone);
 

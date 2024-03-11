@@ -74,7 +74,9 @@ export function executePlayerAction(
       { zone: 'stagingArea', type: 'enemy' },
       ctx,
       scopes
-    ).map((id) => ctx.view.cards[id]);
+    )
+      .map((id) => ctx.state.cards[id])
+      .map((c) => c.view);
 
     const maxEngagement = max(
       enemies
@@ -244,15 +246,15 @@ export function executePlayerAction(
   if (action === 'determineCombatDamage') {
     ctx;
     const attacking = getTargetCards({ mark: 'attacking' }, ctx, scopes).map(
-      (id) => ctx.view.cards[id]
+      (id) => ctx.state.cards[id]
     );
 
     const defending = getTargetCards({ mark: 'defending' }, ctx, scopes).map(
-      (id) => ctx.view.cards[id]
+      (id) => ctx.state.cards[id]
     );
 
-    const attack = sum(attacking.map((a) => a.props.attack || 0));
-    const defense = sum(defending.map((d) => d.props.defense || 0));
+    const attack = sum(attacking.map((a) => a.view.props.attack || 0));
+    const defense = sum(defending.map((d) => d.view.props.defense || 0));
 
     ctx.next({
       card: {
@@ -270,7 +272,7 @@ export function executePlayerAction(
 
     if (
       defending.length === 0 &&
-      attacking.some((a) => a.props.type === 'enemy')
+      attacking.some((a) => a.view.props.type === 'enemy')
     ) {
       ctx.next({
         player: player.id,

@@ -17,5 +17,3 @@ export * from './factory';
 export * from './modifier';
 export * from './simple';
 export * from './state';
-export * from './types';
-export * from './view';

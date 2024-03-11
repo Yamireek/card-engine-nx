@@ -18,13 +18,14 @@ export const LotrCard3d = (props: {
   position: Vector3;
   size: Dimensions;
 }) => {
-  const { state, view, moves } = useContext(StateContext);
+  const { state, moves } = useContext(StateContext);
   const { texture } = useTextures();
   const { floatingCards: cards } = useFloatingCards();
 
-  const actions = view.actions.filter(
-    (a) => a.card === props.cardId && a.enabled === true
-  );
+  // TODO
+  // const actions = view.actions.filter(
+  //   (a) => a.card === props.cardId && a.enabled === true
+  // );
 
   const card = state.cards[props.cardId];
 
@@ -57,20 +58,20 @@ export const LotrCard3d = (props: {
       orientation={orientation}
       hidden={cards.some((c) => c.id === props.cardId)}
       onClick={() => {
-        if (
-          actions.length === 0 ||
-          !state.choice ||
-          state.choice.type !== 'actions'
-        ) {
-          return;
-        } else {
-          if (actions.length === 1) {
-            moves.action(indexOf(view.actions, actions[0]));
-          } else {
-            // tslint:disable-next-line:no-console
-            console.log('todo multiple actions');
-          }
-        }
+        // if (
+        //   actions.length === 0 ||
+        //   !state.choice ||
+        //   state.choice.type !== 'actions'
+        // ) {
+        //   return;
+        // } else {
+        //   if (actions.length === 1) {
+        //     moves.action(indexOf(view.actions, actions[0]));
+        //   } else {
+        //     // tslint:disable-next-line:no-console
+        //     console.log('todo multiple actions');
+        //   }
+        // }
       }}
     >
       <Token3d
@@ -88,7 +89,7 @@ export const LotrCard3d = (props: {
         texture={texture[image.progress]}
         amount={card.token.progress}
       />
-      {actions.length > 0 && (
+      {/* {actions.length > 0 && (
         <mesh>
           <planeGeometry
             attach="geometry"
@@ -96,7 +97,7 @@ export const LotrCard3d = (props: {
           />
           <meshStandardMaterial attach="material" color="yellow" />
         </mesh>
-      )}
+      )} */}
     </Card3d>
   );
 };

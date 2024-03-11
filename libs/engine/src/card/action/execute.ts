@@ -46,7 +46,7 @@ export function executeCardAction(
   }
 
   if (action === 'travel') {
-    const travelCost = ctx.view.cards[card.id].rules.travel ?? [];
+    const travelCost = ctx.state.cards[card.id].view.rules.travel ?? [];
     ctx.next(
       ...travelCost,
       {
@@ -77,7 +77,7 @@ export function executeCardAction(
       return;
     }
 
-    const props = ctx.view.cards[card.id].props;
+    const props = ctx.state.cards[card.id].view.props;
 
     ctx.next(
       { event: { type: 'revealed', card: card.id } },
@@ -136,7 +136,7 @@ export function executeCardAction(
   }
 
   if (action === 'advance') {
-    const quest = ctx.view.cards[card.id];
+    const quest = ctx.state.cards[card.id].view;
 
     card.token.progress = 0;
 
@@ -256,7 +256,7 @@ export function executeCardAction(
 
   if (action === 'resolveShadowEffects') {
     const cards = ctx.state.cards[card.id].shadows.flatMap(
-      (id) => ctx.view.cards[id]
+      (id) => ctx.state.cards[id]
     );
 
     if (cards.length > 0) {
@@ -278,7 +278,7 @@ export function executeCardAction(
   }
 
   if (action === 'resolveShadow') {
-    const shadows = ctx.view.cards[card.id].rules.shadows ?? [];
+    const shadows = ctx.state.cards[card.id].view.rules.shadows ?? [];
 
     if (shadows.length > 0) {
       for (const shadow of shadows) {
@@ -399,7 +399,7 @@ export function executeCardAction(
   }
 
   if (action.ready === 'refresh') {
-    const cv = ctx.view.cards[card.id];
+    const cv = ctx.state.cards[card.id].view;
     const cost = cv.rules.refreshCost ?? [];
     const free = cost.length === 0;
     if (free) {
@@ -486,7 +486,7 @@ export function executeCardAction(
 
     card.token.damage += amount;
 
-    const hitpoints = ctx.view.cards[card.id].props.hitPoints;
+    const hitpoints = ctx.state.cards[card.id].view.props.hitPoints;
 
     if (hitpoints && card.token.damage >= hitpoints) {
       executeCardAction(
@@ -623,7 +623,7 @@ export function executeCardAction(
     }
 
     card.token.progress += action.placeProgress;
-    const cw = ctx.view.cards[card.id];
+    const cw = ctx.state.cards[card.id].view;
     if (cw.props.type === 'quest') {
       const qp = cw.props.questPoints;
       if (qp && card.token.progress >= qp) {
