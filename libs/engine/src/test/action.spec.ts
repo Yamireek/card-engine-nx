@@ -222,5 +222,5 @@ suite('Card actions', () => {
 
   it.todo('Out of play');
 
-  it.todo('Objective');
+  // it.todo('Objective');
 });
