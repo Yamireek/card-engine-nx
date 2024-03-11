@@ -6,6 +6,9 @@ import {
   CardAction,
   Event,
   Scope,
+  PlayerModifier,
+  GameDependency,
+  Dependencies,
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../../expression/number/calculate';
 import { updatedScopes } from '../../context/update';
@@ -21,6 +24,7 @@ import {
 } from '../../utils/combat';
 import { getTargetCards } from '../../card/target/multi';
 import { getTargetCard } from '../../card/target/single';
+import { Until } from '@card-engine-nx/basic';
 
 export function executePlayerAction(
   action: PlayerAction,
@@ -203,7 +207,8 @@ export function executePlayerAction(
   }
 
   if (action === 'declareDefender') {
-    const multiple = !!ctx.view.players[player.id]?.rules.multipleDefenders;
+    const multiple =
+      !!ctx.state.players[player.id]?.view.rules.multipleDefenders;
     const attacker = getTargetCard({ mark: 'attacking' }, ctx, scopes);
 
     if (attacker) {
@@ -329,8 +334,8 @@ export function executePlayerAction(
   }
 
   if (action.draw) {
-    const owner = ctx.view.players[player.id];
-    if (owner?.rules.disableDraw) {
+    const owner = ctx.state.players[player.id];
+    if (owner?.view.rules.disableDraw) {
       return;
     }
 
@@ -672,6 +677,7 @@ export function executePlayerAction(
       player: player.id,
       modifier: action.modify,
       until: action.until,
+      deps: getUntilDependency(action.until),
     });
     return;
   }
@@ -693,4 +699,26 @@ export function executePlayerAction(
   }
 
   throw new Error(`unknown player action: ${JSON.stringify(action)}`);
+}
+
+export function getUntilDependency(
+  until: Until | undefined
+): Dependencies | undefined {
+  if (!until) {
+    return {};
+  }
+
+  if (until === 'end_of_phase') {
+    return {
+      game: ['phase'],
+    };
+  }
+
+  if (until === 'end_of_round') {
+    return {
+      game: ['round'],
+    };
+  }
+
+  throw new Error('Unknown until: ' + JSON.stringify(until));
 }

@@ -76,8 +76,8 @@ export function canCardExecute(
         return false;
       }
 
-      const owner = ctx.view.players[card.owner];
-      return zone === 'library' && !owner?.rules.disableDraw;
+      const owner = ctx.state.players[card.owner];
+      return zone === 'library' && !owner?.view.rules.disableDraw;
     }
 
     if (zone === 'playerArea' && action === 'commitToQuest') {

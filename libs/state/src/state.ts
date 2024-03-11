@@ -43,4 +43,5 @@ export type State = {
   event: Event[];
   modifiers: GameModifier[];
   scopes: Scope[];
+  invalidate?: boolean;
 };

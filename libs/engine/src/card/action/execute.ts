@@ -209,8 +209,8 @@ export function executeCardAction(
       throw new Error("can't draw card without owner");
     }
 
-    const ow = ctx.view.players[owner];
-    if (ow?.rules.disableDraw) {
+    const ow = ctx.state.players[owner];
+    if (ow?.view.rules.disableDraw) {
       return;
     }
 

@@ -94,6 +94,7 @@ export function executeAction(
     ctx.next({ event: { type: 'end_of_round' } }, gameRound());
     ctx.state.triggers.end_of_round = [];
     ctx.state.round++;
+    ctx.state.invalidate = true;
     return;
   }
 
@@ -116,6 +117,7 @@ export function executeAction(
 
     ctx.next(...ctx.state.triggers.end_of_phase);
     ctx.state.triggers.end_of_phase = [];
+    ctx.state.invalidate = true;
     return;
   }
 

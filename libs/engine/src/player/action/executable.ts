@@ -96,7 +96,7 @@ export function canPlayerExecute(
     }
 
     if (action.draw) {
-      const pv = ctx.view.players[player.id];
+      const pv = ctx.state.players[player.id]?.view;
       return player.zones.library.cards.length > 0 && !pv?.rules.disableDraw;
     }
 

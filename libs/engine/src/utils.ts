@@ -9,10 +9,15 @@ import {
   PlayerId,
   PlayerZoneType,
   Side,
+  values,
 } from '@card-engine-nx/basic';
 import { executeAction } from './action/execute';
 import { ExecutionContext } from './context/execution';
-import { createView } from './view';
+import {
+  applyGlobalCardModifier,
+  applyGlobalPlayerModifier,
+  createView,
+} from './view';
 import { Logger } from './logger/types';
 import { toJS } from 'mobx';
 
@@ -58,7 +63,45 @@ export function nextStep(
   } else {
     logger.log('executing ', toJS(action), toJS(ctx.state.next));
     executeAction(action, ctx, scopes);
+    if (ctx.state.invalidate) {
+      invalidateState(ctx.state);
+    }
   }
+}
+
+export function invalidateState(state: State) {
+  for (const player of values(state.players)) {
+    player.view.rules = {};
+  }
+
+  for (const modifier of state.modifiers) {
+    modifier.applied = false;
+  }
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    let allApplied = true;
+
+    for (const modifier of state.modifiers.filter((m) => !m.applied)) {
+      allApplied = false;
+
+      if ('card' in modifier) {
+        applyGlobalCardModifier(state, undefined as any, modifier);
+      }
+
+      if ('player' in modifier) {
+        applyGlobalPlayerModifier(state, undefined as any, modifier);
+      }
+
+      modifier.applied = true;
+    }
+
+    if (allApplied) {
+      break;
+    }
+  }
+
+  state.invalidate = false;
 }
 
 export type SkipOptions = { show: boolean; actions: boolean };

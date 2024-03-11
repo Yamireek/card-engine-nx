@@ -15,5 +15,9 @@ export function createPlayerState(playerId: PlayerId): PlayerState {
     flags: {},
     eliminated: false,
     limits: {},
+    view: {
+      id: playerId,
+      rules: {},
+    },
   };
 }

@@ -12,6 +12,6 @@ export function getCard(id: CardId, ctx: ViewContext) {
 
 export function getPlayer(id: PlayerId, ctx: ViewContext) {
   const state = ctx.state.players[id];
-  const view = ctx.view.players[id];
+  const view = ctx.state.players[id]?.view;
   return { id, state, view };
 }

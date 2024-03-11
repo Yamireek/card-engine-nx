@@ -12,7 +12,6 @@ import { createPlayAllyAction } from './card/action/play/ally';
 import { applyModifier } from './card/modifier/apply';
 import { createCardView } from './card/view';
 import { canExecute } from './action/executable';
-import { createPlayerView } from './player/view';
 import { applyPlayerModifier } from './player/modifier/apply';
 import { getTargetPlayers } from './player/target/multi';
 import { calculateBoolExpr } from './expression/bool/calculate';
@@ -24,9 +23,6 @@ import { asArray } from '@card-engine-nx/basic';
 export function createBaseView(state: State): View {
   return {
     cards: mapValues(state.cards, (c) => createCardView(c)),
-    players: mapValues(state.players, (p) =>
-      p ? createPlayerView(p) : undefined
-    ),
     actions: [],
     modifiers: [],
     responses: {},
@@ -173,9 +169,9 @@ export function applyGlobalPlayerModifier(
     const targets = getTargetPlayers(modifier.player, ctx, scopes);
 
     for (const target of targets) {
-      const player = view.players[target];
+      const player = state.players[target];
       if (player) {
-        applyPlayerModifier(player, modifier.modifier);
+        applyPlayerModifier(player.view, modifier.modifier);
       }
     }
   }

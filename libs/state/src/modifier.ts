@@ -13,6 +13,8 @@ export type CardGlobalModifier = {
   modifier: CardModifier;
   condition?: BoolExpr;
   until?: Until;
+  deps?: Dependencies;
+  applied?: boolean;
 };
 
 export type PlayerGlobalModifier = {
@@ -21,4 +23,10 @@ export type PlayerGlobalModifier = {
   modifier: PlayerModifier;
   condition?: BoolExpr;
   until?: Until;
+  deps?: Dependencies;
+  applied?: boolean;
 };
+
+export type Dependencies = { game?: GameDependency[] };
+
+export type GameDependency = 'phase' | 'round';
