@@ -46,7 +46,7 @@ export class TestEngine {
   }
 
   get actions() {
-    return this.view.actions.filter((a) => a.enabled);
+    return this.ctx.actions;
   }
 
   get choiceTitle() {
@@ -65,10 +65,7 @@ export class TestEngine {
 
     if (this.state.choice) {
       if (this.state.choice.type === 'actions') {
-        this.logger.log(
-          'actions',
-          this.view.actions.filter((a) => a.enabled)
-        );
+        this.logger.log('actions', this.ctx.actions);
       } else {
         this.logger.log('choice', toJS(this.state.choice));
       }

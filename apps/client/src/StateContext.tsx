@@ -3,6 +3,7 @@ import {
   PlayerDeck,
   Scenario,
   State,
+  UserCardAction,
   View,
 } from '@card-engine-nx/state';
 import { Difficulty, PlayerId } from '@card-engine-nx/basic';
@@ -24,6 +25,7 @@ export const StateContext = createContext<{
   view: View;
   moves: Moves;
   playerId?: PlayerId;
+  actions: UserCardAction[];
   undo: () => void;
   redo: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

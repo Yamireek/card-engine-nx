@@ -208,7 +208,7 @@ export function LotrLCGame(
           return [
             { move: 'skip' },
             ...view.actions
-              .filter((a) => a.enabled)
+              // TODO .filter((a) => a.enabled)
               .map((_, i) => ({ move: 'action', args: [i] })),
           ];
         }

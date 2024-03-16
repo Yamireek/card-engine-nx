@@ -18,13 +18,11 @@ export const LotrCard3d = (props: {
   position: Vector3;
   size: Dimensions;
 }) => {
-  const { state, view, moves } = useContext(StateContext);
+  const { state, view, moves, actions } = useContext(StateContext);
   const { texture } = useTextures();
   const { floatingCards: cards } = useFloatingCards();
 
-  const actions = view.actions.filter(
-    (a) => a.card === props.cardId && a.enabled === true
-  );
+  const cardActions = actions.filter((a) => a.card === props.cardId);
 
   const card = state.cards[props.cardId];
 
@@ -58,14 +56,14 @@ export const LotrCard3d = (props: {
       hidden={cards.some((c) => c.id === props.cardId)}
       onClick={() => {
         if (
-          actions.length === 0 ||
+          cardActions.length === 0 ||
           !state.choice ||
           state.choice.type !== 'actions'
         ) {
           return;
         } else {
-          if (actions.length === 1) {
-            moves.action(indexOf(view.actions, actions[0]));
+          if (cardActions.length === 1) {
+            moves.action(indexOf(view.actions, cardActions[0]));
           } else {
             // tslint:disable-next-line:no-console
             console.log('todo multiple actions');
@@ -88,7 +86,7 @@ export const LotrCard3d = (props: {
         texture={texture[image.progress]}
         amount={card.token.progress}
       />
-      {actions.length > 0 && (
+      {cardActions.length > 0 && (
         <mesh>
           <planeGeometry
             attach="geometry"

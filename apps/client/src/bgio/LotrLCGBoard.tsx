@@ -3,6 +3,7 @@ import {
   LotrLCGame,
   UIEvents,
   createView,
+  getActions,
 } from '@card-engine-nx/engine';
 import { State } from '@card-engine-nx/state';
 import { BoardProps, Client } from 'boardgame.io/react';
@@ -17,6 +18,7 @@ export type LotrLCGProps = BoardProps<State>;
 
 export const LotrLCGBoard = (props: LotrLCGProps) => {
   const view = useMemo(() => createView(props.G), [props.G]);
+  const actions = useMemo(() => getActions(props.G, view), [props.G, view]);
 
   useEffect(() => {
     const value = localStorage.getItem('saved_state');
@@ -47,6 +49,7 @@ export const LotrLCGBoard = (props: LotrLCGProps) => {
             : undefined,
         undo: props.undo,
         redo: props.redo,
+        actions,
       }}
     >
       <GameSetup />

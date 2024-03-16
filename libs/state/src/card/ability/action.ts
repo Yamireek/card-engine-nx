@@ -2,8 +2,7 @@ import { CardId } from '@card-engine-nx/basic';
 import { Action } from '../../action';
 
 export type UserCardAction = {
-  card: CardId;
   description: string;
+  card: CardId;
   action: Action;
-  enabled?: true;
 };

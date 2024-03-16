@@ -116,7 +116,7 @@ export function createView(state: State): View {
           card.attachesTo
         ) {
           view.actions.push({
-            description: 'Play ally',
+            description: 'Play attachment',
             card: cardId,
             action: createPlayAttachmentAction(
               card.props.sphere,
@@ -130,25 +130,6 @@ export function createView(state: State): View {
       }
     }
   }
-
-  view.actions = view.actions.map((a) => {
-    const controller = state.cards[a.card].controller;
-    const enabled = canExecute(
-      a.action,
-      true,
-      {
-        state: state,
-        view: view,
-      },
-      [
-        {
-          player: { controller: controller ? [controller] : [] },
-          card: { self: asArray(a.card) },
-        },
-      ]
-    );
-    return { ...a, enabled: enabled ? true : undefined };
-  });
 
   return view;
 }

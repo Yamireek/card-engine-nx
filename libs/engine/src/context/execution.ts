@@ -1,4 +1,4 @@
-import { Action, State, View } from '@card-engine-nx/state';
+import { Action, State, UserCardAction, View } from '@card-engine-nx/state';
 import { UIEvents } from '../events/uiEvents';
 import { Random } from '../utils/random';
 import { createView } from '../view';
@@ -6,6 +6,8 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { SkipOptions, chooseOnlyOption, nextStep } from '../utils';
 import { Logger } from '../logger';
 import { uiEvent } from '../events';
+import { canExecute } from '../action';
+import { asArray } from '@card-engine-nx/basic';
 
 export type ExecutionContext = {
   state: State;
@@ -25,6 +27,7 @@ export class ObservableContext implements ExecutionContext {
     makeObservable(this, {
       state: observable,
       view: computed({ keepAlive: true }),
+      actions: computed({ keepAlive: true }),
       advance: action,
     });
   }
@@ -37,10 +40,14 @@ export class ObservableContext implements ExecutionContext {
     return createView(this.state);
   }
 
+  get actions() {
+    return getActions(this.state, this.view);
+  }
+
   advance(skip: SkipOptions, stopOnError: boolean) {
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      chooseOnlyOption(this.state, skip);
+      chooseOnlyOption(this, skip);
 
       if (this.state.choice) {
         return;
@@ -70,4 +77,18 @@ export class ObservableContext implements ExecutionContext {
       }
     }
   }
+}
+
+export function getActions(state: State, view: View): UserCardAction[] {
+  return view.actions.filter((a) =>
+    canExecute(
+      a.action,
+      true,
+      {
+        state,
+        view,
+      },
+      []
+    )
+  );
 }

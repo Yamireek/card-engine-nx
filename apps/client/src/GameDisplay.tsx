@@ -124,7 +124,8 @@ export const ActionEditorButton = () => {
 };
 
 export const LotrLCGInfo = () => {
-  const { state, view, playerId, moves, undo, redo } = useContext(StateContext);
+  const { state, view, playerId, moves, undo, redo, actions } =
+    useContext(StateContext);
 
   const totalWillpower = sum(
     values(state.cards)
@@ -254,19 +255,17 @@ export const LotrLCGInfo = () => {
         )}
         <Paper style={{ padding: 4, overflow: 'auto', pointerEvents: 'auto' }}>
           <Typography variant="caption">Possible actions</Typography>
-          {view.actions
-            .filter((a) => a.enabled)
-            .map((a, i) => {
-              const title = view.cards[a.card].props.name ?? '';
-              return (
-                <React.Fragment key={title + i}>
-                  <Tooltip title={title} placement="left">
-                    <Typography>{a.description}</Typography>
-                  </Tooltip>
-                  <Divider variant="fullWidth" />
-                </React.Fragment>
-              );
-            })}
+          {actions.map((a, i) => {
+            const title = view.cards[a.card].props.name ?? '';
+            return (
+              <React.Fragment key={title + i}>
+                <Tooltip title={title} placement="left">
+                  <Typography>{a.description}</Typography>
+                </Tooltip>
+                <Divider variant="fullWidth" />
+              </React.Fragment>
+            );
+          })}
         </Paper>
       </Stack>
     </div>

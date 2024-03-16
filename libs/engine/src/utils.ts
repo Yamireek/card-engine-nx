@@ -11,7 +11,7 @@ import {
   Side,
 } from '@card-engine-nx/basic';
 import { executeAction } from './action/execute';
-import { ExecutionContext } from './context/execution';
+import { ExecutionContext, ObservableContext } from './context/execution';
 import { createView } from './view';
 import { Logger } from './logger/types';
 import { toJS } from 'mobx';
@@ -63,7 +63,8 @@ export function nextStep(
 
 export type SkipOptions = { show: boolean; actions: boolean };
 
-export function chooseOnlyOption(state: State, skip: SkipOptions) {
+export function chooseOnlyOption(ctx: ObservableContext, skip: SkipOptions) {
+  const state = ctx.state;
   const choice = state.choice;
 
   if (!choice) {
@@ -99,7 +100,7 @@ export function chooseOnlyOption(state: State, skip: SkipOptions) {
 
   if (choice.type === 'actions') {
     if (skip.actions) {
-      const actions = createView(state).actions.filter((a) => a.enabled);
+      const actions = ctx.actions;
       if (actions.length === 0) {
         state.choice = undefined;
       }
