@@ -22,14 +22,17 @@ export class ObservableContext implements ExecutionContext {
     public state: State,
     public events: UIEvents,
     public random: Random,
-    public logger: Logger
+    public logger: Logger,
+    observable = false
   ) {
-    makeObservable(this, {
-      state: observable,
-      view: computed({ keepAlive: true }),
-      actions: computed({ keepAlive: true }),
-      advance: action,
-    });
+    if (observable) {
+      makeObservable(this, {
+        state: observable,
+        view: computed({ keepAlive: true }),
+        actions: computed({ keepAlive: true }),
+        advance: action,
+      });
+    }
   }
 
   next(...action: Action[]) {

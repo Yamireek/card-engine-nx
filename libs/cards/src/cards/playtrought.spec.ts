@@ -43,9 +43,12 @@ const testScenario: Scenario = {
 };
 
 it('Plays', () => {
-  const game = new TestEngine({
-    players: [],
-  });
+  const game = new TestEngine(
+    {
+      players: [],
+    },
+    { observable: true }
+  );
   game.do(
     beginScenario({
       scenario: testScenario,

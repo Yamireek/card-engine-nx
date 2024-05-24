@@ -23,13 +23,17 @@ export class TestEngine {
 
   ctx: ObservableContext;
 
-  constructor(state: SimpleState, console?: boolean) {
-    this.logger = console ? consoleLogger : nullLogger;
+  constructor(
+    state: SimpleState,
+    params: { observable?: boolean; console?: boolean } = {}
+  ) {
+    this.logger = params.console ? consoleLogger : nullLogger;
     this.ctx = new ObservableContext(
       createState(state),
       emptyEvents,
       random,
-      this.logger
+      this.logger,
+      params.observable
     );
 
     this.advance();

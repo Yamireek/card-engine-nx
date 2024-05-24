@@ -319,11 +319,20 @@ export function executePlayerAction(
       return;
     }
 
-    // TODO return engaged
-    ctx.next({
-      card: { owner: player.id },
-      action: 'destroy',
-    });
+    ctx.next(
+      {
+        card: { zone: { player: player.id, type: 'engaged' } },
+        action: {
+          move: {
+            to: 'stagingArea',
+          },
+        },
+      },
+      {
+        card: { owner: player.id },
+        action: 'destroy',
+      }
+    );
 
     return;
   }

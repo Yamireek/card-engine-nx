@@ -399,7 +399,7 @@ export function executeAction(
         if (card) {
           executeCardAction(action.action, card, ctx, scopes);
         } else {
-          throw new Error('player not found');
+          throw new Error('card not found');
         }
       }
       return;
@@ -412,7 +412,7 @@ export function executeAction(
             action: { card: id, action: action.action, scooped: true },
           });
         } else {
-          throw new Error('player not found');
+          throw new Error('card not found');
         }
       }
 
@@ -866,7 +866,10 @@ export function executeAction(
       cardId,
       action.addCard.side,
       action.addCard.definition,
-      owner,
+      typeof action.addCard.zone !== 'string' &&
+        action.addCard.zone.type !== 'engaged'
+        ? owner
+        : undefined,
       action.addCard.zone
     );
 
@@ -876,7 +879,7 @@ export function executeAction(
       if (action.addCard[token]) {
         const amount = action.addCard[token];
         if (amount) {
-         cardState.token[token] = amount;
+          cardState.token[token] = amount;
         }
       }
     }
