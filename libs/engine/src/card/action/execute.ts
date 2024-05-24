@@ -89,6 +89,14 @@ export function executeCardAction(
             to: props.type === 'treachery' ? 'discardPile' : 'stagingArea',
           },
         },
+      },
+      {
+        if: {
+          condition: {
+            more: ['surge', 0],
+          },
+          true: ['surge--', 'revealEncounterCard'],
+        },
       }
     );
 

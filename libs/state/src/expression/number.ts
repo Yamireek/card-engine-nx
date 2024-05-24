@@ -9,6 +9,7 @@ export type NumberExpr =
   | number
   | 'countOfPlayers'
   | 'totalThreat'
+  | 'surge'
   | 'X'
   | {
       count?: {

@@ -360,6 +360,16 @@ export function executeAction(
     return;
   }
 
+  if (action === 'surge++') {
+    ctx.state.surge++;
+    return;
+  }
+
+  if (action === 'surge--') {
+    ctx.state.surge--;
+    return;
+  }
+
   if ('player' in action && 'action' in action) {
     const ids = getTargetPlayers(action.player, ctx, scopes);
     for (const id of ids) {
@@ -770,12 +780,16 @@ export function executeAction(
     }
 
     if (action.event.type === 'revealed') {
-      const releaved =
+      if (ctx.view.cards[action.event.card].props.keywords?.surge) {
+        ctx.next('surge++');
+      }
+
+      const whenRevealed =
         ctx.view.cards[action.event.card].rules.whenRevealed ?? [];
-      if (releaved.length > 0) {
+      if (whenRevealed.length > 0) {
         const target = action.event.card;
         ctx.next(
-          releaved.map((effect) => ({
+          whenRevealed.map((effect) => ({
             card: target,
             action: {
               whenRevealed: effect,
@@ -785,7 +799,6 @@ export function executeAction(
       }
     }
 
-    // TODO surge
     return;
   }
 

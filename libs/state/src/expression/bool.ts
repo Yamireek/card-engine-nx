@@ -15,6 +15,8 @@ export type BoolExpr =
       phase?: Phase;
       someCard?: CardTarget;
       eq?: [NumberExpr, NumberExpr];
+      more?: [NumberExpr, NumberExpr];
+      less?: [NumberExpr, NumberExpr];
       card?: {
         target: CardTarget;
         value: CardBoolExpr;

@@ -37,6 +37,10 @@ export function calculateNumberExpr(
     return x;
   }
 
+  if (expr === 'surge') {    
+    return ctx.state.surge;
+  }
+
   if (expr.card) {
     const ids = getTargetCards(expr.card.target, ctx, scopes);
     if (ids.length === 1) {

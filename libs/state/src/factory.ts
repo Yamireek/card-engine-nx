@@ -30,6 +30,7 @@ export function createState(initState?: SimpleState, program?: Action): State {
     event: [],
     stack: [],
     scopes: [],
+    surge: 0,
   };
 
   if (initState) {

@@ -38,6 +38,8 @@ export type Action =
   | 'loose'
   | 'stackPop'
   | 'stateCheck'
+  | 'surge++'
+  | 'surge--'
   | { useScope: ScopeAction; action: Action }
   | {
       player: PlayerTarget;

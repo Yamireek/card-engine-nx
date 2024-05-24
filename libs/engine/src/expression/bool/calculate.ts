@@ -92,5 +92,17 @@ export function calculateBoolExpr(
     return a === b;
   }
 
+  if (expr.more) {
+    const a = calculateNumberExpr(expr.more[0], ctx, scopes);
+    const b = calculateNumberExpr(expr.more[1], ctx, scopes);
+    return a > b;
+  }
+
+  if (expr.less) {
+    const a = calculateNumberExpr(expr.less[0], ctx, scopes);
+    const b = calculateNumberExpr(expr.less[1], ctx, scopes);
+    return a < b;
+  }
+
   throw new Error(`unknown bool expression: ${JSON.stringify(expr)}`);
 }

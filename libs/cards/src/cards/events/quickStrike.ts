@@ -1,7 +1,5 @@
 import { event } from '@card-engine-nx/state';
 
-// TODO custom action
-
 export const quickStrike = event(
   {
     name: 'Quick Strike',
