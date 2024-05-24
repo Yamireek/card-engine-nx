@@ -9,7 +9,7 @@ import { getTargetPlayer } from '../player/target/single';
 import { getTargetPlayers } from '../player/target/multi';
 import { executePlayerAction } from '../player/action/execute';
 import { isArray, keys, last, reverse, sum } from 'lodash/fp';
-import { CardId, values } from '@card-engine-nx/basic';
+import { CardId, Token, values } from '@card-engine-nx/basic';
 import { addPlayerCard, addGameCard } from '../utils';
 import { calculateBoolExpr } from '../expression/bool/calculate';
 import { calculateNumberExpr } from '../expression/number/calculate';
@@ -870,17 +870,15 @@ export function executeAction(
       action.addCard.zone
     );
 
-    // TODO simplify
-    if (action.addCard.damage) {
-      cardState.token.damage = action.addCard.damage;
-    }
+    const tokens: Token[] = ['damage', 'progress', 'resources'];
 
-    if (action.addCard.progress) {
-      cardState.token.progress = action.addCard.progress;
-    }
-
-    if (action.addCard.resources) {
-      cardState.token.resources = action.addCard.resources;
+    for (const token of tokens) {
+      if (action.addCard[token]) {
+        const amount = action.addCard[token];
+        if (amount) {
+         cardState.token[token] = amount;
+        }
+      }
     }
 
     if (action.addCard.exhausted) {
