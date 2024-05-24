@@ -33,7 +33,7 @@ export class TestEngine {
       emptyEvents,
       random,
       this.logger,
-      params.observable
+      params.observable ?? false
     );
 
     this.advance();

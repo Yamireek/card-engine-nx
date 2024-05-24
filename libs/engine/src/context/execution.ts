@@ -23,7 +23,7 @@ export class ObservableContext implements ExecutionContext {
     public events: UIEvents,
     public random: Random,
     public logger: Logger,
-    observable = false
+    observable = true
   ) {
     if (observable) {
       makeObservable(this, {
