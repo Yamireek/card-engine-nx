@@ -10,7 +10,6 @@ import { getTargetPlayers } from '../player/target/multi';
 import { executePlayerAction } from '../player/action/execute';
 import { isArray, keys, last, reverse, sum } from 'lodash/fp';
 import { CardId, Token, values } from '@card-engine-nx/basic';
-import { addPlayerCard, addGameCard } from '../utils';
 import { calculateBoolExpr } from '../expression/bool/calculate';
 import { calculateNumberExpr } from '../expression/number/calculate';
 import { updatedScopes } from '../context/update';
@@ -516,12 +515,24 @@ export function executeAction(
 
     ctx.state.players[playerId] = createPlayerState(playerId);
 
-    for (const hero of action.addPlayer.heroes) {
-      addPlayerCard(ctx.state, hero, playerId, 'front', 'playerArea');
+    for (const card of action.addPlayer.library) {
+      ctx.next({
+        addCard: {
+          definition: card,
+          side: 'back',
+          zone: { player: playerId, type: 'library' },
+        },
+      });
     }
 
-    for (const card of reverse(action.addPlayer.library)) {
-      addPlayerCard(ctx.state, card, playerId, 'back', 'library');
+    for (const hero of reverse(action.addPlayer.heroes)) {
+      ctx.next({
+        addCard: {
+          definition: hero,
+          side: 'front',
+          zone: { player: playerId, type: 'playerArea' },
+        },
+      });
     }
 
     const player = ctx.state.players[playerId];
@@ -536,21 +547,40 @@ export function executeAction(
   }
 
   if (action.setupScenario) {
-    for (const set of reverse(action.setupScenario.scenario.sets)) {
-      for (const card of reverse(set.easy)) {
-        addGameCard(ctx.state, card, 'back', 'encounterDeck');
-      }
+    for (const questCard of action.setupScenario.scenario.quest) {
+      ctx.next({
+        addCard: {
+          definition: questCard,
+          side: 'front',
+          zone: 'questDeck',
+        },
+      });
+    }
 
+    for (const set of action.setupScenario.scenario.sets) {
       if (action.setupScenario.difficulty === 'normal') {
-        for (const card of reverse(set.normal)) {
-          addGameCard(ctx.state, card, 'back', 'encounterDeck');
+        for (const card of set.normal) {
+          ctx.next({
+            addCard: {
+              definition: card,
+              side: 'back',
+              zone: 'encounterDeck',
+            },
+          });
         }
       }
+
+      for (const card of set.easy) {
+        ctx.next({
+          addCard: {
+            definition: card,
+            side: 'back',
+            zone: 'encounterDeck',
+          },
+        });
+      }
     }
 
-    for (const questCard of reverse(action.setupScenario.scenario.quest)) {
-      addGameCard(ctx.state, questCard, 'front', 'questDeck');
-    }
     return;
   }
 

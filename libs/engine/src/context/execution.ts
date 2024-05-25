@@ -2,12 +2,11 @@ import { Action, State, UserCardAction, View } from '@card-engine-nx/state';
 import { UIEvents } from '../events/uiEvents';
 import { Random } from '../utils/random';
 import { createView } from '../view';
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { SkipOptions, chooseOnlyOption, nextStep } from '../utils';
 import { Logger } from '../logger';
 import { uiEvent } from '../events';
 import { canExecute } from '../action';
-import { asArray } from '@card-engine-nx/basic';
 
 export type ExecutionContext = {
   state: State;

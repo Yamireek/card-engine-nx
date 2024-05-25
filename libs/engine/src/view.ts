@@ -11,7 +11,6 @@ import { createPlayAttachmentAction } from './card/action/play/attachment';
 import { createPlayAllyAction } from './card/action/play/ally';
 import { applyModifier } from './card/modifier/apply';
 import { createCardView } from './card/view';
-import { canExecute } from './action/executable';
 import { createPlayerView } from './player/view';
 import { applyPlayerModifier } from './player/modifier/apply';
 import { getTargetPlayers } from './player/target/multi';
