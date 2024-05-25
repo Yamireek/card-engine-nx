@@ -44,7 +44,12 @@ export function applyModifier(
   }
 
   if ('setup' in modifier) {
-    ctx.view.setup.push(modifier.setup);
+    // TODO move to rules
+    if (!self.rules.setup) {
+      self.rules.setup = [modifier.setup];
+    } else {
+      self.rules.setup.push(modifier.setup);
+    }
     return;
   }
 

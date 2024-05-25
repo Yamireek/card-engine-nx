@@ -29,7 +29,6 @@ export function createBaseView(state: State): View {
     actions: [],
     modifiers: [],
     responses: {},
-    setup: [],
   };
 }
 

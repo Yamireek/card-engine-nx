@@ -52,7 +52,9 @@ export function executeAction(
           cardId: ctx.state.zones.questArea.cards[0] ?? 0,
         },
       },
-      ...ctx.view.setup,
+      ...values(ctx.view.cards).flatMap((c) =>
+        c.rules.setup ? [c.rules.setup] : []
+      ),
       {
         card: {
           zone: 'questArea',
