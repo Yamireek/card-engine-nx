@@ -361,6 +361,8 @@ export function executePlayerAction(
       },
     });
 
+    ctx.logger.log(`Player ${player.id} draws ${action.draw} cards`);
+
     return;
   }
 
@@ -375,6 +377,7 @@ export function executePlayerAction(
   if (action.incrementThreat) {
     const amount = calculateNumberExpr(action.incrementThreat, ctx, scopes);
     player.thread += amount;
+    ctx.logger.warning(`Player ${player.id} increments thread by ${amount}`);
     return;
   }
 

@@ -3,6 +3,7 @@ import { Game } from './Game';
 import { useState } from 'react';
 import { GameSetupData } from '@card-engine-nx/engine';
 import { GameSetupDialog } from './GameSetupDialog';
+import { SnackbarProvider } from 'notistack';
 
 const savedState = localStorage.getItem('saved_state');
 
@@ -25,13 +26,15 @@ export const App = () => {
       {!setup && !savedState && <GameSetupDialog onSubmit={setSetup} />}
 
       {(setup || savedState) && (
-        <Game
-          players={1}
-          playerID={window.location.hash.substring(1)}
-          multiplayer={false}
-          server="localhost:3000"
-          setup={savedState ? { state: JSON.parse(savedState) } : setup}
-        />
+        <SnackbarProvider>
+          <Game
+            players={1}
+            playerID={window.location.hash.substring(1)}
+            multiplayer={false}
+            server="localhost:3000"
+            setup={savedState ? { state: JSON.parse(savedState) } : setup}
+          />
+        </SnackbarProvider>
       )}
     </div>
   );

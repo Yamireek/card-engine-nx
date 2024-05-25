@@ -9,9 +9,9 @@ import { PowerSet } from 'js-combinatorics';
 import { randomBgIO } from '../utils/random';
 import { GameSetupData } from '../GameSetupData';
 import { Logger } from '../logger/types';
-import { consoleLogger } from '../logger/console';
 import { toJS } from 'mobx';
 import { ObservableContext } from '../context';
+import { nullLogger } from '../logger';
 
 const skipOptions = { actions: false, show: false };
 
@@ -146,7 +146,8 @@ function createMoves(
 
 export function LotrLCGame(
   events: UIEvents,
-  setupClient?: GameSetupData
+  setupClient?: GameSetupData,
+  logger?: Logger
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Game<State, any, GameSetupData | { state: State }> {
   return {
@@ -182,7 +183,7 @@ export function LotrLCGame(
     },
     minPlayers: 1,
     maxPlayers: 4,
-    moves: createMoves(events, consoleLogger),
+    moves: createMoves(events, logger ?? nullLogger),
     turn: {
       activePlayers: ActivePlayers.ALL,
     },

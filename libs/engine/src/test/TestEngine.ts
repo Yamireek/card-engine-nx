@@ -69,9 +69,9 @@ export class TestEngine {
 
     if (this.state.choice) {
       if (this.state.choice.type === 'actions') {
-        this.logger.log('actions', this.ctx.actions);
+        this.logger.debug('actions', this.ctx.actions);
       } else {
-        this.logger.log('choice', toJS(this.state.choice));
+        this.logger.debug('choice', toJS(this.state.choice));
       }
     }
   }

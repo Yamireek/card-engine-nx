@@ -1,6 +1,4 @@
-import {
-  Scope,
-} from '@card-engine-nx/state';
+import { Scope } from '@card-engine-nx/state';
 import { executeAction } from './action/execute';
 import { ExecutionContext, ObservableContext } from './context/execution';
 import { Logger } from './logger/types';
@@ -15,7 +13,7 @@ export function nextStep(
   if (!action) {
     return false;
   } else {
-    logger.log('executing ', toJS(action), toJS(ctx.state.next));
+    logger.debug('executing ', toJS(action), toJS(ctx.state.next));
     executeAction(action, ctx, scopes);
   }
 }

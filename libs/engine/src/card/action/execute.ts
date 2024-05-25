@@ -42,6 +42,8 @@ export function executeCardAction(
 
   if (action === 'ready') {
     card.tapped = false;
+    const props = ctx.view.cards[card.id].props;
+    ctx.logger.log(`${props.name} is ready`);
     return;
   }
 
@@ -60,11 +62,14 @@ export function executeCardAction(
       },
       { event: { type: 'traveled', card: card.id } }
     );
+    ctx.logger.log(`Traveling to ${ctx.view.cards[card.id].props.name}`);
     return;
   }
 
   if (action === 'exhaust') {
     card.tapped = true;
+    const props = ctx.view.cards[card.id].props;
+    ctx.logger.log(`${props.name} exhausted`);
     return;
   }
 
@@ -475,6 +480,8 @@ export function executeCardAction(
   }
 
   if (action.heal) {
+    const props = ctx.view.cards[card.id].props;
+    ctx.logger.success(`Healed ${action.heal} damage on ${props.name}`);
     if (action.heal === 'all') {
       card.token.damage = 0;
     } else {
@@ -494,7 +501,15 @@ export function executeCardAction(
 
     card.token.damage += amount;
 
-    const hitpoints = ctx.view.cards[card.id].props.hitPoints;
+    const props = ctx.view.cards[card.id].props;
+
+    if (props.type === 'enemy') {
+      ctx.logger.success(`Enemy ${props.name} was dealt ${amount} damage`);
+    } else {
+      ctx.logger.warning(`Character ${props.name} was dealt ${amount} damage`);
+    }
+
+    const hitpoints = props.hitPoints;
 
     if (hitpoints && card.token.damage >= hitpoints) {
       executeCardAction(
@@ -527,7 +542,11 @@ export function executeCardAction(
 
   if (action.generateResources !== undefined) {
     const amount = calculateNumberExpr(action.generateResources, ctx, scopes);
-    card.token.resources += amount;
+    if (amount > 0) {
+      card.token.resources += amount;
+      const props = ctx.view.cards[card.id].props;
+      ctx.logger.success(`${props.name} generated ${amount} resources`);
+    }
     return;
   }
 
@@ -646,6 +665,10 @@ export function executeCardAction(
         }
       }
     }
+
+    ctx.logger.success(
+      `Placing ${action.placeProgress} progress to ${cw.props.name}`
+    );
 
     if (cw.props.type === 'location') {
       const qp = cw.props.questPoints;

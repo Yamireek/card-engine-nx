@@ -13,6 +13,7 @@ export type ExecutionContext = {
   view: View;
   events: UIEvents;
   random: Random;
+  logger: Logger;
   next: (...action: Action[]) => void;
 };
 

@@ -1,5 +1,6 @@
 import {
   GameSetupData,
+  Logger,
   LotrLCGame,
   UIEvents,
   createView,
@@ -61,10 +62,11 @@ export function LotrLCGClient(
   events: UIEvents,
   numPlayers: number,
   multiplayer?: ClientOpts['multiplayer'],
-  setup?: GameSetupData
+  setup?: GameSetupData,
+  logger?: Logger
 ) {
   return Client({
-    game: LotrLCGame(events, setup),
+    game: LotrLCGame(events, setup, logger),
     board: LotrLCGBoard,
     numPlayers,
     multiplayer,
