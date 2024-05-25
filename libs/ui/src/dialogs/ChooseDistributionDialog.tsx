@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { min, sum } from 'lodash/fp';
+import { MinimizeDialogButton } from './MinimizeDialogButton';
 
 export type Amount<T> = { id: T; value: number };
 
@@ -37,6 +38,7 @@ export const ChooseDistributionDialog = <T extends unknown>(props: {
     max: number;
   }[];
   onSubmit: (amounts: Array<number>) => void;
+  onMinimize?: () => void;
 }) => {
   const [amounts, setAmounts] = useState<Array<number>>(
     props.choices.map((c) => c.min ?? 0)
@@ -58,6 +60,7 @@ export const ChooseDistributionDialog = <T extends unknown>(props: {
   return (
     <Dialog open={true} maxWidth="md">
       <DialogTitle>{props.title}</DialogTitle>
+      <MinimizeDialogButton onMinimize={props.onMinimize} />
       <DialogContent>
         <List
           style={{

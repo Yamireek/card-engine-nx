@@ -4,13 +4,15 @@ import {
   ChooseSingleDialog,
   NextStepButton,
   getCardImageUrl,
+  MinimizeDialogButton,
 } from '@card-engine-nx/ui';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { StateContext } from './StateContext';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 export const GameDialogs = () => {
   const { state, view, moves, playerId } = useContext(StateContext);
+  const [mini, setMini] = useState(false);
 
   if (state.result) {
     if (state.result.win) {
@@ -43,6 +45,17 @@ export const GameDialogs = () => {
     );
   }
 
+  if (mini) {
+    return (
+      <NextStepButton
+        title="Choose"
+        onClick={() => {
+          setMini(false);
+        }}
+      />
+    );
+  }
+
   if (state.choice.type === 'show') {
     const cardState = state.cards[state.choice.cardId];
     return (
@@ -54,6 +67,9 @@ export const GameDialogs = () => {
         maxWidth="md"
       >
         <DialogTitle>{state.choice.title}</DialogTitle>
+        <MinimizeDialogButton
+          onMinimize={state.phase !== 'setup' ? () => setMini(true) : undefined}
+        />
         <DialogContent>
           <img
             alt=""
@@ -106,6 +122,7 @@ export const GameDialogs = () => {
           },
         }))}
         onSubmit={(ids) => moves.choose(...ids)}
+        onMinimize={() => setMini(true)}
       />
     );
   }
@@ -117,6 +134,7 @@ export const GameDialogs = () => {
         title={state.choice.title}
         skippable={state.choice.optional}
         onSkip={() => moves.skip()}
+        onMinimize={state.phase !== 'setup' ? () => setMini(true) : undefined}
         choices={state.choice.options.map((o, i) => ({
           title: o.title,
           action: () => {
@@ -158,6 +176,7 @@ export const GameDialogs = () => {
         onSubmit={(amounts) => {
           moves.split(...amounts);
         }}
+        onMinimize={() => setMini(true)}
       />
     );
   }
@@ -179,6 +198,7 @@ export const GameDialogs = () => {
         onSubmit={(amounts) => {
           moves.split(...amounts);
         }}
+        onMinimize={() => setMini(true)}
       />
     );
   }

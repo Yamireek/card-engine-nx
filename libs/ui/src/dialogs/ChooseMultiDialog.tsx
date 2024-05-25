@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import { MinimizeDialogButton } from './MinimizeDialogButton';
 
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
 export const ChooseMultiDialog = <T extends unknown>(props: {
@@ -23,12 +24,14 @@ export const ChooseMultiDialog = <T extends unknown>(props: {
     id: T;
   }[];
   onSubmit: (ids: T[]) => void;
+  onMinimize?: () => void;
 }) => {
   const [selected, setSelected] = useState<T[]>([]);
 
   return (
     <Dialog open={true} maxWidth="md">
       <DialogTitle>{props.title}</DialogTitle>
+      <MinimizeDialogButton onMinimize={props.onMinimize} />
       <DialogContent>
         <List
           style={{

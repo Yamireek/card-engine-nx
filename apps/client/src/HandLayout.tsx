@@ -4,6 +4,7 @@ import { CardId } from '@card-engine-nx/basic';
 import { Tooltip } from '@mui/material';
 import { CardDetail } from './CardDetail';
 import { CardDisplay, cardRatio } from '@card-engine-nx/ui';
+import { useGameState } from './StateContext';
 
 export const HandLayout = (props: {
   cardWidth: number;
@@ -14,6 +15,7 @@ export const HandLayout = (props: {
 }) => {
   const [ref, { width }] = useMeasure();
   const cards = props.cards ?? [];
+  const { state } = useGameState();
 
   const rotate = props.rotate;
   const cardHeight = props.cardWidth / cardRatio;
@@ -70,7 +72,10 @@ export const HandLayout = (props: {
                 }`,
                 transition: 'transform 0.25s ease 0s',
                 zIndex: i === detail ? 5 : 0,
-                border: card.activable ? '3px solid yellow' : 'none',
+                border:
+                  card.activable && state.choice?.type === 'actions'
+                    ? '3px solid yellow'
+                    : 'none',
               }}
               onClick={() => {
                 if (card.activable && props.onActivation) {

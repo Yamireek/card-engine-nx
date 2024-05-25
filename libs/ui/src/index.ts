@@ -9,3 +9,4 @@ export * from './dialogs/ChooseSingleDialog';
 export * from './dialogs/ChooseMultiDialog';
 export * from './dialogs/ChooseDistributionDialog';
 export * from './GameInfo';
+export * from './dialogs/MinimizeDialogButton';

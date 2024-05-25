@@ -8,6 +8,7 @@ import {
   ListItemButton,
   Typography,
 } from '@mui/material';
+import { MinimizeDialogButton } from './MinimizeDialogButton';
 
 export const ChooseSingleDialog = (props: {
   title: string;
@@ -22,10 +23,12 @@ export const ChooseSingleDialog = (props: {
     action: () => void;
   }>;
   onSkip?: () => void;
+  onMinimize?: () => void;
 }) => {
   return (
     <Dialog open={true} maxWidth="md">
       <DialogTitle>{props.title}</DialogTitle>
+      <MinimizeDialogButton onMinimize={props.onMinimize} />
       <DialogContent>
         <Grid container spacing={1} justifyContent="space-evenly">
           {props.choices.map((a, i) => (

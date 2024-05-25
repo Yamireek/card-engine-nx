@@ -86,7 +86,7 @@ export const LotrCard3d = (props: {
         texture={texture[image.progress]}
         amount={card.token.progress}
       />
-      {cardActions.length > 0 && (
+      {cardActions.length > 0 && state.choice?.type === 'actions' && (
         <mesh>
           <planeGeometry
             attach="geometry"
