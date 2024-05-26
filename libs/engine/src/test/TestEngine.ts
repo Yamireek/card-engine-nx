@@ -15,7 +15,6 @@ import { nullLogger } from '../logger/null';
 import { consoleLogger } from '../logger/console';
 import { ObservableContext } from '../context';
 import { toJS } from 'mobx';
-import { writeFileSync } from 'fs';
 import { padStart } from 'lodash';
 
 const random = noRandom();
@@ -90,10 +89,11 @@ export class TestEngine {
   logToFile() {
     this.step++;
     if (this.params.file) {
-      writeFileSync(
-        `./logs/${padStart(this.step.toString(), 3, '0')}.json`,
-        JSON.stringify(this.state, null, 1)
-      );
+      const name = `./logs/${padStart(this.step.toString(), 3, '0')}.json`;
+      const content = JSON.stringify(this.state, null, 1);
+      import('fs').then((fs) => {
+        fs.writeFileSync(name, content);
+      });
     }
   }
 

@@ -279,7 +279,6 @@ it('Plays', () => {
   game.skip();
   game.skip();
   game.skip();
-  game.skip();
   game.chooseAction('Play ally Snowbourn Scout');
   game.chooseOption(
     'Response: After Snowbourn Scout enters play, choose a location. Place 1 progress token on that location.'

@@ -57,8 +57,6 @@ export function createBaseModifiers(state: State) {
 }
 
 export function createView(state: State): View {
-  debugger;
-
   const view = createBaseView(state);
   view.modifiers = createBaseModifiers(state);
 
