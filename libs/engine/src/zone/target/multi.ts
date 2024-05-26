@@ -4,14 +4,13 @@ import { ViewContext } from '../../context/view';
 
 export function getTargetZones(
   target: ZoneTarget,
-  ctx: ViewContext,
-  scopes: Scope[]
+  ctx: ViewContext
 ): ZoneState[] {
   if (typeof target === 'string') {
     return [ctx.state.zones[target]];
   }
 
-  const players = getTargetPlayers(target.player, ctx, scopes);
+  const players = getTargetPlayers(target.player, ctx);
   return players.flatMap((p) => {
     const ps = ctx.state.players[p];
     if (ps) {

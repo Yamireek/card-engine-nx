@@ -11,8 +11,7 @@ import { getFromScope } from '../../scope/utils';
 
 export function calculateNumberExpr(
   expr: NumberExpr,
-  ctx: ViewContext,
-  scopes: Scope[]
+  ctx: ViewContext
 ): number {
   if (typeof expr === 'number') {
     return expr;
@@ -30,19 +29,19 @@ export function calculateNumberExpr(
   }
 
   if (expr === 'X') {
-    const x = getFromScope(ctx, scopes, (s) => s.x);
+    const x = getFromScope(ctx, (s) => s.x);
     if (x === undefined) {
       throw new Error('no x value');
     }
     return x;
   }
 
-  if (expr === 'surge') {    
+  if (expr === 'surge') {
     return ctx.state.surge;
   }
 
   if (expr.card) {
-    const ids = getTargetCards(expr.card.target, ctx, scopes);
+    const ids = getTargetCards(expr.card.target, ctx);
     if (ids.length === 1) {
       return calculateCardExpr(expr.card.value, ids[0], ctx);
     } else {
@@ -57,9 +56,9 @@ export function calculateNumberExpr(
   }
 
   if (expr.player) {
-    const ids = getTargetPlayers(expr.player.target, ctx, scopes);
+    const ids = getTargetPlayers(expr.player.target, ctx);
     if (ids.length === 1) {
-      return calculatePlayerExpr(expr.player.value, ids[0], ctx, scopes);
+      return calculatePlayerExpr(expr.player.value, ids[0], ctx);
     } else {
       throw new Error('multiple players card');
     }
@@ -82,41 +81,39 @@ export function calculateNumberExpr(
   }
 
   if (expr.plus) {
-    const values = expr.plus.map((e) => calculateNumberExpr(e, ctx, scopes));
+    const values = expr.plus.map((e) => calculateNumberExpr(e, ctx));
     return sum(values) ?? 0;
   }
 
   if (expr.minus) {
-    const a = calculateNumberExpr(expr.minus[0], ctx, scopes);
-    const b = calculateNumberExpr(expr.minus[1], ctx, scopes);
+    const a = calculateNumberExpr(expr.minus[0], ctx);
+    const b = calculateNumberExpr(expr.minus[1], ctx);
     return a - b;
   }
 
   if (expr.multiply) {
-    const values = expr.multiply.map((e) =>
-      calculateNumberExpr(e, ctx, scopes)
-    );
+    const values = expr.multiply.map((e) => calculateNumberExpr(e, ctx));
     return multiply(values[0], values[1]) ?? 0;
   }
 
   if (expr.if) {
-    const result = calculateBoolExpr(expr.if.cond, ctx, scopes);
+    const result = calculateBoolExpr(expr.if.cond, ctx);
     if (result) {
-      return calculateNumberExpr(expr.if.true, ctx, scopes);
+      return calculateNumberExpr(expr.if.true, ctx);
     } else {
-      return calculateNumberExpr(expr.if.false, ctx, scopes);
+      return calculateNumberExpr(expr.if.false, ctx);
     }
   }
 
   if (expr.count) {
     if (expr.count.cards) {
-      const cards = getTargetCards(expr.count.cards, ctx, scopes);
+      const cards = getTargetCards(expr.count.cards, ctx);
       return cards.length;
     }
   }
 
   if (expr.min) {
-    const values = expr.min.map((v) => calculateNumberExpr(v, ctx, scopes));
+    const values = expr.min.map((v) => calculateNumberExpr(v, ctx));
     const minimun = min(values);
     if (minimun === undefined) {
       throw new Error('no values');

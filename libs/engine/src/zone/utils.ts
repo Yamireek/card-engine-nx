@@ -38,15 +38,11 @@ export function getZoneState(zoneId: ZoneId, state: State): ZoneState {
   }
 }
 
-export function getTargetZoneId(
-  target: ZoneTarget,
-  ctx: ViewContext,
-  scopes: Scope[]
-): ZoneId {
+export function getTargetZoneId(target: ZoneTarget, ctx: ViewContext): ZoneId {
   if (typeof target === 'string') {
     return target;
   } else {
-    const player = getTargetPlayer(target.player, ctx, scopes);
+    const player = getTargetPlayer(target.player, ctx);
     return {
       player,
       type: target.type,

@@ -4,17 +4,13 @@ import { ExecutionContext, ObservableContext } from './context/execution';
 import { Logger } from './logger/types';
 import { toJS } from 'mobx';
 
-export function nextStep(
-  ctx: ExecutionContext,
-  logger: Logger,
-  scopes: Scope[]
-) {
+export function nextStep(ctx: ExecutionContext, logger: Logger) {
   const action = ctx.state.next.shift();
   if (!action) {
     return false;
   } else {
     logger.debug('executing ', toJS(action), toJS(ctx.state.next));
-    executeAction(action, ctx, scopes);
+    executeAction(action, ctx);
   }
 }
 

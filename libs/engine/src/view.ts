@@ -19,6 +19,7 @@ import { ViewContext, createViewContext } from './context/view';
 import { getZoneType } from './zone/utils';
 import { getTargetCards } from './card/target/multi';
 import { asArray } from '@card-engine-nx/basic';
+import { updatedScopes } from './context';
 
 export function createBaseView(state: State): View {
   return {
@@ -56,6 +57,8 @@ export function createBaseModifiers(state: State) {
 }
 
 export function createView(state: State): View {
+  debugger;
+
   const view = createBaseView(state);
   view.modifiers = createBaseModifiers(state);
 
@@ -142,11 +145,11 @@ export function applyGlobalPlayerModifier(
   const scopes: Scope[] = [{ card: { self: asArray(modifier.source) } }];
 
   const condition = modifier.condition
-    ? calculateBoolExpr(modifier.condition, ctx, scopes)
+    ? calculateBoolExpr(modifier.condition, ctx)
     : true;
 
   if (condition) {
-    const targets = getTargetPlayers(modifier.player, ctx, scopes);
+    const targets = getTargetPlayers(modifier.player, ctx);
 
     for (const target of targets) {
       const player = view.players[target];
@@ -163,38 +166,41 @@ export function applyGlobalCardModifier(
   modifier: CardGlobalModifier
 ) {
   const sourceCard = state.cards[modifier.source];
-
   const targets = getTargetCards(
     modifier.card,
-    createViewContext(state, view),
-    [
-      { player: { controller: asArray(sourceCard.controller) } },
-      { card: { self: asArray(modifier.source) } },
-    ]
+    updatedScopes(createViewContext(state, view), [
+      sourceCard.controller
+        ? {
+            var: 'controller',
+            player: sourceCard.controller,
+          }
+        : [],
+      {
+        var: 'self',
+        card: modifier.source,
+      },
+    ])
   );
-
   for (const target of targets) {
     const ctx = createViewContext(state, view);
-
-    const scopes: Scope[] = [
-      {
-        card: {
-          target: asArray(target),
-          self: asArray(modifier.source),
-        },
-      },
-    ];
-
     const condition = modifier.condition
-      ? calculateBoolExpr(modifier.condition, ctx, scopes)
+      ? calculateBoolExpr(modifier.condition, ctx)
       : true;
     if (condition) {
       applyModifier(
         modifier.modifier,
         view.cards[target],
         modifier.source,
-        ctx,
-        scopes
+        updatedScopes(ctx, [
+          {
+            var: 'target',
+            card: target,
+          },
+          {
+            var: 'self',
+            card: modifier.source,
+          },
+        ])
       );
     }
   }

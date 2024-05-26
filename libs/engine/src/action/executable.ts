@@ -11,11 +11,10 @@ import { canPlayerExecute } from '../player/action/executable';
 export function canExecute(
   action: Action,
   payment: boolean,
-  ctx: ViewContext,
-  scopes: Scope[]
+  ctx: ViewContext
 ): boolean {
   if (isArray(action)) {
-    return action.every((a) => canExecute(a, payment, ctx, scopes));
+    return action.every((a) => canExecute(a, payment, ctx));
   }
 
   if (typeof action === 'string') {
@@ -34,25 +33,23 @@ export function canExecute(
     throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
   } else {
     if ('player' in action && 'action' in action) {
-      const players = getTargetPlayers(action.player, ctx, scopes);
+      const players = getTargetPlayers(action.player, ctx);
       return players.some((p) =>
         canPlayerExecute(
           action.action,
           p,
-          ctx,
-          updatedScopes(ctx, scopes, { var: 'target', player: p })
+          updatedScopes(ctx, { var: 'target', player: p })
         )
       );
     }
 
     if ('card' in action && 'action' in action) {
-      const cards = getTargetCards(action.card, ctx, scopes);
+      const cards = getTargetCards(action.card, ctx);
       return cards.some((id) =>
         canCardExecute(
           action.action,
           id,
-          ctx,
-          updatedScopes(ctx, scopes, { var: 'target', card: id })
+          updatedScopes(ctx, { var: 'target', card: id })
         )
       );
     }
@@ -61,14 +58,13 @@ export function canExecute(
       return canExecute(
         action.action,
         payment,
-        ctx,
-        updatedScopes(ctx, scopes, action.useScope)
+        updatedScopes(ctx, action.useScope)
       );
     }
 
     if (action.payment) {
-      const payment = canExecute(action.payment.cost, true, ctx, scopes);
-      const effect = canExecute(action.payment.effect, false, ctx, scopes);
+      const payment = canExecute(action.payment.cost, true, ctx);
+      const effect = canExecute(action.payment.effect, false, ctx);
       return payment && effect;
     }
 
@@ -99,20 +95,20 @@ export function canExecute(
     }
 
     if (action.repeat) {
-      return canExecute(action.repeat.action, payment, ctx, scopes);
+      return canExecute(action.repeat.action, payment, ctx);
     }
 
     if (action.if) {
-      const result = calculateBoolExpr(action.if.condition, ctx, scopes);
+      const result = calculateBoolExpr(action.if.condition, ctx);
       if (result) {
         return (
           action.if.true !== undefined &&
-          canExecute(action.if.true, payment, ctx, scopes)
+          canExecute(action.if.true, payment, ctx)
         );
       } else {
         return (
           action.if.false !== undefined &&
-          canExecute(action.if.false, payment, ctx, scopes)
+          canExecute(action.if.false, payment, ctx)
         );
       }
     }

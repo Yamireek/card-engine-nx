@@ -19,12 +19,11 @@ export function applyModifier(
   modifier: CardModifier | CardModifier[],
   self: CardView,
   source: CardId,
-  ctx: ViewContext,
-  scopes: Scope[]
+  ctx: ViewContext
 ) {
   if (isArray(modifier)) {
     for (const m of modifier) {
-      applyModifier(m, self, source, ctx, scopes);
+      applyModifier(m, self, source, ctx);
     }
     return;
   }
@@ -33,7 +32,7 @@ export function applyModifier(
     for (const property of keys(modifier.increment)) {
       const expr = modifier.increment[property];
       if (expr) {
-        const amount = calculateNumberExpr(expr, ctx, scopes);
+        const amount = calculateNumberExpr(expr, ctx);
         const value = self.props[property];
         if (value !== undefined && amount) {
           self.props[property] = value + amount;
@@ -92,18 +91,17 @@ export function applyModifier(
     const condition = calculateCardBoolExpr(
       modifier.if.condition,
       self.id,
-      ctx,
-      scopes
+      ctx
     );
 
     const ifTrue = modifier.if.true;
     const ifFalse = modifier.if.false;
 
     if (condition && ifTrue) {
-      applyModifier(ifTrue, self, source, ctx, scopes);
+      applyModifier(ifTrue, self, source, ctx);
     }
     if (!condition && ifFalse) {
-      applyModifier(ifFalse, self, source, ctx, scopes);
+      applyModifier(ifFalse, self, source, ctx);
     }
     return;
   }

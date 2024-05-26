@@ -7,16 +7,11 @@ import { getTargetCards } from '../../card/target/multi';
 export function calculatePlayerExpr(
   expr: PlayerNumberExpr,
   playerId: PlayerId,
-  ctx: ViewContext,
-  scopes: Scope[]
+  ctx: ViewContext
 ): number {
   if ('resources' in expr) {
     const sphere = expr.resources;
-    const heroes = getTargetCards(
-      { sphere, controller: playerId },
-      ctx,
-      scopes
-    );
+    const heroes = getTargetCards({ sphere, controller: playerId }, ctx);
     return sum(heroes.map((id) => ctx.state.cards[id].token.resources));
   }
 

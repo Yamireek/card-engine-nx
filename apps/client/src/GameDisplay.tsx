@@ -137,8 +137,7 @@ export const LotrLCGInfo = () => {
 
   const totalThreat = calculateNumberExpr(
     'totalThreat',
-    createViewContext(state, view),
-    []
+    createViewContext(state, view)
   );
 
   const currentProgress = sum(

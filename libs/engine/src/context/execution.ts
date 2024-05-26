@@ -73,7 +73,7 @@ export class ObservableContext implements ExecutionContext {
       }
 
       try {
-        nextStep(this, this.logger, []);
+        nextStep(this, this.logger);
         if (
           this.state.choice ||
           this.state.next.length === 0 ||
@@ -96,6 +96,6 @@ export class ObservableContext implements ExecutionContext {
 
 export function getActions(state: State, view: View): UserCardAction[] {
   return view.actions.filter((a) =>
-    canExecute(a.action, true, createViewContext(state, view), [])
+    canExecute(a.action, true, createViewContext(state, view))
   );
 }

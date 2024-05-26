@@ -8,8 +8,7 @@ import { getTargetCard } from '../../card/target/single';
 
 export function getTargetPlayers(
   target: PlayerTarget,
-  ctx: ViewContext,
-  scopes: Scope[]
+  ctx: ViewContext
 ): PlayerId[] {
   if (isArray(target)) {
     return target;
@@ -27,7 +26,7 @@ export function getTargetPlayers(
     target === 'target' ||
     target === 'defending'
   ) {
-    const player = getPlayerFromScope(ctx, scopes, target);
+    const player = getPlayerFromScope(ctx, target);
 
     if (player) {
       return player;
@@ -42,17 +41,17 @@ export function getTargetPlayers(
 
   if (typeof target === 'object') {
     if (target.and) {
-      const lists = target.and.map((t) => getTargetPlayers(t, ctx, scopes));
+      const lists = target.and.map((t) => getTargetPlayers(t, ctx));
       return uniq(intersection(...lists));
     }
 
     if (target.not) {
-      const not = getTargetPlayers(target.not, ctx, scopes);
+      const not = getTargetPlayers(target.not, ctx);
       return keys(ctx.state.players).filter((key) => !not.includes(key));
     }
 
     if (target.controllerOf) {
-      const cardId = getTargetCard(target.controllerOf, ctx, scopes);
+      const cardId = getTargetCard(target.controllerOf, ctx);
       if (!cardId) {
         return [];
       }

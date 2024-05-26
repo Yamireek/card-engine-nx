@@ -15,8 +15,7 @@ export function checkCardPredicate(
   target: CardTarget,
   state: CardState,
   view: CardView,
-  ctx: ViewContext,
-  scopes: Scope[]
+  ctx: ViewContext
 ): boolean {
   if (typeof target === 'number') {
     return state.id === target;
@@ -28,12 +27,12 @@ export function checkCardPredicate(
 
   if (typeof target !== 'string' && Object.keys(target).length > 1) {
     return keys(target).every((key) =>
-      checkCardPredicate({ [key]: target[key] }, state, view, ctx, scopes)
+      checkCardPredicate({ [key]: target[key] }, state, view, ctx)
     );
   }
 
   if (target === 'self' || target === 'target') {
-    const ids = getCardFromScope(ctx, scopes, target);
+    const ids = getCardFromScope(ctx, target);
     return (ids && ids.includes(state.id)) ?? false;
   }
 
@@ -75,7 +74,7 @@ export function checkCardPredicate(
     const need = view.props.questPoints;
     const expr = view.rules.conditional?.advance ?? [];
     const allowed =
-      expr.length > 0 ? calculateBoolExpr({ and: expr }, ctx, scopes) : true;
+      expr.length > 0 ? calculateBoolExpr({ and: expr }, ctx) : true;
     return need !== undefined && allowed && need <= state.token.progress;
   }
 
@@ -89,18 +88,16 @@ export function checkCardPredicate(
 
   if (target.simple) {
     return asArray(target.simple).every((s) =>
-      checkCardPredicate(s, state, view, ctx, scopes)
+      checkCardPredicate(s, state, view, ctx)
     );
   }
 
   if (target.and) {
-    return target.and.every((p) =>
-      checkCardPredicate(p, state, view, ctx, scopes)
-    );
+    return target.and.every((p) => checkCardPredicate(p, state, view, ctx));
   }
 
   if (target.not) {
-    return !checkCardPredicate(target.not, state, view, ctx, scopes);
+    return !checkCardPredicate(target.not, state, view, ctx);
   }
 
   if (target.owner) {
@@ -108,7 +105,7 @@ export function checkCardPredicate(
       return false;
     }
 
-    const players = getTargetPlayers(target.owner, ctx, scopes);
+    const players = getTargetPlayers(target.owner, ctx);
     return players.includes(state.owner);
   }
 
@@ -117,7 +114,7 @@ export function checkCardPredicate(
   }
 
   if (target.sequence) {
-    const value = calculateNumberExpr(target.sequence, ctx, scopes);
+    const value = calculateNumberExpr(target.sequence, ctx);
     return value === view.props.sequence;
   }
 
@@ -140,7 +137,7 @@ export function checkCardPredicate(
       return false;
     }
 
-    const players = getTargetPlayers(target.controller, ctx, scopes);
+    const players = getTargetPlayers(target.controller, ctx);
     return players.includes(state.controller);
   }
 
@@ -162,7 +159,7 @@ export function checkCardPredicate(
   }
 
   if (target.hasAttachment) {
-    const attachments = getTargetCards(target.hasAttachment, ctx, scopes);
+    const attachments = getTargetCards(target.hasAttachment, ctx);
     return intersection(attachments, state.attachments).length > 0;
   }
 
@@ -171,7 +168,7 @@ export function checkCardPredicate(
       return false;
     }
 
-    const targets = getTargetCards(target.shadows, ctx, scopes);
+    const targets = getTargetCards(target.shadows, ctx);
     return targets.includes(state.shadowOf);
   }
 
@@ -202,7 +199,7 @@ export function checkCardPredicate(
   }
 
   if (target.hasShadow) {
-    const shadows = getTargetCards(target.hasShadow, ctx, scopes);
+    const shadows = getTargetCards(target.hasShadow, ctx);
     return state.shadows.some((s) => shadows.includes(s));
   }
 
@@ -211,12 +208,12 @@ export function checkCardPredicate(
       return false;
     }
 
-    const targets = getTargetCards(target.attachmentOf, ctx, scopes);
+    const targets = getTargetCards(target.attachmentOf, ctx);
     return targets.includes(state.attachedTo);
   }
 
   if (target.var) {
-    const vars = getCardFromScope(ctx, scopes, target.var);
+    const vars = getCardFromScope(ctx, target.var);
     return (vars && vars.includes(state.id)) ?? false;
   }
 

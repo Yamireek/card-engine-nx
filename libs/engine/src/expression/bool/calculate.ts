@@ -5,11 +5,7 @@ import { last, max, min, values } from 'lodash/fp';
 import { calculateNumberExpr } from '../number/calculate';
 import { calculateCardBoolExpr } from '../../card/expression/bool/calculate';
 
-export function calculateBoolExpr(
-  expr: BoolExpr,
-  ctx: ViewContext,
-  scopes: Scope[]
-): boolean {
+export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
   if (typeof expr === 'boolean') {
     return expr;
   }
@@ -23,8 +19,7 @@ export function calculateBoolExpr(
         type: 'enemy',
         zone: 'stagingArea',
       },
-      ctx,
-      scopes
+      ctx
     );
 
     const enemyEngagements = enemies
@@ -42,7 +37,7 @@ export function calculateBoolExpr(
   }
 
   if (expr === 'undefended.attack') {
-    const defenders = getTargetCards({ mark: 'defending' }, ctx, scopes);
+    const defenders = getTargetCards({ mark: 'defending' }, ctx);
     return defenders.length === 0;
   }
 
@@ -51,30 +46,30 @@ export function calculateBoolExpr(
   }
 
   if (expr.someCard) {
-    const ids = getTargetCards(expr.someCard, ctx, scopes);
+    const ids = getTargetCards(expr.someCard, ctx);
     return ids.length > 0;
   }
 
   if (expr.card) {
-    const target = getTargetCards(expr.card.target, ctx, scopes);
+    const target = getTargetCards(expr.card.target, ctx);
     if (target.length === 0) {
       return false;
     }
 
     if (target.length === 1) {
-      return calculateCardBoolExpr(expr.card.value, target[0], ctx, scopes);
+      return calculateCardBoolExpr(expr.card.value, target[0], ctx);
     }
   }
 
   if (expr.and) {
-    return expr.and.every((e) => calculateBoolExpr(e, ctx, scopes));
+    return expr.and.every((e) => calculateBoolExpr(e, ctx));
   }
 
   if (expr.event) {
     const event = last(ctx.state.event);
     if (expr.event.type === event?.type) {
       if (expr.event.type === 'destroyed') {
-        const target = getTargetCards(expr.event.isAttacker, ctx, scopes);
+        const target = getTargetCards(expr.event.isAttacker, ctx);
         return event.attackers.some((a) => target.includes(a));
       }
     }
@@ -83,24 +78,24 @@ export function calculateBoolExpr(
   }
 
   if (expr.not) {
-    return !calculateBoolExpr(expr.not, ctx, scopes);
+    return !calculateBoolExpr(expr.not, ctx);
   }
 
   if (expr.eq) {
-    const a = calculateNumberExpr(expr.eq[0], ctx, scopes);
-    const b = calculateNumberExpr(expr.eq[1], ctx, scopes);
+    const a = calculateNumberExpr(expr.eq[0], ctx);
+    const b = calculateNumberExpr(expr.eq[1], ctx);
     return a === b;
   }
 
   if (expr.more) {
-    const a = calculateNumberExpr(expr.more[0], ctx, scopes);
-    const b = calculateNumberExpr(expr.more[1], ctx, scopes);
+    const a = calculateNumberExpr(expr.more[0], ctx);
+    const b = calculateNumberExpr(expr.more[1], ctx);
     return a > b;
   }
 
   if (expr.less) {
-    const a = calculateNumberExpr(expr.less[0], ctx, scopes);
-    const b = calculateNumberExpr(expr.less[1], ctx, scopes);
+    const a = calculateNumberExpr(expr.less[0], ctx);
+    const b = calculateNumberExpr(expr.less[1], ctx);
     return a < b;
   }
 

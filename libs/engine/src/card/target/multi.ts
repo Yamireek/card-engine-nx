@@ -9,11 +9,7 @@ import { calculateNumberExpr } from '../../expression/number/calculate';
 import { getCardFromScope } from '../../scope/getCard';
 import { checkCardPredicate } from '../predicate/check';
 
-export function getTargetCards(
-  target: CardTarget,
-  ctx: ViewContext,
-  scopes: Scope[]
-): CardId[] {
+export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {
   if (typeof target === 'number') {
     return [target];
   }
@@ -28,7 +24,7 @@ export function getTargetCards(
 
   if (typeof target !== 'string' && target.top) {
     if (typeof target.top !== 'string' && 'amount' in target.top) {
-      const zones = getTargetZones(target.top.zone, ctx, scopes);
+      const zones = getTargetZones(target.top.zone, ctx);
       if (zones.length === 1) {
         const cards = zones[0].cards;
         const predicate = target.top.filter;
@@ -38,29 +34,28 @@ export function getTargetCards(
                 predicate,
                 ctx.state.cards[c],
                 ctx.view.cards[c],
-                ctx,
-                scopes
+                ctx
               )
             )
           : cards;
-        const amount = calculateNumberExpr(target.top.amount, ctx, scopes);
+        const amount = calculateNumberExpr(target.top.amount, ctx);
         return takeRight(amount)(filtered);
       } else {
         throw new Error('need only 1 zone when using amount');
       }
     }
 
-    const zones = getTargetZones(target.top, ctx, scopes);
+    const zones = getTargetZones(target.top, ctx);
     return zones.flatMap((z) => last(z.cards) ?? []);
   }
 
   if (typeof target !== 'string' && target.take) {
-    const all = getTargetCards({ ...target, take: undefined }, ctx, scopes);
+    const all = getTargetCards({ ...target, take: undefined }, ctx);
     return all.slice(0, target.take);
   }
 
   if (typeof target !== 'string' && target.var) {
-    const inScope = getCardFromScope(ctx, scopes, target.var);
+    const inScope = getCardFromScope(ctx, target.var);
     if (inScope) {
       return inScope;
     }
@@ -76,7 +71,7 @@ export function getTargetCards(
       return [];
     }
 
-    const checked = checkCardPredicate(target, state, view, ctx, scopes);
+    const checked = checkCardPredicate(target, state, view, ctx);
     return checked ? id : [];
   });
 

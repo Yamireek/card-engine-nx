@@ -1,13 +1,19 @@
 import { Scope, ScopeAction } from '@card-engine-nx/state';
 import { executeScopeAction } from '../scope/execute';
 import { ViewContext } from './view';
+import { asArray } from '@card-engine-nx/basic';
 
 export function updatedScopes(
   ctx: ViewContext,
-  scopes: Scope[],
-  action: ScopeAction
-): Scope[] {
-  const scope: Scope = {};
-  executeScopeAction(action, scope, ctx, scopes);
-  return [...scopes, scope];
+  actions: ScopeAction | ScopeAction[]
+): ViewContext {
+  const newScope: Scope = {};
+  for (const action of asArray(actions)) {
+    executeScopeAction(action, newScope, ctx);
+  }
+  return {
+    state: ctx.state,
+    view: ctx.view,
+    scopes: [...ctx.scopes, newScope],
+  };
 }

@@ -9,8 +9,7 @@ import { calculateBoolExpr } from '../../../expression/bool/calculate';
 export function calculateCardBoolExpr(
   expr: CardBoolExpr,
   cardId: CardId,
-  ctx: ViewContext,
-  scopes: Scope[]
+  ctx: ViewContext
 ): boolean {
   if (typeof expr === 'boolean') {
     return expr;
@@ -32,7 +31,7 @@ export function calculateCardBoolExpr(
   }
 
   if (expr.is) {
-    const target = getTargetCard(expr.is, ctx, scopes);
+    const target = getTargetCard(expr.is, ctx);
     return target === cardId;
   }
 
@@ -55,11 +54,11 @@ export function calculateCardBoolExpr(
   }
 
   if (expr.and) {
-    return expr.and.every((e) => calculateCardBoolExpr(e, cardId, ctx, scopes));
+    return expr.and.every((e) => calculateCardBoolExpr(e, cardId, ctx));
   }
 
   if (expr.global) {
-    return calculateBoolExpr(expr.global, ctx, scopes);
+    return calculateBoolExpr(expr.global, ctx);
   }
 
   if (expr.predicate) {
@@ -67,8 +66,7 @@ export function calculateCardBoolExpr(
       expr.predicate,
       ctx.state.cards[cardId],
       ctx.view.cards[cardId],
-      ctx,
-      scopes
+      ctx
     );
   }
 

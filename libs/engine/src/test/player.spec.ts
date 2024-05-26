@@ -35,17 +35,22 @@ suite('First player', () => {
 it.todo('Player order');
 
 it('Eliminate player', () => {
-  const game = new TestEngine({
-    players: [
-      {
-        playerArea: [cards.hero],
-        engaged: [cards.enemy],
-      },
-      {
-        playerArea: [cards.hero],
-      },
-    ],
-  });
+  const game = new TestEngine(
+    {
+      players: [
+        {
+          playerArea: [cards.hero],
+          engaged: [cards.enemy],
+        },
+        {
+          playerArea: [cards.hero],
+        },
+      ],
+    },
+    {
+      console: true,
+    }
+  );
 
   game.do({ player: '0', action: 'eliminate' });
   expect(game.state.players[0]?.eliminated).toBe(true);

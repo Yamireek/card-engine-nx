@@ -23,8 +23,7 @@ import { isInGame } from '../../zone/utils';
 export function executeCardAction(
   action: CardAction,
   card: CardState,
-  ctx: ExecutionContext,
-  scopes: Scope[]
+  ctx: ExecutionContext
 ) {
   if (isArray(action)) {
     const actions: Action[] = action.map((a) => ({
@@ -170,8 +169,7 @@ export function executeCardAction(
           plus: [{ card: { target: quest.id, value: 'sequence' } }, 1],
         },
       },
-      ctx,
-      scopes
+      ctx
     );
 
     if (next.length === 0) {
@@ -457,7 +455,7 @@ export function executeCardAction(
   }
 
   if (action.engagePlayer) {
-    const player = getTargetPlayer(action.engagePlayer, ctx, scopes);
+    const player = getTargetPlayer(action.engagePlayer, ctx);
     ctx.next(
       {
         card: card.id,
@@ -497,7 +495,7 @@ export function executeCardAction(
         ? { amount: action.dealDamage, attackers: [] }
         : action.dealDamage;
 
-    const amount = calculateNumberExpr(data.amount, ctx, scopes);
+    const amount = calculateNumberExpr(data.amount, ctx);
 
     card.token.damage += amount;
 
@@ -519,8 +517,7 @@ export function executeCardAction(
           },
         },
         card,
-        ctx,
-        scopes
+        ctx
       );
     }
 
@@ -541,7 +538,7 @@ export function executeCardAction(
   }
 
   if (action.generateResources !== undefined) {
-    const amount = calculateNumberExpr(action.generateResources, ctx, scopes);
+    const amount = calculateNumberExpr(action.generateResources, ctx);
     if (amount > 0) {
       card.token.resources += amount;
       const props = ctx.view.cards[card.id].props;
@@ -551,21 +548,21 @@ export function executeCardAction(
   }
 
   if (action.payResources !== undefined) {
-    const amount = calculateNumberExpr(action.payResources, ctx, scopes);
+    const amount = calculateNumberExpr(action.payResources, ctx);
     card.token.resources -= amount;
     return;
   }
 
   if (action.move) {
-    const moveScope = card.controller
-      ? updatedScopes(ctx, scopes, {
-          var: 'controller',
-          player: card.controller,
-        })
-      : scopes;
+    // const moveScope = card.controller
+    //   ? updatedScopes(ctx, scopes, {
+    //       var: 'controller',
+    //       player: card.controller,
+    //     })
+    //   : scopes;
 
     const fromId = action.move.from
-      ? getTargetZoneId(action.move.from, ctx, moveScope)
+      ? getTargetZoneId(action.move.from, ctx)
       : getCardZoneId(card.id, ctx.state);
 
     if (action.move.from) {
@@ -574,8 +571,8 @@ export function executeCardAction(
       }
     }
 
-    const sourceZone = getTargetZone(fromId, ctx, moveScope);
-    const destinationZone = getTargetZone(action.move.to, ctx, moveScope);
+    const sourceZone = getTargetZone(fromId, ctx);
+    const destinationZone = getTargetZone(action.move.to, ctx);
 
     const sourceInGame = isInGame(getZoneType(fromId));
     const destInGame = isInGame(getZoneType(action.move.to));
@@ -583,7 +580,7 @@ export function executeCardAction(
     sourceZone.cards = sourceZone.cards.filter((c) => c !== card.id);
     destinationZone.cards.push(card.id);
     card.sideUp = action.move.side ?? card.sideUp;
-    const destZoneId = getTargetZoneId(action.move.to, ctx, moveScope);
+    const destZoneId = getTargetZoneId(action.move.to, ctx);
     card.zone = destZoneId;
 
     ctx.events.send(
@@ -656,12 +653,10 @@ export function executeCardAction(
       if (qp && card.token.progress >= qp) {
         const expr = cw.rules.conditional?.advance ?? [];
         const allowed =
-          expr.length > 0
-            ? calculateBoolExpr({ and: expr }, ctx, scopes)
-            : true;
+          expr.length > 0 ? calculateBoolExpr({ and: expr }, ctx) : true;
 
         if (allowed) {
-          executeCardAction('advance', card, ctx, scopes);
+          executeCardAction('advance', card, ctx);
         }
       }
     }
@@ -673,7 +668,7 @@ export function executeCardAction(
     if (cw.props.type === 'location') {
       const qp = cw.props.questPoints;
       if (qp && card.token.progress >= qp) {
-        executeCardAction('explore', card, ctx, scopes);
+        executeCardAction('explore', card, ctx);
       }
     }
 
@@ -744,7 +739,7 @@ export function executeCardAction(
   }
 
   if (action.attachCard) {
-    const target = getTargetCard(action.attachCard, ctx, scopes);
+    const target = getTargetCard(action.attachCard, ctx);
     if (target) {
       card.attachments.push(target);
       ctx.state.cards[target].attachedTo = card.id;
@@ -762,7 +757,7 @@ export function executeCardAction(
   }
 
   if (action.modify) {
-    const source = getTargetCard({ var: 'self' }, ctx, scopes);
+    const source = getTargetCard({ var: 'self' }, ctx);
     if (isArray(action.modify)) {
       for (const modifier of action.modify) {
         ctx.state.modifiers.push({
@@ -789,7 +784,7 @@ export function executeCardAction(
   }
 
   if (action.putInPlay) {
-    const player = getTargetPlayer(action.putInPlay, ctx, scopes);
+    const player = getTargetPlayer(action.putInPlay, ctx);
     ctx.next({
       card: card.id,
       action: { move: { to: { player, type: 'playerArea' }, side: 'front' } },
@@ -807,13 +802,13 @@ export function executeCardAction(
   }
 
   if (action.setController) {
-    const controller = getTargetPlayer(action.setController, ctx, scopes);
+    const controller = getTargetPlayer(action.setController, ctx);
     card.controller = controller;
     return;
   }
 
   if (action.action) {
-    executeAction(action.action, ctx, scopes);
+    executeAction(action.action, ctx);
     return;
   }
 

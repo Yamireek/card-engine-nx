@@ -22,11 +22,7 @@ import { executeScopeAction } from '../scope/execute';
 import { gameRound } from '../round/gameRound';
 import { getZoneState } from '../zone';
 
-export function executeAction(
-  action: Action,
-  ctx: ExecutionContext,
-  scopes: Scope[]
-) {
+export function executeAction(action: Action, ctx: ExecutionContext) {
   if (isArray(action)) {
     ctx.next(...action);
     return;
@@ -121,11 +117,7 @@ export function executeAction(
   }
 
   if (action === 'chooseTravelDestination') {
-    const existing = getTargetCards(
-      { zoneType: 'activeLocation' },
-      ctx,
-      scopes
-    );
+    const existing = getTargetCards({ zoneType: 'activeLocation' }, ctx);
     if (existing.length > 0) {
       return;
     }
@@ -156,7 +148,7 @@ export function executeAction(
   }
 
   if (action === 'passFirstPlayerToken') {
-    const next = getTargetPlayer('next', ctx, scopes);
+    const next = getTargetPlayer('next', ctx);
     ctx.state.firstPlayer = next;
     return;
   }
@@ -170,11 +162,10 @@ export function executeAction(
           sum: true,
         },
       },
-      ctx,
-      scopes
+      ctx
     );
 
-    const totalThreat = calculateNumberExpr('totalThreat', ctx, scopes);
+    const totalThreat = calculateNumberExpr('totalThreat', ctx);
 
     const diff = totalWillpower - totalThreat;
     if (diff > 0) {
@@ -187,7 +178,7 @@ export function executeAction(
   }
 
   if (action === 'revealEncounterCard') {
-    const card = getTargetCard({ top: 'encounterDeck' }, ctx, scopes);
+    const card = getTargetCard({ top: 'encounterDeck' }, ctx);
 
     if (!card) {
       if (ctx.state.zones.discardPile.cards.length > 0) {
@@ -227,8 +218,7 @@ export function executeAction(
           zone: { player: p.id, type: 'discardPile' },
           type: 'hero',
         },
-        ctx,
-        scopes
+        ctx
       ).map((id) => ctx.state.cards[id]);
 
       const aliveHeroes = getTargetCards(
@@ -236,8 +226,7 @@ export function executeAction(
           zone: { player: p.id, type: 'discardPile' },
           type: 'hero',
         },
-        ctx,
-        scopes
+        ctx
       ).map((id) => ctx.state.cards[id]);
 
       return (
@@ -251,8 +240,7 @@ export function executeAction(
       {
         zoneType: 'victoryDisplay',
       },
-      ctx,
-      scopes
+      ctx
     ).map((id) => ctx.view.cards[id]);
 
     const score =
@@ -289,17 +277,12 @@ export function executeAction(
   }
 
   if (action === 'stateCheck') {
-    const destroy = getTargetCards('destroyed', ctx, scopes);
+    const destroy = getTargetCards('destroyed', ctx);
     const explore = getTargetCards(
       { simple: 'explored', type: 'location' },
-      ctx,
-      scopes
+      ctx
     );
-    const advance = getTargetCards(
-      { simple: 'explored', type: 'quest' },
-      ctx,
-      scopes
-    );
+    const advance = getTargetCards({ simple: 'explored', type: 'quest' }, ctx);
 
     if (destroy.length > 0 || explore.length > 0 || advance.length > 0) {
       ctx.next('stateCheck');
@@ -329,8 +312,7 @@ export function executeAction(
     for (const player of values(ctx.state.players)) {
       const heroes = getTargetCards(
         { simple: 'inAPlay', type: 'hero', controller: player.id },
-        ctx,
-        scopes
+        ctx
       );
       if (heroes.length === 0) {
         ctx.next({ player: player.id, action: 'eliminate' });
@@ -342,7 +324,7 @@ export function executeAction(
   }
 
   if (action === 'sendCommitedEvents') {
-    const questers = getTargetCards({ mark: 'questing' }, ctx, scopes);
+    const questers = getTargetCards({ mark: 'questing' }, ctx);
     if (questers.length > 0) {
       ctx.next(
         questers.map((id) => ({
@@ -372,12 +354,12 @@ export function executeAction(
   }
 
   if ('player' in action && 'action' in action) {
-    const ids = getTargetPlayers(action.player, ctx, scopes);
+    const ids = getTargetPlayers(action.player, ctx);
     for (const id of ids) {
       const player = ctx.state.players[id];
       if (player) {
         if (action.scooped) {
-          executePlayerAction(action.action, player, ctx, scopes);
+          executePlayerAction(action.action, player, ctx);
         } else {
           ctx.next({
             useScope: { var: 'target', player: id },
@@ -392,13 +374,13 @@ export function executeAction(
   }
 
   if ('card' in action && 'action' in action) {
-    const ids = getTargetCards(action.card, ctx, scopes);
+    const ids = getTargetCards(action.card, ctx);
 
     if (action.scooped) {
       for (const id of ids) {
         const card = ctx.state.cards[id];
         if (card) {
-          executeCardAction(action.action, card, ctx, scopes);
+          executeCardAction(action.action, card, ctx);
         } else {
           throw new Error('card not found');
         }
@@ -423,7 +405,7 @@ export function executeAction(
 
   if ('useScope' in action) {
     const scope: Scope = {};
-    executeScopeAction(action.useScope, scope, ctx, scopes);
+    executeScopeAction(action.useScope, scope, ctx);
     ctx.state.scopes.push(scope);
     ctx.next(action.action, 'endScope');
     return;
@@ -431,19 +413,14 @@ export function executeAction(
 
   if (action.stackPush) {
     if (action.stackPush.type === 'whenRevealed') {
-      const hasEffect = canExecute(
-        action.stackPush.whenRevealed,
-        false,
-        ctx,
-        scopes
-      );
+      const hasEffect = canExecute(action.stackPush.whenRevealed, false, ctx);
       if (!hasEffect) {
         return;
       }
     }
 
     if (action.stackPush.type === 'shadow') {
-      const hasEffect = canExecute(action.stackPush.shadow, false, ctx, scopes);
+      const hasEffect = canExecute(action.stackPush.shadow, false, ctx);
       if (!hasEffect) {
         return;
       }
@@ -608,7 +585,7 @@ export function executeAction(
   }
 
   if (action.repeat) {
-    const amount = calculateNumberExpr(action.repeat.amount, ctx, scopes);
+    const amount = calculateNumberExpr(action.repeat.amount, ctx);
     if (amount === 0) {
       return;
     } else {
@@ -634,11 +611,7 @@ export function executeAction(
       return;
     }
 
-    const activeLocation = getTargetCards(
-      { top: 'activeLocation' },
-      ctx,
-      scopes
-    );
+    const activeLocation = getTargetCards({ top: 'activeLocation' }, ctx);
 
     if (activeLocation.length === 0) {
       ctx.next({
@@ -676,7 +649,7 @@ export function executeAction(
   }
 
   if (action.while) {
-    const condition = calculateBoolExpr(action.while.condition, ctx, scopes);
+    const condition = calculateBoolExpr(action.while.condition, ctx);
     if (condition) {
       ctx.next(action.while.action, action);
     }
@@ -740,8 +713,7 @@ export function executeAction(
           !r.condition ||
           calculateBoolExpr(
             r.condition,
-            ctx,
-            updatedScopes(ctx, scopes, [
+            updatedScopes(ctx, [
               { var: 'target', card: r.card },
               { var: 'self', card: r.source },
             ])
@@ -756,8 +728,7 @@ export function executeAction(
           !r.condition ||
           calculateBoolExpr(
             r.condition,
-            ctx,
-            updatedScopes(ctx, scopes, [
+            updatedScopes(ctx, [
               { var: 'target', card: r.card },
               { var: 'self', card: r.source },
             ])
@@ -835,17 +806,13 @@ export function executeAction(
   }
 
   if (action.resolveAttack) {
-    const attacking = getTargetCards(
-      action.resolveAttack.attackers,
-      ctx,
-      scopes
-    ).map((id) => ctx.view.cards[id]);
+    const attacking = getTargetCards(action.resolveAttack.attackers, ctx).map(
+      (id) => ctx.view.cards[id]
+    );
 
-    const defender = getTargetCards(
-      action.resolveAttack.defender,
-      ctx,
-      scopes
-    ).map((id) => ctx.view.cards[id]);
+    const defender = getTargetCards(action.resolveAttack.defender, ctx).map(
+      (id) => ctx.view.cards[id]
+    );
 
     const attack = sum(attacking.map((a) => a.props.attack || 0));
     const defense = sum(defender.map((d) => d.props.defense || 0));
@@ -875,7 +842,7 @@ export function executeAction(
   }
 
   if (action.if) {
-    const result = calculateBoolExpr(action.if.condition, ctx, scopes);
+    const result = calculateBoolExpr(action.if.condition, ctx);
     if (result && action.if.true) {
       ctx.next(action.if.true);
     }
