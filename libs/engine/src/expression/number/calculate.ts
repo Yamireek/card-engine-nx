@@ -1,4 +1,4 @@
-import { NumberExpr, Scope } from '@card-engine-nx/state';
+import { NumberExpr } from '@card-engine-nx/state';
 import { getTargetCards } from '../../card/target/multi';
 import { calculateCardExpr } from '../../card/expression/number/calculate';
 import { sum } from 'lodash';

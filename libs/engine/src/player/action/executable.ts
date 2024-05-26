@@ -1,4 +1,4 @@
-import { PlayerAction, Scope } from '@card-engine-nx/state';
+import { PlayerAction } from '@card-engine-nx/state';
 import { updatedScopes } from '../../context/update';
 import { ViewContext } from '../../context/view';
 import { sumBy } from 'lodash';

@@ -1,4 +1,4 @@
-import { PlayerTarget, Scope } from '@card-engine-nx/state';
+import { PlayerTarget } from '@card-engine-nx/state';
 import { ViewContext } from '../../context/view';
 import { getTargetPlayers } from './multi';
 

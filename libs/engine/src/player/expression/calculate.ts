@@ -1,4 +1,4 @@
-import { PlayerNumberExpr, Scope } from '@card-engine-nx/state';
+import { PlayerNumberExpr } from '@card-engine-nx/state';
 import { ViewContext } from '../../context/view';
 import { PlayerId } from '@card-engine-nx/basic';
 import { sum } from 'lodash/fp';

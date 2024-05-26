@@ -1,9 +1,4 @@
-import {
-  CardView,
-  CardModifier,
-  mergeCardRules,
-  Scope,
-} from '@card-engine-nx/state';
+import { CardView, CardModifier, mergeCardRules } from '@card-engine-nx/state';
 import { ViewContext } from '../../context/view';
 import {
   CardId,

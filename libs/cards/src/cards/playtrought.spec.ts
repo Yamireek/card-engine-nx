@@ -3,7 +3,6 @@ import { Scenario } from '@card-engine-nx/state';
 import { core } from '../index';
 import { it } from 'vitest';
 import { coreThree } from '../decks/coreThree';
-import { readFileSync, writeFileSync } from 'fs';
 
 const testScenario: Scenario = {
   name: 'Test',

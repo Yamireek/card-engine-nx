@@ -1,4 +1,4 @@
-import { Scope, ZoneTarget } from '@card-engine-nx/state';
+import { ZoneTarget } from '@card-engine-nx/state';
 import { ViewContext } from '../../context/view';
 import { getTargetZones } from './multi';
 

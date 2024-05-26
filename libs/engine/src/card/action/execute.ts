@@ -1,5 +1,4 @@
-import { CardState, CardAction, Action, Scope } from '@card-engine-nx/state';
-import { updatedScopes } from '../../context/update';
+import { CardState, CardAction, Action } from '@card-engine-nx/state';
 import { ExecutionContext } from '../../context/execution';
 import { uiEvent } from '../../events/eventFactories';
 import {

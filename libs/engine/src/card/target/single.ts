@@ -1,5 +1,5 @@
 import { CardId } from '@card-engine-nx/basic';
-import { CardTarget, Scope } from '@card-engine-nx/state';
+import { CardTarget } from '@card-engine-nx/state';
 import { ViewContext } from '../../context/view';
 import { getTargetCards } from './multi';
 

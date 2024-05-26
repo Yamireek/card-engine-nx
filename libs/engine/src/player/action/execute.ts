@@ -5,7 +5,6 @@ import {
   Action,
   CardAction,
   Event,
-  Scope,
 } from '@card-engine-nx/state';
 import { calculateNumberExpr } from '../../expression/number/calculate';
 import { updatedScopes } from '../../context/update';

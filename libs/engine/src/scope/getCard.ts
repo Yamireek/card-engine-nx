@@ -1,7 +1,6 @@
 import { CardId } from '@card-engine-nx/basic';
 import { ViewContext } from '../context/view';
 import { reverse } from 'lodash/fp';
-import { Scope } from '@card-engine-nx/state';
 
 export function getCardFromScope(
   ctx: ViewContext,

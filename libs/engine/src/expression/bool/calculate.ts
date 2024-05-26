@@ -1,4 +1,4 @@
-import { BoolExpr, Scope } from '@card-engine-nx/state';
+import { BoolExpr } from '@card-engine-nx/state';
 import { getTargetCards } from '../../card/target/multi';
 import { ViewContext } from '../../context/view';
 import { last, max, min, values } from 'lodash/fp';

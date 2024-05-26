@@ -1,4 +1,4 @@
-import { Action, Scope } from '@card-engine-nx/state';
+import { Action } from '@card-engine-nx/state';
 import { updatedScopes } from '../context/update';
 import { ViewContext } from '../context/view';
 import { getTargetCards } from '../card';

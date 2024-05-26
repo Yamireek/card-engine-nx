@@ -1,4 +1,3 @@
-import { Scope } from '@card-engine-nx/state';
 import { executeAction } from './action/execute';
 import { ExecutionContext, ObservableContext } from './context/execution';
 import { Logger } from './logger/types';

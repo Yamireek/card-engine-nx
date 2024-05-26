@@ -1,4 +1,4 @@
-import { CardAction, Scope } from '@card-engine-nx/state';
+import { CardAction } from '@card-engine-nx/state';
 import { CardId } from '@card-engine-nx/basic';
 import { isArray } from 'lodash';
 import { ViewContext } from '../../context/view';

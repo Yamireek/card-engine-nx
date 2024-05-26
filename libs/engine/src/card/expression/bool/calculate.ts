@@ -1,4 +1,4 @@
-import { CardBoolExpr, Scope } from '@card-engine-nx/state';
+import { CardBoolExpr } from '@card-engine-nx/state';
 import { checkCardPredicate } from '../../predicate/check';
 import { getTargetCard } from '../../target/single';
 import { ViewContext } from '../../../context/view';

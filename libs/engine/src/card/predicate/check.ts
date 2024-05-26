@@ -1,5 +1,5 @@
 import { asArray, keys, zonesEqual } from '@card-engine-nx/basic';
-import { CardState, CardTarget, CardView, Scope } from '@card-engine-nx/state';
+import { CardState, CardTarget, CardView } from '@card-engine-nx/state';
 import { intersection, last } from 'lodash';
 import { ViewContext } from '../../context/view';
 import { getZoneType } from '../../zone/utils';

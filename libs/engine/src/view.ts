@@ -1,7 +1,6 @@
 import {
   CardGlobalModifier,
   PlayerGlobalModifier,
-  Scope,
   State,
   View,
 } from '@card-engine-nx/state';
@@ -15,10 +14,9 @@ import { createPlayerView } from './player/view';
 import { applyPlayerModifier } from './player/modifier/apply';
 import { getTargetPlayers } from './player/target/multi';
 import { calculateBoolExpr } from './expression/bool/calculate';
-import { ViewContext, createViewContext } from './context/view';
+import { createViewContext } from './context/view';
 import { getZoneType } from './zone/utils';
 import { getTargetCards } from './card/target/multi';
-import { asArray } from '@card-engine-nx/basic';
 import { updatedScopes } from './context';
 
 export function createBaseView(state: State): View {
@@ -140,10 +138,14 @@ export function applyGlobalPlayerModifier(
 ) {
   const ctx = createViewContext(state, view);
 
-  const scopes: Scope[] = [{ card: { self: asArray(modifier.source) } }];
-
   const condition = modifier.condition
-    ? calculateBoolExpr(modifier.condition, ctx)
+    ? calculateBoolExpr(
+        modifier.condition,
+        updatedScopes(ctx, {
+          var: 'self',
+          card: modifier.source,
+        })
+      )
     : true;
 
   if (condition) {
