@@ -8,6 +8,7 @@ import React, { useContext, useMemo, useState } from 'react';
 import { StateContext } from './StateContext';
 import {
   calculateNumberExpr,
+  createViewContext,
   getModifierText,
   UiEvent,
   UIEvents,
@@ -136,10 +137,7 @@ export const LotrLCGInfo = () => {
 
   const totalThreat = calculateNumberExpr(
     'totalThreat',
-    {
-      state,
-      view,
-    },
+    createViewContext(state, view),
     []
   );
 

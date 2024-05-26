@@ -1,4 +1,10 @@
-import { Action, State, UserCardAction, View } from '@card-engine-nx/state';
+import {
+  Action,
+  Scope,
+  State,
+  UserCardAction,
+  View,
+} from '@card-engine-nx/state';
 import { UIEvents } from '../events/uiEvents';
 import { Random } from '../utils/random';
 import { createView } from '../view';
@@ -7,6 +13,7 @@ import { SkipOptions, chooseOnlyOption, nextStep } from '../utils';
 import { Logger } from '../logger';
 import { uiEvent } from '../events';
 import { canExecute } from '../action';
+import { createViewContext } from './view';
 
 export type ExecutionContext = {
   state: State;
@@ -14,6 +21,7 @@ export type ExecutionContext = {
   events: UIEvents;
   random: Random;
   logger: Logger;
+  scopes: Scope[];
   next: (...action: Action[]) => void;
 };
 
@@ -45,6 +53,10 @@ export class ObservableContext implements ExecutionContext {
 
   get actions() {
     return getActions(this.state, this.view);
+  }
+
+  get scopes() {
+    return this.state.scopes;
   }
 
   advance(skip: SkipOptions, stopOnError: boolean) {
@@ -84,14 +96,6 @@ export class ObservableContext implements ExecutionContext {
 
 export function getActions(state: State, view: View): UserCardAction[] {
   return view.actions.filter((a) =>
-    canExecute(
-      a.action,
-      true,
-      {
-        state,
-        view,
-      },
-      []
-    )
+    canExecute(a.action, true, createViewContext(state, view), [])
   );
 }
