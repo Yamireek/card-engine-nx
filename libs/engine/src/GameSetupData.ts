@@ -1,7 +1,12 @@
 import { Difficulty } from '@card-engine-nx/basic';
 import { PlayerDeck, Scenario, State } from '@card-engine-nx/state';
 
-export type GameSetupData = ScenarioSetupData | { state: State };
+export type GameSetupData =
+  | {
+      type: 'scenario';
+      data: ScenarioSetupData;
+    }
+  | { type: 'state'; state: State };
 
 export type ScenarioSetupData = {
   players: PlayerDeck[];

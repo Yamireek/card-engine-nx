@@ -32,7 +32,11 @@ export const App = () => {
             playerID={window.location.hash.substring(1)}
             multiplayer={false}
             server="localhost:3000"
-            setup={savedState ? { state: JSON.parse(savedState) } : setup}
+            setup={
+              savedState
+                ? { type: 'state', state: JSON.parse(savedState) }
+                : setup
+            }
           />
         </SnackbarProvider>
       )}

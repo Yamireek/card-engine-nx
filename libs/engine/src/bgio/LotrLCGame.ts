@@ -6,7 +6,7 @@ import { createView } from '../view';
 import { beginScenario } from '../round/beginScenario';
 import { ActivePlayers } from 'boardgame.io/core';
 import { PowerSet } from 'js-combinatorics';
-import { randomBgIO } from '../utils/random';
+import { randomBgIO, randomJS } from '../utils/random';
 import { GameSetupData } from '../GameSetupData';
 import { Logger } from '../logger/types';
 import { toJS } from 'mobx';
@@ -149,7 +149,7 @@ export function LotrLCGame(
   setupClient?: GameSetupData,
   logger?: Logger
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Game<State, any, GameSetupData | { state: State }> {
+): Game<State, any, GameSetupData> {
   return {
     name: 'LotrLCG',
     setup: (_, setupServer) => {
@@ -159,25 +159,22 @@ export function LotrLCGame(
         throw new Error('missing setupData');
       }
 
-      if ('state' in setup) {
+      if (setup.type === 'state') {
         return setup.state;
       }
 
       const state = createState();
-      state.choice = {
-        id: 0,
-        player: '0',
-        title: '',
-        type: 'single',
-        options: [
-          {
-            title: 'START',
-            action: {},
-          },
-        ],
-        optional: false,
-      };
-      state.next = [beginScenario(setup)];
+      state.next = [beginScenario(setup.data)];
+
+      const ctx = new ObservableContext(
+        state,
+        events,
+        randomJS(),
+        nullLogger,
+        false
+      );
+
+      ctx.advance({ actions: false, show: false }, true);
 
       return state;
     },
