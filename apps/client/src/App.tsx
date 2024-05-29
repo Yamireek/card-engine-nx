@@ -59,7 +59,6 @@ export const App = () => {
           <Game setup={setup} />
         </SnackbarProvider>
       )}
-      ;
     </div>
   );
 };
