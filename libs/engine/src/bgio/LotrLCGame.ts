@@ -1,4 +1,4 @@
-import { Action, State, createState } from '@card-engine-nx/state';
+import { Action, State } from '@card-engine-nx/state';
 import type { Game, Move } from 'boardgame.io';
 import { INVALID_MOVE } from 'boardgame.io/core';
 import { UIEvents } from '../events/uiEvents';

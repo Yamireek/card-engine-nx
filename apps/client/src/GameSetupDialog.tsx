@@ -139,6 +139,7 @@ const defaults = localStorage.getItem('setup');
 
 export const GameSetupDialog = (props: {
   onSubmit: (setup: SetupParams) => void;
+  onClose: () => void;
 }) => {
   return (
     <Dialog open maxWidth="sm" fullWidth>
@@ -170,7 +171,7 @@ export const GameSetupDialog = (props: {
           <GameSetupForm />
         </DialogContent>
         <DialogActions>
-          <Button>close</Button>
+          <Button onClick={props.onClose}>close</Button>
           <Button type="submit" variant="contained">
             start
           </Button>

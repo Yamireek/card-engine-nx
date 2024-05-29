@@ -1,10 +1,14 @@
 import { CssBaseline } from '@mui/material';
 import { Difficulty } from '@card-engine-nx/basic';
 import { core, decks } from '@card-engine-nx/cards';
-import { useState } from 'react';
 import { DialogProvider } from './DialogsContext';
-import { Lobby } from './Lobby';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { SnackbarProvider } from 'notistack';
+import { GamePage } from './GamePage';
+import { SingleSetupPage } from './SingleSetupPage';
+import { MenuPage } from './MenuPage';
+import { CollectionPage } from './CollectionPage';
 
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -38,7 +42,7 @@ export type JoinGameParams = {
 
 export type SetupParams = NewGameParams | LoadGameParams | JoinGameParams;
 
-const savedState = localStorage.getItem('saved_state');
+export const savedState = localStorage.getItem('saved_state');
 
 export type ConnectionParams = {
   playerID: string;
@@ -46,11 +50,28 @@ export type ConnectionParams = {
   credentials: string;
 };
 
-export const App = () => {
-  const [setup, setSetup] = useState<SetupParams | undefined>(
-    savedState ? { type: 'load', state: savedState } : undefined
-  );
+const router = createHashRouter([
+  {
+    path: '/',
+    element: (
+      <MenuPage
+        items={[
+          { label: 'Singleplayer', link: '/#/single', icon: 'person' },
+          { label: 'Multiplayer', link: '/#/multi', icon: 'group' },
+          { label: 'Collection', link: '/#/collection', icon: 'collections' },
+        ]}
+      />
+    ),
+  },
+  {
+    path: '/single',
+    element: <SingleSetupPage />,
+  },
+  { path: '/game', element: <GamePage /> },
+  { path: '/collection', element: <CollectionPage /> },
+]);
 
+export const App = () => {
   return (
     <div
       style={{
@@ -65,14 +86,10 @@ export const App = () => {
       <CssBaseline />
       <DialogProvider>
         <QueryClientProvider client={new QueryClient()}>
-          <Lobby />
+          <SnackbarProvider>
+            <RouterProvider router={router} />
+          </SnackbarProvider>
         </QueryClientProvider>
-        {/* {!setup && <GameSetupDialog onSubmit={setSetup} />}
-      {setup && (
-        <SnackbarProvider>
-          <Game setup={setup} />
-        </SnackbarProvider>
-      )} */}
       </DialogProvider>
     </div>
   );
