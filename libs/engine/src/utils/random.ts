@@ -32,7 +32,7 @@ export function randomBgIO(random: RandomAPI): Random {
   };
 }
 
-export function randomJS(): Random {
+export function rndJS(): Random {
   return {
     item<T>(items: T[]) {
       return getRandomItem<T>(Math.random)(items);

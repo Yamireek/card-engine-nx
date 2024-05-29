@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx serve client",
-    "server": "nx run-many -t serve",
+    "server": "nx serve server",
     "build": "nx run client:build:production",
     "build:all": "nx run-many -t build",
     "lint": "nx run-many -t lint --max-warnings=0",
