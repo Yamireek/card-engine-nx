@@ -1,16 +1,15 @@
-import { CssBaseline } from "@mui/material";
-import { Game } from "./Game";
-import { useState } from "react";
-import { GameSetupData } from "@card-engine-nx/engine";
-import { GameSetupDialog } from "./GameSetupDialog";
-import { SnackbarProvider } from "notistack";
-import { Difficulty } from "@card-engine-nx/basic";
-import { core, decks } from "@card-engine-nx/cards";
+import { CssBaseline } from '@mui/material';
+import { Game } from './Game';
+import { SnackbarProvider } from 'notistack';
+import { Difficulty } from '@card-engine-nx/basic';
+import { core, decks } from '@card-engine-nx/cards';
+import { GameSetupDialog } from './GameSetupDialog';
+import { useState } from 'react';
 
 export type NewGameParams = {
-  type: "new";
-  server?: "local" | { url: string };
-  playerCount: "1" | "2" | "3" | "4";
+  type: 'new';
+  server?: 'local' | { url: string };
+  playerCount: '1' | '2' | '3' | '4';
   players: Array<keyof typeof decks>;
   scenario: keyof typeof core.scenario;
   difficulty: Difficulty;
@@ -21,54 +20,46 @@ export type NewGameParams = {
 };
 
 export type LoadGameParams = {
-  type: "load";
+  type: 'load';
   state: string;
 };
 
 export type JoinGameParams = {
-  type: "join";
+  type: 'join';
   server: {
     url: string;
-    playerId: "0" | "1" | "2" | "3";
+    playerId: '0' | '1' | '2' | '3';
   };
 };
 
 export type SetupParams = NewGameParams | LoadGameParams | JoinGameParams;
 
-const savedState = localStorage.getItem("saved_state");
-
-const setup: SetupParams = {
-  type: "new",
-  difficulty: "normal",
-  extra: { cards: 0, resources: 0 },
-  playerCount: "1",
-  players: ["coreLore"],
-  scenario: "passageThroughMirkwood",
-};
+const savedState = localStorage.getItem('saved_state');
 
 export const App = () => {
-  //const [setup, setSetup] = useState<GameSetupData | undefined>();
+  const [setup, setSetup] = useState<SetupParams | undefined>(
+    savedState ? { type: 'load', state: savedState } : undefined
+  );
 
   return (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
+        width: '100vw',
+        height: '100vh',
         padding: 0,
         margin: 0,
-        overflow: "hidden",
-        userSelect: "none",
+        overflow: 'hidden',
+        userSelect: 'none',
       }}
     >
       <CssBaseline />
-
-      {/* {!setup && !savedState && <GameSetupDialog onSubmit={setSetup} />} */}
-
-      {(setup || savedState) && (
+      {!setup && <GameSetupDialog onSubmit={setSetup} />}
+      {setup && (
         <SnackbarProvider>
           <Game setup={setup} />
         </SnackbarProvider>
       )}
+      ;
     </div>
   );
 };

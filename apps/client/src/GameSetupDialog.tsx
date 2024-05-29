@@ -19,6 +19,7 @@ import {
 } from 'react-hook-form-mui';
 import { GameSetupData } from '@card-engine-nx/engine';
 import { Editor } from '@monaco-editor/react';
+import { SetupParams } from './App';
 
 const GameSetupForm = () => {
   const form = useFormContext();
@@ -36,18 +37,18 @@ const GameSetupForm = () => {
           fullWidth
           options={[
             {
-              id: 'scenario',
-              label: 'Start scenario',
+              id: 'new',
+              label: 'New game',
             },
             {
-              id: 'state',
+              id: 'load',
               label: 'Load state',
             },
           ]}
         />
       </Grid>
 
-      {typeF === 'state' && (
+      {typeF === 'load' && (
         <Grid item xs={12}>
           <Controller
             name="state"
@@ -63,7 +64,7 @@ const GameSetupForm = () => {
         </Grid>
       )}
 
-      {typeF === 'scenario' && (
+      {typeF === 'new' && (
         <>
           <Grid item xs={6}>
             <Stack spacing={2}>
@@ -137,31 +138,17 @@ const GameSetupForm = () => {
 
 const defaults = localStorage.getItem('setup');
 
-type GameSetupFormData =
-  | {
-      type: 'scenario';
-      playerCount: '1' | '2' | '3' | '4';
-      players: Array<keyof typeof decks>;
-      scenario: keyof typeof core.scenario;
-      difficulty: Difficulty;
-      extra: {
-        resources: number;
-        cards: number;
-      };
-    }
-  | { type: 'state'; state: string };
-
 export const GameSetupDialog = (props: {
-  onSubmit: (setup: GameSetupData) => void;
+  onSubmit: (setup: SetupParams) => void;
 }) => {
   return (
     <Dialog open maxWidth="sm" fullWidth>
-      <FormContainer<GameSetupFormData>
+      <FormContainer<SetupParams>
         defaultValues={
           defaults
             ? JSON.parse(defaults)
             : {
-                type: 'scenario',
+                type: 'new',
                 playerCount: '1',
                 scenario: 'passageThroughMirkwood',
                 difficulty: 'normal',
@@ -174,28 +161,10 @@ export const GameSetupDialog = (props: {
         onSuccess={(values) => {
           console.log(values);
           localStorage.setItem('setup', JSON.stringify(values));
-
-          if (values.type === 'scenario') {
-            props.onSubmit({
-              type: 'scenario',
-              data: {
-                players: values.players
-                  .filter((p, i) => i < Number(values.playerCount))
-                  .map((key) => decks[key]),
-                scenario: core.scenario[values.scenario],
-                difficulty: values.difficulty,
-                extra: values.extra,
-              },
-            });
-          } else {
-            props.onSubmit({
-              type: 'state',
-              state: JSON.parse(values.state),
-            });
-          }
+          props.onSubmit(values);
         }}
       >
-        <DialogTitle>Choose setup data</DialogTitle>
+        <DialogTitle>Singleplayer</DialogTitle>
         <DialogContent
           sx={{ '.MuiDialogContent-root&.MuiDialogContent-root': { pt: 1 } }}
         >
