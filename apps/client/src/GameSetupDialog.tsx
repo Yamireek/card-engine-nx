@@ -1,4 +1,4 @@
-import { Difficulty, keys } from '@card-engine-nx/basic';
+import { keys } from '@card-engine-nx/basic';
 import { core, decks } from '@card-engine-nx/cards';
 import {
   Button,
@@ -17,7 +17,6 @@ import {
   ToggleButtonGroupElement,
   useFormContext,
 } from 'react-hook-form-mui';
-import { GameSetupData } from '@card-engine-nx/engine';
 import { Editor } from '@monaco-editor/react';
 import { SetupParams } from './App';
 

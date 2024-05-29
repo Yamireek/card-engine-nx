@@ -1,17 +1,15 @@
-import { Action, State, createState } from "@card-engine-nx/state";
-import type { Game, Move } from "boardgame.io";
-import { INVALID_MOVE } from "boardgame.io/core";
-import { UIEvents } from "../events/uiEvents";
-import { createView } from "../view";
-import { beginScenario } from "../round/beginScenario";
-import { ActivePlayers } from "boardgame.io/core";
-import { PowerSet } from "js-combinatorics";
-import { randomBgIO, rndJS } from "../utils/random";
-import { GameSetupData } from "../GameSetupData";
-import { Logger } from "../logger/types";
-import { toJS } from "mobx";
-import { ObservableContext } from "../context";
-import { nullLogger } from "../logger";
+import { Action, State, createState } from '@card-engine-nx/state';
+import type { Game, Move } from 'boardgame.io';
+import { INVALID_MOVE } from 'boardgame.io/core';
+import { UIEvents } from '../events/uiEvents';
+import { createView } from '../view';
+import { ActivePlayers } from 'boardgame.io/core';
+import { PowerSet } from 'js-combinatorics';
+import { randomBgIO } from '../utils/random';
+import { Logger } from '../logger/types';
+import { toJS } from 'mobx';
+import { ObservableContext } from '../context';
+import { nullLogger } from '../logger';
 
 const skipOptions = { actions: false, show: false };
 
@@ -35,15 +33,15 @@ function createMoves(
       return INVALID_MOVE;
     }
 
-    if (G.choice.type === "actions") {
+    if (G.choice.type === 'actions') {
       return INVALID_MOVE;
     }
 
-    if (G.choice.type === "show") {
+    if (G.choice.type === 'show') {
       return INVALID_MOVE;
     }
 
-    if (G.choice.type === "X") {
+    if (G.choice.type === 'X') {
       return INVALID_MOVE;
     }
 
@@ -81,12 +79,12 @@ function createMoves(
 
     if (
       !ctx.state.choice ||
-      (ctx.state.choice.type !== "split" && ctx.state.choice.type !== "X")
+      (ctx.state.choice.type !== 'split' && ctx.state.choice.type !== 'X')
     ) {
       return INVALID_MOVE;
     }
 
-    if (ctx.state.choice.type === "X") {
+    if (ctx.state.choice.type === 'X') {
       const action: Action = {
         useScope: { x: amounts[0] },
         action: ctx.state.choice.action,
@@ -124,7 +122,7 @@ function createMoves(
       return INVALID_MOVE;
     }
 
-    const title = "title" in G.choice ? G.choice.title : "";
+    const title = 'title' in G.choice ? G.choice.title : '';
     const ctx = new ObservableContext(G, events, randomBgIO(random), logger);
     const action = ctx.view.actions[index];
     ctx.state.choice = undefined;
@@ -151,7 +149,7 @@ export function LotrLCGame(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Game<State, any, State> {
   return {
-    name: "LotrLCG",
+    name: 'LotrLCG',
     setup: (_, setupServer) => {
       const setup = setupServer ?? setupClient;
 
@@ -171,7 +169,7 @@ export function LotrLCGame(
       if (G.result?.win) {
         return {
           score: 100 / G.result.score,
-          winner: "0",
+          winner: '0',
         };
       }
 
@@ -184,45 +182,45 @@ export function LotrLCGame(
           return [];
         }
 
-        if (choice.type === "actions") {
+        if (choice.type === 'actions') {
           const view = createView(G);
           return [
-            { move: "skip" },
+            { move: 'skip' },
             ...view.actions
               // TODO .filter((a) => a.enabled)
-              .map((_, i) => ({ move: "action", args: [i] })),
+              .map((_, i) => ({ move: 'action', args: [i] })),
           ];
         }
 
-        if (choice.type === "multi") {
+        if (choice.type === 'multi') {
           const sets = new PowerSet(choice.options.map((o, i) => i));
           const array = sets.toArray();
           return array.map((a) => ({
-            move: "choose",
+            move: 'choose',
             args: a,
           }));
         }
 
-        if (choice.type === "single") {
+        if (choice.type === 'single') {
           if (choice.optional) {
             return [
-              { move: "skip" },
-              ...choice.options.map((o, i) => ({ move: "choose", args: [i] })),
+              { move: 'skip' },
+              ...choice.options.map((o, i) => ({ move: 'choose', args: [i] })),
             ];
           } else {
             return choice.options.map((o, i) => ({
-              move: "choose",
+              move: 'choose',
               args: [i],
             }));
           }
         }
 
-        if (choice.type === "show") {
-          return [{ move: "skip" }];
+        if (choice.type === 'show') {
+          return [{ move: 'skip' }];
         }
 
-        if (choice.type === "split") {
-          return [{ move: "split", args: choice.options.map(() => 1) }]; // TODO real split
+        if (choice.type === 'split') {
+          return [{ move: 'split', args: choice.options.map(() => 1) }]; // TODO real split
         }
 
         return [];

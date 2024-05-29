@@ -1,9 +1,9 @@
 // src/server.js
 import { Server, Origins } from 'boardgame.io/server';
-import { LotrLCGame, consoleEvents } from '@card-engine-nx/engine';
+import { LotrLCGame, emptyEvents } from '@card-engine-nx/engine';
 
 const server = Server({
-  games: [LotrLCGame(consoleEvents)],
+  games: [LotrLCGame(emptyEvents)],
   origins: ['http://192.168.0.101:4200', Origins.LOCALHOST],
 });
 
