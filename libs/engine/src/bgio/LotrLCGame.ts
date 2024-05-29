@@ -147,17 +147,19 @@ export function LotrLCGame(
   logger?: Logger,
   setupClient?: State
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Game<State, any, State> {
+): Game<State, any, { name: string; state: State }> {
   return {
     name: 'LotrLCG',
     setup: (_, setupServer) => {
-      const setup = setupServer ?? setupClient;
-
-      if (!setup) {
-        return createState();
+      if (setupServer) {
+        return setupServer.state;
       }
 
-      return setup;
+      if (setupClient) {
+        return setupClient;
+      }
+
+      throw new Error('missing setup');
     },
     minPlayers: 1,
     maxPlayers: 4,
