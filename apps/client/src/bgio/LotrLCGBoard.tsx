@@ -117,7 +117,7 @@ export function LotrLCGClient(
       game: LotrLCGame(events, logger),
       board: LotrLCGBoard,
       numPlayers: 1,
-      multiplayer: SocketIO({ server: setup.server.url }),
+      multiplayer: SocketIO({ server: setup.server }),
       debug: { collapseOnLoad: true, impl: Debug },
     });
   }

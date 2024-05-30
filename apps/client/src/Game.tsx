@@ -24,10 +24,15 @@ export const Game = (props: { setup: SetupParams }) => {
     },
   });
 
-  const playerID =
-    props.setup.type === "join" ? props.setup.server.playerId : "0";
+  if (props.setup.type === "join") {
+    return (
+      <Client
+        matchID={props.setup.matchID}
+        playerID={props.setup.playerID}
+        credentials={props.setup.credentials}
+      />
+    );
+  }
 
-  console.log("playerID", playerID);
-
-  return <Client playerID={playerID} />;
+  return <Client playerID="0" />;
 };
