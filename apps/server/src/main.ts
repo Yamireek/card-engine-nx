@@ -4,7 +4,11 @@ import { LotrLCGame, emptyEvents } from '@card-engine-nx/engine';
 
 const server = Server({
   games: [LotrLCGame(emptyEvents)],
-  origins: ['http://192.168.0.101:4200', Origins.LOCALHOST],
+  origins: [
+    'https://card-engine-client.onrender.com',
+    'http://192.168.0.101:4200',
+    Origins.LOCALHOST,
+  ],
 });
 
 server.run({
