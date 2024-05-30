@@ -8,7 +8,7 @@
     "build": "nx run-many -t build",
     "build:client": "nx run client:build:production",
     "build:server": "nx run server:build:production",
-    "run:server": "node ./dist/apps/server/main.js",
+    "run:server": "node dist/apps/server/main.js",
     "lint": "nx run-many -t lint --max-warnings=0",
     "storybook": "nx run ui:storybook",
     "test": "npx vitest",
