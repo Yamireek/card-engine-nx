@@ -6,9 +6,8 @@ import {
   State,
   createState,
 } from '@card-engine-nx/state';
-import { CardId, PlayerId, values } from '@card-engine-nx/basic';
+import { CardId, PlayerId, noRandom, values } from '@card-engine-nx/basic';
 import { emptyEvents } from '../events/uiEvents';
-import { noRandom } from '../utils/random';
 import { createView } from '../view';
 import { Logger } from '../logger/types';
 import { nullLogger } from '../logger/null';

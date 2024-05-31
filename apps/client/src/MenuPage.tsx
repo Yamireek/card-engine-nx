@@ -1,14 +1,15 @@
 import {
-  Button, Dialog,
+  Button,
+  Dialog,
   DialogContent,
   DialogTitle,
   Divider,
-  Icon, Stack
+  Icon,
+  Stack,
 } from '@mui/material';
 
-
 export const MenuPage = (props: {
-  items: Array<{ label: string; link: string; icon: string; }>;
+  items: Array<{ label: string; link: string; icon: string }>;
 }) => {
   return (
     <Dialog open>

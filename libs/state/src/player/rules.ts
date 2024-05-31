@@ -5,6 +5,9 @@ export type PlayerRules = {
   disableDraw?: true;
 };
 
-export function mergePlayerRules(r1: PlayerRules, r2: PlayerRules): PlayerRules {
+export function mergePlayerRules(
+  r1: PlayerRules,
+  r2: PlayerRules
+): PlayerRules {
   return merge(r1, r2);
 }

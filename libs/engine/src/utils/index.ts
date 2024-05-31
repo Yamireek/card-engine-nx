@@ -1,2 +1,2 @@
 export * from './combat';
-export * from './random';
+export * from '../bgio/random';

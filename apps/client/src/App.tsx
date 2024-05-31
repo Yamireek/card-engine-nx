@@ -1,20 +1,20 @@
-import { CssBaseline } from "@mui/material";
-import { Difficulty } from "@card-engine-nx/basic";
-import { core, decks } from "@card-engine-nx/cards";
-import { DialogProvider } from "./DialogsContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createHashRouter, RouterProvider } from "react-router-dom";
-import { SnackbarProvider } from "notistack";
-import { GamePage } from "./GamePage";
-import { SingleSetupPage } from "./SingleSetupPage";
-import { MenuPage } from "./MenuPage";
-import { CollectionPage } from "./CollectionPage";
-import { LobbyPage } from "./LobbyPage";
+import { CssBaseline } from '@mui/material';
+import { Difficulty } from '@card-engine-nx/basic';
+import { core, decks } from '@card-engine-nx/cards';
+import { DialogProvider } from './DialogsContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { SnackbarProvider } from 'notistack';
+import { GamePage } from './GamePage';
+import { SingleSetupPage } from './SingleSetupPage';
+import { MenuPage } from './MenuPage';
+import { CollectionPage } from './CollectionPage';
+import { LobbyPage } from './bgio/LobbyPage';
 
 export type NewGameParams = {
-  type: "new";
-  server?: "local" | { url: string };
-  playerCount: "1" | "2" | "3" | "4";
+  type: 'new';
+  server?: 'local' | { url: string };
+  playerCount: '1' | '2' | '3' | '4';
   players: Array<keyof typeof decks>;
   scenario: keyof typeof core.scenario;
   difficulty: Difficulty;
@@ -25,12 +25,12 @@ export type NewGameParams = {
 };
 
 export type LoadGameParams = {
-  type: "load";
+  type: 'load';
   state: string;
 };
 
 export type JoinGameParams = {
-  type: "join";
+  type: 'join';
   server: string;
   playerID: string;
   matchID: string;
@@ -39,7 +39,7 @@ export type JoinGameParams = {
 
 export type SetupParams = NewGameParams | LoadGameParams | JoinGameParams;
 
-export const savedState = localStorage.getItem("saved_state");
+export const savedState = localStorage.getItem('saved_state');
 
 export type ConnectionParams = {
   playerID: string;
@@ -49,36 +49,36 @@ export type ConnectionParams = {
 
 const router = createHashRouter([
   {
-    path: "/",
+    path: '/',
     element: (
       <MenuPage
         items={[
-          { label: "Singleplayer", link: "/#/single", icon: "person" },
-          { label: "Multiplayer", link: "/#/lobby", icon: "group" },
-          { label: "Collection", link: "/#/collection", icon: "collections" },
+          { label: 'Singleplayer', link: '/#/single', icon: 'person' },
+          { label: 'Multiplayer', link: '/#/lobby', icon: 'group' },
+          { label: 'Collection', link: '/#/collection', icon: 'collections' },
         ]}
       />
     ),
   },
   {
-    path: "/single",
+    path: '/single',
     element: <SingleSetupPage />,
   },
-  { path: "/lobby", element: <LobbyPage /> },
-  { path: "/game", element: <GamePage /> },
-  { path: "/collection", element: <CollectionPage /> },
+  { path: '/lobby', element: <LobbyPage /> },
+  { path: '/game', element: <GamePage /> },
+  { path: '/collection', element: <CollectionPage /> },
 ]);
 
 export const App = () => {
   return (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
+        width: '100vw',
+        height: '100vh',
         padding: 0,
         margin: 0,
-        overflow: "hidden",
-        userSelect: "none",
+        overflow: 'hidden',
+        userSelect: 'none',
       }}
     >
       <CssBaseline />

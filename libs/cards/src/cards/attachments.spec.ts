@@ -3,7 +3,6 @@ import { core } from '../index';
 import { it, expect } from 'vitest';
 
 it('Citadel plate', () => {
-  
   const game = new TestEngine({
     players: [
       {

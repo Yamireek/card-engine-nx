@@ -4,6 +4,12 @@ import { Texture, TextureLoader } from 'three';
 import { mapValues } from 'lodash';
 import { values } from '@card-engine-nx/basic';
 import { Material } from '../types';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  LinearProgress,
+} from '@mui/material';
 
 type MaterialDefiniton = { color: string; roughness: string; normal: string };
 
@@ -64,7 +70,14 @@ export const TexturesProvider = (
   }, [textures.value]);
 
   if (textures.loading || !textures.value || !materials) {
-    return <>Loading textures</>;
+    return (
+      <Dialog open maxWidth="md" fullWidth>
+        <DialogTitle>Loading...</DialogTitle>
+        <DialogContent>
+          <LinearProgress />
+        </DialogContent>
+      </Dialog>
+    );
   }
 
   return (

@@ -1,5 +1,3 @@
-import { RandomAPI } from 'boardgame.io/dist/types/src/plugins/random/random';
-
 export type Random = {
   shuffle: <T>(items: T[]) => T[];
   item: <T>(items: T[]) => T;
@@ -21,18 +19,7 @@ export function shuffleItems<T>(items: T[]) {
   }
 }
 
-export function randomBgIO(random: RandomAPI): Random {
-  return {
-    item<T>(items: T[]) {
-      return getRandomItem<T>(random.Number)(items);
-    },
-    shuffle(items) {
-      return random.Shuffle(items);
-    },
-  };
-}
-
-export function rndJS(): Random {
+export function randomJS(): Random {
   return {
     item<T>(items: T[]) {
       return getRandomItem<T>(Math.random)(items);

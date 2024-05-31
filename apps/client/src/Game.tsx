@@ -1,7 +1,7 @@
-import { rxEvents } from "./GameDisplay";
-import { LotrLCGClient } from "./bgio/LotrLCGBoard";
-import { useSnackbar } from "notistack";
-import { SetupParams } from "./App";
+import { rxEvents } from './GameDisplay';
+import { LotrLCGClient } from './bgio/LotrLCGClient';
+import { useSnackbar } from 'notistack';
+import { SetupParams } from './App';
 
 export const Game = (props: { setup: SetupParams }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -14,17 +14,17 @@ export const Game = (props: { setup: SetupParams }) => {
       enqueueSnackbar(m);
     },
     success(m) {
-      enqueueSnackbar(m, { variant: "success" });
+      enqueueSnackbar(m, { variant: 'success' });
     },
     warning(m) {
-      enqueueSnackbar(m, { variant: "warning" });
+      enqueueSnackbar(m, { variant: 'warning' });
     },
     error(m) {
-      enqueueSnackbar(m, { variant: "error" });
+      enqueueSnackbar(m, { variant: 'error' });
     },
   });
 
-  if (props.setup.type === "join") {
+  if (props.setup.type === 'join') {
     return (
       <Client
         matchID={props.setup.matchID}

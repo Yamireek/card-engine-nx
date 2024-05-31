@@ -9,7 +9,7 @@ import { UserCardAction } from './card/ability/action';
 
 export type View = {
   cards: Record<CardId, CardView>;
-  players: Partial<Record<PlayerId, PlayerView>>;  
+  players: Partial<Record<PlayerId, PlayerView>>;
   actions: UserCardAction[];
   modifiers: GameModifierState[];
   responses: Partial<
