@@ -22,18 +22,31 @@ import {
   Divider,
 } from '@mui/material';
 import { Matches } from './Matches';
+import { useSettings } from '../settings/useSettings';
+import { SettingsDialog } from '../settings/SettingsDialog';
 
 export const GAME_NAME = 'LotrLCG';
 
-export const SERVER_URL =
-  window.location.origin === 'http://localhost:4200'
-    ? 'http://localhost:3000'
-    : 'https://card-engine-server.onrender.com';
-
 export const LobbyPage = () => {
-  const lobby = useMemo(() => new LobbyClient({ server: SERVER_URL }), []);
+  const settings = useSettings();
+  const lobby = useMemo(
+    () => new LobbyClient({ server: settings.value.serverUrl }),
+    [settings.value.serverUrl]
+  );
   const navigate = useNavigate();
   const d = useDialogs();
+
+  if (!settings.value.playerName) {
+    return (
+      <SettingsDialog
+        defaults={settings.value}
+        onSubmit={(v) => {
+          settings.set(v);
+        }}
+        onClose={() => navigate('/')}
+      />
+    );
+  }
 
   return (
     <Dialog open fullWidth>
@@ -56,7 +69,7 @@ export const LobbyPage = () => {
             const matchId = await createMatch(params, lobby);
 
             const credentials = await lobby.joinMatch(GAME_NAME, matchId, {
-              playerName: 'player',
+              playerName: settings.value.playerName,
             });
 
             const state: SetupParams = {
@@ -64,7 +77,7 @@ export const LobbyPage = () => {
               playerID: credentials.playerID,
               matchID: matchId,
               credentials: credentials.playerCredentials,
-              server: SERVER_URL,
+              server: settings.value.serverUrl,
             };
 
             navigate('/game', { state });

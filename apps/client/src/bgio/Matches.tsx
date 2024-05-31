@@ -3,10 +3,12 @@ import { SetupParams } from './../App';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button, LinearProgress, List, ListItem } from '@mui/material';
-import { GAME_NAME, SERVER_URL } from './LobbyPage';
+import { GAME_NAME } from './LobbyPage';
+import { useSettings } from '../settings/useSettings';
 
 export const Matches = (props: { lobby: LobbyClient }) => {
   const navigate = useNavigate();
+  const settings = useSettings();
 
   const matchesQ = useQuery({
     queryKey: ['matches'],
@@ -44,7 +46,7 @@ export const Matches = (props: { lobby: LobbyClient }) => {
                   playerID: result.playerID,
                   matchID: m.matchID,
                   credentials: result.playerCredentials,
-                  server: SERVER_URL,
+                  server: settings.value.serverUrl,
                 };
 
                 navigate('/game', { state });

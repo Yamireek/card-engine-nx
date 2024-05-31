@@ -18,7 +18,11 @@ export const MenuPage = (props: {
       <DialogContent>
         <Stack>
           {props.items.map((item) => (
-            <Button startIcon={<Icon>{item.icon}</Icon>} href={item.link}>
+            <Button
+              key={item.link}
+              startIcon={<Icon>{item.icon}</Icon>}
+              href={item.link}
+            >
               {item.label}
             </Button>
           ))}

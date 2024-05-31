@@ -10,6 +10,7 @@ import { SingleSetupPage } from './SingleSetupPage';
 import { MenuPage } from './MenuPage';
 import { CollectionPage } from './CollectionPage';
 import { LobbyPage } from './bgio/LobbyPage';
+import { SettingsPage } from './settings/SettingsPage';
 
 export type NewGameParams = {
   type: 'new';
@@ -56,6 +57,7 @@ const router = createHashRouter([
           { label: 'Singleplayer', link: '/#/single', icon: 'person' },
           { label: 'Multiplayer', link: '/#/lobby', icon: 'group' },
           { label: 'Collection', link: '/#/collection', icon: 'collections' },
+          { label: 'Settings', link: '/#/settings', icon: 'settings' },
         ]}
       />
     ),
@@ -66,7 +68,11 @@ const router = createHashRouter([
   },
   { path: '/lobby', element: <LobbyPage /> },
   { path: '/game', element: <GamePage /> },
-  { path: '/collection', element: <CollectionPage /> },
+  {
+    path: '/collection',
+    element: <CollectionPage />,
+  },
+  { path: '/settings', element: <SettingsPage /> },
 ]);
 
 export const App = () => {

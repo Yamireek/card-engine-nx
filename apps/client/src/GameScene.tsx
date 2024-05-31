@@ -68,12 +68,12 @@ const Lights = () => {
   return (
     <>
       <pointLight
-        position={[-2, 8, 1]}
+        position={[-2, 1, 4]}
         castShadow
         intensity={1}
         distance={10}
       />
-      <directionalLight position={[-1, -1, 5]} intensity={0.2} />
+      <directionalLight position={[-1, -1, 5]} intensity={2} />
     </>
   );
 };
