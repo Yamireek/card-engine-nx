@@ -36,7 +36,7 @@ export const FloatingCards = () => {
               id: e.cardId,
               name: `floating-card-${e.cardId}`,
               position: [position.x, position.y, position.z],
-              rotation: [0, Math.PI, 0],
+              rotation: [-Math.PI / 2, Math.PI, 0],
               texture: {
                 front: texture[getCardImageUrl(card.definition.front, 'front')],
                 back: texture[getCardImageUrl(card.definition.back, 'back')],
@@ -50,7 +50,7 @@ export const FloatingCards = () => {
                 c.id === e.cardId
                   ? {
                       ...c,
-                      position: [position.x, position.y, 0.1],
+                      position: [position.x, 0.1, position.z],
                     }
                   : { ...c }
               )
@@ -60,7 +60,9 @@ export const FloatingCards = () => {
           setTimeout(() => {
             setCards((p) =>
               p.map((c) =>
-                c.id === e.cardId ? { ...c, rotation: [0, 0, 0] } : { ...c }
+                c.id === e.cardId
+                  ? { ...c, rotation: [-Math.PI / 2, 0, 0] }
+                  : { ...c }
               )
             );
           }, 1000);
@@ -79,6 +81,7 @@ export const FloatingCards = () => {
                     ? {
                         ...c,
                         position: [position.x, position.y, position.z],
+                        rotation: [-Math.PI / 2, 0, 0],
                         scale: cardMesh.scale.x,
                       }
                     : { ...c }

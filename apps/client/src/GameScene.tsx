@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { MapControls, Stats } from '@react-three/drei';
+import { Environment, MapControls, Stats } from '@react-three/drei';
 import { NoToneMapping } from 'three';
 import * as THREE from 'three';
 import { Perf } from 'r3f-perf';
@@ -9,10 +9,6 @@ import { Tooltip } from '@mui/material';
 import { CardDetail } from './CardDetail';
 import { useContext } from 'react';
 import { DetailContext } from './DetailContext';
-
-const near = 0.01;
-const far = 50000;
-const perspective = 3000;
 
 export type GameSceneProps = React.PropsWithChildren<{
   debug?: boolean;
@@ -43,19 +39,12 @@ export const GameScene = (
 ) => {
   const width = props.size.width;
   const height = props.size.height;
-  const aspect = width / height;
-  const fov = calculateFov(height, perspective);
 
   return (
     <Canvas
       style={{ width, height }}
       camera={{
-        position: [0, 0, 1.42],
-        up: [0, 0, 1],
-        fov,
-        near,
-        far,
-        aspect,
+        position: [0, 0.35, 0],
       }}
       frameloop="always"
       shadows
@@ -66,6 +55,7 @@ export const GameScene = (
       }}
       linear={false}
     >
+      <Environment background preset="apartment" />
       <Lights />
       {props.children}
       <MapControls />
@@ -78,9 +68,9 @@ const Lights = () => {
   return (
     <>
       <pointLight
-        position={[-2, 1, 4]}
+        position={[-2, 8, 1]}
         castShadow
-        intensity={4}
+        intensity={1}
         distance={10}
       />
       <directionalLight position={[-1, -1, 5]} intensity={0.2} />

@@ -293,14 +293,16 @@ export const GameDisplay = () => {
             }}
           >
             <GameSceneLoader angle={20} rotation={0} perspective={1500}>
-              <Board3d />
               <FloatingCards />
+              <group rotation={[-Math.PI / 2, 0, 0]}>
+                <Board3d />
 
-              {playerIds.map((id) => (
-                <PlayerAreas key={id} player={id} />
-              ))}
+                {playerIds.map((id) => (
+                  <PlayerAreas key={id} player={id} />
+                ))}
 
-              <GameAreas playerCount={Object.keys(state.players).length} />
+                <GameAreas playerCount={Object.keys(state.players).length} />
+              </group>
             </GameSceneLoader>
           </TexturesProvider>
         </div>
