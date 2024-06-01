@@ -18,7 +18,7 @@ import {
   useFormContext,
 } from 'react-hook-form-mui';
 import { Editor } from '@monaco-editor/react';
-import { SetupParams } from './App';
+import { SetupParams } from './types';
 
 const GameSetupForm = () => {
   const form = useFormContext();

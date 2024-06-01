@@ -6,7 +6,7 @@ import {
   useTextures,
 } from '@card-engine-nx/ui';
 import { Deck3d } from './Deck3d';
-import { useGameState } from './StateContext';
+import { useGameState } from '../game/StateContext';
 import { getZoneState } from '@card-engine-nx/engine';
 import { last } from 'lodash';
 import { State, ZoneState } from '@card-engine-nx/state';

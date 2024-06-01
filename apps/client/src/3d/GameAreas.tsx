@@ -1,6 +1,6 @@
 import { Vector3 } from '@card-engine-nx/ui';
 import { useContext } from 'react';
-import { StateContext } from './StateContext';
+import { StateContext } from '../game/StateContext';
 import { LotrDeck3d } from './LotrDeck3d';
 import { LotrCardArea } from './LotrCardArea';
 import { cardSize } from './Card3d';

@@ -1,81 +1,52 @@
 import { CssBaseline } from '@mui/material';
-import { Difficulty } from '@card-engine-nx/basic';
-import { core, decks } from '@card-engine-nx/cards';
-import { DialogProvider } from './DialogsContext';
+import { DialogProvider } from './dialogs/DialogsContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
-import { GamePage } from './GamePage';
-import { SingleSetupPage } from './SingleSetupPage';
-import { MenuPage } from './MenuPage';
-import { CollectionPage } from './CollectionPage';
+import { GamePage } from './game/GamePage';
+import { SingleSetupPage } from './game/SingleSetupPage';
+import { MenuPage } from './game/MenuPage';
+import { CollectionPage } from './collection/CollectionPage';
 import { LobbyPage } from './bgio/LobbyPage';
 import { SettingsPage } from './settings/SettingsPage';
-
-export type NewGameParams = {
-  type: 'new';
-  server?: 'local' | { url: string };
-  playerCount: '1' | '2' | '3' | '4';
-  players: Array<keyof typeof decks>;
-  scenario: keyof typeof core.scenario;
-  difficulty: Difficulty;
-  extra: {
-    resources: number;
-    cards: number;
-  };
-};
-
-export type LoadGameParams = {
-  type: 'load';
-  state: string;
-};
-
-export type JoinGameParams = {
-  type: 'join';
-  server: string;
-  playerID: string;
-  matchID: string;
-  credentials: string;
-};
-
-export type SetupParams = NewGameParams | LoadGameParams | JoinGameParams;
-
-export const savedState = localStorage.getItem('saved_state');
-
-export type ConnectionParams = {
-  playerID: string;
-  matchID: string;
-  credentials: string;
-};
-
-const router = createHashRouter([
-  {
-    path: '/',
-    element: (
-      <MenuPage
-        items={[
-          { label: 'Singleplayer', link: '/#/single', icon: 'person' },
-          { label: 'Multiplayer', link: '/#/lobby', icon: 'group' },
-          { label: 'Collection', link: '/#/collection', icon: 'collections' },
-          { label: 'Settings', link: '/#/settings', icon: 'settings' },
-        ]}
-      />
-    ),
-  },
-  {
-    path: '/single',
-    element: <SingleSetupPage />,
-  },
-  { path: '/lobby', element: <LobbyPage /> },
-  { path: '/game', element: <GamePage /> },
-  {
-    path: '/collection',
-    element: <CollectionPage />,
-  },
-  { path: '/settings', element: <SettingsPage /> },
-]);
+import { useMemo } from 'react';
 
 export const App = () => {
+  const router = useMemo(
+    () =>
+      createHashRouter([
+        {
+          path: '/',
+          element: (
+            <MenuPage
+              items={[
+                { label: 'Singleplayer', link: '/#/single', icon: 'person' },
+                { label: 'Multiplayer', link: '/#/lobby', icon: 'group' },
+                {
+                  label: 'Collection',
+                  link: '/#/collection',
+                  icon: 'collections',
+                },
+                { label: 'Settings', link: '/#/settings', icon: 'settings' },
+              ]}
+            />
+          ),
+        },
+        {
+          path: '/single',
+          element: <SingleSetupPage />,
+        },
+        { path: '/lobby', element: <LobbyPage /> },
+        { path: '/game', element: <GamePage /> },
+        {
+          path: '/collection',
+          element: <CollectionPage />,
+        },
+        { path: '/settings', element: <SettingsPage /> },
+      ]),
+    []
+  );
+
   return (
     <div
       style={{

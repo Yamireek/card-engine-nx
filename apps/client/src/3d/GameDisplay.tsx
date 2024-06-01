@@ -5,7 +5,7 @@ import {
   image,
 } from '@card-engine-nx/ui';
 import React, { useContext, useMemo, useState } from 'react';
-import { StateContext } from './StateContext';
+import { StateContext } from '../game/StateContext';
 import {
   calculateNumberExpr,
   createViewContext,
@@ -36,10 +36,10 @@ import {
   Typography,
 } from '@mui/material';
 import { sum } from 'lodash/fp';
-import { GameDialogs } from './GameDialogs';
+import { GameDialogs } from '../game/GameDialogs';
 import { FloatingCardsProvider } from './FloatingCardsContext';
 import Editor from '@monaco-editor/react';
-import { PlayerHand } from './PlayerHand';
+import { PlayerHand } from '../game/PlayerHand';
 
 const staticUrls = [image.progress, image.resource, image.damage];
 

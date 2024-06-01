@@ -1,7 +1,7 @@
-import { rxEvents } from './GameDisplay';
-import { LotrLCGClient } from './bgio/LotrLCGClient';
+import { rxEvents } from '../3d/GameDisplay';
+import { LotrLCGClient } from '../bgio/LotrLCGClient';
 import { useSnackbar } from 'notistack';
-import { SetupParams } from './App';
+import { SetupParams } from './types';
 
 export const Game = (props: { setup: SetupParams }) => {
   const { enqueueSnackbar } = useSnackbar();

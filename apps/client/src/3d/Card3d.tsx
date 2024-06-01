@@ -8,9 +8,15 @@ import {
   useTextures,
 } from '@card-engine-nx/ui';
 import { useContext } from 'react';
-import { DetailContext } from './DetailContext';
+import { DetailContext } from '../game/DetailContext';
 import { Orientation } from '@card-engine-nx/basic';
 import { Texture } from 'three';
+
+export const cardSize: Dimensions3 = {
+  width: 0.0635,
+  height: 0.0889,
+  thick: 0.000305,
+};
 
 export type Card3dProps = React.PropsWithChildren<{
   id: number;
@@ -24,12 +30,6 @@ export type Card3dProps = React.PropsWithChildren<{
   onClick?: () => void;
   showId?: boolean;
 }>;
-
-export const cardSize: Dimensions3 = {
-  width: 0.0635,
-  height: 0.0889,
-  thick: 0.000305,
-};
 
 export const Card3d = (props: Card3dProps) => {
   const { material } = useTextures();

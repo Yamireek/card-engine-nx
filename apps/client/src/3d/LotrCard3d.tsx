@@ -6,7 +6,7 @@ import {
   Dimensions,
 } from '@card-engine-nx/ui';
 import { useContext } from 'react';
-import { StateContext } from './StateContext';
+import { StateContext } from '../game/StateContext';
 import { CardId } from '@card-engine-nx/basic';
 import { Card3d, cardSize } from './Card3d';
 import { Token3d } from './Token3d';

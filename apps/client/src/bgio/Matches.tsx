@@ -1,5 +1,5 @@
 import { LobbyClient } from 'boardgame.io/client';
-import { SetupParams } from './../App';
+import { SetupParams } from '../game/types';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button, LinearProgress, List, ListItem } from '@mui/material';

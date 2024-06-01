@@ -6,9 +6,9 @@ import { Perf } from 'r3f-perf';
 import { Dimensions } from '@card-engine-nx/ui';
 import { useMeasure } from 'react-use';
 import { Tooltip } from '@mui/material';
-import { CardDetail } from './CardDetail';
+import { CardDetail } from '../game/CardDetail';
 import { useContext } from 'react';
-import { DetailContext } from './DetailContext';
+import { DetailContext } from '../game/DetailContext';
 
 export type GameSceneProps = React.PropsWithChildren<{
   debug?: boolean;

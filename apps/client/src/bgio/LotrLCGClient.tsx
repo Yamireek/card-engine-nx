@@ -10,7 +10,7 @@ import { createState } from '@card-engine-nx/state';
 import { Client } from 'boardgame.io/react';
 import { randomJS } from '@card-engine-nx/basic';
 import { Debug } from 'boardgame.io/debug';
-import { SetupParams } from '../App';
+import { NewGameParams, SetupParams } from '../game/types';
 import { core, decks } from '@card-engine-nx/cards';
 import { Local, SocketIO } from 'boardgame.io/multiplayer';
 import { LotrLCGBoard } from './LotrLCGBoard';
@@ -40,28 +40,7 @@ export function LotrLCGClient(
   }
 
   if (setup.type === 'new') {
-    const state = createState();
-
-    state.next = [
-      beginScenario({
-        players: setup.players
-          .filter((p, i) => i < Number(setup.playerCount))
-          .map((key) => decks[key]),
-        scenario: core.scenario[setup.scenario],
-        difficulty: setup.difficulty,
-        extra: setup.extra,
-      }),
-    ];
-
-    const ctx = new ObservableContext(
-      state,
-      events,
-      randomJS(),
-      nullLogger,
-      false
-    );
-
-    ctx.advance({ actions: false, show: false }, true);
+    const state = createNewGameState(setup, events);
 
     return Client({
       game: LotrLCGame(events, logger, state),
@@ -81,4 +60,30 @@ export function LotrLCGClient(
   }
 
   throw new Error('not implemented');
+}
+
+export function createNewGameState(setup: NewGameParams, events: UIEvents) {
+  const state = createState();
+
+  state.next = [
+    beginScenario({
+      players: setup.players
+        .filter((p, i) => i < Number(setup.playerCount))
+        .map((key) => decks[key]),
+      scenario: core.scenario[setup.scenario],
+      difficulty: setup.difficulty,
+      extra: setup.extra,
+    }),
+  ];
+
+  const ctx = new ObservableContext(
+    state,
+    events,
+    randomJS(),
+    nullLogger,
+    false
+  );
+
+  ctx.advance({ actions: false, show: false }, true);
+  return state;
 }

@@ -1,6 +1,6 @@
 import { getCardImageUrl, useTextures } from '@card-engine-nx/ui';
 import { useEffect } from 'react';
-import { useGameState } from './StateContext';
+import { useGameState } from '../game/StateContext';
 import { Card3d } from './Card3d';
 import { useThree } from '@react-three/fiber';
 import { rxEvents } from './GameDisplay';
