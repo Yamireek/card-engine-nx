@@ -14,7 +14,14 @@ import {
 } from '@mui/material';
 import { uniq } from 'lodash';
 import { sum } from 'lodash/fp';
-import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  Fragment,
+  Suspense,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Subject } from 'rxjs';
 import { keys, values } from '@card-engine-nx/basic';
 import {
@@ -27,6 +34,7 @@ import {
 import { State } from '@card-engine-nx/state';
 import {
   GameInfo,
+  LoadingDialog,
   TexturesProvider,
   getCardImageUrls,
   image,
@@ -306,7 +314,6 @@ export const GameDisplay = () => {
               <FloatingCards />
               <group rotation={[-Math.PI / 2, 0, 0]}>
                 <Board3d />
-
                 {playerIds.map((id) => (
                   <PlayerAreas key={id} player={id} />
                 ))}

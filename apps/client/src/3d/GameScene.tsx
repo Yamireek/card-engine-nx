@@ -1,14 +1,21 @@
 import { Tooltip } from '@mui/material';
-import { Environment, MapControls, Stats, useHelper } from '@react-three/drei';
+import {
+  Environment,
+  MapControls,
+  OrbitControls,
+  Stats,
+  useHelper,
+} from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
-import { useContext, useRef } from 'react';
+import { Suspense, useContext, useRef } from 'react';
 import { useMeasure } from 'react-use';
 import { NoToneMapping } from 'three';
 import * as THREE from 'three';
-import { Dimensions } from '@card-engine-nx/ui';
+import { Dimensions, LoadingDialog } from '@card-engine-nx/ui';
 import { CardDetail } from '../game/CardDetail';
 import { DetailContext } from '../game/DetailContext';
+import { Text } from '@react-three/drei';
 
 export type GameSceneProps = React.PropsWithChildren<{
   debug?: boolean;
@@ -34,6 +41,14 @@ export const GameSceneLoader = (props: GameSceneProps) => {
   );
 };
 
+export const Test = () => {
+  return (
+    <Text rotation={[-Math.PI / 2, 0, 0]} scale={[0.05, 0.05, 0.05]}>
+      Loading...
+    </Text>
+  );
+};
+
 export const GameScene = (
   props: React.PropsWithChildren<GameSceneProps & { size: Dimensions }>
 ) => {
@@ -41,26 +56,28 @@ export const GameScene = (
   const height = props.size.height;
 
   return (
-    <Canvas
-      style={{ width, height }}
-      camera={{
-        position: [0, 0.35, 0],
-      }}
-      frameloop="demand"
-      shadows
-      gl={{
-        antialias: true,
-        shadowMapType: THREE.PCFSoftShadowMap,
-        toneMappingExposure: Math.pow(0.7, 5.0),
-      }}
-      linear={false}
-    >
-      <Environment background preset="apartment" />
-      <Lights />
-      {props.children}
-      <MapControls />
-      {props.debug && <Debug />}
-    </Canvas>
+    <Suspense fallback={<LoadingDialog />}>
+      <Canvas
+        style={{ width, height }}
+        camera={{
+          position: [0, 0.35, 0],
+        }}
+        frameloop="demand"
+        shadows
+        gl={{
+          antialias: true,
+          shadowMapType: THREE.PCFSoftShadowMap,
+          toneMappingExposure: Math.pow(0.7, 5.0),
+        }}
+        linear={false}
+      >
+        <Environment background preset="apartment" />
+        <Lights />
+        {props.children}
+        <MapControls />
+        {props.debug && <Debug />}
+      </Canvas>
+    </Suspense>
   );
 };
 
