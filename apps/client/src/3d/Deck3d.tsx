@@ -27,9 +27,8 @@ export const Deck3d = (props: Deck3dProps) => {
         props.position[1],
         props.cardCount > 0 ? depth / 2 : 0.0001,
       ]}
-      castShadow={props.cardCount > 0}
     >
-      <mesh>
+      <mesh castShadow={props.cardCount > 0}>
         {props.cardCount > 0 ? (
           <>
             <boxGeometry

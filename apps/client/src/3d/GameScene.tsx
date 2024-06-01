@@ -55,7 +55,7 @@ export const GameScene = (
       }}
       linear={false}
     >
-      <Environment background preset="apartment" />
+      {/* <Environment  background preset="apartment" /> */}
       <Lights />
       {props.children}
       <MapControls />
@@ -71,9 +71,9 @@ const Lights = () => {
         position={[-2, 1, 4]}
         castShadow
         intensity={1}
-        distance={10}
+        distance={100000}
       />
-      <directionalLight position={[-1, -1, 5]} intensity={2} />
+      {/* <directionalLight castShadow position={[3, 3, 1]} intensity={1} /> */}
     </>
   );
 };
