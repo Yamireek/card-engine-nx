@@ -10,3 +10,4 @@ export * from './dialogs/ChooseMultiDialog';
 export * from './dialogs/ChooseDistributionDialog';
 export * from './GameInfo';
 export * from './dialogs/MinimizeDialogButton';
+export * from './dialogs/LoadingDialog';

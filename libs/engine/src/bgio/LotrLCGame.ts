@@ -1,7 +1,7 @@
-import { INVALID_MOVE , ActivePlayers } from 'boardgame.io/core';
+import { INVALID_MOVE, ActivePlayers } from 'boardgame.io/core';
 import { PowerSet } from 'js-combinatorics';
 import { toJS } from 'mobx';
-import { Action, State } from '@card-engine-nx/state';
+import { Action, State, createState } from '@card-engine-nx/state';
 import { ObservableContext } from '../context';
 import { UIEvents } from '../events/uiEvents';
 import { nullLogger } from '../logger';
@@ -158,7 +158,7 @@ export function LotrLCGame(
         return setupClient;
       }
 
-      throw new Error('missing setup');
+      return createState();
     },
     minPlayers: 1,
     maxPlayers: 4,

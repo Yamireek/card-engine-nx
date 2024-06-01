@@ -28,6 +28,7 @@ export const StateContext = createContext<{
   actions: UserCardAction[];
   undo: () => void;
   redo: () => void;
+  leave: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }>({} as any);
 

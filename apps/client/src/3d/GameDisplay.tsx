@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { uniq } from 'lodash';
 import { sum } from 'lodash/fp';
-import { Fragment, useContext, useMemo, useState } from 'react';
+import { Fragment, useContext, useEffect, useMemo, useState } from 'react';
 import { Subject } from 'rxjs';
 import { keys, values } from '@card-engine-nx/basic';
 import {
@@ -33,7 +33,7 @@ import {
 } from '@card-engine-nx/ui';
 import { GameDialogs } from '../game/GameDialogs';
 import { PlayerHand } from '../game/PlayerHand';
-import { StateContext } from '../game/StateContext';
+import { StateContext, useGameState } from '../game/StateContext';
 import { Board3d } from './Board3d';
 import { FloatingCards } from './FloatingCards';
 import { FloatingCardsProvider } from './FloatingCardsContext';
@@ -125,7 +125,7 @@ export const ActionEditorButton = () => {
 };
 
 export const LotrLCGInfo = () => {
-  const { state, view, playerId, moves, undo, redo, actions } =
+  const { state, view, playerId, moves, undo, redo, actions, leave } =
     useContext(StateContext);
 
   const totalWillpower = sum(
@@ -230,6 +230,14 @@ export const LotrLCGInfo = () => {
             >
               <Icon>redo</Icon>
             </IconButton>
+
+            <IconButton
+              onClick={() => {
+                leave();
+              }}
+            >
+              <Icon>logout</Icon>
+            </IconButton>
           </Stack>
         </Paper>
         {state.modifiers.length > 0 && (
@@ -271,11 +279,22 @@ export const LotrLCGInfo = () => {
 
 export const GameDisplay = () => {
   const { state } = useContext(StateContext);
+  const game = useGameState();
   const textureUrls = useMemo(
     () => [...staticUrls, ...getAllImageUrls(state)],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  useEffect(() => {
+    const handleUnload = () => {
+      game.leave();
+    };
+    window.addEventListener('unload', handleUnload);
+    return () => {
+      window.removeEventListener('unload', handleUnload);
+    };
+  }, [game]);
 
   return (
     <FloatingCardsProvider>

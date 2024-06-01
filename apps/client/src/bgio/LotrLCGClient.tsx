@@ -12,6 +12,7 @@ import {
   nullLogger,
 } from '@card-engine-nx/engine';
 import { createState } from '@card-engine-nx/state';
+import { LoadingDialog } from '@card-engine-nx/ui';
 import { NewGameParams, SetupParams } from '../game/types';
 import { LotrLCGBoard } from './LotrLCGBoard';
 
@@ -26,6 +27,7 @@ export function LotrLCGClient(
       board: LotrLCGBoard,
       numPlayers: 1,
       debug: { collapseOnLoad: true, impl: Debug },
+      loading: LoadingDialog,
     });
   }
 
@@ -36,6 +38,7 @@ export function LotrLCGClient(
       numPlayers: 1,
       multiplayer: SocketIO({ server: setup.server }),
       debug: { collapseOnLoad: true, impl: Debug },
+      loading: LoadingDialog,
     });
   }
 
@@ -56,6 +59,7 @@ export function LotrLCGClient(
           ? SocketIO({ server: setup.server.url })
           : undefined,
       debug: { collapseOnLoad: true, impl: Debug },
+      loading: LoadingDialog,
     });
   }
 

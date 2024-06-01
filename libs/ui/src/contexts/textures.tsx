@@ -1,14 +1,9 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  LinearProgress,
-} from '@mui/material';
 import { mapValues } from 'lodash';
 import { createContext, useContext, useMemo } from 'react';
 import { useAsync } from 'react-use';
 import { Texture, TextureLoader } from 'three';
 import { values } from '@card-engine-nx/basic';
+import { LoadingDialog } from '../dialogs/LoadingDialog';
 import { Material } from '../types';
 
 type MaterialDefiniton = { color: string; roughness: string; normal: string };
@@ -70,14 +65,7 @@ export const TexturesProvider = (
   }, [textures.value]);
 
   if (textures.loading || !textures.value || !materials) {
-    return (
-      <Dialog open maxWidth="md" fullWidth>
-        <DialogTitle>Loading...</DialogTitle>
-        <DialogContent>
-          <LinearProgress />
-        </DialogContent>
-      </Dialog>
-    );
+    return <LoadingDialog />;
   }
 
   return (
