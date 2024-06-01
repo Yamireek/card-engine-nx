@@ -1,5 +1,5 @@
-import { TestEngine, getZoneType } from '@card-engine-nx/engine';
 import { it, expect } from 'vitest';
+import { TestEngine, getZoneType } from '@card-engine-nx/engine';
 import { core } from '../index';
 
 it('Beorn', () => {

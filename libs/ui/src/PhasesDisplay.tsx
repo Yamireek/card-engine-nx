@@ -1,6 +1,6 @@
-import { Phase } from '@card-engine-nx/basic';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import { indexOf } from 'lodash';
+import { Phase } from '@card-engine-nx/basic';
 
 const phases: Phase[] = [
   'resource',

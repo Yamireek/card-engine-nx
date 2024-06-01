@@ -1,14 +1,14 @@
+import { sumBy } from 'lodash';
+import { isArray } from 'lodash/fp';
+import { PlayerId } from '@card-engine-nx/basic';
 import { PlayerAction } from '@card-engine-nx/state';
+import { canExecute } from '../../action/executable';
+import { canCardExecute } from '../../card/action/executable';
+import { getTargetCards } from '../../card/target/multi';
 import { updatedScopes } from '../../context/update';
 import { ViewContext } from '../../context/view';
-import { sumBy } from 'lodash';
-import { PlayerId } from '@card-engine-nx/basic';
-import { getTargetPlayers } from '../target/multi';
-import { isArray } from 'lodash/fp';
-import { canCardExecute } from '../../card/action/executable';
 import { calculateNumberExpr } from '../../expression/number/calculate';
-import { canExecute } from '../../action/executable';
-import { getTargetCards } from '../../card/target/multi';
+import { getTargetPlayers } from '../target/multi';
 
 export function canPlayerExecute(
   action: PlayerAction,

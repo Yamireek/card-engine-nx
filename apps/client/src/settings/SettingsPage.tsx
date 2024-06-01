@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useSettings } from './useSettings';
 import { SettingsDialog } from './SettingsDialog';
+import { useSettings } from './useSettings';
 
 export const SettingsPage = () => {
   const navigate = useNavigate();

@@ -1,5 +1,4 @@
 import { it, suite, expect } from 'vitest';
-import { TestEngine } from './TestEngine';
 import {
   hero,
   Ability,
@@ -9,6 +8,7 @@ import {
   quest,
   location,
 } from '@card-engine-nx/state';
+import { TestEngine } from './TestEngine';
 
 const drawAbility: Ability = {
   description: 'Draw 1 card',

@@ -1,5 +1,5 @@
-import { CardModifier } from '@card-engine-nx/state';
 import { keys } from '@card-engine-nx/basic';
+import { CardModifier } from '@card-engine-nx/state';
 import { getNumberExprText } from '../../expression/number/text';
 
 export function getCardModifierText(modifier: CardModifier): string {

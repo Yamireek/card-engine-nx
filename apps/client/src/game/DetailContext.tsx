@@ -1,5 +1,5 @@
-import { CardId } from '@card-engine-nx/basic';
 import * as React from 'react';
+import { CardId } from '@card-engine-nx/basic';
 
 export const DetailContext = React.createContext<{
   cardId?: CardId | undefined;

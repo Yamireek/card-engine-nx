@@ -1,3 +1,5 @@
+import { action, computed, makeObservable } from 'mobx';
+import { Random } from '@card-engine-nx/basic';
 import {
   Action,
   Scope,
@@ -5,15 +7,13 @@ import {
   UserCardAction,
   View,
 } from '@card-engine-nx/state';
-import { UIEvents } from '../events/uiEvents';
-import { createView } from '../view';
-import { action, computed, makeObservable } from 'mobx';
-import { SkipOptions, chooseOnlyOption, nextStep } from '../utils';
-import { Logger } from '../logger';
-import { uiEvent } from '../events';
 import { canExecute } from '../action';
+import { uiEvent } from '../events';
+import { UIEvents } from '../events/uiEvents';
+import { Logger } from '../logger';
+import { SkipOptions, chooseOnlyOption, nextStep } from '../utils';
+import { createView } from '../view';
 import { createViewContext } from './view';
-import { Random } from '@card-engine-nx/basic';
 
 export type ExecutionContext = {
   state: State;

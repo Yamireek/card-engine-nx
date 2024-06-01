@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext, useState, createElement } from 'react';
+import { createContext, useState, createElement, useContext } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { v4 as uuid } from 'uuid';
 
@@ -76,4 +76,4 @@ export const DialogProvider = (props: React.PropsWithChildren<unknown>) => {
   );
 };
 
-export const useDialogs = () => React.useContext(DialogContext);
+export const useDialogs = () => useContext(DialogContext);

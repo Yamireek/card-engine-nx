@@ -1,15 +1,15 @@
 import { CssBaseline } from '@mui/material';
-import { DialogProvider } from './dialogs/DialogsContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
-import { GamePage } from './game/GamePage';
-import { SingleSetupPage } from './game/SingleSetupPage';
-import { MenuPage } from './game/MenuPage';
-import { CollectionPage } from './collection/CollectionPage';
-import { LobbyPage } from './bgio/LobbyPage';
-import { SettingsPage } from './settings/SettingsPage';
 import { useMemo } from 'react';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { LobbyPage } from './bgio/LobbyPage';
+import { CollectionPage } from './collection/CollectionPage';
+import { DialogProvider } from './dialogs/DialogsContext';
+import { GamePage } from './game/GamePage';
+import { MenuPage } from './game/MenuPage';
+import { SingleSetupPage } from './game/SingleSetupPage';
+import { SettingsPage } from './settings/SettingsPage';
 
 export const App = () => {
   const router = useMemo(

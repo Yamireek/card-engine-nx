@@ -1,13 +1,13 @@
+import { intersection, last } from 'lodash';
+import { isArray } from 'lodash/fp';
 import { asArray, keys, zonesEqual } from '@card-engine-nx/basic';
 import { CardState, CardTarget, CardView } from '@card-engine-nx/state';
-import { intersection, last } from 'lodash';
 import { ViewContext } from '../../context/view';
-import { getZoneType , isInPlay } from '../../zone/utils';
-import { isArray } from 'lodash/fp';
 import { calculateBoolExpr } from '../../expression/bool/calculate';
 import { calculateNumberExpr } from '../../expression/number/calculate';
-import { getCardFromScope } from '../../scope/getCard';
 import { getTargetPlayers } from '../../player/target/multi';
+import { getCardFromScope } from '../../scope/getCard';
+import { getZoneType , isInPlay } from '../../zone/utils';
 import { getTargetCards } from '../target/multi';
 
 export function checkCardPredicate(

@@ -1,6 +1,6 @@
+import { it, expect } from 'vitest';
 import { TestEngine } from '@card-engine-nx/engine';
 import { core } from '../index';
-import { it, expect } from 'vitest';
 
 it('Flies and Spiders', () => {
   const game = new TestEngine({

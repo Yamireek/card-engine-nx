@@ -5,15 +5,15 @@ import {
   Phase,
   PlayerId,
 } from '@card-engine-nx/basic';
-import { CardState } from './card/state';
-import { PlayerState } from './player/state';
-import { ZoneState } from './zone/state';
 import { Action } from './action';
+import { CardState } from './card/state';
 import { Choice } from './choice';
-import { GameModifier } from './modifier';
 import { PendingEffect } from './effect';
-import { Scope } from './scope/type';
 import { Event } from './event';
+import { GameModifier } from './modifier';
+import { PlayerState } from './player/state';
+import { Scope } from './scope/type';
+import { ZoneState } from './zone/state';
 
 export type State = {
   round: number;

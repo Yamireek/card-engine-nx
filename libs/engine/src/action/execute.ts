@@ -1,3 +1,5 @@
+import { isArray, keys, last, reverse, sum } from 'lodash/fp';
+import { CardId, Token, values } from '@card-engine-nx/basic';
 import {
   Action,
   Choice,
@@ -5,22 +7,20 @@ import {
   createCardState,
   createPlayerState,
 } from '@card-engine-nx/state';
-import { getTargetPlayer } from '../player/target/single';
-import { getTargetPlayers } from '../player/target/multi';
-import { executePlayerAction } from '../player/action/execute';
-import { isArray, keys, last, reverse, sum } from 'lodash/fp';
-import { CardId, Token, values } from '@card-engine-nx/basic';
-import { calculateBoolExpr } from '../expression/bool/calculate';
-import { calculateNumberExpr } from '../expression/number/calculate';
-import { updatedScopes } from '../context/update';
-import { ExecutionContext } from '../context/execution';
-import { canExecute } from './executable';
 import { executeCardAction } from '../card/action/execute';
 import { getTargetCards } from '../card/target/multi';
 import { getTargetCard } from '../card/target/single';
-import { executeScopeAction } from '../scope/execute';
+import { ExecutionContext } from '../context/execution';
+import { updatedScopes } from '../context/update';
+import { calculateBoolExpr } from '../expression/bool/calculate';
+import { calculateNumberExpr } from '../expression/number/calculate';
+import { executePlayerAction } from '../player/action/execute';
+import { getTargetPlayers } from '../player/target/multi';
+import { getTargetPlayer } from '../player/target/single';
 import { gameRound } from '../round/gameRound';
+import { executeScopeAction } from '../scope/execute';
 import { getZoneState } from '../zone';
+import { canExecute } from './executable';
 
 export function executeAction(action: Action, ctx: ExecutionContext) {
   if (isArray(action)) {

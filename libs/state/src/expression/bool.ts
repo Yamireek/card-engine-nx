@@ -1,8 +1,8 @@
 import { Phase } from '@card-engine-nx/basic';
-import { CardTarget } from '../card/target';
 import { CardBoolExpr } from '../card/expression/bool';
-import { NumberExpr } from './number';
+import { CardTarget } from '../card/target';
 import { EventBool } from '../event/bool';
+import { NumberExpr } from './number';
 
 export type BoolExpr =
   | boolean

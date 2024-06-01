@@ -1,9 +1,9 @@
 import { GameZoneType, PlayerId, PlayerZoneType } from '@card-engine-nx/basic';
-import { State } from './state';
-import { SimpleCardState, SimpleState } from './simple';
 import { Action } from './action';
-import { ZoneState } from './zone/state';
 import { createPlayerState } from './player/factory';
+import { SimpleCardState, SimpleState } from './simple';
+import { State } from './state';
+import { ZoneState } from './zone/state';
 
 export function createState(initState?: SimpleState, program?: Action): State {
   const state: State = {

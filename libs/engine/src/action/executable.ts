@@ -1,12 +1,12 @@
+import { isArray } from 'lodash/fp';
 import { Action } from '@card-engine-nx/state';
+import { getTargetCards } from '../card';
+import { canCardExecute } from '../card/action/executable';
 import { updatedScopes } from '../context/update';
 import { ViewContext } from '../context/view';
-import { getTargetCards } from '../card';
-import { getTargetPlayers } from '../player/target/multi';
-import { isArray } from 'lodash/fp';
-import { canCardExecute } from '../card/action/executable';
 import { calculateBoolExpr } from '../expression/bool/calculate';
 import { canPlayerExecute } from '../player/action/executable';
+import { getTargetPlayers } from '../player/target/multi';
 
 export function canExecute(
   action: Action,

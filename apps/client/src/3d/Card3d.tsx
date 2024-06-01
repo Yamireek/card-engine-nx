@@ -1,5 +1,8 @@
-import { Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
+import { Text } from '@react-three/drei';
+import { useContext } from 'react';
+import { Texture } from 'three';
+import { Orientation } from '@card-engine-nx/basic';
 import {
   CardTexture,
   Dimensions,
@@ -7,10 +10,7 @@ import {
   Vector3,
   useTextures,
 } from '@card-engine-nx/ui';
-import { useContext } from 'react';
 import { DetailContext } from '../game/DetailContext';
-import { Orientation } from '@card-engine-nx/basic';
-import { Texture } from 'three';
 
 export const cardSize: Dimensions3 = {
   width: 0.0635,

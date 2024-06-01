@@ -1,5 +1,5 @@
-import { CardState, CardView } from '@card-engine-nx/state';
 import { cloneDeep } from 'lodash/fp';
+import { CardState, CardView } from '@card-engine-nx/state';
 
 export function createCardView(state: CardState): CardView {
   if (state.sideUp === 'shadow') {

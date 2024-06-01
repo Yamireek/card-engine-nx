@@ -1,10 +1,10 @@
-import { LobbyClient } from 'boardgame.io/client';
-import { SetupParams } from '../game/types';
-import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { Button, LinearProgress, List, ListItem } from '@mui/material';
-import { GAME_NAME } from './LobbyPage';
+import { useQuery } from '@tanstack/react-query';
+import { LobbyClient } from 'boardgame.io/client';
+import { useNavigate } from 'react-router-dom';
+import { SetupParams } from '../game/types';
 import { useSettings } from '../settings/useSettings';
+import { GAME_NAME } from './LobbyPage';
 
 export const Matches = (props: { lobby: LobbyClient }) => {
   const navigate = useNavigate();

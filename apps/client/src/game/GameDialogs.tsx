@@ -1,3 +1,5 @@
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { useContext, useState } from 'react';
 import {
   ChooseDistributionDialog,
   ChooseMultiDialog,
@@ -6,9 +8,7 @@ import {
   getCardImageUrl,
   MinimizeDialogButton,
 } from '@card-engine-nx/ui';
-import { useContext, useState } from 'react';
 import { StateContext } from './StateContext';
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 
 export const GameDialogs = () => {
   const { state, view, moves, playerId } = useContext(StateContext);

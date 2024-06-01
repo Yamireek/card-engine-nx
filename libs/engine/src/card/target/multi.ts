@@ -1,12 +1,12 @@
+import { last } from 'lodash';
+import { isArray, takeRight } from 'lodash/fp';
 import { CardId } from '@card-engine-nx/basic';
 import { CardTarget } from '@card-engine-nx/state';
-import { last } from 'lodash';
 import { cardIds } from '../../context/utils';
 import { ViewContext } from '../../context/view';
-import { getTargetZones } from '../../zone/target/multi';
-import { isArray, takeRight } from 'lodash/fp';
 import { calculateNumberExpr } from '../../expression/number/calculate';
 import { getCardFromScope } from '../../scope/getCard';
+import { getTargetZones } from '../../zone/target/multi';
 import { checkCardPredicate } from '../predicate/check';
 
 export function getTargetCards(target: CardTarget, ctx: ViewContext): CardId[] {

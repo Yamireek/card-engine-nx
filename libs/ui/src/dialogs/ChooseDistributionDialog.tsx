@@ -9,8 +9,8 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-import { useState } from 'react';
 import { min, sum } from 'lodash/fp';
+import { useState } from 'react';
 import { MinimizeDialogButton } from './MinimizeDialogButton';
 
 export type Amount<T> = { id: T; value: number };

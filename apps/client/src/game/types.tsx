@@ -1,6 +1,6 @@
+import { Texture } from 'three';
 import { Difficulty } from '@card-engine-nx/basic';
 import { decks, core } from '@card-engine-nx/cards';
-import { Texture } from 'three';
 
 export type Textures = Record<string, Texture>;
 export type NewGameParams = {

@@ -1,5 +1,4 @@
-import { keys } from '@card-engine-nx/basic';
-import { core, decks } from '@card-engine-nx/cards';
+import { Editor } from '@monaco-editor/react';
 import {
   Button,
   Dialog,
@@ -17,7 +16,8 @@ import {
   ToggleButtonGroupElement,
   useFormContext,
 } from 'react-hook-form-mui';
-import { Editor } from '@monaco-editor/react';
+import { keys } from '@card-engine-nx/basic';
+import { core, decks } from '@card-engine-nx/cards';
 import { SetupParams } from './types';
 
 const GameSetupForm = () => {

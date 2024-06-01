@@ -1,6 +1,6 @@
 import { Orientation, PrintedProps } from '@card-engine-nx/basic';
-import { Ability } from '../card/ability/types';
 import { Shadow } from '../card/ability/shadow';
+import { Ability } from '../card/ability/types';
 
 export type CardDefinition = {
   front: PrintedProps & { abilities: Ability[] };

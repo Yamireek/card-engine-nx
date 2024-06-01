@@ -1,10 +1,10 @@
+import { CardId } from '@card-engine-nx/basic';
 import { CardBoolExpr } from '@card-engine-nx/state';
+import { ViewContext } from '../../../context/view';
+import { calculateBoolExpr } from '../../../expression/bool/calculate';
+import { getZoneType, isInPlay } from '../../../zone/utils';
 import { checkCardPredicate } from '../../predicate/check';
 import { getTargetCard } from '../../target/single';
-import { ViewContext } from '../../../context/view';
-import { CardId } from '@card-engine-nx/basic';
-import { getZoneType, isInPlay } from '../../../zone/utils';
-import { calculateBoolExpr } from '../../../expression/bool/calculate';
 
 export function calculateCardBoolExpr(
   expr: CardBoolExpr,

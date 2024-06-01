@@ -1,5 +1,5 @@
-import type { Meta } from '@storybook/react';
 import { CardDisplay } from './CardDisplay';
+import type { Meta } from '@storybook/react';
 
 const Story: Meta<typeof CardDisplay> = {
   component: CardDisplay,

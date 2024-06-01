@@ -1,3 +1,4 @@
+import { isArray, max, sum, values } from 'lodash/fp';
 import {
   PlayerState,
   PlayerAction,
@@ -6,20 +7,19 @@ import {
   CardAction,
   Event,
 } from '@card-engine-nx/state';
-import { calculateNumberExpr } from '../../expression/number/calculate';
-import { updatedScopes } from '../../context/update';
-import { ExecutionContext } from '../../context/execution';
-import { isArray, max, sum, values } from 'lodash/fp';
-import { getTargetPlayers } from '../target/multi';
-import { canPlayerExecute } from './executable';
 import { canExecute } from '../../action/executable';
+import { getTargetCards } from '../../card/target/multi';
+import { getTargetCard } from '../../card/target/single';
+import { ExecutionContext } from '../../context/execution';
+import { updatedScopes } from '../../context/update';
+import { calculateNumberExpr } from '../../expression/number/calculate';
 import {
   canCharacterAttack,
   canCharacterDefend,
   canEnemyAttack,
 } from '../../utils/combat';
-import { getTargetCards } from '../../card/target/multi';
-import { getTargetCard } from '../../card/target/single';
+import { getTargetPlayers } from '../target/multi';
+import { canPlayerExecute } from './executable';
 
 export function executePlayerAction(
   action: PlayerAction,

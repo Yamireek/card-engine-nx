@@ -1,7 +1,7 @@
 import board from './board.jpg';
-import playerBack from './player-back.jpg';
-import encounterBack from './encounter-back.jpg';
 import damage from './damage.png';
+import encounterBack from './encounter-back.jpg';
+import playerBack from './player-back.jpg';
 import progress from './progress.png';
 import resource from './resource.png';
 

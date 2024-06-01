@@ -1,3 +1,8 @@
+import { Debug } from 'boardgame.io/debug';
+import { Local, SocketIO } from 'boardgame.io/multiplayer';
+import { Client } from 'boardgame.io/react';
+import { randomJS } from '@card-engine-nx/basic';
+import { core, decks } from '@card-engine-nx/cards';
 import {
   Logger,
   LotrLCGame,
@@ -7,12 +12,7 @@ import {
   nullLogger,
 } from '@card-engine-nx/engine';
 import { createState } from '@card-engine-nx/state';
-import { Client } from 'boardgame.io/react';
-import { randomJS } from '@card-engine-nx/basic';
-import { Debug } from 'boardgame.io/debug';
 import { NewGameParams, SetupParams } from '../game/types';
-import { core, decks } from '@card-engine-nx/cards';
-import { Local, SocketIO } from 'boardgame.io/multiplayer';
 import { LotrLCGBoard } from './LotrLCGBoard';
 
 export function LotrLCGClient(

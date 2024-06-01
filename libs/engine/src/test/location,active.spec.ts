@@ -1,8 +1,8 @@
 import { it, suite, expect } from 'vitest';
-import { TestEngine } from './TestEngine';
 import { hero, location, quest } from '@card-engine-nx/state';
-import { phaseTravel } from '../round';
 import { calculateNumberExpr } from '../expression';
+import { phaseTravel } from '../round';
+import { TestEngine } from './TestEngine';
 
 const cards = {
   hero: hero({

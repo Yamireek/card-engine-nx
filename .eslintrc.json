@@ -32,6 +32,32 @@
         "import/newline-after-import": [
           "error",
           { "count": 1, "exactCount": true, "considerComments": true }
+        ],
+        "import/order": [
+          1,
+          {
+            "groups": [
+              "builtin",
+              "external",
+              "internal",
+              "parent",
+              "sibling",
+              "index",
+              "object",
+              "type"
+            ],
+            "pathGroups": [
+              {
+                "pattern": "@card-engine-nx/**",
+                "group": "internal"
+              }
+            ],
+            "alphabetize": {
+              "order": "asc",
+              "caseInsensitive": true
+            },
+            "warnOnUnassignedImports": true
+          }
         ]
       },
       "settings": {

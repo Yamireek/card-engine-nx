@@ -1,6 +1,6 @@
-import { Dimensions, Vector2 } from '@card-engine-nx/ui';
 import { maxBy } from 'lodash';
 import { useMemo } from 'react';
+import { Dimensions, Vector2 } from '@card-engine-nx/ui';
 
 export type CardAreaLayoutProps<T> = {
   position: Vector2;

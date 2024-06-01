@@ -1,4 +1,3 @@
-import { Ability, GameModifier } from '@card-engine-nx/state';
 import {
   CardId,
   CardType,
@@ -7,6 +6,7 @@ import {
   ZoneType,
   asArray,
 } from '@card-engine-nx/basic';
+import { Ability, GameModifier } from '@card-engine-nx/state';
 import { isInPlay } from '../../zone/utils';
 
 export function abilityToModifiers(

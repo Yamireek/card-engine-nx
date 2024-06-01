@@ -1,14 +1,14 @@
-import { CardView, CardModifier, mergeCardRules } from '@card-engine-nx/state';
-import { ViewContext } from '../../context/view';
+import { isArray } from 'lodash/fp';
 import {
   CardId,
   keys,
   mergeArrays as appendToArray,
   mergeKeywords,
 } from '@card-engine-nx/basic';
-import { calculateCardBoolExpr } from '../expression/bool/calculate';
+import { CardView, CardModifier, mergeCardRules } from '@card-engine-nx/state';
+import { ViewContext } from '../../context/view';
 import { calculateNumberExpr } from '../../expression/number/calculate';
-import { isArray } from 'lodash/fp';
+import { calculateCardBoolExpr } from '../expression/bool/calculate';
 
 export function applyModifier(
   modifier: CardModifier | CardModifier[],

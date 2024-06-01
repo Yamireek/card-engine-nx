@@ -1,3 +1,6 @@
+import { indexOf } from 'lodash';
+import { useContext } from 'react';
+import { CardId } from '@card-engine-nx/basic';
 import {
   image,
   getCardImageUrl,
@@ -5,13 +8,10 @@ import {
   useTextures,
   Dimensions,
 } from '@card-engine-nx/ui';
-import { useContext } from 'react';
 import { StateContext } from '../game/StateContext';
-import { CardId } from '@card-engine-nx/basic';
 import { Card3d, cardSize } from './Card3d';
-import { Token3d } from './Token3d';
-import { indexOf } from 'lodash';
 import { useFloatingCards } from './FloatingCardsContext';
+import { Token3d } from './Token3d';
 
 export const LotrCard3d = (props: {
   cardId: CardId;

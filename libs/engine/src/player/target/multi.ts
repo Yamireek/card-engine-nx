@@ -1,10 +1,10 @@
+import { intersection, isArray, last, uniq } from 'lodash';
+import { max } from 'lodash/fp';
 import { PlayerId, keys, values } from '@card-engine-nx/basic';
 import { PlayerTarget } from '@card-engine-nx/state';
-import { intersection, isArray, last, uniq } from 'lodash';
-import { ViewContext } from '../../context/view';
-import { max } from 'lodash/fp';
-import { getPlayerFromScope } from '../../scope/getPlayer';
 import { getTargetCard } from '../../card/target/single';
+import { ViewContext } from '../../context/view';
+import { getPlayerFromScope } from '../../scope/getPlayer';
 
 export function getTargetPlayers(
   target: PlayerTarget,

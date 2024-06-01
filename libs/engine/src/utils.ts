@@ -1,7 +1,7 @@
+import { toJS } from 'mobx';
 import { executeAction } from './action/execute';
 import { ExecutionContext, ObservableContext } from './context/execution';
 import { Logger } from './logger/types';
-import { toJS } from 'mobx';
 
 export function nextStep(ctx: ExecutionContext, logger: Logger) {
   const action = ctx.state.next.shift();

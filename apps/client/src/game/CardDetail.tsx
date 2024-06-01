@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { StateContext } from './StateContext';
+import { CardId } from '@card-engine-nx/basic';
 import { CardText } from './CardText';
 import { DetailContext } from './DetailContext';
-import { CardId } from '@card-engine-nx/basic';
+import { StateContext } from './StateContext';
 
 const cardProperties = [
   'cost',

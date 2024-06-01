@@ -10,9 +10,9 @@ import {
   Trait,
   ZoneId,
 } from '@card-engine-nx/basic';
+import { NumberExpr } from '../expression/number';
 import { PlayerTarget } from '../player/target';
 import { ZoneTarget } from '../zone/target';
-import { NumberExpr } from '../expression/number';
 
 export type SimpleCardTarget =
   | 'self'

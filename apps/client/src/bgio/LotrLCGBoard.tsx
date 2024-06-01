@@ -1,11 +1,11 @@
-import { createView, getActions } from '@card-engine-nx/engine';
-import { State } from '@card-engine-nx/state';
 import { BoardProps } from 'boardgame.io/react';
-import { StateContext } from '../game/StateContext';
 import { useEffect, useMemo } from 'react';
 import { validPlayerId } from '@card-engine-nx/basic';
-import { DetailProvider } from '../game/DetailContext';
+import { createView, getActions } from '@card-engine-nx/engine';
+import { State } from '@card-engine-nx/state';
 import { GameDisplay } from '../3d/GameDisplay';
+import { DetailProvider } from '../game/DetailContext';
+import { StateContext } from '../game/StateContext';
 
 export type LotrLCGProps = BoardProps<State>;
 

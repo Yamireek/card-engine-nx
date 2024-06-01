@@ -1,8 +1,8 @@
+import { PlayerDeck } from '@card-engine-nx/state';
 import * as ally from '../cards/allies';
 import * as attachment from '../cards/attachments';
 import * as event from '../cards/events';
 import * as hero from '../cards/heroes';
-import { PlayerDeck } from '@card-engine-nx/state';
 
 export const coreLoreTactics: PlayerDeck = {
   name: 'Core (Lore & Tactics)',

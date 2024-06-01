@@ -1,13 +1,3 @@
-import { GameSetupDialog } from '../game/GameSetupDialog';
-import { useMemo } from 'react';
-import { LobbyClient } from 'boardgame.io/client';
-import { useDialogs } from '../dialogs/DialogsContext';
-import {
-  emptyEvents,
-} from '@card-engine-nx/engine';
-import { SetupParams } from '../game/types';
-import { keys } from '@card-engine-nx/basic';
-import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Dialog,
@@ -16,10 +6,20 @@ import {
   DialogTitle,
   Divider,
 } from '@mui/material';
-import { Matches } from './Matches';
-import { useSettings } from '../settings/useSettings';
+import { LobbyClient } from 'boardgame.io/client';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { keys } from '@card-engine-nx/basic';
+import {
+  emptyEvents,
+} from '@card-engine-nx/engine';
+import { useDialogs } from '../dialogs/DialogsContext';
+import { GameSetupDialog } from '../game/GameSetupDialog';
+import { SetupParams } from '../game/types';
 import { SettingsDialog } from '../settings/SettingsDialog';
+import { useSettings } from '../settings/useSettings';
 import { createNewGameState } from './LotrLCGClient';
+import { Matches } from './Matches';
 
 export const GAME_NAME = 'LotrLCG';
 

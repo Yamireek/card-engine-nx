@@ -1,6 +1,6 @@
 import { EnemyProps } from '@card-engine-nx/basic';
-import { CardDefinition } from './types';
 import { Ability } from '../card/ability/types';
+import { CardDefinition } from './types';
 import { getShadowAbility } from './utils';
 
 export function enemy(

@@ -5,8 +5,8 @@ import {
   PlayerZoneType,
   Trait,
 } from '@card-engine-nx/basic';
-import { CardTarget } from '../target';
 import { BoolExpr } from '../../expression/bool';
+import { CardTarget } from '../target';
 
 export type CardBoolExpr =
   | boolean

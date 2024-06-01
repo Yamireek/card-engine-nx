@@ -1,6 +1,6 @@
 import { Action } from '../action';
-import { BoolExpr } from '../expression/bool';
 import { EventType } from '../event/type';
+import { BoolExpr } from '../expression/bool';
 
 export type ResponseAction = {
   event: EventType;

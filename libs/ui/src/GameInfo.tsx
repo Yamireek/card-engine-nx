@@ -1,4 +1,3 @@
-import { PlayerId } from '@card-engine-nx/basic';
 
  //string
 import {
@@ -11,6 +10,7 @@ import {
   Paper,
 } from '@mui/material';
 import { CSSProperties } from 'react';
+import { PlayerId } from '@card-engine-nx/basic';
 
 type GameInfoProps = {
   showPlayer?: PlayerId;

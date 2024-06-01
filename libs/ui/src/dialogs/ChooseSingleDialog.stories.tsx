@@ -1,7 +1,7 @@
-import type { Meta } from '@storybook/react';
-import { ChooseSingleDialog } from './ChooseSingleDialog';
-import { ComponentProps } from 'react';
 import { action } from '@storybook/addon-actions';
+import { ComponentProps } from 'react';
+import { ChooseSingleDialog } from './ChooseSingleDialog';
+import type { Meta } from '@storybook/react';
 
 const width = 430 / 2;
 const height = 600 / 2;

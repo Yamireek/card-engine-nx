@@ -1,6 +1,6 @@
 import { EventProps } from '@card-engine-nx/basic';
-import { CardDefinition } from './types';
 import { Ability } from '../card/ability/types';
+import { CardDefinition } from './types';
 
 export function event(
   props: Omit<EventProps, 'type'>,

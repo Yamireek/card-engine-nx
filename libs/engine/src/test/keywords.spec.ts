@@ -1,5 +1,5 @@
-import { enemy } from '@card-engine-nx/state';
 import { it, suite, expect } from 'vitest';
+import { enemy } from '@card-engine-nx/state';
 import { TestEngine } from './TestEngine';
 
 const cards = {

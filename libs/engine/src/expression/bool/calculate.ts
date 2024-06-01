@@ -1,9 +1,9 @@
+import { last, max, min, values } from 'lodash/fp';
 import { BoolExpr } from '@card-engine-nx/state';
+import { calculateCardBoolExpr } from '../../card/expression/bool/calculate';
 import { getTargetCards } from '../../card/target/multi';
 import { ViewContext } from '../../context/view';
-import { last, max, min, values } from 'lodash/fp';
 import { calculateNumberExpr } from '../number/calculate';
-import { calculateCardBoolExpr } from '../../card/expression/bool/calculate';
 
 export function calculateBoolExpr(expr: BoolExpr, ctx: ViewContext): boolean {
   if (typeof expr === 'boolean') {

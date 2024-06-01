@@ -1,8 +1,8 @@
-import { Scope, ScopeAction } from '@card-engine-nx/state';
-import { getTargetPlayers } from '../player/target/multi';
 import { isArray } from 'lodash/fp';
-import { ViewContext } from '../context/view';
+import { Scope, ScopeAction } from '@card-engine-nx/state';
 import { getTargetCards } from '../card/target/multi';
+import { ViewContext } from '../context/view';
+import { getTargetPlayers } from '../player/target/multi';
 
 export function executeScopeAction(
   action: ScopeAction,

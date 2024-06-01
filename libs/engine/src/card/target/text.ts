@@ -1,5 +1,5 @@
-import { CardTarget, State, View } from '@card-engine-nx/state';
 import { isArray } from 'lodash';
+import { CardTarget, State, View } from '@card-engine-nx/state';
 
 export function getCardTargetText(
   target: CardTarget,

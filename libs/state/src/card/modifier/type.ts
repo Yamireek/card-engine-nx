@@ -1,9 +1,9 @@
 import { CardType, Keywords, Sphere, Trait } from '@card-engine-nx/basic';
-import { CardRules } from '../rules';
 import { Action } from '../../action';
-import { CardBoolExpr } from '../expression/bool';
-import { BoolExpr } from '../../expression/bool';
 import { EventType } from '../../event/type';
+import { BoolExpr } from '../../expression/bool';
+import { CardBoolExpr } from '../expression/bool';
+import { CardRules } from '../rules';
 import { CostModifier } from './cost';
 import { PropertyIncrement } from './increment';
 

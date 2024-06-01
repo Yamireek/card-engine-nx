@@ -1,5 +1,5 @@
-import { Action } from '@card-engine-nx/state';
 import { CardId, PlayerId, Sphere } from '@card-engine-nx/basic';
+import { Action } from '@card-engine-nx/state';
 
 export function createPlayAllyAction(
   sphere: Sphere[],

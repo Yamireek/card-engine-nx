@@ -1,6 +1,6 @@
 import { CardId, PrintedProps, ZoneId } from '@card-engine-nx/basic';
-import { CardTarget } from './target';
 import { CardRules } from './rules';
+import { CardTarget } from './target';
 
 export type CardView = {
   id: CardId;

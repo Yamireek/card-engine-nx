@@ -1,7 +1,7 @@
+import { asArray } from '@card-engine-nx/basic';
 import { Scope, ScopeAction } from '@card-engine-nx/state';
 import { executeScopeAction } from '../scope/execute';
 import { ViewContext } from './view';
-import { asArray } from '@card-engine-nx/basic';
 
 export function updatedScopes(
   ctx: ViewContext,

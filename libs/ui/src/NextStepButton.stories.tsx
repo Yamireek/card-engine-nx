@@ -1,5 +1,5 @@
-import type { Meta } from '@storybook/react';
 import { NextStepButton } from './NextStepButton';
+import type { Meta } from '@storybook/react';
 
 const Story: Meta<typeof NextStepButton> = {
   component: NextStepButton,

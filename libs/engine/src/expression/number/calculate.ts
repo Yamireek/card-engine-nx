@@ -1,13 +1,13 @@
-import { NumberExpr } from '@card-engine-nx/state';
-import { getTargetCards } from '../../card/target/multi';
-import { calculateCardExpr } from '../../card/expression/number/calculate';
 import { sum } from 'lodash';
-import { ViewContext } from '../../context/view';
 import { last, min, multiply } from 'lodash/fp';
-import { getTargetPlayers } from '../../player/target/multi';
+import { NumberExpr } from '@card-engine-nx/state';
+import { calculateCardExpr } from '../../card/expression/number/calculate';
+import { getTargetCards } from '../../card/target/multi';
+import { ViewContext } from '../../context/view';
 import { calculatePlayerExpr } from '../../player/expression/calculate';
-import { calculateBoolExpr } from '../bool/calculate';
+import { getTargetPlayers } from '../../player/target/multi';
 import { getFromScope } from '../../scope/utils';
+import { calculateBoolExpr } from '../bool/calculate';
 
 export function calculateNumberExpr(
   expr: NumberExpr,

@@ -1,8 +1,8 @@
-import { PlayerNumberExpr } from '@card-engine-nx/state';
-import { ViewContext } from '../../context/view';
-import { PlayerId } from '@card-engine-nx/basic';
 import { sum } from 'lodash/fp';
+import { PlayerId } from '@card-engine-nx/basic';
+import { PlayerNumberExpr } from '@card-engine-nx/state';
 import { getTargetCards } from '../../card/target/multi';
+import { ViewContext } from '../../context/view';
 
 export function calculatePlayerExpr(
   expr: PlayerNumberExpr,

@@ -1,9 +1,9 @@
-import { PlayerTarget } from '../player/target';
-import { CardTarget } from '../card/target';
 import { CardNumberExpr } from '../card/expression/number';
-import { BoolExpr } from './bool';
+import { CardTarget } from '../card/target';
 import { EventNumbers } from '../event/number';
 import { PlayerNumberExpr } from '../player/number';
+import { PlayerTarget } from '../player/target';
+import { BoolExpr } from './bool';
 
 export type NumberExpr =
   | number

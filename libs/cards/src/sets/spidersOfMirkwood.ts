@@ -1,7 +1,7 @@
 import { EncounterSet } from '@card-engine-nx/state';
 import * as enemy from '../cards/enemies';
-import * as treachery from '../cards/treacheries';
 import * as location from '../cards/locations';
+import * as treachery from '../cards/treacheries';
 
 export const spidersOfMirkwood: EncounterSet = {
   easy: [
