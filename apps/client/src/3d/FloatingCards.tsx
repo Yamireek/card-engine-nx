@@ -107,6 +107,7 @@ export const FloatingCards = () => {
               id: e.cardId,
               name: `floating-card-${e.cardId}`,
               position: [x, y, z],
+              rotation: [-Math.PI / 2, 0, 0],
               scale,
               texture: {
                 front: texture[getCardImageUrl(card.definition.front, 'front')],
@@ -130,6 +131,7 @@ export const FloatingCards = () => {
                     ? {
                         ...c,
                         position: [position.x, position.y, position.z],
+                        rotation: [-Math.PI / 2, 0, 0],
                         scale: newCardMesh.scale.x,
                       }
                     : { ...c }
@@ -148,6 +150,7 @@ export const FloatingCards = () => {
                     ? {
                         ...c,
                         position: [position.x, position.y, position.z],
+                        rotation: [-Math.PI / 2, 0, 0],
                         scale: 1,
                       }
                     : { ...c }

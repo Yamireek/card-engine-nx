@@ -1,4 +1,10 @@
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
 import { useContext, useState } from 'react';
 import {
   ChooseDistributionDialog,
@@ -11,20 +17,51 @@ import {
 import { StateContext } from './StateContext';
 
 export const GameDialogs = () => {
-  const { state, view, moves, playerId } = useContext(StateContext);
+  const { state, view, moves, playerId, leave } = useContext(StateContext);
   const [mini, setMini] = useState(false);
+
+  if (mini) {
+    return (
+      <NextStepButton
+        title="Show dialog"
+        onClick={() => {
+          setMini(false);
+        }}
+      />
+    );
+  }
 
   if (state.result) {
     if (state.result.win) {
       return (
-        <Dialog open>
-          <DialogTitle>Game won with score {state.result.score}</DialogTitle>
+        <Dialog open fullWidth maxWidth="xs">
+          <DialogTitle>Game won with score {state.result.score}</DialogTitle>{' '}
+          <MinimizeDialogButton
+            onMinimize={
+              state.phase !== 'setup' ? () => setMini(true) : undefined
+            }
+          />
+          <DialogActions>
+            <Button variant="contained" onClick={leave}>
+              Leave game
+            </Button>
+          </DialogActions>
         </Dialog>
       );
     } else {
       return (
-        <Dialog open>
+        <Dialog open fullWidth maxWidth="xs">
           <DialogTitle>Game lost</DialogTitle>
+          <MinimizeDialogButton
+            onMinimize={
+              state.phase !== 'setup' ? () => setMini(true) : undefined
+            }
+          />
+          <DialogActions>
+            <Button variant="contained" onClick={leave}>
+              Leave game
+            </Button>
+          </DialogActions>
         </Dialog>
       );
     }
@@ -40,17 +77,6 @@ export const GameDialogs = () => {
         title={state.choice?.title ?? 'Next'}
         onClick={() => {
           moves.skip();
-        }}
-      />
-    );
-  }
-
-  if (mini) {
-    return (
-      <NextStepButton
-        title="Choose"
-        onClick={() => {
-          setMini(false);
         }}
       />
     );
@@ -96,6 +122,7 @@ export const GameDialogs = () => {
   if (playerId && state.choice.player !== playerId) {
     return (
       <Dialog open>
+        <MinimizeDialogButton onMinimize={() => setMini(true)} />
         <DialogTitle>Waiting for player {state.choice.player}</DialogTitle>
       </Dialog>
     );

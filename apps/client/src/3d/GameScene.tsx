@@ -46,7 +46,7 @@ export const GameScene = (
       camera={{
         position: [0, 0.35, 0],
       }}
-      frameloop="always"
+      frameloop="demand"
       shadows
       gl={{
         antialias: true,

@@ -1,5 +1,6 @@
 import { useSpring, animated } from '@react-spring/three';
 import { Text } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
 import { useContext } from 'react';
 import { Texture } from 'three';
 import { Orientation } from '@card-engine-nx/basic';
@@ -34,6 +35,7 @@ export type Card3dProps = React.PropsWithChildren<{
 export const Card3d = (props: Card3dProps) => {
   const { material } = useTextures();
   const detail = useContext(DetailContext);
+  const { invalidate } = useThree();
 
   const spring = useSpring({
     scale: props.size?.width ? props.size.width / cardSize.width : 1,
@@ -43,6 +45,7 @@ export const Card3d = (props: Card3dProps) => {
     rotX: props.rotation?.[0],
     rotY: props.rotation?.[1],
     rotZ: props.rotation?.[2],
+    onChange: () => invalidate(),
   });
 
   return (
