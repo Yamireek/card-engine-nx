@@ -1,4 +1,6 @@
-import { PlayerId } from '@card-engine-nx/basic'; //string
+import { PlayerId } from '@card-engine-nx/basic';
+
+ //string
 import {
   Table,
   TableHead,

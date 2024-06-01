@@ -1,11 +1,10 @@
-import { useContext } from 'react';
+import { Fragment, useContext } from 'react';
 import { StateContext } from '../game/StateContext';
 import { CardId, Orientation } from '@card-engine-nx/basic';
 import { cardSize } from './Card3d';
 import { CardAreaLayout, CardAreaLayoutProps } from './CardAreaLayout';
 import { CardState } from '@card-engine-nx/state';
 import { max } from 'lodash/fp';
-import React from 'react';
 import { LotrCard3d } from './LotrCard3d';
 
 export const LotrCardArea = (props: {
@@ -47,7 +46,7 @@ export const LotrCardArea = (props: {
         };
 
         return (
-          <React.Fragment key={p.item.id}>
+          <Fragment key={p.item.id}>
             <LotrCard3d
               cardId={p.item.id}
               position={[p.position[0], p.position[1] + offsetMin, 0.01]}
@@ -81,7 +80,7 @@ export const LotrCardArea = (props: {
                 />
               );
             })}
-          </React.Fragment>
+          </Fragment>
         );
       }}
     />

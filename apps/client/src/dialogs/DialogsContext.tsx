@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+import { createContext, useState, createElement } from 'react';
+import { Fragment } from 'react/jsx-runtime';
 import { v4 as uuid } from 'uuid';
 
 export type DialogProps<T> = {
@@ -16,14 +17,14 @@ export type DialogContextValue = {
   }) => Promise<R>;
 };
 
-export const DialogContext = React.createContext<DialogContextValue>({
+export const DialogContext = createContext<DialogContextValue>({
   open: () => {
     throw new Error('no DialogProvider');
   },
 });
 
 export const DialogProvider = (props: React.PropsWithChildren<unknown>) => {
-  const [dialogs, setDialogs] = React.useState<
+  const [dialogs, setDialogs] = useState<
     Array<{
       id: string;
       component: React.FunctionComponent<any>;
@@ -68,9 +69,7 @@ export const DialogProvider = (props: React.PropsWithChildren<unknown>) => {
       {props.children}
       {dialogs.map((dialog) => {
         return (
-          <React.Fragment key={dialog.id}>
-            {React.createElement(dialog.component)}
-          </React.Fragment>
+          <Fragment key={dialog.id}>{createElement(dialog.component)}</Fragment>
         );
       })}
     </DialogContext.Provider>

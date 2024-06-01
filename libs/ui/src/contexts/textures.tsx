@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { useAsync } from 'react-use';
 import { Texture, TextureLoader } from 'three';
 import { mapValues } from 'lodash';
@@ -18,7 +18,7 @@ type TextureContextProps = {
   material: Record<string, Material>;
 };
 
-const TexturesContext = React.createContext<TextureContextProps>({
+const TexturesContext = createContext<TextureContextProps>({
   texture: {},
   material: {},
 });

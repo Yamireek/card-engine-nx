@@ -5,7 +5,6 @@ import {
   Trait,
   capitalizeFirst,
 } from '@card-engine-nx/basic';
-import React from 'react';
 
 type PropertyProps = {
   name: string;

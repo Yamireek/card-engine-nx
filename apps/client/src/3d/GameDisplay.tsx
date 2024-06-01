@@ -4,7 +4,7 @@ import {
   getCardImageUrls,
   image,
 } from '@card-engine-nx/ui';
-import React, { useContext, useMemo, useState } from 'react';
+import { Fragment, useContext, useMemo, useState } from 'react';
 import { StateContext } from '../game/StateContext';
 import {
   calculateNumberExpr,
@@ -38,7 +38,7 @@ import {
 import { sum } from 'lodash/fp';
 import { GameDialogs } from '../game/GameDialogs';
 import { FloatingCardsProvider } from './FloatingCardsContext';
-import Editor from '@monaco-editor/react';
+import { Editor } from '@monaco-editor/react';
 import { PlayerHand } from '../game/PlayerHand';
 
 const staticUrls = [image.progress, image.resource, image.damage];
@@ -240,12 +240,12 @@ export const LotrLCGInfo = () => {
             {state.modifiers.map((m, i) => {
               const title = view.cards[m.source].props.name ?? '';
               return (
-                <React.Fragment key={title + i}>
+                <Fragment key={title + i}>
                   <Tooltip title={title} placement="left">
                     <Typography>{getModifierText(m, state, view)}</Typography>
                   </Tooltip>
                   <Divider variant="fullWidth" />
-                </React.Fragment>
+                </Fragment>
               );
             })}
           </Paper>
@@ -255,12 +255,12 @@ export const LotrLCGInfo = () => {
           {actions.map((a, i) => {
             const title = view.cards[a.card].props.name ?? '';
             return (
-              <React.Fragment key={title + i}>
+              <Fragment key={title + i}>
                 <Tooltip title={title} placement="left">
                   <Typography>{a.description}</Typography>
                 </Tooltip>
                 <Divider variant="fullWidth" />
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </Paper>

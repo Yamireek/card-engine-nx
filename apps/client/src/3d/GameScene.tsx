@@ -91,7 +91,3 @@ const Debug = () => {
     </>
   );
 };
-
-function calculateFov(height: number, perspective: number) {
-  return 2 * Math.atan(height / 2 / perspective) * (180 / Math.PI);
-}

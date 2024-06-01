@@ -8,6 +8,7 @@ import * as quest from './cards/quests';
 import * as scenario from './scenarios';
 import * as treachery from './cards/treacheries';
 import * as set from './sets';
+
 export * as decks from './decks/index';
 
 export const core = {
