@@ -80,6 +80,7 @@ export const Card3d = (props: Card3dProps) => {
             <meshBasicMaterial attach="material-3" color="gray" />
             <meshPhysicalMaterial
               attach="material-4"
+              roughness={0.1}
               map={
                 props.texture instanceof Texture
                   ? props.texture

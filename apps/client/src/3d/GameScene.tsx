@@ -50,11 +50,12 @@ export const GameScene = (
       shadows
       gl={{
         antialias: true,
-        //toneMapping: NoToneMapping,
         shadowMapType: THREE.PCFSoftShadowMap,
+        toneMappingExposure: Math.pow(0.7, 5.0),
       }}
       linear={false}
     >
+      <Environment background preset="apartment" />
       <Lights />
       {props.children}
       <MapControls />
@@ -65,16 +66,13 @@ export const GameScene = (
 
 const Lights = () => {
   return (
-    <>
-      <pointLight
-        position={[0.5, 0.5, 0]}
-        castShadow
-        intensity={0.5}
-        distance={10}
-      />
-      <directionalLight castShadow position={[-45, 58, 42]} intensity={0.5} />
-      <directionalLight castShadow position={[45, 80, 42]} intensity={0.5} />
-    </>
+    <pointLight
+      position={[-6, 5, 5]}
+      castShadow
+      power={150}
+      shadow-mapSize-width={2048}
+      shadow-mapSize-height={2048}
+    />
   );
 };
 

@@ -2,23 +2,25 @@ import { useLoader } from '@react-three/fiber';
 import { Group, Object3D } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-function addShadows(scene: Group | Object3D) {
+function addShadows(scene: Group | Object3D, type: 'cast' | 'receive') {
   for (const child of scene.children) {
-    addShadows(child);
+    addShadows(child, type);
   }
 
-  scene.castShadow = true;
-  scene.receiveShadow = true;
+  if (type === 'cast') {
+    scene.castShadow = true;
+  }
+  if (type === 'receive') {
+    scene.receiveShadow = true;
+  }
 }
 
 export const Board3d = () => {
   const table = useLoader(GLTFLoader, './models/wooden-table/scene.gltf');
   const candle = useLoader(GLTFLoader, './models/candlestick/scene.gltf');
 
-  console.log(table.scene);
-
-  addShadows(table.scene);
-  addShadows(candle.scene);
+  addShadows(table.scene, 'receive');
+  addShadows(candle.scene, 'cast');
 
   return (
     <>
