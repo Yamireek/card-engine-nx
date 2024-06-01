@@ -14,8 +14,6 @@ export type Deck3dProps = {
 };
 
 export const Deck3d = (props: Deck3dProps) => {
-  const { material } = useTextures();
-
   const depth = props.cardCount * cardSize.thick;
 
   return (
@@ -42,18 +40,8 @@ export const Deck3d = (props: Deck3dProps) => {
             <meshBasicMaterial attach="material-1" color="gray" />
             <meshBasicMaterial attach="material-2" color="gray" />
             <meshBasicMaterial attach="material-3" color="gray" />
-            <meshPhysicalMaterial
-              attach="material-4"
-              map={props.texture}
-              roughnessMap={material.wood.roughness}
-              normalMap={material.wood.normal}
-            />
-            <meshPhysicalMaterial
-              attach="material-5"
-              map={props.texture}
-              roughnessMap={material.wood.roughness}
-              normalMap={material.wood.normal}
-            />
+            <meshPhysicalMaterial attach="material-4" map={props.texture} />
+            <meshPhysicalMaterial attach="material-5" map={props.texture} />
           </>
         ) : (
           <>

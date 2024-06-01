@@ -33,7 +33,6 @@ export type Card3dProps = React.PropsWithChildren<{
 }>;
 
 export const Card3d = (props: Card3dProps) => {
-  const { material } = useTextures();
   const detail = useContext(DetailContext);
   const { invalidate } = useThree();
 
@@ -86,8 +85,6 @@ export const Card3d = (props: Card3dProps) => {
                   ? props.texture
                   : props.texture.front
               }
-              roughnessMap={material.wood.roughness}
-              normalMap={material.wood.normal}
             />
             <meshPhysicalMaterial
               attach="material-5"
@@ -96,8 +93,6 @@ export const Card3d = (props: Card3dProps) => {
                   ? props.texture
                   : props.texture.back
               }
-              roughnessMap={material.wood.roughness}
-              normalMap={material.wood.normal}
             />
           </>
         )}

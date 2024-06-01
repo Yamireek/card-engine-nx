@@ -1,8 +1,8 @@
 import { Tooltip } from '@mui/material';
-import { Environment, MapControls, Stats } from '@react-three/drei';
+import { Environment, MapControls, Stats, useHelper } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { useMeasure } from 'react-use';
 import { NoToneMapping } from 'three';
 import * as THREE from 'three';
@@ -50,12 +50,11 @@ export const GameScene = (
       shadows
       gl={{
         antialias: true,
-        toneMapping: NoToneMapping,
+        //toneMapping: NoToneMapping,
         shadowMapType: THREE.PCFSoftShadowMap,
       }}
       linear={false}
     >
-      {/* <Environment  background preset="apartment" /> */}
       <Lights />
       {props.children}
       <MapControls />
@@ -68,12 +67,13 @@ const Lights = () => {
   return (
     <>
       <pointLight
-        position={[-2, 1, 4]}
+        position={[0.5, 0.5, 0]}
         castShadow
-        intensity={1}
-        distance={100000}
+        intensity={0.5}
+        distance={10}
       />
-      {/* <directionalLight castShadow position={[3, 3, 1]} intensity={1} /> */}
+      <directionalLight castShadow position={[-45, 58, 42]} intensity={0.5} />
+      <directionalLight castShadow position={[45, 80, 42]} intensity={0.5} />
     </>
   );
 };

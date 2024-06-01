@@ -301,16 +301,7 @@ export const GameDisplay = () => {
       <div style={{ width: '100%', height: '100vh' }}>
         <LotrLCGInfo />
         <div style={{ width: '100%', height: '100%' }}>
-          <TexturesProvider
-            textures={textureUrls}
-            materials={{
-              wood: {
-                color: './textures/wood-2k/Wood026_2K_Color.png',
-                roughness: './textures/wood-2k/Wood026_2K_Roughness.png',
-                normal: './textures/wood-2k/Wood026_2K_NormalGL.png',
-              },
-            }}
-          >
+          <TexturesProvider textures={textureUrls}>
             <GameSceneLoader angle={20} rotation={0} perspective={1500}>
               <FloatingCards />
               <group rotation={[-Math.PI / 2, 0, 0]}>
