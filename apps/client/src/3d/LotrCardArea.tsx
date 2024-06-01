@@ -49,7 +49,7 @@ export const LotrCardArea = (props: {
           <Fragment key={p.item.id}>
             <LotrCard3d
               cardId={p.item.id}
-              position={[p.position[0], p.position[1] + offsetMin, 0.01]}
+              position={[p.position[0], p.position[1] + offsetMin, 0]}
               size={realItemSize}
             />
             {p.item.attachments.map((a, i) => {

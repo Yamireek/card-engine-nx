@@ -1,16 +1,23 @@
-import { useTextures } from '@card-engine-nx/ui';
+import { useLoader } from '@react-three/fiber';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export const Board3d = () => {
-  const { material } = useTextures();
+  const table = useLoader(GLTFLoader, './models/wooden-table/scene.gltf');
+  const candle = useLoader(GLTFLoader, './models/candlestick/scene.gltf');
 
   return (
-    <mesh position={[0, 0, 0]} rotation={[0, 0, 0]} receiveShadow>
-      <planeGeometry args={[1, 1, 1, 1]} />
-      <meshPhysicalMaterial
-        map={material.wood.color}
-        roughnessMap={material.wood.roughness}
-        normalMap={material.wood.normal}
-      />
-    </mesh>
+    <>
+      <group rotation={[Math.PI / 2, 0, 0.005]} scale={0.2}>
+        <primitive
+          object={table.scene}
+          position={[0, 400.876, 0]}
+          scale={5}
+          rotation={[0, 0, 0]}
+        />
+      </group>
+      <group rotation={[Math.PI / 2, 0, 0.005]} position={[0.6, 0.3, 0.45]}>
+        <primitive object={candle.scene} scale={0.015} rotation={[0, 0, 0]} />
+      </group>
+    </>
   );
 };

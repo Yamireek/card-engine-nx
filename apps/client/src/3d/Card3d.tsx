@@ -41,7 +41,7 @@ export const Card3d = (props: Card3dProps) => {
     scale: props.size?.width ? props.size.width / cardSize.width : 1,
     x: props.position[0],
     y: props.position[1],
-    z: props.position[2],
+    z: props.position[2] + props.id * 0.00001,
     rotX: props.rotation?.[0],
     rotY: props.rotation?.[1],
     rotZ: props.rotation?.[2],

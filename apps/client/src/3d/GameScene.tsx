@@ -82,10 +82,7 @@ const Debug = () => {
   return (
     <>
       <axesHelper args={[1024]} />
-      <gridHelper
-        args={[2, 20, 'red', 'black']}
-        rotation={[-Math.PI / 2, 0, 0]}
-      />
+      <gridHelper args={[2, 20, 'red', 'black']} rotation={[0, 0, 0]} />
       <Perf matrixUpdate deepAnalyze overClock />
       <Stats />
     </>
