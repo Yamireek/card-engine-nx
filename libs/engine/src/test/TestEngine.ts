@@ -1,28 +1,15 @@
 import { padStart } from 'lodash';
 import { toJS } from 'mobx';
-import { CardId, PlayerId, noRandom, values } from '@card-engine-nx/basic';
-import {
-  Action,
-  CardAction,
-  Choice,
-  SimpleState,
-  State,
-  createState,
-} from '@card-engine-nx/state';
-import { ObservableContext } from '../context';
+import { PlayerId, noRandom } from '@card-engine-nx/basic';
+import { Action, Choice, SimpleState, createState } from '@card-engine-nx/state';
+import { ExeCtx } from '../context';
 import { emptyEvents } from '../events/uiEvents';
 import { consoleLogger } from '../logger/console';
 import { nullLogger } from '../logger/null';
-import { Logger } from '../logger/types';
-import { createView } from '../view';
 
 const random = noRandom();
 
-export class TestEngine {
-  logger: Logger;
-
-  ctx: ObservableContext;
-
+export class TestEngine extends ExeCtx {
   step = 0;
 
   constructor(
@@ -33,31 +20,16 @@ export class TestEngine {
       file?: boolean;
     } = {}
   ) {
-    this.logger = params.console ? consoleLogger : nullLogger;
-    this.ctx = new ObservableContext(
+    super(
       createState(state),
       emptyEvents,
       random,
-      this.logger,
-      params.observable ?? false
+      params.console ? consoleLogger : nullLogger,
+      params.observable ?? true
     );
-
-    this.advance();
+    this.auto();
     this.state.choice = undefined;
     this.state.next = [];
-    this.logToFile();
-  }
-
-  get state() {
-    return this.ctx.state;
-  }
-
-  get view() {
-    return this.ctx.view;
-  }
-
-  get actions() {
-    return this.ctx.actions;
   }
 
   get choiceTitle() {
@@ -66,17 +38,17 @@ export class TestEngine {
     }
   }
 
-  advance() {
-    this.ctx.advance({ actions: true, show: true }, true);
+  auto() {
+    this.advance({ actions: true, show: true }, true);
   }
 
   do(...action: Action[]) {
     this.state.next.unshift(...action, 'stateCheck');
-    this.advance();
+    this.auto();
 
     if (this.state.choice) {
       if (this.state.choice.type === 'actions') {
-        this.logger.debug('actions', this.ctx.actions);
+        //this.logger.debug('actions', this.ctx.actions);
       } else {
         this.logger.debug('choice', toJS(this.state.choice));
       }
@@ -188,68 +160,15 @@ export class TestEngine {
     this.logToFile();
   }
 
-  getPlayer(playerId: PlayerId) {
-    return new PlayerProxy(this.state, playerId);
+  card(name: string) {
+    return this.getCard({ name });
   }
 
-  getCard(name: string) {
-    const card = values(this.state.cards).find(
-      (c) => c.definition.front.name === name
-    );
-
-    if (!card) {
-      throw new Error('card not found');
-    }
-
-    return new CardProxy(this.state, card.id, this);
-  }
-}
-
-export class CardProxy {
-  constructor(
-    private _state: State,
-    public id: CardId,
-    private game: TestEngine
-  ) {}
-
-  update(cardAction: CardAction) {
-    this.game.do({ card: this.id, action: cardAction });
-  }
-
-  get props() {
-    const view = createView(this._state);
-    return view.cards[this.id].props;
-  }
-
-  get token() {
-    return this._state.cards[this.id].token;
-  }
-
-  get state() {
-    return this._state.cards[this.id];
-  }
-
-  get view() {
-    return this.game.view.cards[this.id];
-  }
-}
-
-export class PlayerProxy {
-  constructor(private state: State, public id: PlayerId) {}
-
-  get player() {
-    const player = this.state.players[this.id];
+  player(id: PlayerId) {
+    const player = this.state.players[id];
     if (!player) {
       throw new Error('player not found');
     }
-    return player;
-  }
-
-  get hand() {
-    return this.player.zones.hand;
-  }
-
-  get library() {
-    return this.player.zones.library;
+    return player.zones;
   }
 }

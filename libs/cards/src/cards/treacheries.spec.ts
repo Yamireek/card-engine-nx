@@ -12,14 +12,14 @@ it('Caught in a Web', () => {
     encounterDeck: [core.treachery.caughtInAWeb],
   });
 
-  const gimli = game.getCard('Gimli');
-  const treatchery = game.getCard('Caught in a Web');
+  const gimli = game.card('Gimli');
+  const treatchery = game.card('Caught in a Web');
   game.do('revealEncounterCard');
   expect(gimli.state.attachments).toHaveLength(1);
-  gimli.update({ ready: 'refresh' });
+  gimli.execute({ ready: 'refresh' });
   game.chooseOption('Yes');
   expect(gimli.state.token.resources).toBe(0);
   expect(gimli.state.tapped).toBe(false);
-  treatchery.update('discard');
+  treatchery.execute('discard');
   expect(game.state.modifiers).toHaveLength(0);
 });

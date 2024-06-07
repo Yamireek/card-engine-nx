@@ -5,7 +5,7 @@ import {
   OrbitControls,
   Stats,
   useHelper,
-} from '@react-three/drei';
+ Text } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
 import { Suspense, useContext, useRef } from 'react';
@@ -15,7 +15,6 @@ import * as THREE from 'three';
 import { Dimensions, LoadingDialog } from '@card-engine-nx/ui';
 import { CardDetail } from '../game/CardDetail';
 import { DetailContext } from '../game/DetailContext';
-import { Text } from '@react-three/drei';
 
 export type GameSceneProps = React.PropsWithChildren<{
   debug?: boolean;

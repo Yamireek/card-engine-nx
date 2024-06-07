@@ -1,5 +1,6 @@
-import { CardId, PlayerId } from '@card-engine-nx/basic';
+import { CardId, CardNumProp, PlayerId } from '@card-engine-nx/basic';
 import { Action } from './action';
+import { CardRules } from './card';
 import { UserCardAction } from './card/ability/action';
 import { CardView } from './card/view';
 import { EventType } from './event/type';
@@ -25,4 +26,16 @@ export type View = {
       }>
     >
   >;
+};
+
+export type CardStateModifier =
+  | {
+      property: CardNumProp;
+      increment: number;
+    }
+  | { rule: CardRules };
+
+export type StateModifiers = {
+  cards: Record<CardId, CardStateModifier[]>;
+  actions: Array<{ source: CardId; description: string; action: Action }>;
 };

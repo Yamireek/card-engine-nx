@@ -16,8 +16,20 @@ export type CardRules = {
   refreshCost?: CardAction[];
   travel?: Action[];
   setup?: Action[];
+  action?: Action[];
 };
 
-export function mergeCardRules(r1: CardRules, r2: CardRules): CardRules {
-  return merge(r1, r2);
+export function mergeCardRules(
+  r1: CardRules | undefined,
+  r2: CardRules | undefined
+): CardRules {
+  if (r1) {
+    if (r2) {
+      return merge(r1, r2);
+    } else {
+      return r1;
+    }
+  } else {
+    return r2 ?? {};
+  }
 }

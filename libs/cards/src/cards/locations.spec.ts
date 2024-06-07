@@ -14,6 +14,6 @@ it('Enchanted Stream', () => {
   });
 
   game.do({ player: 'each', action: { draw: 1 } });
-  const player = game.getPlayer('0');
+  const player = game.player('0');
   expect(player.library.cards).toHaveLength(1);
 });

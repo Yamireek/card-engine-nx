@@ -1,17 +1,29 @@
-import { CardId, PlayerId } from '@card-engine-nx/basic';
-import { ViewContext } from './view';
+import { reverse } from "lodash/fp";
+import { CardId, PlayerId, ZoneId } from "@card-engine-nx/basic";
+import { Scope } from "@card-engine-nx/state";
 
-export function cardIds(ctx: ViewContext) {
-  return Object.keys(ctx.state.cards).map((id) => Number(id)) as CardId[];
-}
-export function getCard(id: CardId, ctx: ViewContext) {
-  const state = ctx.state.cards[id];
-  const view = ctx.view.cards[id];
-  return { id, state, view };
+export function getZoneType(zone: ZoneId) {
+  if (typeof zone === "string") {
+    return zone;
+  }
+
+  return zone.type;
 }
 
-export function getPlayer(id: PlayerId, ctx: ViewContext) {
-  const state = ctx.state.players[id];
-  const view = ctx.view.players[id];
-  return { id, state, view };
+export function getPlayerFromScope(
+  scopes: Scope[],
+  name: string
+): PlayerId[] | undefined {
+  const reversed = reverse(scopes);
+  const scope = reversed.find((s) => s.player && s.player[name]);
+  return scope?.player?.[name];
+}
+
+export function getCardFromScope(
+  scopes: Scope[],
+  name: string
+): CardId[] | undefined {
+  const reversed = reverse(scopes);
+  const scope = reversed.find((s) => s.card && s.card[name]);
+  return scope?.card?.[name];
 }

@@ -8,7 +8,7 @@ import {
 import { Action } from './action';
 import { CardState } from './card/state';
 import { Choice } from './choice';
-import { PendingEffect } from './effect';
+import { StackEffect } from './effect';
 import { Event } from './event';
 import { GameModifier } from './modifier';
 import { PlayerState } from './player/state';
@@ -27,7 +27,7 @@ export type State = {
     end_of_round: Action[];
   };
   choice?: Choice;
-  stack: PendingEffect[];
+  stack: StackEffect[];
   next: Action[];
   result?: {
     win: boolean;

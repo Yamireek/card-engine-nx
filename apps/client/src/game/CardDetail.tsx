@@ -39,10 +39,10 @@ export const CardDetail = (props: { cardId?: CardId }) => {
   return (
     <CardText
       title={`${name} (${card.state.id}) [${exhaused}${unique}]`}
-      sphere={card.view.props.sphere}
+      sphere={card.view.props.sphere ?? []}
       text={
         card.state.sideUp !== 'shadow'
-          ? card.state.definition[card.state.sideUp].abilities.map(
+          ? (card.state.definition[card.state.sideUp].abilities ?? []).map(
               (a) => a.description ?? ''
             )
           : card.view.rules.shadows?.map((s) => s.description) ?? []

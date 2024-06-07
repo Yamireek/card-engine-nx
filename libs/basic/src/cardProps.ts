@@ -2,15 +2,15 @@ import { CardType, Mark, Sphere, Token, Trait } from './enums';
 import { Keywords } from './types';
 
 export type PrintedProps = {
-  type: CardType;
+  type?: CardType;
   name?: string;
   threatCost?: number;
   willpower?: number;
   attack?: number;
   defense?: number;
   hitPoints?: number;
-  traits: Trait[];
-  sphere: Sphere[];
+  traits?: Trait[];
+  sphere?: Sphere[];
   sequence?: number;
   questPoints?: number;
   cost?: number | 'X';

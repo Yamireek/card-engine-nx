@@ -20,8 +20,8 @@ it('A Fork in the Road', () => {
     questDeck: [core.quest.achosenPath1, core.quest.achosenPath2],
   });
 
-  const quest = game.getCard('A Fork in the Road');
-  quest.update({ flip: 'back' });
+  const quest = game.card('A Fork in the Road');
+  quest.execute({ flip: 'back' });
   game.do({ placeProgress: 2 });
 });
 
@@ -33,12 +33,12 @@ it("Don't Leave the Path!", () => {
     questDeck: [core.quest.achosenPath1],
   });
 
-  const quest = game.getCard('A Fork in the Road');
-  const spawn = game.getCard("Ungoliant's Spawn");
-  quest.update({ flip: 'back' });
+  const quest = game.card('A Fork in the Road');
+  const spawn = game.card("Ungoliant's Spawn");
+  quest.execute({ flip: 'back' });
   game.do({ placeProgress: 2 });
   expect(game.state.result).toBeUndefined();
-  spawn.update('destroy');
+  spawn.execute('destroy');
   expect(game.state.result?.win).toBeTruthy();
 });
 
@@ -50,11 +50,11 @@ it("Beorn's Path", () => {
     questArea: [core.quest.achosenPath2],
   });
 
-  const quest = game.getCard('A Chosen Path');
-  const spawn = game.getCard("Ungoliant's Spawn");
-  quest.update({ flip: 'back' });
+  const quest = game.card('A Chosen Path');
+  const spawn = game.card("Ungoliant's Spawn");
+  quest.execute({ flip: 'back' });
   game.do({ placeProgress: 20 });
   expect(game.state.result).toBeUndefined();
-  spawn.update('destroy');
+  spawn.execute('destroy');
   expect(game.state.result?.win).toBeTruthy();
 });

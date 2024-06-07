@@ -16,7 +16,7 @@ it('Citadel plate', () => {
     ],
   });
 
-  const gimli = game.getCard('Gimli');
+  const gimli = game.card('Gimli');
   expect(gimli.props.hitPoints).toEqual(9);
 });
 
@@ -34,7 +34,7 @@ it('Dwarwen axe - dwarf', () => {
     ],
   });
 
-  const gimli = game.getCard('Gimli');
+  const gimli = game.card('Gimli');
   expect(gimli.props.attack).toEqual(4);
 });
 
@@ -52,7 +52,7 @@ it('Dwarwen axe - elf', () => {
     ],
   });
 
-  const legolas = game.getCard('Legolas');
+  const legolas = game.card('Legolas');
   expect(legolas.props.attack).toEqual(4);
 });
 
@@ -71,13 +71,13 @@ it('Blade of Gondolin - bonus', () => {
     ],
   });
 
-  const legolas = game.getCard('Legolas');
-  const orc = game.getCard('Dol Guldur Orcs');
-  const bats = game.getCard('Black Forest Bats');
+  const legolas = game.card('Legolas');
+  const orc = game.card('Dol Guldur Orcs');
+  const bats = game.card('Black Forest Bats');
   expect(legolas.props.attack).toEqual(3);
-  legolas.update({ mark: 'attacking' });
-  orc.update({ mark: 'defending' });
-  bats.update({ mark: 'defending' });
+  legolas.execute({ mark: 'attacking' });
+  orc.execute({ mark: 'defending' });
+  bats.execute({ mark: 'defending' });
   expect(legolas.props.attack).toEqual(4);
 });
 
@@ -100,9 +100,9 @@ it('Blade of Gondolin - response', async () => {
     activeLocation: [core.location.mountainsOfMirkwood],
   });
 
-  const hero = game.getCard('Gimli');
-  const location = game.getCard('Mountains of Mirkwood');
-  const enemy = game.getCard('Dol Guldur Orcs');
+  const hero = game.card('Gimli');
+  const location = game.card('Mountains of Mirkwood');
+  const enemy = game.card('Dol Guldur Orcs');
   game.do({
     card: enemy.id,
     action: {
@@ -134,10 +134,10 @@ it('Horn of Gondor', () => {
     ],
   });
 
-  const legolas = game.getCard('Legolas');
-  const spearman = game.getCard('Gondorian Spearman');
+  const legolas = game.card('Legolas');
+  const spearman = game.card('Gondorian Spearman');
   expect(legolas.token.resources).toBe(0);
-  spearman.update('destroy');
+  spearman.execute('destroy');
   game.chooseOption(response);
   expect(legolas.token.resources).toBe(1);
 });

@@ -1,5 +1,5 @@
 import { it, expect } from 'vitest';
-import { TestEngine, getZoneType } from '@card-engine-nx/engine';
+import { TestEngine } from '@card-engine-nx/engine';
 import { core } from '../index';
 
 it('Beorn', () => {
@@ -10,8 +10,8 @@ it('Beorn', () => {
     players: [{ playerArea: [core.hero.gimli, core.ally.beorn] }],
   });
 
-  const player = game.getPlayer('0');
-  const beorn = game.getCard('Beorn');
+  const player = game.player('0');
+  const beorn = game.card('Beorn');
   game.chooseAction(action);
   expect(game.actions).toHaveLength(0);
   expect(beorn.props.attack).toBe(8);
@@ -38,7 +38,7 @@ it('Gondorian Spearman', () => {
     ],
   });
 
-  const enemy = game.getCard('Forest Spider');
+  const enemy = game.card('Forest Spider');
   game.do({ player: '0', action: 'resolveEnemyAttacks' });
   game.chooseOption('2');
   game.chooseOption(response);
@@ -63,11 +63,11 @@ it('Gandalf', () => {
     ],
   });
 
-  const gandalf = game.getCard('Gandalf');
+  const gandalf = game.card('Gandalf');
   game.do({ beginPhase: 'planning' });
   game.chooseAction('Play ally Gandalf');
   game.chooseOption(response);
   expect(game.state.players['0']?.thread).toBe(-5);
   game.do('endRound');
-  expect(getZoneType(gandalf.state.zone)).toBe('discardPile');
+  expect((gandalf.state.zone)).toBe('discardPile');
 });

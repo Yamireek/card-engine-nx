@@ -7,11 +7,11 @@ it('Gimli', () => {
     players: [{ playerArea: [core.hero.gimli] }],
   });
 
-  const gimli = game.getCard('Gimli');
+  const gimli = game.card('Gimli');
   expect(gimli.props.attack).toEqual(2);
-  gimli.update({ dealDamage: 1 });
+  gimli.execute({ dealDamage: 1 });
   expect(gimli.props.attack).toEqual(3);
-  gimli.update({ heal: 1 });
+  gimli.execute({ heal: 1 });
   expect(gimli.props.attack).toEqual(2);
 });
 
@@ -23,11 +23,11 @@ it('Glorfindel', () => {
     players: [{ playerArea: [core.hero.glorfindel] }],
   });
 
-  const glorfindel = game.getCard('Glorfindel');
+  const glorfindel = game.card('Glorfindel');
   expect(game.actions.length).toEqual(0);
-  glorfindel.update({ generateResources: 2 });
+  glorfindel.execute({ generateResources: 2 });
   expect(game.actions.length).toEqual(0);
-  glorfindel.update({ dealDamage: 2 });
+  glorfindel.execute({ dealDamage: 2 });
   expect(game.actions.length).toEqual(1);
   game.chooseAction(action);
   expect(glorfindel.token.resources).toEqual(1);
@@ -45,10 +45,10 @@ it('Gloin', () => {
     players: [{ playerArea: [core.hero.gloin] }],
   });
 
-  const gloin = game.getCard('Glóin');
+  const gloin = game.card('Glóin');
   expect(gloin.token.resources).toEqual(0);
-  expect(game.view.responses.receivedDamage).toHaveLength(1);
-  gloin.update({ dealDamage: 2 });
+  expect(game.modifiers.responses.receivedDamage).toHaveLength(1);
+  gloin.execute({ dealDamage: 2 });
   expect(game.choiceTitle).toBe('Choose responses for event receivedDamage');
   game.chooseOption(action);
   expect(gloin.token.resources).toEqual(2);
@@ -67,15 +67,15 @@ it('Beravor', () => {
     ],
   });
 
-  const player = game.getPlayer('0');
-  const beravor = game.getCard('Beravor');
+  const player = game.player('0');
+  const beravor = game.card('Beravor');
   expect(player.hand.cards.length).toEqual(0);
   expect(player.library.cards.length).toEqual(2);
   expect(game.actions.length).toEqual(1);
   game.chooseAction(action);
   expect(player.hand.cards.length).toEqual(2);
   expect(game.actions.length).toEqual(0);
-  beravor.update('ready');
+  beravor.execute('ready');
   expect(game.actions.length).toEqual(0);
 });
 
@@ -96,7 +96,7 @@ it('Éowyn', async () => {
     ],
   });
 
-  const eowyn = game.getCard('Éowyn');
+  const eowyn = game.card('Éowyn');
   expect(eowyn.props.willpower).toEqual(4);
   expect(game.actions.length).toEqual(1);
   game.chooseAction(action);
@@ -122,9 +122,9 @@ it('Thalin', async () => {
     encounterDeck: [core.enemy.forestSpider],
   });
 
-  const thalin = game.getCard('Thalin');
-  const enemy = game.getCard('Forest Spider');
-  thalin.update({ mark: 'questing' });
+  const thalin = game.card('Thalin');
+  const enemy = game.card('Forest Spider');
+  thalin.execute({ mark: 'questing' });
   game.do('revealEncounterCard');
   game.chooseOption(response);
   expect(enemy.token.damage).toEqual(1);
@@ -144,9 +144,9 @@ it('Lelogas', async () => {
     activeLocation: [core.location.mountainsOfMirkwood],
   });
 
-  const legolas = game.getCard('Legolas');
-  const location = game.getCard('Mountains of Mirkwood');
-  const enemy = game.getCard('Dol Guldur Orcs');
+  const legolas = game.card('Legolas');
+  const location = game.card('Mountains of Mirkwood');
+  const enemy = game.card('Dol Guldur Orcs');
   game.do({
     card: enemy.id,
     action: {
@@ -174,7 +174,7 @@ it('Eleanor', async () => {
     ],
   });
 
-  const hero = game.getCard('Eleanor');
+  const hero = game.card('Eleanor');
   game.do('revealEncounterCard');
   game.chooseOption(response);
   expect(hero.state.tapped).toBeTruthy();
@@ -187,7 +187,7 @@ it('Dúnhere', async () => {
     stagingArea: [core.enemy.dolGuldurBeastmaster],
   });
 
-  const enemy = game.getCard('Dol Guldur Beastmaster');
+  const enemy = game.card('Dol Guldur Beastmaster');
   game.do({ player: '0', action: 'resolvePlayerAttacks' });
   game.chooseOption('1');
   expect(enemy.state.token.damage).toBe(2);

@@ -89,7 +89,12 @@ export type Sphere = 'tactics' | 'spirit' | 'lore' | 'leadership' | 'neutral';
 
 export type Orientation = 'landscape' | 'portrait';
 
-export type CardNumProp = 'attack' | 'defense' | 'willpower';
+export type CardNumProp =
+  | 'attack'
+  | 'defense'
+  | 'willpower'
+  | 'hitPoints'
+  | 'threat';
 
 export type Difficulty = 'easy' | 'normal';
 

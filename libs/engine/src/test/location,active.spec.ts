@@ -1,6 +1,5 @@
 import { it, suite, expect } from 'vitest';
 import { hero, location, quest } from '@card-engine-nx/state';
-import { calculateNumberExpr } from '../expression';
 import { phaseTravel } from '../round';
 import { TestEngine } from './TestEngine';
 
@@ -44,7 +43,7 @@ suite('Active location', () => {
       stagingArea: [cards.location],
     });
 
-    const locationCard = game.getCard('Location');
+    const locationCard = game.card('Location');
 
     game.do(phaseTravel);
     expect(game.choiceTitle).toBe('Choose location for travel');
@@ -82,9 +81,7 @@ suite('Active location', () => {
       stagingArea: [cards.location],
     });
 
-    const totalThreat = calculateNumberExpr('totalThreat', game.ctx, []);
-
-    expect(totalThreat).toBe(2);
+    expect(game.getNumber('totalThreat')).toBe(2);
   });
 
   it('Replaces quest progress', () => {
@@ -100,8 +97,8 @@ suite('Active location', () => {
       questArea: [cards.quest],
     });
 
-    const locationCard = game.getCard('Location');
-    const questCard = game.getCard('Quest');
+    const locationCard = game.card('Location');
+    const questCard = game.card('Quest');
 
     game.do({ placeProgress: 5 });
     expect(questCard.token.progress).toBe(5);
@@ -126,8 +123,8 @@ suite('Active location', () => {
       questArea: [cards.quest],
     });
 
-    const locationCard = game.getCard('Location');
-    const questCard = game.getCard('Quest');
+    const locationCard = game.card('Location');
+    const questCard = game.card('Quest');
 
     game.do({ placeProgress: 15 });
     expect(questCard.token.progress).toBe(5);

@@ -12,7 +12,7 @@ import { Choice } from './choice';
 import { PlayerDeck } from './deck/player';
 import { Scenario } from './deck/scenario';
 import { CardDefinition } from './definitions';
-import { PendingEffect } from './effect';
+import { StackEffect } from './effect';
 import { Event } from './event';
 import { BoolExpr } from './expression/bool';
 import { NumberExpr } from './expression/number';
@@ -93,7 +93,7 @@ export type Action =
         defender: CardTarget;
       };
       atEndOfPhase?: Action;
-      stackPush?: PendingEffect;
+      stackPush?: StackEffect;
       cancel?: 'when.revealed' | 'shadow';
       if?: {
         condition: BoolExpr;

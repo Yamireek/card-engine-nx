@@ -1,6 +1,6 @@
 import { Action } from './action';
 
-export type PendingEffect =
+export type StackEffect =
   | {
       type: 'whenRevealed';
       description: string;
