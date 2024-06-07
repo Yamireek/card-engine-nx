@@ -256,6 +256,67 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
       return;
     }
 
+    if ('forced' in ability) {
+      const responses =
+        this._modifiers.responses[ability.forced.event] ??
+        (this._modifiers.responses[ability.forced.event] = []);
+
+      if (self.zone.inPlay) {
+        responses.push({
+          description: ability.description,
+          source: self.id,
+          cards: asArray(
+            ability.target
+              ? this.getCards(ability.target).map((c) => c.id)
+              : self.id
+          ),
+          forced: true,
+          action: ability.forced.action,
+        });
+      }
+
+      return;
+    }
+
+    if ('whenRevealed' in ability) {
+      this.addCardModifier(self.id, {
+        rule: {
+          whenRevealed: [
+            {
+              description: ability.description,
+              action: ability.whenRevealed,
+            },
+          ],
+        },
+      });
+
+      return;
+    }
+
+    if ('rule' in ability) {
+      this.addCardModifier(self.id, {
+        rule: ability.rule,
+      });
+
+      return;
+    }
+
+    if ('shadow' in ability) {
+      return;
+    }
+
+    if ('travel' in ability) {
+      if (self.zone.type === 'stagingArea') {
+        this.addCardModifier(self.id, {
+          rule: {
+            travel: [ability.travel],
+          },
+        });
+      }
+
+      return;
+    }
+
     throw new Error('unknown abiliy: ' + JSON.stringify(ability));
   }
 

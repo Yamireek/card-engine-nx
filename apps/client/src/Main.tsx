@@ -27,17 +27,30 @@ import { TestEngine } from '@card-engine-nx/engine';
 // const card = ctx.getCard(1);
 
 // console.log(toJS(card.props));
-const action =
-  'After Glóin suffers damage, add 1 resource to his resource pool for each point of damage he just suffered.';
+const response =
+  'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.';
 
 const game = new TestEngine({
-  players: [{ playerArea: [core.hero.gloin] }],
+  players: [
+    {
+      playerArea: [core.hero.legolas],
+      engaged: [core.enemy.dolGuldurOrcs],
+    },
+  ],
+  activeLocation: [core.location.mountainsOfMirkwood],
 });
 
-const gloin = game.card('Glóin');
-console.log(gloin.token.resources);
-console.log(game.modifiers.responses.receivedDamage);
-gloin.execute({ dealDamage: 2 });
-console.log(game.choiceTitle);
-game.chooseOption(action);
-console.log(gloin.token.resources);
+const legolas = game.card('Legolas');
+const location = game.card('Mountains of Mirkwood');
+const enemy = game.card('Dol Guldur Orcs');
+game.do({
+  card: enemy.id,
+  action: {
+    dealDamage: {
+      amount: 5,
+      attackers: [legolas.id],
+    },
+  },
+});
+game.chooseOption(response);
+console.log(location.token.progress);
