@@ -38,4 +38,17 @@ export type CardStateModifier =
 export type StateModifiers = {
   cards: Record<CardId, CardStateModifier[]>;
   actions: Array<{ source: CardId; description: string; action: Action }>;
+  responses: Partial<
+    Record<
+      EventType,
+      Array<{
+        source: CardId;
+        cards: CardId[];
+        description: string;
+        condition?: BoolExpr;
+        action: Action;
+        forced: boolean;
+      }>
+    >
+  >;
 };

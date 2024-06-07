@@ -1,8 +1,20 @@
 import { padStart } from 'lodash';
-import { toJS } from 'mobx';
-import { PlayerId, noRandom } from '@card-engine-nx/basic';
-import { Action, Choice, SimpleState, createState } from '@card-engine-nx/state';
-import { ExeCtx } from '../context';
+import { observable, toJS } from 'mobx';
+import { CardId, PlayerId, Tokens, noRandom } from '@card-engine-nx/basic';
+import {
+  Action,
+  CardAction,
+  CardNumberExpr,
+  CardProps,
+  CardRules,
+  CardState,
+  CardStateModifier,
+  CardTarget,
+  Choice,
+  SimpleState,
+  createState,
+} from '@card-engine-nx/state';
+import { BaseCtx, CardCtx, ExeCtx, ZoneCtx } from '../context';
 import { emptyEvents } from '../events/uiEvents';
 import { consoleLogger } from '../logger/console';
 import { nullLogger } from '../logger/null';
@@ -161,7 +173,8 @@ export class TestEngine extends ExeCtx {
   }
 
   card(name: string) {
-    return this.getCard({ name });
+    const card = this.getCard({ name });
+    return new TestCard(this, card);
   }
 
   player(id: PlayerId) {
@@ -170,5 +183,25 @@ export class TestEngine extends ExeCtx {
       throw new Error('player not found');
     }
     return player.zones;
+  }
+}
+
+export class TestCard {
+  constructor(public engine: TestEngine, public base: CardCtx) {}
+  get id() {
+    return this.base.id;
+  }
+  get state() {
+    return this.base.state;
+  }
+  get token() {
+    return this.base.token;
+  }
+  get props() {
+    return this.base.props;
+  }
+
+  execute(action: CardAction) {
+    this.engine.do({ card: this.base.id, action });
   }
 }

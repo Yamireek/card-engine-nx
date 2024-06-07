@@ -1,19 +1,20 @@
-import { intersection, isArray, last } from "lodash";
-import { action, computed, makeObservable, toJS } from "mobx";
-import { CardId, asArray, keys, zonesEqual } from "@card-engine-nx/basic";
+import { intersection, isArray, last } from 'lodash';
+import { action, computed, makeObservable, toJS } from 'mobx';
+import { CardId, asArray, keys, zonesEqual } from '@card-engine-nx/basic';
 import {
   Action,
   CardAction,
+  CardBoolExpr,
   CardNumberExpr,
   CardProps,
   CardRules,
   CardTarget,
   isInPlay,
   mergeCardRules,
-} from "@card-engine-nx/state";
-import { uiEvent } from "../events";
-import { ZoneCtx, BaseCtx } from "./internal";
-import { getCardFromScope, getZoneType } from "./utils";
+} from '@card-engine-nx/state';
+import { uiEvent } from '../events';
+import { ZoneCtx, BaseCtx } from './internal';
+import { getCardFromScope, getZoneType } from './utils';
 
 export class CardCtx {
   constructor(
@@ -35,7 +36,7 @@ export class CardCtx {
   get state() {
     const state = this.game.state.cards[this.id];
     if (!state) {
-      throw new Error("not found");
+      throw new Error('not found');
     }
     return state;
   }
@@ -45,7 +46,7 @@ export class CardCtx {
   }
 
   get props(): CardProps {
-    if (this.state.sideUp === "shadow") {
+    if (this.state.sideUp === 'shadow') {
       return {};
     }
 
@@ -59,14 +60,14 @@ export class CardCtx {
     const draft = toJS(printed);
 
     for (const modifier of modifiers) {
-      if ("increment" in modifier) {
+      if ('increment' in modifier) {
         const prev = draft[modifier.property];
         if (prev !== undefined) {
           draft[modifier.property] = prev + modifier.increment;
         }
       }
 
-      if ("rule" in modifier) {
+      if ('rule' in modifier) {
         draft.rules = mergeCardRules(draft.rules, modifier.rule);
       }
     }
@@ -86,20 +87,76 @@ export class CardCtx {
     return this.game.getZone(this.state.zone);
   }
 
-  getNumber(expr: CardNumberExpr) {
-    if (typeof expr === "number") {
+  getBool(expr: CardBoolExpr): boolean {
+    if (typeof expr === 'boolean') {
       return expr;
     }
 
-    if (typeof expr === "string") {
-      throw new Error("uknown CardNumberExpr:" + JSON.stringify(expr));
+    if (expr === 'in_a_play') {
+      return this.zone.inPlay;
     }
 
-    if ("tokens" in expr) {
+    if (expr.hasTrait) {
+      return this.props.traits && this.props.traits.includes(expr.hasTrait)
+        ? true
+        : false;
+    }
+
+    if (expr.hasMark) {
+      return this.state.mark[expr.hasMark];
+    }
+
+    if (expr.is) {
+      return this.is(expr.is);
+    }
+
+    if (expr.isType) {
+      const type = this.props.type;
+      if (expr.isType === 'character' && (type === 'ally' || type === 'hero')) {
+        return true;
+      } else {
+        return expr.isType === type;
+      }
+    }
+
+    if (expr.name) {
+      return this.props.name === expr.name;
+    }
+
+    if (expr.zone) {
+      return this.zone.type === expr.zone;
+    }
+
+    if (expr.and) {
+      return expr.and.every((e) => this.getBool(e));
+    }
+
+    if (expr.global) {
+      return this.game.getBool(expr.global);
+    }
+
+    if (expr.predicate) {
+      // TODO merge with is
+      return this.is(expr.predicate);
+    }
+
+    throw new Error(`unknown card bool expression: ${JSON.stringify(expr)}`);
+  }
+
+  getNumber(expr: CardNumberExpr) {
+    if (typeof expr === 'number') {
+      return expr;
+    }
+
+    if (typeof expr === 'string') {
+      throw new Error('uknown CardNumberExpr:' + JSON.stringify(expr));
+    }
+
+    if ('tokens' in expr) {
       return this.state.token[expr.tokens];
     }
 
-    throw new Error("uknown CardNumberExpr:" + JSON.stringify(expr));
+    throw new Error('uknown CardNumberExpr:' + JSON.stringify(expr));
   }
 
   canExecute(action: CardAction): boolean {
@@ -111,12 +168,12 @@ export class CardCtx {
     const zone = getZoneType(this.state.zone);
     const inPlay = isInPlay(zone);
 
-    if (typeof action === "string") {
-      if (action === "moveToBottom" || action === "moveToTop") {
+    if (typeof action === 'string') {
+      if (action === 'moveToBottom' || action === 'moveToTop') {
         return true;
       }
 
-      if (inPlay && action === "travel") {
+      if (inPlay && action === 'travel') {
         if (this.game.state.zones.activeLocation.cards.length > 0) {
           return false;
         }
@@ -129,56 +186,56 @@ export class CardCtx {
         return true;
       }
 
-      if (inPlay && action === "exhaust") {
-        return !this.state.tapped && zone === "playerArea";
+      if (inPlay && action === 'exhaust') {
+        return !this.state.tapped && zone === 'playerArea';
       }
 
-      if (inPlay && action === "ready") {
+      if (inPlay && action === 'ready') {
         return this.state.tapped;
       }
 
-      if (zone === "hand" && action === "discard") {
+      if (zone === 'hand' && action === 'discard') {
         return true;
       }
 
-      if (zone === "playerArea" && action === "discard") {
+      if (zone === 'playerArea' && action === 'discard') {
         return true;
       }
 
-      if (zone === "encounterDeck" && action === "discard") {
+      if (zone === 'encounterDeck' && action === 'discard') {
         return true;
       }
 
-      if (zone === "encounterDeck" && action === "reveal") {
+      if (zone === 'encounterDeck' && action === 'reveal') {
         return true;
       }
 
-      if (zone === "library" && action === "draw") {
+      if (zone === 'library' && action === 'draw') {
         if (!this.state.owner) {
           return false;
         }
 
         const owner = this.game.getPlayer(this.state.owner);
-        return zone === "library" && !owner.rules.disableDraw;
+        return zone === 'library' && !owner.rules.disableDraw;
       }
 
-      if (zone === "playerArea" && action === "commitToQuest") {
+      if (zone === 'playerArea' && action === 'commitToQuest') {
         return !this.state.tapped;
       }
 
       return false;
     }
 
-    if (zone === "playerArea" && action.declareAsDefender) {
+    if (zone === 'playerArea' && action.declareAsDefender) {
       return !this.state.tapped;
     }
 
-    if (zone === "playerArea" && action.payResources) {
+    if (zone === 'playerArea' && action.payResources) {
       const amount = this.game.getNumber(action.payResources);
       return this.token.resources >= amount;
     }
 
-    if (zone === "engaged" && action.resolveEnemyAttacking) {
+    if (zone === 'engaged' && action.resolveEnemyAttacking) {
       return true;
     }
 
@@ -195,14 +252,14 @@ export class CardCtx {
     }
 
     if (
-      zone === "encounterDeck" &&
-      this.state.sideUp === "front" &&
+      zone === 'encounterDeck' &&
+      this.state.sideUp === 'front' &&
       action.dealDamage
     ) {
       return true;
     }
 
-    if (zone === "playerArea" && action.heal) {
+    if (zone === 'playerArea' && action.heal) {
       return this.state.token.damage > 0;
     }
 
@@ -218,8 +275,8 @@ export class CardCtx {
       }
 
       const exising = this.game.getCards({
-        simple: "inAPlay",
-        name: this.props.name ?? "",
+        simple: 'inAPlay',
+        name: this.props.name ?? '',
       });
 
       return exising.length === 0;
@@ -232,8 +289,8 @@ export class CardCtx {
       }
 
       const exising = this.game.getCards({
-        simple: "inAPlay",
-        name: target.props.name ?? "",
+        simple: 'inAPlay',
+        name: target.props.name ?? '',
       });
 
       return exising.length === 0;
@@ -248,13 +305,13 @@ export class CardCtx {
     }
 
     if (
-      zone === "engaged" ||
-      (zone === "stagingArea" && action.resolvePlayerAttacking)
+      zone === 'engaged' ||
+      (zone === 'stagingArea' && action.resolvePlayerAttacking)
     ) {
       return true;
     }
 
-    if (zone === "hand" && action.payCost) {
+    if (zone === 'hand' && action.payCost) {
       // if (!this.state.controller) {
       //   return false;
       // }
@@ -266,19 +323,19 @@ export class CardCtx {
       // }
 
       // return canPlayerExecute(payCostAction, this.state.controller, ctx);
-      throw new Error("not implemented");
+      throw new Error('not implemented');
     }
 
-    if (zone === "stagingArea" && action.engagePlayer) {
+    if (zone === 'stagingArea' && action.engagePlayer) {
       return true;
     }
 
     if (action.engagePlayer) {
-      if (this.state.zone === "stagingArea") {
+      if (this.state.zone === 'stagingArea') {
         return true;
       }
 
-      if (typeof this.state.zone === "string") {
+      if (typeof this.state.zone === 'string') {
         return false;
       }
 
@@ -300,8 +357,8 @@ export class CardCtx {
       }
 
       const exising = this.game.getCards({
-        simple: "inAPlay",
-        name: this.props.name ?? "",
+        simple: 'inAPlay',
+        name: this.props.name ?? '',
       });
 
       return exising.length === 0;
@@ -338,17 +395,17 @@ export class CardCtx {
       return;
     }
 
-    if (action === "empty") {
+    if (action === 'empty') {
       return;
     }
 
-    if (action === "ready") {
+    if (action === 'ready') {
       this.state.tapped = false;
       this.game.logger.log(`${this.props.name} is ready`);
       return;
     }
 
-    if (action === "travel") {
+    if (action === 'travel') {
       const travelCost = this.rules.travel ?? [];
       this.game.next(
         ...travelCost,
@@ -356,50 +413,50 @@ export class CardCtx {
           card: this.id,
           action: {
             move: {
-              from: "stagingArea",
-              to: "activeLocation",
+              from: 'stagingArea',
+              to: 'activeLocation',
             },
           },
         },
-        { event: { type: "traveled", card: this.id } }
+        { event: { type: 'traveled', card: this.id } }
       );
       this.game.logger.log(`Traveling to ${this.props.name}`);
       return;
     }
 
-    if (action === "exhaust") {
+    if (action === 'exhaust') {
       this.state.tapped = true;
       this.game.logger.log(`${this.props.name} exhausted`);
       return;
     }
 
-    if (action === "reveal") {
-      if (this.state.sideUp === "back") {
+    if (action === 'reveal') {
+      if (this.state.sideUp === 'back') {
         this.game.next({
           card: this.id,
-          action: [{ flip: "front" }, "reveal"],
+          action: [{ flip: 'front' }, 'reveal'],
         });
         return;
       }
 
       this.game.next(
-        { event: { type: "revealed", card: this.id } },
+        { event: { type: 'revealed', card: this.id } },
         {
           card: this.id,
           action: {
             move: {
-              from: "encounterDeck",
+              from: 'encounterDeck',
               to:
-                this.props.type === "treachery" ? "discardPile" : "stagingArea",
+                this.props.type === 'treachery' ? 'discardPile' : 'stagingArea',
             },
           },
         },
         {
           if: {
             condition: {
-              more: ["surge", 0],
+              more: ['surge', 0],
             },
-            true: ["surge--", "revealEncounterCard"],
+            true: ['surge--', 'revealEncounterCard'],
           },
         }
       );
@@ -407,7 +464,7 @@ export class CardCtx {
       return;
     }
 
-    if (action === "shuffleToDeck") {
+    if (action === 'shuffleToDeck') {
       if (this.state.owner) {
         this.game.next(
           {
@@ -416,15 +473,15 @@ export class CardCtx {
               move: {
                 to: {
                   player: this.state.owner,
-                  type: "library",
+                  type: 'library',
                 },
-                side: "back",
+                side: 'back',
               },
             },
           },
           {
             player: this.state.owner,
-            action: "shuffleLibrary",
+            action: 'shuffleLibrary',
           }
         );
       }
@@ -432,43 +489,43 @@ export class CardCtx {
       return;
     }
 
-    if (action === "discard") {
+    if (action === 'discard') {
       const owner = this.state.owner;
 
       this.game.next({
         card: this.id,
         action: {
           move: {
-            to: !owner ? "discardPile" : { type: "discardPile", player: owner },
-            side: "front",
+            to: !owner ? 'discardPile' : { type: 'discardPile', player: owner },
+            side: 'front',
           },
         },
       });
       return;
     }
 
-    if (action === "advance") {
+    if (action === 'advance') {
       this.token.progress = 0;
 
       const removedExplored: Action = {
         card: this.id,
         action: {
           move: {
-            from: "questArea",
-            to: "removed",
+            from: 'questArea',
+            to: 'removed',
           },
         },
       };
 
       const nexts = this.game.getCards({
-        zone: "questDeck",
+        zone: 'questDeck',
         sequence: {
-          plus: [{ card: { target: this.id, value: "sequence" } }, 1],
+          plus: [{ card: { target: this.id, value: 'sequence' } }, 1],
         },
       });
 
       if (nexts.length === 0) {
-        this.game.next("win");
+        this.game.next('win');
         return;
       }
 
@@ -479,8 +536,8 @@ export class CardCtx {
         {
           choice: {
             id: this.game.state.nextId++,
-            type: "show",
-            title: "Next quest card",
+            type: 'show',
+            title: 'Next quest card',
             cardId: next.id,
           },
         },
@@ -489,17 +546,17 @@ export class CardCtx {
           action: [
             {
               move: {
-                from: "questDeck",
-                to: "questArea",
-                side: "front",
+                from: 'questDeck',
+                to: 'questArea',
+                side: 'front',
               },
             },
-            { flip: "back" },
+            { flip: 'back' },
           ],
         },
         {
           event: {
-            type: "revealed",
+            type: 'revealed',
             card: next.id,
           },
         }
@@ -508,7 +565,7 @@ export class CardCtx {
       return;
     }
 
-    if (action === "draw") {
+    if (action === 'draw') {
       const owner = this.state.owner;
 
       if (!owner) {
@@ -523,19 +580,19 @@ export class CardCtx {
         card: this.id,
         action: {
           move: {
-            to: { type: "hand", player: owner },
-            side: "front",
+            to: { type: 'hand', player: owner },
+            side: 'front',
           },
         },
       });
       return;
     }
 
-    if (action === "explore") {
+    if (action === 'explore') {
       this.game.next(
         {
           event: {
-            type: "explored",
+            type: 'explored',
             card: this.id,
           },
         },
@@ -543,7 +600,7 @@ export class CardCtx {
           card: this.id,
           action: {
             move: {
-              to: "discardPile",
+              to: 'discardPile',
             },
           },
         }
@@ -551,15 +608,15 @@ export class CardCtx {
       return;
     }
 
-    if (action === "commitToQuest") {
+    if (action === 'commitToQuest') {
       this.game.next({
         card: this.id,
-        action: ["exhaust", { mark: "questing" }],
+        action: ['exhaust', { mark: 'questing' }],
       });
       return;
     }
 
-    if (action === "resolveShadowEffects") {
+    if (action === 'resolveShadowEffects') {
       const cards = this.game.getCards({ shadows: this.id });
 
       if (cards.length > 0) {
@@ -567,12 +624,12 @@ export class CardCtx {
           {
             card: cards.map((s) => s.id),
             action: {
-              flip: "shadow",
+              flip: 'shadow',
             },
           },
           {
             card: cards.map((s) => s.id),
-            action: "resolveShadow",
+            action: 'resolveShadow',
           }
         );
       }
@@ -580,7 +637,7 @@ export class CardCtx {
       return;
     }
 
-    if (action === "resolveShadow") {
+    if (action === 'resolveShadow') {
       const shadows = this.rules.shadows ?? [];
 
       if (shadows.length > 0) {
@@ -588,33 +645,33 @@ export class CardCtx {
           this.game.next(
             {
               choice: {
-                title: "Shadow effect",
+                title: 'Shadow effect',
                 id: this.game.state.nextId++,
-                type: "show",
+                type: 'show',
                 cardId: this.id,
               },
             },
             {
               stackPush: {
-                type: "shadow",
+                type: 'shadow',
                 description: shadow.description,
                 shadow: {
                   useScope: {
-                    var: "self",
+                    var: 'self',
                     card: this.id,
                   },
                   action: shadow.action,
                 },
               },
             },
-            "stackPop"
+            'stackPop'
           );
         }
       }
       return;
     }
 
-    if (action === "moveToBottom") {
+    if (action === 'moveToBottom') {
       const zone = this.game.getZone(this.state.zone);
       zone.state.cards = [
         this.id,
@@ -623,7 +680,7 @@ export class CardCtx {
       return;
     }
 
-    if (action === "moveToTop") {
+    if (action === 'moveToTop') {
       const zone = this.game.getZone(this.state.zone);
       zone.state.cards = [
         ...zone.state.cards.filter((id) => id !== this.id),
@@ -632,7 +689,7 @@ export class CardCtx {
       return;
     }
 
-    if (action === "dealShadowCard") {
+    if (action === 'dealShadowCard') {
       const cardId = this.id;
       const deck = this.game.state.zones.encounterDeck;
       const shadow = deck.cards.pop();
@@ -648,7 +705,7 @@ export class CardCtx {
       return;
     }
 
-    if (action === "destroy" || action.destroy) {
+    if (action === 'destroy' || action.destroy) {
       const owner = this.state.owner;
 
       this.game.next(
@@ -657,17 +714,17 @@ export class CardCtx {
           action: {
             move: {
               to: !owner
-                ? "discardPile"
-                : { type: "discardPile", player: owner },
+                ? 'discardPile'
+                : { type: 'discardPile', player: owner },
             },
           },
         },
         {
           event: {
-            type: "destroyed",
+            type: 'destroyed',
             card: this.id,
             attackers:
-              action === "destroy" ? [] : action.destroy?.attackers ?? [],
+              action === 'destroy' ? [] : action.destroy?.attackers ?? [],
           },
         }
       );
@@ -679,18 +736,18 @@ export class CardCtx {
       this.game.next(
         {
           stackPush: {
-            type: "whenRevealed",
+            type: 'whenRevealed',
             description: action.whenRevealed.description,
             whenRevealed: {
               useScope: {
-                var: "self",
+                var: 'self',
                 card: this.id,
               },
               action: action.whenRevealed.action,
             },
           },
         },
-        "stackPop"
+        'stackPop'
       );
       return;
     }
@@ -708,27 +765,27 @@ export class CardCtx {
       //   });
       // }
       // return;
-      throw new Error("not implemented");
+      throw new Error('not implemented');
     }
 
-    if (action.ready === "refresh") {
+    if (action.ready === 'refresh') {
       const cost = this.rules.refreshCost ?? [];
       const free = cost.length === 0;
       if (free) {
-        this.game.next({ card: this.id, action: "ready" });
+        this.game.next({ card: this.id, action: 'ready' });
       } else {
         if (this.state.controller) {
           this.game.next({
             player: this.state.controller,
             action: {
               chooseActions: {
-                title: "Pay for refresh?",
+                title: 'Pay for refresh?',
                 actions: [
                   {
-                    title: "Yes",
+                    title: 'Yes',
                     action: {
                       card: this.id,
-                      action: [...cost, "ready"],
+                      action: [...cost, 'ready'],
                     },
                   },
                 ],
@@ -747,7 +804,7 @@ export class CardCtx {
       this.state.mark.defending = true;
       this.game.next({
         event: {
-          type: "declaredAsDefender",
+          type: 'declaredAsDefender',
           card: this.id,
           attacker: action.declareAsDefender.attacker,
         },
@@ -762,14 +819,14 @@ export class CardCtx {
           card: this.id,
           action: {
             move: {
-              from: "stagingArea",
-              to: { player: player.id, type: "engaged" },
+              from: 'stagingArea',
+              to: { player: player.id, type: 'engaged' },
             },
           },
         },
         {
           event: {
-            type: "engaged",
+            type: 'engaged',
             card: this.id,
             player: player.id,
           },
@@ -782,7 +839,7 @@ export class CardCtx {
       this.game.logger.success(
         `Healed ${action.heal} damage on ${this.props.name}`
       );
-      if (action.heal === "all") {
+      if (action.heal === 'all') {
         this.state.token.damage = 0;
       } else {
         this.state.token.damage = Math.max(
@@ -796,7 +853,7 @@ export class CardCtx {
 
     if (action.dealDamage) {
       const data =
-        typeof action.dealDamage === "number"
+        typeof action.dealDamage === 'number'
           ? { amount: action.dealDamage, attackers: [] }
           : action.dealDamage;
 
@@ -804,7 +861,7 @@ export class CardCtx {
 
       this.state.token.damage += amount;
 
-      if (this.props.type === "enemy") {
+      if (this.props.type === 'enemy') {
         this.game.logger.success(
           `Enemy ${this.props.name} was dealt ${amount} damage`
         );
@@ -826,7 +883,7 @@ export class CardCtx {
 
       this.game.next({
         event: {
-          type: "receivedDamage",
+          type: 'receivedDamage',
           card: this.id,
           damage: amount,
         },
@@ -885,7 +942,7 @@ export class CardCtx {
       );
 
       if (!from.inPlay && to.inPlay) {
-        this.game.next({ event: { type: "enteredPlay", card: this.id } });
+        this.game.next({ event: { type: 'enteredPlay', card: this.id } });
       }
 
       if (from.inPlay && !to.inPlay) {
@@ -899,12 +956,12 @@ export class CardCtx {
 
         this.game.next({
           card: this.state.attachments,
-          action: "discard",
+          action: 'discard',
         });
 
         this.game.next({
           card: this.state.shadows,
-          action: "discard",
+          action: 'discard',
         });
 
         this.game.state.modifiers = this.game.state.modifiers.filter(
@@ -929,7 +986,7 @@ export class CardCtx {
           this.state.shadowOf = undefined;
         }
 
-        this.game.next({ event: { type: "leftPlay", card: this.id } });
+        this.game.next({ event: { type: 'leftPlay', card: this.id } });
       }
 
       return;
@@ -941,7 +998,7 @@ export class CardCtx {
       }
 
       this.token.progress += action.placeProgress;
-      if (this.props.type === "quest") {
+      if (this.props.type === 'quest') {
         const qp = this.props.questPoints;
         if (qp && this.token.progress >= qp) {
           const expr = this.rules.conditional?.advance ?? [];
@@ -949,7 +1006,7 @@ export class CardCtx {
             expr.length > 0 ? this.game.getBool({ and: expr }) : true;
 
           if (allowed) {
-            this.execute("advance");
+            this.execute('advance');
           }
         }
       }
@@ -958,10 +1015,10 @@ export class CardCtx {
         `Placing ${action.placeProgress} progress to ${this.props.name}`
       );
 
-      if (this.props.type === "location") {
+      if (this.props.type === 'location') {
         const qp = this.props.questPoints;
         if (qp && this.token.progress >= qp) {
-          this.execute("explore");
+          this.execute('explore');
         }
       }
 
@@ -972,32 +1029,32 @@ export class CardCtx {
       this.game.next(
         {
           card: this.id,
-          action: { mark: "attacking" },
+          action: { mark: 'attacking' },
         },
         {
           event: {
-            type: "attacks",
+            type: 'attacks',
             card: this.id,
           },
         },
-        { playerActions: "Declare defender" },
+        { playerActions: 'Declare defender' },
         {
           player: action.resolveEnemyAttacking,
-          action: "declareDefender",
+          action: 'declareDefender',
         },
         {
           card: this.id,
-          action: "resolveShadowEffects",
+          action: 'resolveShadowEffects',
         },
         {
           player: action.resolveEnemyAttacking,
-          action: "determineCombatDamage",
+          action: 'determineCombatDamage',
         },
-        { clearMarks: "attacking" },
-        { clearMarks: "defending" },
+        { clearMarks: 'attacking' },
+        { clearMarks: 'defending' },
         {
           card: this.id,
-          action: { mark: "attacked" },
+          action: { mark: 'attacked' },
         }
       );
       return;
@@ -1006,22 +1063,22 @@ export class CardCtx {
     if (action.resolvePlayerAttacking) {
       const enemy = this.id;
       this.game.next(
-        { card: enemy, action: { mark: "defending" } },
-        { playerActions: "Declare attackers" },
+        { card: enemy, action: { mark: 'defending' } },
+        { playerActions: 'Declare attackers' },
         {
           player: action.resolvePlayerAttacking,
           action: {
             declareAttackers: enemy,
           },
         },
-        { playerActions: "Determine combat damage" },
+        { playerActions: 'Determine combat damage' },
         {
           player: action.resolvePlayerAttacking,
-          action: "determineCombatDamage",
+          action: 'determineCombatDamage',
         },
-        { clearMarks: "attacking" },
-        { clearMarks: "defending" },
-        { card: enemy, action: { mark: "attacked" } }
+        { clearMarks: 'attacking' },
+        { clearMarks: 'defending' },
+        { card: enemy, action: { mark: 'attacked' } }
       );
       return;
     }
@@ -1040,7 +1097,7 @@ export class CardCtx {
           card: target.id,
           action: {
             move: {
-              side: "front",
+              side: 'front',
               to: this.state.zone,
             },
           },
@@ -1050,7 +1107,7 @@ export class CardCtx {
     }
 
     if (action.modify) {
-      const source = this.game.getCard({ var: "self" });
+      const source = this.game.getCard({ var: 'self' });
       if (isArray(action.modify)) {
         for (const modifier of action.modify) {
           this.game.state.modifiers.push({
@@ -1082,8 +1139,8 @@ export class CardCtx {
         card: this.id,
         action: {
           move: {
-            to: { player: player.id, type: "playerArea" },
-            side: "front",
+            to: { player: player.id, type: 'playerArea' },
+            side: 'front',
           },
         },
       });
@@ -1110,11 +1167,11 @@ export class CardCtx {
       return;
     }
 
-    throw new Error("uknown CardAction: " + JSON.stringify(action));
+    throw new Error('uknown CardAction: ' + JSON.stringify(action));
   }
 
   is(target: CardTarget): boolean {
-    if (typeof target === "number") {
+    if (typeof target === 'number') {
       return this.id === target;
     }
 
@@ -1122,61 +1179,61 @@ export class CardCtx {
       return target.includes(this.id);
     }
 
-    if (typeof target !== "string" && Object.keys(target).length > 1) {
+    if (typeof target !== 'string' && Object.keys(target).length > 1) {
       return keys(target).every((key) => this.is({ [key]: target[key] }));
     }
 
-    if (target === "self" || target === "target") {
+    if (target === 'self' || target === 'target') {
       const ids = getCardFromScope(this.game.scopes, target);
       return (ids && ids?.includes(this.id)) ?? false;
     }
 
-    if (target === "each") {
+    if (target === 'each') {
       return true;
     }
 
-    if (target === "inAPlay") {
+    if (target === 'inAPlay') {
       return isInPlay(getZoneType(this.state.zone));
     }
 
-    if (target === "character") {
-      return this.props.type === "ally" || this.props.type === "hero";
+    if (target === 'character') {
+      return this.props.type === 'ally' || this.props.type === 'hero';
     }
 
-    if (target === "ready") {
+    if (target === 'ready') {
       return !this.state.tapped;
     }
 
-    if (target === "event") {
+    if (target === 'event') {
       const event = last(this.game.state.event);
-      if (event && "card" in event) {
+      if (event && 'card' in event) {
         return event.card === this.id;
       } else {
         return false;
       }
     }
 
-    if (target === "exhausted") {
+    if (target === 'exhausted') {
       return this.state.tapped;
     }
 
-    if (target === "destroyed") {
+    if (target === 'destroyed') {
       const hitpoints = this.props.hitPoints;
       return hitpoints !== undefined && hitpoints <= this.state.token.damage;
     }
 
-    if (target === "explored") {
+    if (target === 'explored') {
       const need = this.props.questPoints;
       const expr = this.rules.conditional?.advance ?? [];
       const allowed = expr.length > 0 ? this.game.getBool({ and: expr }) : true;
       return need !== undefined && allowed && need <= this.state.token.progress;
     }
 
-    if (target === "isAttached") {
+    if (target === 'isAttached') {
       return !!this.state.attachedTo;
     }
 
-    if (target === "isShadow") {
+    if (target === 'isShadow') {
       return !!this.state.shadowOf;
     }
 
@@ -1213,11 +1270,11 @@ export class CardCtx {
     }
 
     if (target.sphere) {
-      if (target.sphere === "any") {
+      if (target.sphere === 'any') {
         return (
           this.props.sphere !== undefined &&
           this.props.sphere.length > 0 &&
-          !this.props.sphere.includes("neutral")
+          !this.props.sphere.includes('neutral')
         );
       }
 
@@ -1281,9 +1338,9 @@ export class CardCtx {
       );
     }
 
-    if (target.event === "attacking") {
+    if (target.event === 'attacking') {
       const event = last(this.game.state.event);
-      if (event?.type === "declaredAsDefender") {
+      if (event?.type === 'declaredAsDefender') {
         return event.attacker === this.id;
       } else {
         return false;
@@ -1311,7 +1368,7 @@ export class CardCtx {
     if (target.var) {
       // const vars = getCardFromScope(ctx, target.var);
       // return (vars && vars.includes(state.id)) ?? false;
-      throw new Error("not implemented");
+      throw new Error('not implemented');
     }
 
     throw new Error(`unknown card predicate: ${JSON.stringify(target)}`);

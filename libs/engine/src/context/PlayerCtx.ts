@@ -1,6 +1,6 @@
-import { isArray, max, sum, sumBy } from "lodash";
-import { action, computed, makeObservable } from "mobx";
-import { PlayerId, values } from "@card-engine-nx/basic";
+import { isArray, max, sum, sumBy } from 'lodash';
+import { action, computed, makeObservable } from 'mobx';
+import { PlayerId, values } from '@card-engine-nx/basic';
 import {
   Action,
   CardAction,
@@ -9,8 +9,8 @@ import {
   PlayerAction,
   PlayerNumberExpr,
   PlayerRules,
-} from "@card-engine-nx/state";
-import { BaseCtx } from "./internal";
+} from '@card-engine-nx/state';
+import { BaseCtx } from './internal';
 
 export class PlayerCtx {
   constructor(
@@ -29,7 +29,7 @@ export class PlayerCtx {
   get state() {
     const state = this.game.state.players[this.id];
     if (!state) {
-      throw new Error("not found");
+      throw new Error('not found');
     }
     return state;
   }
@@ -47,12 +47,12 @@ export class PlayerCtx {
       return false;
     }
 
-    if (typeof action === "string") {
-      if (action === "resolvePlayerAttacks") {
+    if (typeof action === 'string') {
+      if (action === 'resolvePlayerAttacks') {
         return true;
       }
 
-      if (action === "shuffleLibrary") {
+      if (action === 'shuffleLibrary') {
         return true;
       }
 
@@ -81,10 +81,10 @@ export class PlayerCtx {
         const cost = this.game.getNumber(action.payResources.amount);
         const heroes = this.state.zones.playerArea.cards
           .map((id) => this.game.cards[id])
-          .filter((card) => card.props.type === "hero")
+          .filter((card) => card.props.type === 'hero')
           .filter(
             (c) =>
-              sphere.includes("neutral") ||
+              sphere.includes('neutral') ||
               c.props.sphere?.some((s) => sphere.includes(s))
           )
           .filter((card) => card.token.resources > 0);
@@ -194,37 +194,37 @@ export class PlayerCtx {
       return;
     }
 
-    if (action === "empty") {
+    if (action === 'empty') {
       return;
     }
 
-    if (action === "shuffleLibrary") {
-      const zone = this.state.zones["library"];
+    if (action === 'shuffleLibrary') {
+      const zone = this.state.zones['library'];
       zone.cards = this.game.random.shuffle(zone.cards);
       return;
     }
 
-    if (action === "commitCharactersToQuest") {
+    if (action === 'commitCharactersToQuest') {
       this.game.next({
         player: this.id,
         action: {
           chooseCardActions: {
-            title: "Choose characters commiting to quest",
+            title: 'Choose characters commiting to quest',
             multi: true,
             optional: true,
-            target: { simple: "character", controller: this.id },
-            action: "commitToQuest",
+            target: { simple: 'character', controller: this.id },
+            action: 'commitToQuest',
           },
         },
       });
       return;
     }
 
-    if (action === "engagementCheck") {
+    if (action === 'engagementCheck') {
       const threat = this.state.thread;
       const enemies = this.game.getCards({
-        zone: "stagingArea",
-        type: "enemy",
+        zone: 'stagingArea',
+        type: 'enemy',
       });
 
       const maxEngagement = max(
@@ -245,7 +245,7 @@ export class PlayerCtx {
         player: this.id,
         action: {
           chooseCardActions: {
-            title: "Choose enemy to engage",
+            title: 'Choose enemy to engage',
             target: enemyChoices.map((e) => e.id),
             action: {
               engagePlayer: this.id,
@@ -256,14 +256,14 @@ export class PlayerCtx {
       return;
     }
 
-    if (action === "optionalEngagement") {
+    if (action === 'optionalEngagement') {
       this.game.next({
         player: this.id,
         action: {
           chooseCardActions: {
-            title: "Choose enemy to optionally engage",
+            title: 'Choose enemy to optionally engage',
             optional: true,
-            target: { zone: "stagingArea", type: "enemy" },
+            target: { zone: 'stagingArea', type: 'enemy' },
             action: {
               engagePlayer: this.id,
             },
@@ -273,7 +273,7 @@ export class PlayerCtx {
       return;
     }
 
-    if (action === "resolveEnemyAttacks") {
+    if (action === 'resolveEnemyAttacks') {
       // const enemies = this.game
       //   .getCards({ type: "enemy", simple: "inAPlay" })
       //   .filter((enemy) => canEnemyAttack(enemy, this.id, ctx));
@@ -304,10 +304,10 @@ export class PlayerCtx {
       //   );
       // }
       // return;
-      throw new Error("not implemented");
+      throw new Error('not implemented');
     }
 
-    if (action === "resolvePlayerAttacks") {
+    if (action === 'resolvePlayerAttacks') {
       // const enemies = this.game.getCards({ type: "enemy", simple: "inAPlay" });
       // const characters = this.game.getCards({
       //   simple: ["character", "ready", "inAPlay"],
@@ -343,10 +343,10 @@ export class PlayerCtx {
       //   });
       // }
       // return;
-      throw new Error("not implemented");
+      throw new Error('not implemented');
     }
 
-    if (action === "declareDefender") {
+    if (action === 'declareDefender') {
       // const multiple = !!this.view.players[this.id]?.rules.multipleDefenders;
       // const attacker = getTargetCard({ mark: "attacking" }, ctx);
       // if (attacker) {
@@ -373,12 +373,12 @@ export class PlayerCtx {
       //   }
       // }
       // return;
-      throw new Error("not implemented");
+      throw new Error('not implemented');
     }
 
-    if (action === "determineCombatDamage") {
-      const attacking = this.game.getCards({ mark: "attacking" });
-      const defending = this.game.getCards({ mark: "defending" });
+    if (action === 'determineCombatDamage') {
+      const attacking = this.game.getCards({ mark: 'attacking' });
+      const defending = this.game.getCards({ mark: 'defending' });
 
       const attack = sum(attacking.map((a) => a.props.attack || 0));
       const defense = sum(defending.map((d) => d.props.defense || 0));
@@ -387,28 +387,28 @@ export class PlayerCtx {
         card: {
           shadows: attacking.map((c) => c.id),
         },
-        action: "discard",
+        action: 'discard',
       });
 
       this.game.next(
         attacking.map((a) => {
-          const event: Event = { type: "attacked", card: a.id };
+          const event: Event = { type: 'attacked', card: a.id };
           return { event };
         })
       );
 
       if (
         defending.length === 0 &&
-        attacking.some((a) => a.props.type === "enemy")
+        attacking.some((a) => a.props.type === 'enemy')
       ) {
         this.game.next({
           player: this.id,
           action: {
             chooseCardActions: {
-              title: "Choose hero for undefended attack",
+              title: 'Choose hero for undefended attack',
               target: {
-                type: "hero",
-                zone: { player: this.id, type: "playerArea" },
+                type: 'hero',
+                zone: { player: this.id, type: 'playerArea' },
               },
               action: {
                 dealDamage: attack,
@@ -431,7 +431,7 @@ export class PlayerCtx {
               player: this.id,
               action: {
                 chooseCardActions: {
-                  title: "Choose character for damage",
+                  title: 'Choose character for damage',
                   target: defending.map((c) => c.id),
                   action: {
                     dealDamage: damage,
@@ -445,26 +445,26 @@ export class PlayerCtx {
       return;
     }
 
-    if (action === "eliminate") {
+    if (action === 'eliminate') {
       this.state.eliminated = true;
 
       if (values(this.game.players).every((p) => p.state.eliminated)) {
-        this.game.next("loose");
+        this.game.next('loose');
         return;
       }
 
       this.game.next(
         {
-          card: { zone: { player: this.id, type: "engaged" } },
+          card: { zone: { player: this.id, type: 'engaged' } },
           action: {
             move: {
-              to: "stagingArea",
+              to: 'stagingArea',
             },
           },
         },
         {
           card: { owner: this.id },
-          action: "destroy",
+          action: 'destroy',
         }
       );
 
@@ -481,13 +481,13 @@ export class PlayerCtx {
           amount: action.draw,
           action: {
             card: {
-              top: { player: this.id, type: "library" },
+              top: { player: this.id, type: 'library' },
             },
             action: {
               move: {
-                from: { player: this.id, type: "library" },
-                to: { player: this.id, type: "hand" },
-                side: "front",
+                from: { player: this.id, type: 'library' },
+                to: { player: this.id, type: 'hand' },
+                side: 'front',
               },
             },
           },
@@ -517,11 +517,11 @@ export class PlayerCtx {
     }
 
     if (action.payResources) {
-      const sphere = action.payResources.sphere.includes("neutral")
-        ? "any"
+      const sphere = action.payResources.sphere.includes('neutral')
+        ? 'any'
         : action.payResources.sphere;
 
-      const target: CardTarget = { type: "hero", owner: this.id, sphere };
+      const target: CardTarget = { type: 'hero', owner: this.id, sphere };
 
       const targets = this.game.getCards(target);
 
@@ -563,11 +563,11 @@ export class PlayerCtx {
       const amount = this.game.getNumber(action.payResources.amount);
 
       if (amount > 0) {
-        this.game.next("stateCheck", {
+        this.game.next('stateCheck', {
           choice: {
             id: this.game.state.nextId++,
             player: this.id,
-            type: "split",
+            type: 'split',
             min: amount,
             max: amount,
             title: `Choose how pay ${action.payResources.amount} ${action.payResources.sphere} resources`,
@@ -589,17 +589,17 @@ export class PlayerCtx {
         return;
       }
 
-      this.game.next("stateCheck", {
+      this.game.next('stateCheck', {
         choice: {
           id: this.game.state.nextId++,
           player: this.id,
           title: action.chooseCardActions.title,
-          type: action.chooseCardActions.multi ? "multi" : "single",
+          type: action.chooseCardActions.multi ? 'multi' : 'single',
           optional: action.chooseCardActions.optional ?? false,
           options: cards.flatMap((card) => {
             const action: Action = {
               useScope: {
-                var: "target",
+                var: 'target',
                 card: card.id,
               },
               action: {
@@ -631,16 +631,16 @@ export class PlayerCtx {
       if (players.length == 0) {
         return;
       }
-      this.game.next("stateCheck", {
+      this.game.next('stateCheck', {
         choice: {
           id: this.game.state.nextId++,
           player: this.id,
           title: action.choosePlayerActions.title,
-          type: action.choosePlayerActions.multi ? "multi" : "single",
+          type: action.choosePlayerActions.multi ? 'multi' : 'single',
           optional: action.choosePlayerActions.optional ?? false,
           options: players
             .filter((p) =>
-              p.game.withScope({ var: "target", player: p.id }, () =>
+              p.game.withScope({ var: 'target', player: p.id }, () =>
                 p.canExecute(playerAction)
               )
             )
@@ -648,7 +648,7 @@ export class PlayerCtx {
               title: player.id,
               action: {
                 useScope: {
-                  var: "target",
+                  var: 'target',
                   player: player.id,
                 },
                 action: {
@@ -667,12 +667,12 @@ export class PlayerCtx {
         this.game.canExecute(a.action, false)
       );
 
-      this.game.next("stateCheck", {
+      this.game.next('stateCheck', {
         choice: {
           id: this.game.state.nextId++,
           player: this.id,
           title: action.chooseActions.title,
-          type: action.chooseActions.multi ? "multi" : "single",
+          type: action.chooseActions.multi ? 'multi' : 'single',
           optional: action.chooseActions.optional ?? false,
           options,
         },
@@ -684,11 +684,11 @@ export class PlayerCtx {
     if (action.chooseX) {
       const min = this.game.getNumber(action.chooseX.min);
       const max = this.game.getNumber(action.chooseX.max);
-      this.game.next("stateCheck", {
+      this.game.next('stateCheck', {
         choice: {
           id: this.game.state.nextId++,
           player: this.id,
-          type: "X",
+          type: 'X',
           min,
           max,
           action: action.chooseX.action,
@@ -698,15 +698,15 @@ export class PlayerCtx {
     }
 
     if (action.discard) {
-      const target: CardTarget = { zone: { player: this.id, type: "hand" } };
+      const target: CardTarget = { zone: { player: this.id, type: 'hand' } };
       const discard: CardAction = {
         move: {
-          from: { player: this.id, type: "hand" },
-          to: { player: this.id, type: "discardPile" },
+          from: { player: this.id, type: 'hand' },
+          to: { player: this.id, type: 'discardPile' },
         },
       };
 
-      if (action.discard.target === "choice") {
+      if (action.discard.target === 'choice') {
         this.game.next({
           repeat: {
             amount: action.discard.amount,
@@ -714,7 +714,7 @@ export class PlayerCtx {
               player: this.id,
               action: {
                 chooseCardActions: {
-                  title: "Choose card to discard",
+                  title: 'Choose card to discard',
                   target,
                   action: discard,
                 },
@@ -725,7 +725,7 @@ export class PlayerCtx {
         return;
       }
 
-      if (action.discard.target === "random") {
+      if (action.discard.target === 'random') {
         const cards = this.game.getCards(target);
         const choosen = this.game.random
           .shuffle(cards)
@@ -760,7 +760,7 @@ export class PlayerCtx {
       //   });
       // }
       // return;
-      throw new Error("not implemented");
+      throw new Error('not implemented');
     }
 
     if (action.useLimit) {
@@ -781,7 +781,7 @@ export class PlayerCtx {
         card: {
           zone: {
             player: this.id,
-            type: "engaged",
+            type: 'engaged',
           },
         },
         action: action.engaged,
@@ -828,11 +828,13 @@ export class PlayerCtx {
     throw new Error(`unknown PlayerAaction: ${JSON.stringify(action)}`);
   }
 
-  getNumber(expr: PlayerNumberExpr) {
-    if ("resources" in expr) {
+  getNumber(expr: PlayerNumberExpr): number {
+    if ('resources' in expr) {
       const sphere = expr.resources;
       const heroes = this.game.getCards({ sphere, controller: this.id });
       return sum(heroes.map((hero) => hero.token.resources));
     }
+
+    throw new Error('not implemented');
   }
 }

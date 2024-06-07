@@ -7,10 +7,10 @@ import {
   reverse,
   sum,
   uniq,
-} from "lodash";
-import { takeRight } from "lodash/fp";
-import { computed, makeObservable, toJS } from "mobx";
-import { CardId, Random, Token, keys, values } from "@card-engine-nx/basic";
+} from 'lodash';
+import { min, multiply, takeRight } from 'lodash/fp';
+import { computed, makeObservable, toJS } from 'mobx';
+import { CardId, Random, Token, keys, values } from '@card-engine-nx/basic';
 import {
   Action,
   BoolExpr,
@@ -24,12 +24,12 @@ import {
   ZoneTarget,
   createCardState,
   createPlayerState,
-} from "@card-engine-nx/state";
-import { UIEvents } from "../events";
-import { Logger } from "../logger";
-import { gameRound } from "../round";
-import { PlayerCtx, ZoneCtx, CardCtx } from "./internal";
-import { getCardFromScope, getPlayerFromScope } from "./utils";
+} from '@card-engine-nx/state';
+import { UIEvents } from '../events';
+import { Logger } from '../logger';
+import { gameRound } from '../round';
+import { PlayerCtx, ZoneCtx, CardCtx } from './internal';
+import { getCardFromScope, getPlayerFromScope } from './utils';
 
 export abstract class BaseCtx {
   private readonly _scopes: Scope[] = [];
@@ -58,7 +58,7 @@ export abstract class BaseCtx {
   get players() {
     return mapValues(
       this.state.players,
-      (player) => new PlayerCtx(this, player?.id ?? "0", this.observable)
+      (player) => new PlayerCtx(this, player?.id ?? '0', this.observable)
     );
   }
 
@@ -84,7 +84,7 @@ export abstract class BaseCtx {
   }
 
   getCard(target: CardTarget) {
-    if (typeof target === "number") {
+    if (typeof target === 'number') {
       return this.cards[target];
     }
 
@@ -94,11 +94,11 @@ export abstract class BaseCtx {
       return cards[0];
     }
 
-    throw new Error("multiple or none cards found");
+    throw new Error('multiple or none cards found');
   }
 
   getCards(target: CardTarget): CardCtx[] {
-    if (typeof target === "number") {
+    if (typeof target === 'number') {
       return [this.cards[target]];
     }
 
@@ -106,12 +106,12 @@ export abstract class BaseCtx {
       return target.map((id) => this.cards[id]);
     }
 
-    if (target === "each") {
+    if (target === 'each') {
       return values(this.cards);
     }
 
-    if (typeof target !== "string" && target.top) {
-      if (typeof target.top !== "string" && "amount" in target.top) {
+    if (typeof target !== 'string' && target.top) {
+      if (typeof target.top !== 'string' && 'amount' in target.top) {
         const zone = this.getZone(target.top.zone);
         const cards = zone.state.cards.map((id) => this.cards[id]);
         const predicate = target.top.filter;
@@ -126,12 +126,12 @@ export abstract class BaseCtx {
       return this.getCards(last(zone.state.cards) ?? []);
     }
 
-    if (typeof target !== "string" && target.take) {
+    if (typeof target !== 'string' && target.take) {
       const all = this.getCards({ ...target, take: undefined });
       return all.slice(0, target.take);
     }
 
-    if (typeof target !== "string" && target.var) {
+    if (typeof target !== 'string' && target.var) {
       const inScope = getCardFromScope(this.scopes, target.var);
       if (inScope) {
         return this.getCards(inScope);
@@ -146,28 +146,214 @@ export abstract class BaseCtx {
   }
 
   getBool(expr: BoolExpr): boolean {
-    throw new Error("Method not implemented.");
-  }
-
-  getNumber(expr: NumberExpr) {
-    if (typeof expr === "number") {
+    if (typeof expr === 'boolean') {
       return expr;
     }
 
-    if (typeof expr === "string") {
-      throw new Error("unknown NumberExpr: " + JSON.stringify(expr));
+    if (expr === 'enemiesToEngage') {
+      // TODO use exprs
+      const playerThreats = values(this.state.players).map((p) => p.thread);
+
+      const enemies = this.getCards({
+        type: 'enemy',
+        zone: 'stagingArea',
+      });
+
+      const enemyEngagements = enemies.flatMap((e) =>
+        e.props.engagement ? [e.props.engagement] : []
+      );
+
+      const minEng = min(enemyEngagements);
+      const maxEng = max(playerThreats);
+
+      if (minEng === undefined || maxEng === undefined) {
+        return false;
+      }
+
+      return minEng <= maxEng;
     }
 
-    if ("card" in expr && expr.card) {
-      const card = this.getCard(expr.card.target);
-      return card.getNumber(expr.card.value);
+    if (expr === 'undefended.attack') {
+      const defenders = this.getCards({ mark: 'defending' });
+      return defenders.length === 0;
     }
 
-    throw new Error("unknown NumberExpr: " + JSON.stringify(expr));
+    if (expr.phase) {
+      return this.state.phase === expr.phase;
+    }
+
+    if (expr.someCard) {
+      const cards = this.getCards(expr.someCard);
+      return cards.length > 0;
+    }
+
+    if (expr.card) {
+      const target = this.getCards(expr.card.target);
+      if (target.length === 0) {
+        return false;
+      }
+
+      if (target.length === 1) {
+        return target[0].getBool(expr.card.value);
+      }
+    }
+
+    if (expr.and) {
+      return expr.and.every((e) => this.getBool(e));
+    }
+
+    if (expr.event) {
+      const event = last(this.state.event);
+      if (expr.event.type === event?.type) {
+        if (expr.event.type === 'destroyed') {
+          const target = this.getCards(expr.event.isAttacker).map((a) => a.id);
+          return event.attackers.some((a) => target.includes(a));
+        }
+      }
+
+      throw new Error('incorrect event type');
+    }
+
+    if (expr.not) {
+      return !this.getBool(expr.not);
+    }
+
+    if (expr.eq) {
+      const a = this.getNumber(expr.eq[0]);
+      const b = this.getNumber(expr.eq[1]);
+      return a === b;
+    }
+
+    if (expr.more) {
+      const a = this.getNumber(expr.more[0]);
+      const b = this.getNumber(expr.more[1]);
+      return a > b;
+    }
+
+    if (expr.less) {
+      const a = this.getNumber(expr.less[0]);
+      const b = this.getNumber(expr.less[1]);
+      return a < b;
+    }
+
+    throw new Error(`unknown bool expression: ${JSON.stringify(expr)}`);
+  }
+
+  getNumber(expr: NumberExpr): number {
+    if (typeof expr === 'number') {
+      return expr;
+    }
+
+    if (expr === 'countOfPlayers') {
+      return values(this.state.players).filter((p) => !p.eliminated).length;
+    }
+
+    if (expr === 'totalThreat') {
+      const values = this.state.zones.stagingArea.cards
+        .map((c) => this.cards[c])
+        .map((v) => (v.rules.noThreatContribution ? 0 : v.props.threat ?? 0));
+      return sum(values);
+    }
+
+    if (expr === 'X') {
+      // const x = getFromScope(ctx, (s) => s.x);
+      // if (x === undefined) {
+      //   throw new Error('no x value');
+      // }
+      // return x;
+      throw new Error('not implemented');
+    }
+
+    if (expr === 'surge') {
+      return this.state.surge;
+    }
+
+    if (expr.card) {
+      const cards = this.getCards(expr.card.target);
+      if (cards.length === 1) {
+        return cards[0].getNumber(expr.card.value);
+      } else {
+        if (expr.card.sum) {
+          return sum(
+            cards.map((card) => card.getNumber(expr.card?.value || 0))
+          );
+        } else {
+          throw new Error('multiple card');
+        }
+      }
+    }
+
+    if (expr.player) {
+      const players = this.getPlayers(expr.player.target);
+      if (players.length === 1) {
+        return players[0].getNumber(expr.player.value);
+      } else {
+        throw new Error('multiple players card');
+      }
+    }
+
+    if (expr.event) {
+      const event = last(this.state.event);
+
+      if (!event) {
+        throw new Error('no active event');
+      }
+
+      if (expr.event.type === event.type) {
+        if (expr.event.type === 'receivedDamage') {
+          if (expr.event.value === 'damage') {
+            return event.damage;
+          }
+        }
+      }
+    }
+
+    if (expr.plus) {
+      const values = expr.plus.map((e) => this.getNumber(e));
+      return sum(values) ?? 0;
+    }
+
+    if (expr.minus) {
+      const a = this.getNumber(expr.minus[0]);
+      const b = this.getNumber(expr.minus[1]);
+      return a - b;
+    }
+
+    if (expr.multiply) {
+      const values = expr.multiply.map((e) => this.getNumber(e));
+      return multiply(values[0], values[1]) ?? 0;
+    }
+
+    if (expr.if) {
+      const result = this.getBool(expr.if.cond);
+      if (result) {
+        return this.getNumber(expr.if.true);
+      } else {
+        return this.getNumber(expr.if.false);
+      }
+    }
+
+    if (expr.count) {
+      if (expr.count.cards) {
+        const cards = this.getCards(expr.count.cards);
+        return cards.length;
+      }
+    }
+
+    if (expr.min) {
+      const values = expr.min.map((v) => this.getNumber(v));
+      const minimun = min(values);
+      if (minimun === undefined) {
+        throw new Error('no values');
+      }
+      return minimun;
+    }
+
+    throw new Error(`unknown number expression: ${JSON.stringify(expr)}`);
   }
 
   getZone(target: ZoneTarget) {
-    if (typeof target === "string") {
+    if (typeof target === 'string') {
       return new ZoneCtx(this, target);
     }
 
@@ -180,32 +366,32 @@ export abstract class BaseCtx {
       return action.every((a) => this.canExecute(a, payment));
     }
 
-    if (typeof action === "string") {
-      if (action === "revealEncounterCard") {
+    if (typeof action === 'string') {
+      if (action === 'revealEncounterCard') {
         return true;
       }
 
-      if (action === "shuffleEncounterDeck") {
+      if (action === 'shuffleEncounterDeck') {
         return true;
       }
 
-      if (action === "endScope") {
+      if (action === 'endScope') {
         return true;
       }
 
       throw new Error(`not implemented: canExecute ${JSON.stringify(action)}`);
     } else {
-      if ("player" in action && "action" in action) {
+      if ('player' in action && 'action' in action) {
         const players = this.getPlayers(action.player);
         return players.some((player) => player.canExecute(action.action));
       }
 
-      if ("card" in action && "action" in action) {
+      if ('card' in action && 'action' in action) {
         const cards = this.getCards(action.card);
         return cards.some((card) => card.canExecute(action.action));
       }
 
-      if ("useScope" in action) {
+      if ('useScope' in action) {
         const scope: Scope = {};
         this.executeScopeAction(scope, action.useScope);
         return this.useScope(scope, () =>
@@ -274,23 +460,23 @@ export abstract class BaseCtx {
       return;
     }
 
-    if (action === "empty") {
+    if (action === 'empty') {
       return;
     }
 
-    if (action === "shuffleEncounterDeck") {
+    if (action === 'shuffleEncounterDeck') {
       const zone = this.state.zones.encounterDeck;
       zone.cards = this.random.shuffle(zone.cards);
       return;
     }
 
-    if (action === "setup") {
+    if (action === 'setup') {
       this.next(
         {
           choice: {
             id: this.state.nextId++,
-            title: "Setup",
-            type: "show",
+            title: 'Setup',
+            type: 'show',
             cardId: this.state.zones.questArea.cards[0] ?? 0,
           },
         },
@@ -299,17 +485,17 @@ export abstract class BaseCtx {
         ),
         {
           card: {
-            zone: "questArea",
+            zone: 'questArea',
           },
           action: {
-            flip: "back",
+            flip: 'back',
           },
         },
         {
           choice: {
             id: this.state.nextId++,
-            title: "Setup",
-            type: "show",
+            title: 'Setup',
+            type: 'show',
             cardId: this.state.zones.questArea.cards[0] ?? 0,
           },
         }
@@ -317,44 +503,44 @@ export abstract class BaseCtx {
       return;
     }
 
-    if (action === "endRound") {
+    if (action === 'endRound') {
       this.state.actionLimits = this.state.actionLimits.filter(
-        (l) => l.type !== "round"
+        (l) => l.type !== 'round'
       );
 
       for (const player of values(this.state.players)) {
         for (const limit of keys(player.limits)) {
-          if (player.limits[limit].type === "round") {
+          if (player.limits[limit].type === 'round') {
             delete player.limits[limit];
           }
         }
       }
 
       this.state.modifiers = this.state.modifiers.filter(
-        (m) => m.until !== "end_of_round"
+        (m) => m.until !== 'end_of_round'
       );
 
-      this.next({ event: { type: "end_of_round" } }, gameRound());
+      this.next({ event: { type: 'end_of_round' } }, gameRound());
       this.state.triggers.end_of_round = [];
       this.state.round++;
       return;
     }
 
-    if (action === "endPhase") {
+    if (action === 'endPhase') {
       this.state.actionLimits = this.state.actionLimits.filter(
-        (l) => l.type !== "phase"
+        (l) => l.type !== 'phase'
       );
 
       for (const player of values(this.state.players)) {
         for (const limit of keys(player.limits)) {
-          if (player.limits[limit].type === "phase") {
+          if (player.limits[limit].type === 'phase') {
             delete player.limits[limit];
           }
         }
       }
 
       this.state.modifiers = this.state.modifiers.filter(
-        (m) => m.until !== "end_of_phase"
+        (m) => m.until !== 'end_of_phase'
       );
 
       this.next(...this.state.triggers.end_of_phase);
@@ -362,22 +548,22 @@ export abstract class BaseCtx {
       return;
     }
 
-    if (action === "chooseTravelDestination") {
-      const existing = this.getCards({ zoneType: "activeLocation" });
+    if (action === 'chooseTravelDestination') {
+      const existing = this.getCards({ zoneType: 'activeLocation' });
       if (existing.length > 0) {
         return;
       }
 
       this.next({
-        player: "first",
+        player: 'first',
         action: {
           chooseCardActions: {
-            title: "Choose location for travel",
+            title: 'Choose location for travel',
             target: {
-              zone: "stagingArea",
-              type: "location",
+              zone: 'stagingArea',
+              type: 'location',
             },
-            action: "travel",
+            action: 'travel',
             optional: true,
           },
         },
@@ -385,60 +571,60 @@ export abstract class BaseCtx {
       return;
     }
 
-    if (action === "dealShadowCards") {
+    if (action === 'dealShadowCards') {
       this.next({
-        card: { type: "enemy", zoneType: "engaged" },
-        action: "dealShadowCard",
+        card: { type: 'enemy', zoneType: 'engaged' },
+        action: 'dealShadowCard',
       });
       return;
     }
 
-    if (action === "passFirstPlayerToken") {
-      const next = this.getPlayer("next");
+    if (action === 'passFirstPlayerToken') {
+      const next = this.getPlayer('next');
       this.state.firstPlayer = next.id;
       return;
     }
 
-    if (action === "resolveQuesting") {
+    if (action === 'resolveQuesting') {
       const totalWillpower = this.getNumber({
         card: {
-          target: { mark: "questing" },
-          value: "willpower",
+          target: { mark: 'questing' },
+          value: 'willpower',
           sum: true,
         },
       });
 
-      const totalThreat = this.getNumber("totalThreat");
+      const totalThreat = this.getNumber('totalThreat');
 
       const diff = totalWillpower - totalThreat;
       if (diff > 0) {
         this.next({ placeProgress: diff });
       }
       if (diff < 0) {
-        this.next({ player: "each", action: { incrementThreat: -diff } });
+        this.next({ player: 'each', action: { incrementThreat: -diff } });
       }
       return;
     }
 
-    if (action === "revealEncounterCard") {
-      const card = this.getCard({ top: "encounterDeck" });
+    if (action === 'revealEncounterCard') {
+      const card = this.getCard({ top: 'encounterDeck' });
 
       if (!card) {
         if (this.state.zones.discardPile.cards.length > 0) {
           this.next(
             {
               card: {
-                zone: "discardPile",
+                zone: 'discardPile',
               },
               action: {
                 move: {
-                  to: "encounterDeck",
-                  side: "back",
+                  to: 'encounterDeck',
+                  side: 'back',
                 },
               },
             },
-            "shuffleEncounterDeck",
-            "revealEncounterCard"
+            'shuffleEncounterDeck',
+            'revealEncounterCard'
           );
         }
 
@@ -447,23 +633,23 @@ export abstract class BaseCtx {
 
       this.next({
         card: card.id,
-        action: "reveal",
+        action: 'reveal',
       });
 
       return;
     }
 
-    if (action === "win") {
+    if (action === 'win') {
       const playerScores = values(this.state.players).map((p) => {
         const threat = p.thread;
         const deadHeroes = this.getCards({
-          zone: { player: p.id, type: "discardPile" },
-          type: "hero",
+          zone: { player: p.id, type: 'discardPile' },
+          type: 'hero',
         });
 
         const aliveHeroes = this.getCards({
-          zone: { player: p.id, type: "discardPile" },
-          type: "hero",
+          zone: { player: p.id, type: 'discardPile' },
+          type: 'hero',
         });
 
         return (
@@ -474,7 +660,7 @@ export abstract class BaseCtx {
       });
 
       const victoryCards = this.getCards({
-        zoneType: "victoryDisplay",
+        zoneType: 'victoryDisplay',
       });
 
       const score =
@@ -489,7 +675,7 @@ export abstract class BaseCtx {
       return;
     }
 
-    if (action === "loose") {
+    if (action === 'loose') {
       this.state.result = {
         win: false,
         score: 0,
@@ -497,57 +683,57 @@ export abstract class BaseCtx {
       return;
     }
 
-    if (action === "stackPop") {
+    if (action === 'stackPop') {
       const effect = this.state.stack.pop();
       if (effect) {
-        if ("whenRevealed" in effect && !effect.canceled) {
+        if ('whenRevealed' in effect && !effect.canceled) {
           this.next(effect.whenRevealed);
         }
-        if ("shadow" in effect && !effect.canceled) {
+        if ('shadow' in effect && !effect.canceled) {
           this.next(effect.shadow);
         }
       }
       return;
     }
 
-    if (action === "stateCheck") {
-      const destroy = this.getCards("destroyed");
-      const explore = this.getCards({ simple: "explored", type: "location" });
-      const advance = this.getCards({ simple: "explored", type: "quest" });
+    if (action === 'stateCheck') {
+      const destroy = this.getCards('destroyed');
+      const explore = this.getCards({ simple: 'explored', type: 'location' });
+      const advance = this.getCards({ simple: 'explored', type: 'quest' });
 
       if (destroy.length > 0 || explore.length > 0 || advance.length > 0) {
-        this.next("stateCheck");
+        this.next('stateCheck');
       }
 
       if (destroy.length > 0) {
         this.next({
           card: destroy.map((c) => c.id),
-          action: "destroy",
+          action: 'destroy',
         });
       }
 
       if (explore.length > 0) {
         this.next({
           card: explore.map((c) => c.id),
-          action: "explore",
+          action: 'explore',
         });
       }
 
       if (advance.length > 0) {
         this.next({
           card: advance.map((c) => c.id),
-          action: "advance",
+          action: 'advance',
         });
       }
 
       for (const player of values(this.state.players)) {
         const heroes = this.getCards({
-          simple: "inAPlay",
-          type: "hero",
+          simple: 'inAPlay',
+          type: 'hero',
           controller: player.id,
         });
         if (heroes.length === 0) {
-          this.next({ player: player.id, action: "eliminate" });
+          this.next({ player: player.id, action: 'eliminate' });
           return;
         }
       }
@@ -555,13 +741,13 @@ export abstract class BaseCtx {
       return;
     }
 
-    if (action === "sendCommitedEvents") {
-      const questers = this.getCards({ mark: "questing" });
+    if (action === 'sendCommitedEvents') {
+      const questers = this.getCards({ mark: 'questing' });
       if (questers.length > 0) {
         this.next(
           questers.map((card) => ({
             event: {
-              type: "commits",
+              type: 'commits',
               card: card.id,
             },
           }))
@@ -570,29 +756,29 @@ export abstract class BaseCtx {
       return;
     }
 
-    if (action === "endScope") {
+    if (action === 'endScope') {
       this.state.scopes.pop();
       return;
     }
 
-    if (action === "surge++") {
+    if (action === 'surge++') {
       this.state.surge++;
       return;
     }
 
-    if (action === "surge--") {
+    if (action === 'surge--') {
       this.state.surge--;
       return;
     }
 
-    if ("player" in action && "action" in action) {
+    if ('player' in action && 'action' in action) {
       const players = this.getPlayers(action.player);
       for (const player of players) {
         if (action.scooped) {
           player.execute(action.action);
         } else {
           this.next({
-            useScope: { var: "target", player: player.id },
+            useScope: { var: 'target', player: player.id },
             action: { player: player.id, action: action.action, scooped: true },
           });
         }
@@ -600,7 +786,7 @@ export abstract class BaseCtx {
       return;
     }
 
-    if ("card" in action && "action" in action) {
+    if ('card' in action && 'action' in action) {
       const cards = this.getCards(action.card);
 
       if (action.scooped) {
@@ -611,7 +797,7 @@ export abstract class BaseCtx {
       } else {
         for (const card of cards) {
           this.next({
-            useScope: { var: "target", card: card.id },
+            useScope: { var: 'target', card: card.id },
             action: { card: card.id, action: action.action, scooped: true },
           });
         }
@@ -620,23 +806,23 @@ export abstract class BaseCtx {
       }
     }
 
-    if ("useScope" in action) {
+    if ('useScope' in action) {
       const scope: Scope = {};
       this.executeScopeAction(scope, action.useScope);
       this.state.scopes.push(scope);
-      this.next(action.action, "endScope");
+      this.next(action.action, 'endScope');
       return;
     }
 
     if (action.stackPush) {
-      if (action.stackPush.type === "whenRevealed") {
+      if (action.stackPush.type === 'whenRevealed') {
         const hasEffect = this.canExecute(action.stackPush.whenRevealed, false);
         if (!hasEffect) {
           return;
         }
       }
 
-      if (action.stackPush.type === "shadow") {
+      if (action.stackPush.type === 'shadow') {
         const hasEffect = this.canExecute(action.stackPush.shadow, false);
         if (!hasEffect) {
           return;
@@ -645,53 +831,53 @@ export abstract class BaseCtx {
 
       this.state.stack.push(action.stackPush);
 
-      // const responses = this.view.responses[action.stackPush.type] ?? [];
-      // const reponsesAction: Action =
-      //   responses.length > 0
-      //     ? [
-      //         {
-      //           player: 'first',
-      //           action: {
-      //             chooseActions: {
-      //               title: `Choose responses for: ${action.stackPush.description}`,
-      //               actions: responses.map((r) => ({
-      //                 title: r.description,
-      //                 action: {
-      //                   useScope: [
-      //                     {
-      //                       var: 'target',
-      //                       card: r.card,
-      //                     },
-      //                     {
-      //                       var: 'self',
-      //                       card: r.source,
-      //                     },
-      //                   ],
-      //                   action: r.action,
-      //                 },
-      //               })),
-      //               optional: true,
-      //               multi: true,
-      //             },
-      //           },
-      //         },
-      //       ]
-      //     : [];
-      // this.next(reponsesAction);
+      const responses = this.modifiers.responses[action.stackPush.type] ?? [];
+      const reponsesAction: Action =
+        responses.length > 0
+          ? [
+              {
+                player: 'first',
+                action: {
+                  chooseActions: {
+                    title: `Choose responses for: ${action.stackPush.description}`,
+                    actions: responses.map((r) => ({
+                      title: r.description,
+                      action: {
+                        useScope: [
+                          {
+                            var: 'target',
+                            card: r.cards,
+                          },
+                          {
+                            var: 'self',
+                            card: r.source,
+                          },
+                        ],
+                        action: r.action,
+                      },
+                    })),
+                    optional: true,
+                    multi: true,
+                  },
+                },
+              },
+            ]
+          : [];
+      this.next(reponsesAction);
       return;
     }
 
     if (action.cancel) {
       const effect = last(this.state.stack);
       if (!effect) {
-        throw new Error("no effect to cancel");
+        throw new Error('no effect to cancel');
       }
 
-      if ("whenRevealed" in effect && action.cancel === "when.revealed") {
+      if ('whenRevealed' in effect && action.cancel === 'when.revealed') {
         effect.canceled = true;
       }
 
-      if ("shadow" in effect && action.cancel === "shadow") {
+      if ('shadow' in effect && action.cancel === 'shadow') {
         effect.canceled = true;
       }
       return;
@@ -699,12 +885,12 @@ export abstract class BaseCtx {
 
     if (action.addPlayer) {
       const playerId = !this.state.players[0]
-        ? "0"
+        ? '0'
         : !this.state.players[1]
-        ? "1"
+        ? '1'
         : this.state.players[2]
-        ? "3"
-        : "2";
+        ? '3'
+        : '2';
 
       this.state.players[playerId] = createPlayerState(playerId);
 
@@ -712,8 +898,8 @@ export abstract class BaseCtx {
         this.next({
           addCard: {
             definition: card,
-            side: "back",
-            zone: { player: playerId, type: "library" },
+            side: 'back',
+            zone: { player: playerId, type: 'library' },
           },
         });
       }
@@ -722,8 +908,8 @@ export abstract class BaseCtx {
         this.next({
           addCard: {
             definition: hero,
-            side: "front",
-            zone: { player: playerId, type: "playerArea" },
+            side: 'front',
+            zone: { player: playerId, type: 'playerArea' },
           },
         });
       }
@@ -744,20 +930,20 @@ export abstract class BaseCtx {
         this.next({
           addCard: {
             definition: questCard,
-            side: "front",
-            zone: "questDeck",
+            side: 'front',
+            zone: 'questDeck',
           },
         });
       }
 
       for (const set of action.setupScenario.scenario.sets) {
-        if (action.setupScenario.difficulty === "normal") {
+        if (action.setupScenario.difficulty === 'normal') {
           for (const card of set.normal) {
             this.next({
               addCard: {
                 definition: card,
-                side: "back",
-                zone: "encounterDeck",
+                side: 'back',
+                zone: 'encounterDeck',
               },
             });
           }
@@ -767,8 +953,8 @@ export abstract class BaseCtx {
           this.next({
             addCard: {
               definition: card,
-              side: "back",
-              zone: "encounterDeck",
+              side: 'back',
+              zone: 'encounterDeck',
             },
           });
         }
@@ -788,11 +974,11 @@ export abstract class BaseCtx {
     }
 
     if (action.playerActions) {
-      this.next("stateCheck", {
+      this.next('stateCheck', {
         choice: {
           id: this.state.nextId++,
           title: action.playerActions,
-          type: "actions",
+          type: 'actions',
         },
       });
       return;
@@ -825,11 +1011,11 @@ export abstract class BaseCtx {
         return;
       }
 
-      const activeLocations = this.getCards({ top: "activeLocation" });
+      const activeLocations = this.getCards({ top: 'activeLocation' });
 
       if (activeLocations.length === 0) {
         this.next({
-          card: { top: "questArea" },
+          card: { top: 'questArea' },
           action: { placeProgress: action.placeProgress },
         });
         return;
@@ -849,13 +1035,13 @@ export abstract class BaseCtx {
               action: { placeProgress: progressLocation },
             },
             {
-              card: { top: "questArea" },
+              card: { top: 'questArea' },
               action: { placeProgress: progressQuest },
             }
           );
         }
       } else {
-        throw new Error("multiple active locations");
+        throw new Error('multiple active locations');
       }
       return;
     }
@@ -891,7 +1077,7 @@ export abstract class BaseCtx {
     }
 
     if (action.event) {
-      if (action.event === "none") {
+      if (action.event === 'none') {
         this.state.event?.pop();
         return;
       }
@@ -902,111 +1088,113 @@ export abstract class BaseCtx {
         this.state.event = [];
       }
 
-      if (event.type === "revealed") {
+      if (event.type === 'revealed') {
         this.state.choice = {
           id: this.state.nextId++,
-          title: "Revealed",
-          type: "show",
+          title: 'Revealed',
+          type: 'show',
           cardId: event.card,
         };
       }
 
       this.state.event.push(action.event);
 
-      this.next({ event: "none" });
+      this.next({ event: 'none' });
 
-      // const reponses = this.view.responses[event.type] ?? [];
-      // const forced = reponses
-      //   .filter((r) => r.forced)
-      //   .filter((r) => ('card' in event ? r.card === event.card : true))
-      //   .filter(
-      //     (r) =>
-      //       !r.condition ||
-      //       calculateBoolExpr(
-      //         r.condition,
-      //         updatedScopes(ctx, [
-      //           { var: 'target', card: r.card },
-      //           { var: 'self', card: r.source },
-      //         ])
-      //       )
-      //   );
-      // const optional = reponses
-      //   .filter((r) => !r.forced)
-      //   .filter((r) => ('card' in event ? r.card === event.card : true))
-      //   .filter(
-      //     (r) =>
-      //       !r.condition ||
-      //       calculateBoolExpr(
-      //         r.condition,
-      //         updatedScopes(ctx, [
-      //           { var: 'target', card: r.card },
-      //           { var: 'self', card: r.source },
-      //         ])
-      //       )
-      //   );
-      // if (optional.length > 0) {
-      //   this.next({
-      //     player: 'first',
-      //     action: {
-      //       chooseActions: {
-      //         title: 'Choose responses for event ' + event.type,
-      //         actions: optional.map((r) => ({
-      //           title: r.description,
-      //           action: {
-      //             useScope: [
-      //               {
-      //                 var: 'target',
-      //                 card: r.card,
-      //               },
-      //               {
-      //                 var: 'self',
-      //                 card: r.source,
-      //               },
-      //             ],
-      //             action: r.action,
-      //           },
-      //         })),
-      //         optional: true,
-      //         multi: true,
-      //       },
-      //     },
-      //   });
-      // }
-      // if (forced.length > 0) {
-      //   this.next(
-      //     ...forced.map((r) => ({
-      //       useScope: [
-      //         {
-      //           var: 'target',
-      //           card: r.card,
-      //         },
-      //         {
-      //           var: 'self',
-      //           card: r.source,
-      //         },
-      //       ],
-      //       action: r.action,
-      //     }))
-      //   );
-      // }
-      // if (action.event.type === 'revealed') {
-      //   if (this.view.cards[action.event.card].props.keywords?.surge) {
-      //     this.next('surge++');
-      //   }
-      //   const whenRevealed =
-      //     this.view.cards[action.event.card].rules.whenRevealed ?? [];
-      //   if (whenRevealed.length > 0) {
-      //     const target = action.event.card;
-      //     this.next(
-      //       whenRevealed.map((effect) => ({
-      //         card: target,
-      //         action: {
-      //           whenRevealed: effect,
-      //         },
-      //       }))
-      //     );
-      //   }
-      // }
+      const reponses = this.modifiers.responses[event.type] ?? [];
+      const forced = reponses
+        .filter((r) => r.forced)
+        .filter((r) => ('card' in event ? r.cards.includes(event.card) : true))
+        .filter(
+          (r) =>
+            !r.condition ||
+            this.withScope(
+              [
+                { var: 'target', card: r.cards },
+                { var: 'self', card: r.source },
+              ],
+              () => r.condition && this.getBool(r.condition)
+            )
+        );
+
+      const optional = reponses
+        .filter((r) => !r.forced)
+        .filter((r) => ('card' in event ? r.cards.includes(event.card) : true))
+        .filter(
+          (r) =>
+            !r.condition ||
+            this.withScope(
+              [
+                { var: 'target', card: r.cards },
+                { var: 'self', card: r.source },
+              ],
+              () => r.condition && this.getBool(r.condition)
+            )
+        );
+
+      if (optional.length > 0) {
+        this.next({
+          player: 'first',
+          action: {
+            chooseActions: {
+              title: 'Choose responses for event ' + event.type,
+              actions: optional.map((r) => ({
+                title: r.description,
+                action: {
+                  useScope: [
+                    {
+                      var: 'target',
+                      card: r.cards,
+                    },
+                    {
+                      var: 'self',
+                      card: r.source,
+                    },
+                  ],
+                  action: r.action,
+                },
+              })),
+              optional: true,
+              multi: true,
+            },
+          },
+        });
+      }
+      if (forced.length > 0) {
+        this.next(
+          ...forced.map((r) => ({
+            useScope: [
+              {
+                var: 'target',
+                card: r.cards,
+              },
+              {
+                var: 'self',
+                card: r.source,
+              },
+            ],
+            action: r.action,
+          }))
+        );
+      }
+      if (action.event.type === 'revealed') {
+        if (this.cards[action.event.card].props.keywords?.surge) {
+          this.next('surge++');
+        }
+        const whenRevealed =
+          this.cards[action.event.card].rules.whenRevealed ?? [];
+        if (whenRevealed.length > 0) {
+          const target = action.event.card;
+          this.next(
+            whenRevealed.map((effect) => ({
+              card: target,
+              action: {
+                whenRevealed: effect,
+              },
+            }))
+          );
+        }
+      }
       return;
     }
 
@@ -1030,7 +1218,7 @@ export abstract class BaseCtx {
             },
           });
         } else {
-          throw new Error("unexpected defender count");
+          throw new Error('unexpected defender count');
         }
       }
       return;
@@ -1056,7 +1244,7 @@ export abstract class BaseCtx {
     if (action.addCard) {
       const zone = this.getZone(action.addCard.zone);
       const owner =
-        typeof action.addCard.zone !== "string"
+        typeof action.addCard.zone !== 'string'
           ? action.addCard.zone.player
           : undefined;
       const cardId = this.state.nextId++;
@@ -1065,14 +1253,14 @@ export abstract class BaseCtx {
         cardId,
         action.addCard.side,
         action.addCard.definition,
-        typeof action.addCard.zone !== "string" &&
-          action.addCard.zone.type !== "engaged"
+        typeof action.addCard.zone !== 'string' &&
+          action.addCard.zone.type !== 'engaged'
           ? owner
           : undefined,
         action.addCard.zone
       );
 
-      const tokens: Token[] = ["damage", "progress", "resources"];
+      const tokens: Token[] = ['damage', 'progress', 'resources'];
 
       for (const token of tokens) {
         if (action.addCard[token]) {
@@ -1094,7 +1282,7 @@ export abstract class BaseCtx {
           ids.push(attachmenId);
           const attachmentState = createCardState(
             attachmenId,
-            "front",
+            'front',
             atachDef,
             owner,
             action.addCard.zone
@@ -1124,7 +1312,7 @@ export abstract class BaseCtx {
       return;
     }
 
-    if ("var" in action && "card" in action) {
+    if ('var' in action && 'card' in action) {
       const target = this.getCards(action.card);
 
       if (!scope.card) {
@@ -1134,7 +1322,7 @@ export abstract class BaseCtx {
       return;
     }
 
-    if ("var" in action && "player" in action) {
+    if ('var' in action && 'player' in action) {
       const target = this.getPlayers(action.player);
 
       if (!scope.player) {
@@ -1144,7 +1332,7 @@ export abstract class BaseCtx {
       return;
     }
 
-    if ("x" in action) {
+    if ('x' in action) {
       scope.x = action.x;
       return;
     }
@@ -1158,7 +1346,7 @@ export abstract class BaseCtx {
       return players[0];
     }
 
-    throw new Error("multiple or none players found");
+    throw new Error('multiple or none players found');
   }
 
   getPlayers(target: PlayerTarget): PlayerCtx[] {
@@ -1166,15 +1354,15 @@ export abstract class BaseCtx {
       return target.flatMap((id) => this.players[id] ?? []);
     }
 
-    if (target === "each") {
+    if (target === 'each') {
       return values(this.players).filter((p) => !p.state.eliminated);
     }
 
     if (
-      target === "owner" ||
-      target === "controller" ||
-      target === "target" ||
-      target === "defending"
+      target === 'owner' ||
+      target === 'controller' ||
+      target === 'target' ||
+      target === 'defending'
     ) {
       const player = getPlayerFromScope(this.scopes, target);
       if (player) {
@@ -1184,13 +1372,13 @@ export abstract class BaseCtx {
       throw new Error(`no ${target} player in scope`);
     }
 
-    if (target === "first") {
+    if (target === 'first') {
       return values(this.players).filter(
         (p) => p.id === this.state.firstPlayer
       );
     }
 
-    if (typeof target === "object") {
+    if (typeof target === 'object') {
       if (target.and) {
         const lists = target.and.map((t) =>
           this.getPlayers(t).map((p) => p.id)
@@ -1215,7 +1403,7 @@ export abstract class BaseCtx {
       throw new Error(`unknown player target: ${JSON.stringify(target)}`);
     }
 
-    if (target === "next") {
+    if (target === 'next') {
       const players = values(this.players).filter((p) => !p.state.eliminated);
 
       if (players.length === 1) {
@@ -1230,16 +1418,16 @@ export abstract class BaseCtx {
       }
     }
 
-    if (target === "event") {
+    if (target === 'event') {
       const event = last(this.state.event);
-      if (event && "player" in event) {
+      if (event && 'player' in event) {
         return this.getPlayers(event.player);
       } else {
-        throw new Error("no player in event");
+        throw new Error('no player in event');
       }
     }
 
-    if (target === "highestThreat") {
+    if (target === 'highestThreat') {
       const players = values(this.players);
       const value = max(players.map((p) => p.state.thread));
       if (value !== undefined) {
@@ -1249,7 +1437,7 @@ export abstract class BaseCtx {
       }
     }
 
-    if (["0", "1", "2", "3"].includes(target)) {
+    if (['0', '1', '2', '3'].includes(target)) {
       return values(this.players).filter((p) => p.id === target);
     }
 
