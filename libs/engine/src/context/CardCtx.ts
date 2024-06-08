@@ -65,11 +65,30 @@ export class CardCtx {
         if (prev !== undefined) {
           draft[modifier.property] = prev + modifier.increment;
         }
+        continue;
       }
 
       if ('rule' in modifier) {
         draft.rules = mergeCardRules(draft.rules, modifier.rule);
+        continue;
       }
+
+      if ('set' in modifier) {
+        draft.type = modifier.set.type;
+        continue;
+      }
+
+      if ('add' in modifier) {
+        if (!draft.traits) {
+          draft.traits = [];
+        }
+        for (const trait of asArray(modifier.add.trait)) {
+          draft.traits.push(trait);
+        }
+        continue;
+      }
+
+      throw new Error('unknown modifier: ' + JSON.stringify(modifier));
     }
 
     return draft;
@@ -1107,7 +1126,7 @@ export class CardCtx {
     if (action.attachCard) {
       const target = this.game.getCard(action.attachCard);
       if (target) {
-        target.state.attachments.push(target.id);
+        this.state.attachments.push(target.id);
         target.state.attachedTo = this.id;
         this.game.next({
           card: target.id,

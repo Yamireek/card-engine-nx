@@ -83,6 +83,16 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
         continue;
       }
 
+      if ('replaceType' in modifier) {
+        this.addCardModifier(self.id, { set: { type: modifier.replaceType } });
+        continue;
+      }
+
+      if ('add' in modifier) {
+        this.addCardModifier(self.id, { add: modifier.add });
+        continue;
+      }
+
       throw new Error('unknown modifier ' + JSON.stringify(modifier));
     }
   }
@@ -497,7 +507,15 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
                 });
               }
             }
+            continue;
           }
+
+          if ('rules' in mod.modifier) {
+            this.addCardModifier(card.id, { rule: mod.modifier.rules });
+            continue;
+          }
+
+          throw new Error('unknown modifier :' + JSON.stringify(mod.modifier));
         }
       }
     }

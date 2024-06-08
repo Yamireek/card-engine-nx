@@ -28,27 +28,26 @@ import { TestEngine } from '@card-engine-nx/engine';
 // const card = ctx.getCard(1);
 
 // console.log(toJS(card.props));
-const response =
-  'Response: After Gandalf enters play, (choose 1): draw 3 cards, deal 4 damage to 1 enemy in play, or reduce your threat by 5.';
+const game = new TestEngine(
+  {
+    players: [
+      {
+        playerArea: [{ card: core.hero.gimli, exhausted: true, resources: 2 }],
+      },
+    ],
+    encounterDeck: [core.treachery.caughtInAWeb],
+  },
+  { console: false }
+);
 
-const game = new TestEngine({
-  players: [
-    {
-      playerArea: [
-        {
-          card: core.hero.gimli,
-          resources: 5,
-        },
-      ],
-      hand: [core.ally.gandalf],
-    },
-  ],
-});
-
-const gandalf = game.card('Gandalf');
-game.do({ beginPhase: 'planning' });
-game.chooseAction('Play ally Gandalf');
-game.chooseOption(response);
-console.log(game.state.players['0']?.thread);
-game.do('endRound');
-console.log(gandalf.state.zone);
+const gimli = game.card('Gimli');
+const treatchery = game.card('Caught in a Web');
+game.do('revealEncounterCard');
+console.log(game.state);
+console.log(gimli.state.attachments); //.toHaveLength(1);
+gimli.execute({ ready: 'refresh' });
+game.chooseOption('Yes');
+console.log(gimli.state.token.resources); //.toBe(0);
+console.log(gimli.state.tapped); //.toBe(false);
+treatchery.execute('discard');
+console.log(game.state.modifiers); //.toHaveLength(0);

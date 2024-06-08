@@ -1,4 +1,10 @@
-import { CardId, CardNumProp, PlayerId } from '@card-engine-nx/basic';
+import {
+  CardId,
+  CardNumProp,
+  CardType,
+  PlayerId,
+  Trait,
+} from '@card-engine-nx/basic';
 import { Action } from './action';
 import { CardRules } from './card';
 import { UserCardAction } from './card/ability/action';
@@ -34,7 +40,9 @@ export type CardStateModifier =
       property: CardNumProp;
       increment: number;
     }
-  | { rule: CardRules };
+  | { rule: CardRules }
+  | { set: { type: CardType } }
+  | { add: { trait?: Trait | Trait[] } };
 
 export type StateModifiers = {
   cards: Record<CardId, CardStateModifier[]>;
