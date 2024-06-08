@@ -1,9 +1,10 @@
-import { reverse } from "lodash/fp";
-import { CardId, PlayerId, ZoneId } from "@card-engine-nx/basic";
-import { Scope } from "@card-engine-nx/state";
+import { reverse } from 'lodash/fp';
+import { CardId, PlayerId, ZoneId } from '@card-engine-nx/basic';
+import { CostModifier, PlayerAction, Scope } from '@card-engine-nx/state';
+import { CardCtx } from './CardCtx';
 
 export function getZoneType(zone: ZoneId) {
-  if (typeof zone === "string") {
+  if (typeof zone === 'string') {
     return zone;
   }
 
@@ -26,4 +27,30 @@ export function getCardFromScope(
   const reversed = reverse(scopes);
   const scope = reversed.find((s) => s.card && s.card[name]);
   return scope?.card?.[name];
+}
+
+export function createPayCostAction(
+  card: CardCtx,
+  modifiers: CostModifier
+): PlayerAction | undefined {
+  const zone = card.zone.type;
+
+  if (zone !== 'hand' || !card.state.controller) {
+    return undefined;
+  }
+
+  const sphere = card.props.sphere;
+  const amount = card.props.cost;
+
+  if (!sphere || typeof amount !== 'number') {
+    return undefined;
+  }
+
+  return {
+    payResources: {
+      amount,
+      sphere,
+      ...modifiers,
+    },
+  };
 }

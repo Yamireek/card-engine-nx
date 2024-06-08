@@ -168,6 +168,8 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
           },
         });
       }
+
+      return;
     }
 
     if ('response' in ability) {

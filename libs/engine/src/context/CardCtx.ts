@@ -14,7 +14,7 @@ import {
 } from '@card-engine-nx/state';
 import { uiEvent } from '../events';
 import { ZoneCtx, BaseCtx } from './internal';
-import { getCardFromScope, getZoneType } from './utils';
+import { createPayCostAction, getCardFromScope, getZoneType } from './utils';
 
 export class CardCtx {
   constructor(
@@ -312,18 +312,18 @@ export class CardCtx {
     }
 
     if (zone === 'hand' && action.payCost) {
-      // if (!this.state.controller) {
-      //   return false;
-      // }
+      if (!this.state.controller) {
+        return false;
+      }
 
-      // const payCostAction = createPayCostAction(cardId, action.payCost, ctx);
+      const payCostAction = createPayCostAction(this, action.payCost);
 
-      // if (!payCostAction) {
-      //   return true;
-      // }
+      if (!payCostAction) {
+        return true;
+      }
 
-      // return canPlayerExecute(payCostAction, this.state.controller, ctx);
-      throw new Error('not implemented');
+      const controller = this.game.players[this.state.controller];
+      return controller?.canExecute(payCostAction) ?? false;
     }
 
     if (zone === 'stagingArea' && action.engagePlayer) {
@@ -753,19 +753,18 @@ export class CardCtx {
     }
 
     if (action.payCost) {
-      // const controller = this.state.controller;
-      // if (!controller) {
-      //   return;
-      // }
-      // const payCostAction = createPayCostAction(this.id, action.payCost, ctx);
-      // if (payCostAction) {
-      //   this.game.next({
-      //     player: controller,
-      //     action: payCostAction,
-      //   });
-      // }
-      // return;
-      throw new Error('not implemented');
+      const controller = this.state.controller;
+      if (!controller) {
+        return;
+      }
+      const payCostAction = createPayCostAction(this, action.payCost);
+      if (payCostAction) {
+        this.game.next({
+          player: controller,
+          action: payCostAction,
+        });
+      }
+      return;
     }
 
     if (action.ready === 'refresh') {
@@ -1366,9 +1365,8 @@ export class CardCtx {
     }
 
     if (target.var) {
-      // const vars = getCardFromScope(ctx, target.var);
-      // return (vars && vars.includes(state.id)) ?? false;
-      throw new Error('not implemented');
+      const vars = getCardFromScope(this.game.scopes, target.var);
+      return (vars && vars.includes(this.id)) ?? false;
     }
 
     throw new Error(`unknown card predicate: ${JSON.stringify(target)}`);

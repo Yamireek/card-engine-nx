@@ -27,30 +27,28 @@ import { TestEngine } from '@card-engine-nx/engine';
 // const card = ctx.getCard(1);
 
 // console.log(toJS(card.props));
-const response =
-  'After Legolas participates in an attack that destroys an enemy, place 2 progress tokens on the current quest.';
+const action =
+  'Action: Exhaust 1 hero you control to choose and ready a different hero.';
 
 const game = new TestEngine({
   players: [
     {
-      playerArea: [core.hero.legolas],
-      engaged: [core.enemy.dolGuldurOrcs],
+      playerArea: [
+        {
+          card: core.hero.gloin,
+          exhausted: true,
+        },
+        core.hero.aragorn,
+      ],
+      hand: [core.event.commonCause],
     },
   ],
-  activeLocation: [core.location.mountainsOfMirkwood],
 });
 
-const legolas = game.card('Legolas');
-const location = game.card('Mountains of Mirkwood');
-const enemy = game.card('Dol Guldur Orcs');
-game.do({
-  card: enemy.id,
-  action: {
-    dealDamage: {
-      amount: 5,
-      attackers: [legolas.id],
-    },
-  },
-});
-game.chooseOption(response);
-console.log(location.token.progress);
+const aragorn = game.card('Aragorn');
+const gloin = game.card('Glóin');
+
+console.log(game.actions.length);
+game.chooseAction(action);
+console.log(aragorn.state.tapped);
+console.log(gloin.state.tapped);
