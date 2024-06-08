@@ -1,16 +1,25 @@
-import { CardId, asArray, keys, noRandom, values } from '@card-engine-nx/basic';
+import { toJS } from 'mobx';
+import {
+  CardId,
+  PlayerId,
+  asArray,
+  keys,
+  noRandom,
+  values,
+} from '@card-engine-nx/basic';
 import {
   Ability,
   CardStateModifier,
+  PlayerRules,
   State,
   StateModifiers,
+  mergePlayerRules,
 } from '@card-engine-nx/state';
 import { emptyEvents } from '../events';
 import { nullLogger } from '../logger';
 import { BaseCtx, CardCtx } from './internal';
 import { IViewCtx } from './types';
 import { getZoneType } from './utils';
-import { toJS } from 'mobx';
 
 export class ViewCtx extends BaseCtx implements IViewCtx {
   private readonly _modifiers: StateModifiers;
@@ -19,6 +28,7 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
     super(state, emptyEvents, noRandom(), nullLogger, false);
     this._modifiers = {
       cards: {},
+      players: {},
       actions: [],
       responses: {},
     };
@@ -34,6 +44,13 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
     }
 
     this._modifiers.cards[id].push(modifier);
+  }
+
+  addPlayerRule(id: PlayerId, rule: PlayerRules) {
+    this._modifiers.players[id] = mergePlayerRules(
+      this._modifiers.players[id],
+      rule
+    );
   }
 
   evalAbility(self: CardCtx, ability: Ability) {
@@ -374,6 +391,24 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
       for (const item of ability.multi) {
         this.evalAbility(self, item);
       }
+      return;
+    }
+
+    if ('player' in ability) {
+      if (self.zone.inPlay) {
+        const condition = ability.condition
+          ? this.getBool(ability.condition)
+          : true;
+
+        if (condition) {
+          const players = this.getPlayers(ability.target);
+
+          for (const player of players) {
+            this.addPlayerRule(player.id, ability.player.rules);
+          }
+        }
+      }
+
       return;
     }
 

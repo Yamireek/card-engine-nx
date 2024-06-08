@@ -35,7 +35,7 @@ export class PlayerCtx {
   }
 
   get rules(): PlayerRules {
-    return {};
+    return this.game.modifiers.players[this.id] ?? {};
   }
 
   canExecute(action: PlayerAction): boolean {

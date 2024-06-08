@@ -6,6 +6,7 @@ import { CardView } from './card/view';
 import { EventType } from './event/type';
 import { BoolExpr } from './expression/bool';
 import { GameModifierState } from './modifier/state';
+import { PlayerRules } from './player';
 import { PlayerView } from './player/view';
 
 export type View = {
@@ -37,6 +38,7 @@ export type CardStateModifier =
 
 export type StateModifiers = {
   cards: Record<CardId, CardStateModifier[]>;
+  players: Partial<Record<PlayerId, PlayerRules>>;
   actions: Array<{ source: CardId; description: string; action: Action }>;
   responses: Partial<
     Record<
