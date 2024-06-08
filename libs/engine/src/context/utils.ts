@@ -54,3 +54,12 @@ export function createPayCostAction(
     },
   };
 }
+
+export function getFromScope<T>(
+  scopes: Scope[],
+  getter: (s: Scope) => T | undefined
+): T | undefined {
+  const reversed = reverse(scopes);
+  const scope = reversed.find(getter);
+  return scope ? getter(scope) : undefined;
+}

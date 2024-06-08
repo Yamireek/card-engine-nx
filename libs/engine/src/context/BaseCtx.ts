@@ -28,8 +28,15 @@ import {
 import { UIEvents } from '../events';
 import { Logger } from '../logger';
 import { gameRound } from '../round';
-import { PlayerCtx, ZoneCtx, CardCtx } from './internal';
-import { getCardFromScope, getPlayerFromScope } from './utils';
+import {
+  PlayerCtx,
+  ZoneCtx,
+  CardCtx,
+  canCharacterAttack,
+  canCharacterDefend,
+  canEnemyAttack,
+} from './internal';
+import { getCardFromScope, getFromScope, getPlayerFromScope } from './utils';
 
 export abstract class BaseCtx {
   private readonly _scopes: Scope[] = [];
@@ -255,12 +262,11 @@ export abstract class BaseCtx {
     }
 
     if (expr === 'X') {
-      // const x = getFromScope(ctx, (s) => s.x);
-      // if (x === undefined) {
-      //   throw new Error('no x value');
-      // }
-      // return x;
-      throw new Error('not implemented');
+      const x = getFromScope(this.scopes, (s) => s.x);
+      if (x === undefined) {
+        throw new Error('no x value');
+      }
+      return x;
     }
 
     if (expr === 'surge') {

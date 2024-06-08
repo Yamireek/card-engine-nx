@@ -10,7 +10,12 @@ import {
   PlayerNumberExpr,
   PlayerRules,
 } from '@card-engine-nx/state';
-import { BaseCtx } from './internal';
+import {
+  BaseCtx,
+  canCharacterAttack,
+  canCharacterDefend,
+  canEnemyAttack,
+} from './internal';
 
 export class PlayerCtx {
   constructor(
@@ -274,106 +279,102 @@ export class PlayerCtx {
     }
 
     if (action === 'resolveEnemyAttacks') {
-      // const enemies = this.game
-      //   .getCards({ type: "enemy", simple: "inAPlay" })
-      //   .filter((enemy) => canEnemyAttack(enemy, this.id, ctx));
-      // if (enemies.length > 0) {
-      //   this.game.next(
-      //     {
-      //       useScope: {
-      //         var: "defending",
-      //         player: this.id,
-      //       },
-      //       action: {
-      //         player: this.id,
-      //         action: {
-      //           chooseCardActions: {
-      //             title: "Choose enemy attacker",
-      //             target: enemies,
-      //             action: {
-      //               resolveEnemyAttacking: this.id,
-      //             },
-      //           },
-      //         },
-      //       },
-      //     },
-      //     {
-      //       player: this.id,
-      //       action: "resolveEnemyAttacks",
-      //     }
-      //   );
-      // }
-      // return;
-      throw new Error('not implemented');
+      const enemies = this.game
+        .getCards({ type: 'enemy', simple: 'inAPlay' })
+        .filter((enemy) => canEnemyAttack(enemy, this));
+
+      if (enemies.length > 0) {
+        this.game.next(
+          {
+            useScope: {
+              var: 'defending',
+              player: this.id,
+            },
+            action: {
+              player: this.id,
+              action: {
+                chooseCardActions: {
+                  title: 'Choose enemy attacker',
+                  target: enemies.map((e) => e.id),
+                  action: {
+                    resolveEnemyAttacking: this.id,
+                  },
+                },
+              },
+            },
+          },
+          {
+            player: this.id,
+            action: 'resolveEnemyAttacks',
+          }
+        );
+      }
+      return;
     }
 
     if (action === 'resolvePlayerAttacks') {
-      // const enemies = this.game.getCards({ type: "enemy", simple: "inAPlay" });
-      // const characters = this.game.getCards({
-      //   simple: ["character", "ready", "inAPlay"],
-      // });
-      // const attackable = enemies.filter((enemy) =>
-      //   characters.some((character) =>
-      //     canCharacterAttack(character, enemy, ctx)
-      //   )
-      // );
-      // if (attackable.length > 0) {
-      //   this.game.next({
-      //     player: this.id,
-      //     action: {
-      //       chooseActions: {
-      //         title: "Choose enemy to attack",
-      //         actions: attackable.map((e) => ({
-      //           title: e.toString(),
-      //           cardId: e,
-      //           action: [
-      //             {
-      //               card: e,
-      //               action: { resolvePlayerAttacking: this.id },
-      //             },
-      //             {
-      //               player: this.id,
-      //               action: "resolvePlayerAttacks",
-      //             },
-      //           ],
-      //           optional: true,
-      //         })),
-      //       },
-      //     },
-      //   });
-      // }
-      // return;
-      throw new Error('not implemented');
+      const enemies = this.game.getCards({ type: 'enemy', simple: 'inAPlay' });
+      const characters = this.game.getCards({
+        simple: ['character', 'ready', 'inAPlay'],
+      });
+      const attackable = enemies.filter((enemy) =>
+        characters.some((character) => canCharacterAttack(character, enemy))
+      );
+      if (attackable.length > 0) {
+        this.game.next({
+          player: this.id,
+          action: {
+            chooseActions: {
+              title: 'Choose enemy to attack',
+              actions: attackable.map((e) => ({
+                title: e.id.toString(),
+                cardId: e.id,
+                action: [
+                  {
+                    card: e.id,
+                    action: { resolvePlayerAttacking: this.id },
+                  },
+                  {
+                    player: this.id,
+                    action: 'resolvePlayerAttacks',
+                  },
+                ],
+                optional: true,
+              })),
+            },
+          },
+        });
+      }
+      return;
     }
 
     if (action === 'declareDefender') {
-      // const multiple = !!this.view.players[this.id]?.rules.multipleDefenders;
-      // const attacker = getTargetCard({ mark: "attacking" }, ctx);
-      // if (attacker) {
-      //   const defenders = this.game
-      //     .getCards({ simple: ["character", "inAPlay"] }, ctx)
-      //     .filter((defender) => canCharacterDefend(defender, attacker, ctx));
-      //   if (defenders.length > 0) {
-      //     this.game.next({
-      //       player: this.id,
-      //       action: {
-      //         chooseCardActions: {
-      //           title: !multiple ? "Declare defender" : "Declare defenders",
-      //           target: defenders,
-      //           multi: multiple,
-      //           optional: true,
-      //           action: {
-      //             declareAsDefender: {
-      //               attacker,
-      //             },
-      //           },
-      //         },
-      //       },
-      //     });
-      //   }
-      // }
-      // return;
-      throw new Error('not implemented');
+      const multiple = !!this.game.players[this.id]?.rules.multipleDefenders;
+      const attacker = this.game.getCard({ mark: 'attacking' });
+      if (attacker) {
+        const defenders = this.game
+          .getCards({ simple: ['character', 'inAPlay'] })
+          .filter((defender) => canCharacterDefend(defender, attacker));
+        if (defenders.length > 0) {
+          this.game.next({
+            player: this.id,
+            action: {
+              chooseCardActions: {
+                title: !multiple ? 'Declare defender' : 'Declare defenders',
+                target: defenders.map((d) => d.id),
+                multi: multiple,
+                optional: true,
+                action: {
+                  declareAsDefender: {
+                    attacker: attacker.id,
+                  },
+                },
+              },
+            },
+          });
+        }
+      }
+      return;
     }
 
     if (action === 'determineCombatDamage') {
@@ -741,26 +742,25 @@ export class PlayerCtx {
     }
 
     if (action.declareAttackers) {
-      // const enemy = action.declareAttackers;
-      // const characters = this.game
-      //   .getCards({ simple: ["character", "inAPlay"] })
-      //   .filter((character) => canCharacterAttack(character, enemy, ctx));
-      // if (characters.length > 0) {
-      //   this.game.next({
-      //     player: this.id,
-      //     action: {
-      //       chooseCardActions: {
-      //         title: "Declare attackers",
-      //         target: characters,
-      //         action: [{ mark: "attacking" }, "exhaust"],
-      //         multi: true,
-      //         optional: true,
-      //       },
-      //     },
-      //   });
-      // }
-      // return;
-      throw new Error('not implemented');
+      const enemy = this.game.getCard(action.declareAttackers);
+      const characters = this.game
+        .getCards({ simple: ['character', 'inAPlay'] })
+        .filter((character) => canCharacterAttack(character, enemy));
+      if (characters.length > 0) {
+        this.game.next({
+          player: this.id,
+          action: {
+            chooseCardActions: {
+              title: 'Declare attackers',
+              target: characters.map((c) => c.id),
+              action: [{ mark: 'attacking' }, 'exhaust'],
+              multi: true,
+              optional: true,
+            },
+          },
+        });
+      }
+      return;
     }
 
     if (action.useLimit) {
@@ -835,6 +835,6 @@ export class PlayerCtx {
       return sum(heroes.map((hero) => hero.token.resources));
     }
 
-    throw new Error('not implemented');
+    throw new Error('unknown PlayerNumberExpr');
   }
 }
