@@ -360,6 +360,23 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
       return;
     }
 
+    if ('setup' in ability) {
+      this.addCardModifier(self.id, {
+        rule: {
+          setup: [ability.setup],
+        },
+      });
+
+      return;
+    }
+
+    if ('multi' in ability) {
+      for (const item of ability.multi) {
+        this.evalAbility(self, item);
+      }
+      return;
+    }
+
     throw new Error('unknown abiliy: ' + JSON.stringify(ability));
   }
 

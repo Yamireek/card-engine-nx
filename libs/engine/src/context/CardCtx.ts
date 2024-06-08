@@ -148,12 +148,29 @@ export class CardCtx {
       return expr;
     }
 
-    if (typeof expr === 'string') {
-      throw new Error('uknown CardNumberExpr:' + JSON.stringify(expr));
+    if (expr === 'threadCost') {
+      return this.props.threatCost || 0;
     }
 
-    if ('tokens' in expr) {
-      return this.state.token[expr.tokens];
+    if (expr === 'willpower') {
+      return this.props.willpower || 0;
+    }
+
+    if (expr === 'threat') {
+      return this.props.threat || 0;
+    }
+
+    if (expr === 'sequence') {
+      return this.props.sequence || 0;
+    }
+
+    if (expr === 'cost') {
+      const cost = this.props.cost;
+      return typeof cost === 'number' ? cost : 0;
+    }
+
+    if (expr.tokens) {
+      return this.token[expr.tokens];
     }
 
     throw new Error('uknown CardNumberExpr:' + JSON.stringify(expr));
