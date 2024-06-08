@@ -6,6 +6,7 @@
 
 import { core } from '@card-engine-nx/cards';
 import { TestEngine } from '@card-engine-nx/engine';
+import { toJS } from 'mobx';
 
 // const state: State = createState({
 //   players: [
@@ -27,28 +28,19 @@ import { TestEngine } from '@card-engine-nx/engine';
 // const card = ctx.getCard(1);
 
 // console.log(toJS(card.props));
-const action =
-  'Action: Exhaust 1 hero you control to choose and ready a different hero.';
-
 const game = new TestEngine({
   players: [
     {
       playerArea: [
         {
-          card: core.hero.gloin,
-          exhausted: true,
+          card: core.hero.gimli,
+          attachments: [core.attachment.citadelPlate],
         },
-        core.hero.aragorn,
       ],
-      hand: [core.event.commonCause],
     },
   ],
 });
 
-const aragorn = game.card('Aragorn');
-const gloin = game.card('Glóin');
-
-console.log(game.actions.length);
-game.chooseAction(action);
-console.log(aragorn.state.tapped);
-console.log(gloin.state.tapped);
+const gimli = game.card('Gimli');
+console.log(gimli.props.hitPoints);
+console.log(toJS(game.modifiers));

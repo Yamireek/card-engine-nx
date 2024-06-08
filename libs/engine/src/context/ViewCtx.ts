@@ -319,6 +319,44 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
       return;
     }
 
+    if ('attachesTo' in ability) {
+      if (
+        controller &&
+        this.state.phase === 'planning' &&
+        zone === 'hand' &&
+        self.props.type === 'attachment'
+      ) {
+        this._modifiers.actions.push({
+          description: `Play attachment ${name}`,
+          source: self.id,
+          action: {
+            player: controller,
+            action: [
+              {
+                card: {
+                  target: self.id,
+                  action: {
+                    payCost: {},
+                  },
+                },
+              },
+              {
+                chooseCardActions: {
+                  title: 'Choose target for attachment',
+                  target: ability.attachesTo,
+                  action: {
+                    attachCard: self.id,
+                  },
+                },
+              },
+            ],
+          },
+        });
+      }
+
+      return;
+    }
+
     throw new Error('unknown abiliy: ' + JSON.stringify(ability));
   }
 

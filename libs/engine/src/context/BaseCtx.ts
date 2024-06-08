@@ -44,7 +44,6 @@ export abstract class BaseCtx {
     makeObservable(this, {
       state: observable,
       cards: computed,
-      scopes: computed,
     });
   }
 
