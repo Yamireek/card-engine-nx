@@ -72,7 +72,10 @@ export class ExeCtx extends BaseCtx implements IExeCtx {
 
     if (choice.type === 'actions') {
       if (skip.actions) {
-        // TODO skip actions
+        const actions = this.actions;
+        if (actions.length === 0) {
+          state.choice = undefined;
+        }
       }
     }
   }

@@ -9,6 +9,7 @@ import {
 } from '@card-engine-nx/basic';
 import {
   Ability,
+  CardModifier,
   CardStateModifier,
   PlayerRules,
   State,
@@ -51,6 +52,39 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
       this._modifiers.players[id],
       rule
     );
+  }
+
+  evalModifier(self: CardCtx, modifiers: CardModifier | CardModifier[]) {
+    for (const modifier of asArray(modifiers)) {
+      if ('increment' in modifier) {
+        this.evalAbility(self, {
+          description: 'todo',
+          increment: modifier.increment,
+        });
+        continue;
+      }
+
+      if ('rules' in modifier) {
+        this.evalAbility(self, {
+          description: 'todo',
+          rule: modifier.rules,
+        });
+        continue;
+      }
+
+      if ('if' in modifier) {
+        const result = self.getBool(modifier.if.condition);
+        if (result && modifier.if.true) {
+          this.evalModifier(self, modifier.if.true);
+        }
+        if (!result && modifier.if.false) {
+          this.evalModifier(self, modifier.if.false);
+        }
+        continue;
+      }
+
+      throw new Error('unknown modifier ' + JSON.stringify(modifier));
+    }
   }
 
   evalAbility(self: CardCtx, ability: Ability) {
@@ -423,12 +457,7 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
 
           for (const card of cards) {
             for (const modifier of asArray(ability.card)) {
-              if ('increment' in modifier) {
-                this.evalAbility(card, {
-                  description: 'todo',
-                  increment: modifier.increment,
-                });
-              }
+              this.evalModifier(card, modifier);
             }
           }
         }

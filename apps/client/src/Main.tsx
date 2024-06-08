@@ -30,20 +30,23 @@ import { TestEngine } from '@card-engine-nx/engine';
 // console.log(toJS(card.props));
 const game = new TestEngine(
   {
-    players: [
-      {
-        playerArea: [
-          {
-            card: core.hero.gimli,
-            attachments: [core.attachment.dwarvenAxe],
-          },
-        ],
-      },
-    ],
+    players: [{ playerArea: [core.hero.dunhere] }],
+    stagingArea: [core.enemy.dolGuldurBeastmaster],
   },
-  { observable: true }
+  { console: true }
 );
 
-const gimli = game.card('Gimli');
-console.log(gimli.props.attack);
+const enemy = game.card('Dol Guldur Beastmaster');
+const hero = game.card('Dúnhere');
+
+hero.execute({ mark: 'attacking' });
+enemy.execute({ mark: 'defending' });
+
 console.log(game.modifiers);
+console.log(hero.props.attack);
+
+// game.do({ player: '0', action: 'resolvePlayerAttacks' });
+// console.log(toJS(game.state));
+// console.log(game.modifiers);
+// game.chooseOption('1');
+// console.log(enemy.state.token.damage);
