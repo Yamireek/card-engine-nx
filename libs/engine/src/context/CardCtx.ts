@@ -1,5 +1,5 @@
-import { intersection, isArray, last } from 'lodash';
-import { action, computed, makeObservable, toJS } from 'mobx';
+import { cloneDeep, intersection, isArray, last } from 'lodash';
+import { action, computed, isObservable, makeObservable, toJS } from 'mobx';
 import { CardId, asArray, keys, zonesEqual } from '@card-engine-nx/basic';
 import {
   Action,
@@ -57,7 +57,7 @@ export class CardCtx {
       return printed;
     }
 
-    const draft = toJS(printed);
+    const draft = isObservable(printed) ? toJS(printed) : cloneDeep(printed);
 
     for (const modifier of modifiers) {
       if ('increment' in modifier) {

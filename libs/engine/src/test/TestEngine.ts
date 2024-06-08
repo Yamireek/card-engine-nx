@@ -37,7 +37,7 @@ export class TestEngine extends ExeCtx {
       emptyEvents,
       random,
       params.console ? consoleLogger : nullLogger,
-      params.observable ?? true
+      params.observable ?? false
     );
     this.auto();
     this.state.choice = undefined;

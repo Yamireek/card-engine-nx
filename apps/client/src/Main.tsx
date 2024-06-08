@@ -34,7 +34,7 @@ const game = new TestEngine({
       playerArea: [
         {
           card: core.hero.gimli,
-          attachments: [core.attachment.citadelPlate],
+          damage: 1,
         },
       ],
     },
@@ -42,5 +42,9 @@ const game = new TestEngine({
 });
 
 const gimli = game.card('Gimli');
-console.log(gimli.props.hitPoints);
-console.log(toJS(game.modifiers));
+console.log(gimli.props.attack);
+gimli.execute({ dealDamage: 1 });
+console.log(gimli.props.attack);
+console.log(game.modifiers);
+// gimli.execute({ heal: 1 });
+// console.log(gimli.props.attack);
