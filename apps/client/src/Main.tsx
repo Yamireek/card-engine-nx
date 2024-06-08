@@ -28,25 +28,27 @@ import { TestEngine } from '@card-engine-nx/engine';
 // const card = ctx.getCard(1);
 
 // console.log(toJS(card.props));
-const game = new TestEngine(
-  {
-    players: [{ playerArea: [core.hero.dunhere] }],
-    stagingArea: [core.enemy.dolGuldurBeastmaster],
-  },
-  { console: true }
-);
+const response =
+  'Response: After Gandalf enters play, (choose 1): draw 3 cards, deal 4 damage to 1 enemy in play, or reduce your threat by 5.';
 
-const enemy = game.card('Dol Guldur Beastmaster');
-const hero = game.card('Dúnhere');
+const game = new TestEngine({
+  players: [
+    {
+      playerArea: [
+        {
+          card: core.hero.gimli,
+          resources: 5,
+        },
+      ],
+      hand: [core.ally.gandalf],
+    },
+  ],
+});
 
-hero.execute({ mark: 'attacking' });
-enemy.execute({ mark: 'defending' });
-
-console.log(game.modifiers);
-console.log(hero.props.attack);
-
-// game.do({ player: '0', action: 'resolvePlayerAttacks' });
-// console.log(toJS(game.state));
-// console.log(game.modifiers);
-// game.chooseOption('1');
-// console.log(enemy.state.token.damage);
+const gandalf = game.card('Gandalf');
+game.do({ beginPhase: 'planning' });
+game.chooseAction('Play ally Gandalf');
+game.chooseOption(response);
+console.log(game.state.players['0']?.thread);
+game.do('endRound');
+console.log(gandalf.state.zone);

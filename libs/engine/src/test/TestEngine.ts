@@ -201,6 +201,10 @@ export class TestCard {
     return this.base.props;
   }
 
+  get zone() {
+    return this.base.zone;
+  }
+
   execute(action: CardAction) {
     this.engine.do({ card: this.base.id, action });
   }

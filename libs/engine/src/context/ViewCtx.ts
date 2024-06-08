@@ -21,6 +21,7 @@ import { nullLogger } from '../logger';
 import { BaseCtx, CardCtx } from './internal';
 import { IViewCtx } from './types';
 import { getZoneType } from './utils';
+import { createPlayAllyAction, createPlayAttachmentAction } from '../card';
 
 export class ViewCtx extends BaseCtx implements IViewCtx {
   private readonly _modifiers: StateModifiers;
@@ -501,7 +502,33 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
       }
     }
 
-    // TODO
+    if (this.state.phase === 'planning') {
+      for (const player of values(this.state.players).filter(
+        (p) => !p.eliminated
+      )) {
+        for (const cardId of player.zones.hand.cards) {
+          const card = this.cards[cardId];
+          if (
+            card.props.type === 'ally' &&
+            card.props.sphere &&
+            card.props.sphere.length > 0 &&
+            typeof card.props.cost === 'number'
+          ) {
+            base.actions.push({
+              description: `Play ally ${card.props.name}`,
+              source: cardId,
+              action: createPlayAllyAction(
+                card.props.sphere,
+                card.props.cost,
+                player.id,
+                cardId
+              ),
+            });
+          }
+        }
+      }
+    }
+
     return base;
   }
 }

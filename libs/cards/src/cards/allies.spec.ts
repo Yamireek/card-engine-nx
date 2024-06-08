@@ -69,5 +69,5 @@ it('Gandalf', () => {
   game.chooseOption(response);
   expect(game.state.players['0']?.thread).toBe(-5);
   game.do('endRound');
-  expect((gandalf.state.zone)).toBe('discardPile');
+  expect((gandalf.zone.type)).toBe('discardPile');
 });
