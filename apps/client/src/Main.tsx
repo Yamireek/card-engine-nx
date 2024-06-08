@@ -28,23 +28,22 @@ import { toJS } from 'mobx';
 // const card = ctx.getCard(1);
 
 // console.log(toJS(card.props));
-const game = new TestEngine({
-  players: [
-    {
-      playerArea: [
-        {
-          card: core.hero.gimli,
-          damage: 1,
-        },
-      ],
-    },
-  ],
-});
+const game = new TestEngine(
+  {
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.gimli,
+            attachments: [core.attachment.dwarvenAxe],
+          },
+        ],
+      },
+    ],
+  },
+  { observable: true }
+);
 
 const gimli = game.card('Gimli');
 console.log(gimli.props.attack);
-gimli.execute({ dealDamage: 1 });
-console.log(gimli.props.attack);
 console.log(game.modifiers);
-// gimli.execute({ heal: 1 });
-// console.log(gimli.props.attack);

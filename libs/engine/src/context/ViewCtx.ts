@@ -46,8 +46,11 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
         for (const property of keys(ability.increment)) {
           const expr = ability.increment[property];
           if (expr) {
-            const amount = this.getNumber(expr);
             for (const target of targets) {
+              const amount = this.withScope(
+                { card: target.id, var: 'target' },
+                () => this.getNumber(expr)
+              );
               this.addCardModifier(target.id, {
                 property: property,
                 increment: amount,
