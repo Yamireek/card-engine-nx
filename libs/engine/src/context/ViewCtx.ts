@@ -65,8 +65,7 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
       }
 
       if ('rules' in modifier) {
-        this.evalAbility(self, {
-          description: 'todo',
+        this.addCardModifier(self.id, {
           rule: modifier.rules,
         });
         continue;
