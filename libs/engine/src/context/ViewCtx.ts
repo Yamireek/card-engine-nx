@@ -412,6 +412,31 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
       return;
     }
 
+    if ('card' in ability) {
+      if (self.zone.inPlay) {
+        const condition = ability.condition
+          ? this.getBool(ability.condition)
+          : true;
+
+        if (condition) {
+          const cards = ability.target ? this.getCards(ability.target) : [self];
+
+          for (const card of cards) {
+            for (const modifier of asArray(ability.card)) {
+              if ('increment' in modifier) {
+                this.evalAbility(card, {
+                  description: 'todo',
+                  increment: modifier.increment,
+                });
+              }
+            }
+          }
+        }
+      }
+
+      return;
+    }
+
     throw new Error('unknown abiliy: ' + JSON.stringify(ability));
   }
 
