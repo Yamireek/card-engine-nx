@@ -45,7 +45,6 @@ export class TestEngine {
     this.advance();
     this.state.choice = undefined;
     this.state.next = [];
-    this.logToFile();
   }
 
   get state() {
