@@ -47,7 +47,15 @@ export class CardCtx {
 
   get props(): CardProps {
     if (this.state.sideUp === 'shadow') {
-      return {};
+      if (this.state.definition.shadow) {
+        return {
+          rules: {
+            shadows: [this.state.definition.shadow],
+          },
+        };
+      } else {
+        return {};
+      }
     }
 
     const modifiers = this.game.modifiers.cards[this.id];
