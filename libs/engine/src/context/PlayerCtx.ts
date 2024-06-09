@@ -78,7 +78,14 @@ export class PlayerCtx {
       if (action.choosePlayerActions) {
         const targets = this.game.getPlayers(action.choosePlayerActions.target);
         const playerAction = action.choosePlayerActions.action;
-        return targets.some((player) => player.canExecute(playerAction));
+        return targets.some((target) => {
+          return target.game.useScope(
+            { player: { target: [target.id] } },
+            () => {
+              return target.canExecute(playerAction);
+            }
+          );
+        });
       }
 
       if (action.payResources) {

@@ -72,9 +72,8 @@ const game = new TestEngine(
   {
     players: [],
   },
-  { observable: true, console: true }
+  { observable: true }
 );
-
 game.do(
   beginScenario({
     scenario: testScenario,
@@ -312,3 +311,5 @@ game.chooseAction(
   "Action: Exhaust Steward of Gondor to add 2 resources to attached hero's resource pool."
 );
 game.chooseAction('Play ally Gandalf');
+
+console.log('finished');
