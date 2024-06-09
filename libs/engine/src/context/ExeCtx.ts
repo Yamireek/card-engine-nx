@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, toJS } from 'mobx';
 import { Random } from '@card-engine-nx/basic';
-import { Scope, State, StateModifiers } from '@card-engine-nx/state';
+import { State, StateModifiers } from '@card-engine-nx/state';
 import { UIEvents, uiEvent } from '../events';
 import { Logger } from '../logger';
 import { BaseCtx, ViewCtx } from './internal';

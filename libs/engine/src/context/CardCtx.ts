@@ -45,6 +45,14 @@ export class CardCtx {
     return this.state.token;
   }
 
+  get printed(): CardProps {
+    if (this.state.sideUp === 'shadow') {
+      return {};
+    }
+
+    return this.state.definition[this.state.sideUp] ?? {};
+  }
+
   get props(): CardProps {
     if (this.state.sideUp === 'shadow') {
       if (this.state.definition.shadow) {

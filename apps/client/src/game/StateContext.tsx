@@ -1,13 +1,7 @@
 import { createContext, useContext } from 'react';
 import { Difficulty, PlayerId } from '@card-engine-nx/basic';
-import {
-  Action,
-  PlayerDeck,
-  Scenario,
-  State,
-  UserCardAction,
-  View,
-} from '@card-engine-nx/state';
+import { ViewCtx } from '@card-engine-nx/engine';
+import { Action, PlayerDeck, Scenario, State } from '@card-engine-nx/state';
 
 export type Moves = {
   skip: () => void;
@@ -21,11 +15,9 @@ export type Moves = {
 };
 
 export const StateContext = createContext<{
-  state: State;
-  view: View;
+  ctx: ViewCtx;
   moves: Moves;
   playerId?: PlayerId;
-  actions: UserCardAction[];
   undo: () => void;
   redo: () => void;
   leave: () => void;

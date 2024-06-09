@@ -15,7 +15,7 @@ export const HandLayout = (props: {
 }) => {
   const [ref, { width }] = useMeasure();
   const cards = props.cards ?? [];
-  const { state } = useGameState();
+  const { ctx } = useGameState();
 
   const rotate = props.rotate;
   const cardHeight = props.cardWidth / cardRatio;
@@ -73,7 +73,7 @@ export const HandLayout = (props: {
                 transition: 'transform 0.25s ease 0s',
                 zIndex: i === detail ? 5 : 0,
                 border:
-                  card.activable && state.choice?.type === 'actions'
+                  card.activable && ctx.state.choice?.type === 'actions'
                     ? '3px solid yellow'
                     : 'none',
               }}

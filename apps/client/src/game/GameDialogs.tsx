@@ -17,8 +17,10 @@ import {
 import { StateContext } from './StateContext';
 
 export const GameDialogs = () => {
-  const { state, view, moves, playerId, leave } = useContext(StateContext);
+  const { ctx, moves, playerId, leave } = useContext(StateContext);
   const [mini, setMini] = useState(false);
+
+  const state = ctx.state;
 
   if (mini) {
     return (
@@ -100,7 +102,7 @@ export const GameDialogs = () => {
           <img
             alt=""
             src={getCardImageUrl(
-              view.cards[state.choice.cardId].props,
+              ctx.cards[state.choice.cardId].props,
               cardState.sideUp,
               cardState.definition.front.name
             )}
@@ -141,7 +143,7 @@ export const GameDialogs = () => {
           },
           image: o.cardId && {
             src: getCardImageUrl(
-              view.cards[o.cardId].props,
+              ctx.cards[o.cardId].props,
               state.cards[o.cardId].sideUp
             ),
             width: 430 / 2,
@@ -169,7 +171,7 @@ export const GameDialogs = () => {
           },
           image: o.cardId && {
             src: getCardImageUrl(
-              view.cards[o.cardId].props,
+              ctx.cards[o.cardId].props,
               state.cards[o.cardId].sideUp
             ),
             width: 430 / 2,
@@ -191,7 +193,7 @@ export const GameDialogs = () => {
           title: o.title,
           image: {
             src: getCardImageUrl(
-              view.cards[o.cardId].props,
+              ctx.cards[o.cardId].props,
               state.cards[o.cardId].sideUp
             ),
             width: 430 / 2,

@@ -1,7 +1,7 @@
 import { Text } from '@react-three/drei';
 import { Texture } from 'three';
 import { Orientation } from '@card-engine-nx/basic';
-import { Vector3, useTextures } from '@card-engine-nx/ui';
+import { Vector3 } from '@card-engine-nx/ui';
 import { cardSize } from './Card3d';
 
 export type Deck3dProps = {

@@ -1,4 +1,3 @@
-import { toJS } from 'mobx';
 import {
   CardId,
   PlayerId,
@@ -16,12 +15,11 @@ import {
   StateModifiers,
   mergePlayerRules,
 } from '@card-engine-nx/state';
+import { createPlayAllyAction } from '../card';
 import { emptyEvents } from '../events';
 import { nullLogger } from '../logger';
 import { BaseCtx, CardCtx } from './internal';
 import { IViewCtx } from './types';
-import { getZoneType } from './utils';
-import { createPlayAllyAction, createPlayAttachmentAction } from '../card';
 
 export class ViewCtx extends BaseCtx implements IViewCtx {
   private readonly _modifiers: StateModifiers;

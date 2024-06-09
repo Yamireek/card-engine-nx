@@ -18,13 +18,16 @@ export const LotrCard3d = (props: {
   position: Vector3;
   size: Dimensions;
 }) => {
-  const { state, view, moves, actions } = useContext(StateContext);
+  const { moves, ctx } = useContext(StateContext);
   const { texture } = useTextures();
   const { floatingCards: cards } = useFloatingCards();
 
-  const cardActions = actions.filter((a) => a.card === props.cardId);
+  const cardActions = ctx.modifiers.actions.filter(
+    (a) => a.source === props.cardId
+  );
 
-  const card = state.cards[props.cardId];
+  const state = ctx.state;
+  const card = ctx.cards[props.cardId].state;
 
   const textures = {
     front: texture[getCardImageUrl(card.definition.front, 'front')],
@@ -63,7 +66,7 @@ export const LotrCard3d = (props: {
           return;
         } else {
           if (cardActions.length === 1) {
-            moves.action(indexOf(view.actions, cardActions[0]));
+            moves.action(indexOf(ctx.modifiers.actions, cardActions[0]));
           } else {
             // tslint:disable-next-line:no-console
             console.log('todo multiple actions');

@@ -15,13 +15,13 @@ export const LotrCardArea = (props: {
   cards: CardId[];
   orientation?: Orientation;
 }) => {
-  const { state } = useContext(StateContext);
+  const { ctx } = useContext(StateContext);
 
   const items = props.cards
-    .map((id) => state.cards[id])
-    .filter((c) => !c.attachedTo && !c.shadowOf);
+    .map((id) => ctx.cards[id])
+    .filter((c) => !c.state.attachedTo && !c.state.shadowOf);
 
-  const maxAttachments = max(items.map((i) => i.attachments.length)) ?? 0;
+  const maxAttachments = max(items.map((i) => i.state.attachments.length)) ?? 0;
 
   const itemSize = {
     width: cardSize.width * 1.1,
@@ -39,7 +39,7 @@ export const LotrCardArea = (props: {
         const cardHeight = cardSize.height * scale;
         const offsetMin = -(fullHeight - cardHeight) / 2;
         const offsetMax = (fullHeight - cardHeight) / 2;
-        const diff = (offsetMax - offsetMin) / p.item.attachments.length;
+        const diff = (offsetMax - offsetMin) / p.item.state.attachments.length;
         const realItemSize = {
           width: p.size.width / 1.1,
           height: p.size.height / 1.1,
@@ -52,7 +52,7 @@ export const LotrCardArea = (props: {
               position={[p.position[0], p.position[1] + offsetMin, 0]}
               size={realItemSize}
             />
-            {p.item.attachments.map((a, i) => {
+            {p.item.state.attachments.map((a, i) => {
               return (
                 <LotrCard3d
                   key={a}
@@ -66,7 +66,7 @@ export const LotrCardArea = (props: {
                 />
               );
             })}
-            {p.item.shadows.map((a, i) => {
+            {p.item.state.shadows.map((a, i) => {
               return (
                 <LotrCard3d
                   key={a}

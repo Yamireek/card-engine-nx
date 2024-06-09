@@ -9,7 +9,6 @@ import {
   Dimensions,
   Dimensions3,
   Vector3,
-  useTextures,
 } from '@card-engine-nx/ui';
 import { DetailContext } from '../game/DetailContext';
 

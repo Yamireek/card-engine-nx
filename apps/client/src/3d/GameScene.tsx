@@ -2,15 +2,12 @@ import { Tooltip } from '@mui/material';
 import {
   Environment,
   MapControls,
-  OrbitControls,
   Stats,
-  useHelper,
- Text } from '@react-three/drei';
+  Text } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
-import { Suspense, useContext, useRef } from 'react';
+import { Suspense, useContext } from 'react';
 import { useMeasure } from 'react-use';
-import { NoToneMapping } from 'three';
 import * as THREE from 'three';
 import { Dimensions, LoadingDialog } from '@card-engine-nx/ui';
 import { CardDetail } from '../game/CardDetail';

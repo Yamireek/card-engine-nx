@@ -18,44 +18,40 @@ const cardProperties = [
 ] as const;
 
 export const CardDetail = (props: { cardId?: CardId }) => {
-  const { state, view } = useContext(StateContext);
+  const { ctx } = useContext(StateContext);
   const detail = useContext(DetailContext);
-
   const cardId = props.cardId ?? detail.cardId;
 
   if (!cardId) {
     return null;
   }
 
-  const card = {
-    state: state.cards[cardId],
-    view: view.cards[cardId],
-  };
+  const card = ctx.getCard(cardId);
 
-  const name = card.view.props.name ?? card.state.definition.front.name ?? '';
+  const name = card.props.name ?? card.state.definition.front.name ?? '';
   const exhaused = card.state.tapped ? 'E' : '';
-  const unique = card.view.props.unique ? 'U' : '';
+  const unique = card.props.unique ? 'U' : '';
 
   return (
     <CardText
       title={`${name} (${card.state.id}) [${exhaused}${unique}]`}
-      sphere={card.view.props.sphere ?? []}
+      sphere={card.props.sphere ?? []}
       text={
         card.state.sideUp !== 'shadow'
-          ? (card.state.definition[card.state.sideUp].abilities ?? []).map(
+          ? card.state.definition[card.state.sideUp].abilities?.map(
               (a) => a.description ?? ''
-            )
-          : card.view.rules.shadows?.map((s) => s.description) ?? []
+            ) ?? []
+          : card.rules.shadows?.map((s) => s.description) ?? []
       }
       attachments={[]}
-      traits={card.view.props.traits ?? []}
+      traits={card.props.traits ?? []}
       properties={cardProperties.map((p) => ({
         name: p,
-        printed: card.view.printed[p],
-        current: card.view.props[p],
+        printed: card.printed[p],
+        current: card.props[p],
       }))}
       tokens={card.state.token}
-      keywords={card.view.props.keywords ?? {}}
+      keywords={card.props.keywords ?? {}}
     />
   );
 };

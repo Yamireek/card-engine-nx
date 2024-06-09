@@ -7,31 +7,33 @@ import { HandLayout } from './HandLayout';
 import { useGameState } from './StateContext';
 
 export const PlayerHand = (props: { player: PlayerId }) => {
-  const { state, view, moves, actions } = useGameState();
+  const { ctx, moves } = useGameState();
   const detail = useContext(DetailContext);
+
+  const actions = ctx.modifiers.actions;
 
   return (
     <HandLayout
-      cards={state.players[props.player]?.zones.hand.cards.map((id) => ({
+      cards={ctx.state.players[props.player]?.zones.hand.cards.map((id) => ({
         id: id,
-        image: getCardImageUrl(state.cards[id].definition.front, 'front'),
-        activable: actions.some((a) => a.card === id),
+        image: getCardImageUrl(ctx.state.cards[id].definition.front, 'front'),
+        activable: actions.some((a) => a.source === id),
       }))}
       cardWidth={200}
       rotate={2}
       onOver={(id) => detail.setDetail(id)}
       onActivation={(id) => {
-        const cardActions = actions.filter((a) => a.card === id);
+        const cardActions = actions.filter((a) => a.source === id);
 
         if (
           cardActions.length === 0 ||
-          !state.choice ||
-          state.choice.type !== 'actions'
+          !ctx.state.choice ||
+          ctx.state.choice.type !== 'actions'
         ) {
           return;
         } else {
           if (cardActions.length === 1) {
-            moves.action(indexOf(view.actions, cardActions[0]));
+            moves.action(indexOf(ctx.modifiers.actions, cardActions[0]));
           } else {
             // tslint:disable-next-line:no-console
             console.log('todo multiple actions');

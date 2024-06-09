@@ -6,3 +6,4 @@ export * from './utils';
 export * from './GameSetupData';
 export * from './logger';
 export * from './test/TestEngine';
+export * from './bgio';

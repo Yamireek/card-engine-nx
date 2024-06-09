@@ -9,7 +9,7 @@ import {
   uniq,
 } from 'lodash';
 import { min, multiply, takeRight } from 'lodash/fp';
-import { computed, makeObservable, toJS } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { CardId, Random, Token, keys, values } from '@card-engine-nx/basic';
 import {
   Action,
@@ -28,14 +28,7 @@ import {
 import { UIEvents } from '../events';
 import { Logger } from '../logger';
 import { gameRound } from '../round';
-import {
-  PlayerCtx,
-  ZoneCtx,
-  CardCtx,
-  canCharacterAttack,
-  canCharacterDefend,
-  canEnemyAttack,
-} from './internal';
+import { PlayerCtx, ZoneCtx, CardCtx } from './internal';
 import { getCardFromScope, getFromScope, getPlayerFromScope } from './utils';
 
 export abstract class BaseCtx {
