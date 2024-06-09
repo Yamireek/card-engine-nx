@@ -850,10 +850,6 @@ export abstract class BaseCtx {
                       action: {
                         useScope: [
                           {
-                            var: 'target',
-                            card: r.cards,
-                          },
-                          {
                             var: 'self',
                             card: r.source,
                           },
@@ -1106,6 +1102,8 @@ export abstract class BaseCtx {
 
       this.next({ event: 'none' });
 
+      const targetId = 'card' in event ? event.card : undefined;
+
       const reponses = this.modifiers.responses[event.type] ?? [];
       const forced = reponses
         .filter((r) => r.forced)
@@ -1115,7 +1113,7 @@ export abstract class BaseCtx {
             !r.condition ||
             this.withScope(
               [
-                { var: 'target', card: r.cards },
+                { var: 'target', card: targetId ?? [] },
                 { var: 'self', card: r.source },
               ],
               () => r.condition && this.getBool(r.condition)
@@ -1130,7 +1128,7 @@ export abstract class BaseCtx {
             !r.condition ||
             this.withScope(
               [
-                { var: 'target', card: r.cards },
+                { var: 'target', card: targetId ?? [] },
                 { var: 'self', card: r.source },
               ],
               () => r.condition && this.getBool(r.condition)
@@ -1149,7 +1147,7 @@ export abstract class BaseCtx {
                   useScope: [
                     {
                       var: 'target',
-                      card: r.cards,
+                      card: targetId ?? [],
                     },
                     {
                       var: 'self',
@@ -1171,7 +1169,7 @@ export abstract class BaseCtx {
             useScope: [
               {
                 var: 'target',
-                card: r.cards,
+                card: targetId ?? [],
               },
               {
                 var: 'self',

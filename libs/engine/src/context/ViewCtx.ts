@@ -391,7 +391,7 @@ export class ViewCtx extends BaseCtx implements IViewCtx {
         self.props.type === 'attachment'
       ) {
         this._modifiers.actions.push({
-          description: `Play attachment ${name}`,
+          description: `Play attachment ${self.props.name}`,
           source: self.id,
           action: {
             player: controller,
