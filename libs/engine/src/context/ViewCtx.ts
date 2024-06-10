@@ -18,10 +18,10 @@ import {
 import { createPlayAllyAction } from '../card';
 import { emptyEvents } from '../events';
 import { nullLogger } from '../logger';
-import { BaseCtx, CardCtx } from './internal';
+import { ExeCtx, CardCtx } from './internal';
 import { IViewCtx } from './types';
 
-export class ViewCtx extends BaseCtx implements IViewCtx {
+export class ViewCtx extends ExeCtx implements IViewCtx {
   private readonly _modifiers: StateModifiers;
 
   constructor(state: State) {

@@ -1,5 +1,5 @@
 import { isArray, max, sum, sumBy } from 'lodash';
-import { action, computed, makeObservable } from 'mobx';
+import { action, computed, makeAutoObservable, makeObservable } from 'mobx';
 import { PlayerId, values } from '@card-engine-nx/basic';
 import {
   Action,
@@ -11,7 +11,7 @@ import {
   PlayerRules,
 } from '@card-engine-nx/state';
 import {
-  BaseCtx,
+  ExeCtx,
   canCharacterAttack,
   canCharacterDefend,
   canEnemyAttack,
@@ -19,7 +19,7 @@ import {
 
 export class PlayerCtx {
   constructor(
-    public game: BaseCtx,
+    public game: ExeCtx,
     public readonly id: PlayerId,
     observable: boolean
   ) {

@@ -1,5 +1,12 @@
 import { cloneDeep, intersection, isArray, last } from 'lodash';
-import { action, computed, isObservable, makeObservable, toJS } from 'mobx';
+import {
+  action,
+  computed,
+  isObservable,
+  makeAutoObservable,
+  makeObservable,
+  toJS,
+} from 'mobx';
 import { CardId, asArray, keys, zonesEqual } from '@card-engine-nx/basic';
 import {
   Action,
@@ -13,12 +20,12 @@ import {
   mergeCardRules,
 } from '@card-engine-nx/state';
 import { uiEvent } from '../events';
-import { ZoneCtx, BaseCtx } from './internal';
+import { ZoneCtx, ExeCtx } from './internal';
 import { createPayCostAction, getCardFromScope, getZoneType } from './utils';
 
 export class CardCtx {
   constructor(
-    public game: BaseCtx,
+    public game: ExeCtx,
     public readonly id: CardId,
     observable: boolean
   ) {
