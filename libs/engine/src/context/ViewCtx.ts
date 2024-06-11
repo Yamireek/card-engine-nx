@@ -12,7 +12,7 @@ import {
   CardStateModifier,
   PlayerRules,
   State,
-  StateModifiers,
+  View,
   mergePlayerRules,
 } from '@card-engine-nx/state';
 import { createPlayAllyAction } from '../card';
@@ -22,7 +22,7 @@ import { ExeCtx, CardCtx } from './internal';
 import { IViewCtx } from './types';
 
 export class ViewCtx extends ExeCtx implements IViewCtx {
-  private readonly _modifiers: StateModifiers;
+  private readonly _modifiers: View;
 
   constructor(state: State) {
     super(state, emptyEvents, noRandom(), nullLogger, false);
@@ -34,7 +34,7 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
     };
   }
 
-  get modifiers(): StateModifiers {
+  get modifiers(): View {
     return this._modifiers;
   }
 
@@ -111,8 +111,9 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
                 () => this.getNumber(expr)
               );
               this.addCardModifier(target.id, {
-                property: property,
-                increment: amount,
+                inc: {
+                  [property]: amount,
+                },
               });
             }
           }
@@ -477,7 +478,7 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
     throw new Error('unknown abiliy: ' + JSON.stringify(ability));
   }
 
-  evalMods(): StateModifiers {
+  evalMods(): View {
     const base = this._modifiers;
 
     for (const card of values(this.cards)) {
@@ -500,8 +501,9 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
               if (expr) {
                 const amount = this.getNumber(expr);
                 this.addCardModifier(card.id, {
-                  property: property,
-                  increment: amount,
+                  inc: {
+                    [property]: amount,
+                  },
                 });
               }
             }

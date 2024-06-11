@@ -26,7 +26,7 @@ import {
   Scope,
   ScopeAction,
   State,
-  StateModifiers,
+  View,
   ZoneTarget,
   createCardState,
   createPlayerState,
@@ -1464,7 +1464,7 @@ export class ExeCtx {
     );
   }
 
-  get modifiers(): StateModifiers {
+  get modifiers(): View {
     return new ViewCtx(this.state).evalMods();
   }
 

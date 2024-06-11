@@ -83,10 +83,13 @@ export class CardCtx {
     const draft = isObservable(printed) ? toJS(printed) : cloneDeep(printed);
 
     for (const modifier of modifiers) {
-      if ('increment' in modifier) {
-        const prev = draft[modifier.property];
-        if (prev !== undefined) {
-          draft[modifier.property] = prev + modifier.increment;
+      if ('inc' in modifier) {
+        for (const property of keys(modifier.inc)) {
+          const prev = draft[property];
+          const amount = modifier.inc[property];
+          if (prev !== undefined && amount) {
+            draft[property] = prev + amount;
+          }
         }
         continue;
       }
