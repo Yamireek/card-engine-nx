@@ -251,7 +251,7 @@ export const LotrLCGInfo = () => {
         )}
         <Paper style={{ padding: 4, overflow: 'auto', pointerEvents: 'auto' }}>
           <Typography variant="caption">Possible actions</Typography>
-          {ctx.modifiers.actions.map((a, i) => {
+          {ctx.actions.map((a, i) => {
             const title = ctx.cards[a.source].props.name ?? '';
             return (
               <Fragment key={title + i}>

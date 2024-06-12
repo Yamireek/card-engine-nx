@@ -122,7 +122,7 @@ function createMoves(
 
     const title = 'title' in G.choice ? G.choice.title : '';
     const ctx = new ExeCtx(G, events, randomBgIO(random), logger);
-    const action = ctx.modifiers.actions[index];
+    const action = ctx.actions[index];
     ctx.state.choice = undefined;
     ctx.next({ playerActions: title });
     ctx.next(action.action);

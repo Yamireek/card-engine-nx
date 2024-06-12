@@ -10,7 +10,7 @@ export const PlayerHand = (props: { player: PlayerId }) => {
   const { ctx, moves } = useGameState();
   const detail = useContext(DetailContext);
 
-  const actions = ctx.modifiers.actions;
+  const actions = ctx.actions;
 
   return (
     <HandLayout
@@ -33,7 +33,7 @@ export const PlayerHand = (props: { player: PlayerId }) => {
           return;
         } else {
           if (cardActions.length === 1) {
-            moves.action(indexOf(ctx.modifiers.actions, cardActions[0]));
+            moves.action(indexOf(ctx.actions, cardActions[0]));
           } else {
             // tslint:disable-next-line:no-console
             console.log('todo multiple actions');

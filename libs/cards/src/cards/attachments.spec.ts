@@ -141,3 +141,27 @@ it('Horn of Gondor', () => {
   game.chooseOption(response);
   expect(legolas.token.resources).toBe(1);
 });
+
+it('Steward of Gondor', () => {
+  const action =
+    "Action: Exhaust Steward of Gondor to add 2 resources to attached hero's resource pool.";
+
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [
+          {
+            card: core.hero.legolas,
+            attachments: [core.attachment.stewardOfGondor],
+          },
+        ],
+      },
+    ],
+  });
+
+  const legolas = game.card('Legolas');
+  expect(legolas.token.resources).toBe(0);
+  game.chooseAction(action);
+  expect(legolas.token.resources).toBe(2);
+  expect(game.actions).toHaveLength(0);
+});

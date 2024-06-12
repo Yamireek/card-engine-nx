@@ -15,9 +15,9 @@ import {
   View,
   mergePlayerRules,
 } from '@card-engine-nx/state';
-import { createPlayAllyAction } from '../card';
 import { emptyEvents } from '../events';
 import { nullLogger } from '../logger';
+import { createPlayAllyAction } from '../utils';
 import { ExeCtx, CardCtx } from './internal';
 import { IViewCtx } from './types';
 
@@ -548,5 +548,11 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
     }
 
     return base;
+  }
+
+  get actions() {
+    return this.modifiers.actions.filter((a) =>
+      this.canExecute(a.action, false)
+    );
   }
 }
