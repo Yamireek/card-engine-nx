@@ -53,6 +53,19 @@ const cards = {
     traits: [],
     keywords: { sentinel: true },
   }),
+  victory: enemy({
+    name: 'enemy',
+    engagement: 20,
+    hitPoints: 1,
+    threat: 0,
+    traits: [],
+    attack: 1,
+    defense: 1,
+    keywords: {
+      surge: true,
+    },
+    victory: 5,
+  }),
 };
 
 it('Doomed X', () => {
@@ -109,8 +122,7 @@ it('Sentinel', () => {
     encounterDeck: [cards.doomed],
   });
 
-  game.do({ player: '1', action: 'resolveEnemyAttacks' });
-  console.log(game.state.choice);
+  game.do({ player: '1', action: 'resolveEnemyAttacks' });  
   game.chooseOption('1');
 });
 
@@ -130,6 +142,23 @@ it('Surge', () => {
   expect(game.state.zones.encounterDeck.cards.length).toEqual(0);
 });
 
-suite.todo('Victory');
+it('Victory', () => {
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [cards.sentinel],
+        engaged: [],
+      },
+      {
+        playerArea: [cards.sentinel],
+        engaged: [cards.victory],
+      },
+    ],
+  });
+
+  const enemy = game.card('enemy');
+  enemy.execute({ dealDamage: 5 });
+  expect(enemy.zone.type).toBe('victoryDisplay');
+});
 
 it.todo('Stacking');

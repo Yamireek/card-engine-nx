@@ -655,7 +655,7 @@ export class CardCtx {
           card: this.id,
           action: {
             move: {
-              to: 'discardPile',
+              to: this.props.victory ? 'victoryDisplay' : 'discardPile',
             },
           },
         }
@@ -769,7 +769,9 @@ export class CardCtx {
           action: {
             move: {
               to: !owner
-                ? 'discardPile'
+                ? this.props.victory
+                  ? 'victoryDisplay'
+                  : 'discardPile'
                 : { type: 'discardPile', player: owner },
             },
           },
