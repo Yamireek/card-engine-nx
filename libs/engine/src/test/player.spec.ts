@@ -1,4 +1,4 @@
-import { it, suite, expect } from 'vitest';
+import { it, expect } from 'vitest';
 import { enemy, hero } from '@card-engine-nx/state';
 import { TestEngine } from './TestEngine';
 
@@ -24,15 +24,26 @@ const cards = {
   }),
 };
 
-suite('First player', () => {
-  it.todo('Get first player');
+it('First player token', () => {
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [cards.hero],
+        engaged: [cards.enemy],
+      },
+      {
+        playerArea: [cards.hero],
+      },
+    ],
+  });
 
-  it.todo('Pass token');
-
-  it.todo('Eliminate first player');
+  expect(game.state.firstPlayer).toBe('0');
+  expect(game.getPlayer('first').id).toBe('0');
+  game.execute('passFirstPlayerToken');
+  expect(game.state.firstPlayer).toBe('1');
+  game.execute('passFirstPlayerToken');
+  expect(game.state.firstPlayer).toBe('0');
 });
-
-it.todo('Player order');
 
 it('Eliminate player', () => {
   const game = new TestEngine({
@@ -51,4 +62,5 @@ it('Eliminate player', () => {
   expect(game.state.players[0]?.eliminated).toBe(true);
   expect(game.state.players[0]?.zones.playerArea.cards.length).toBe(0);
   expect(game.state.zones.stagingArea.cards.length).toBe(1);
+  expect(game.state.firstPlayer).toBe('1');
 });

@@ -1189,6 +1189,15 @@ export class ExeCtx {
         if (this.cards[action.event.card].props.keywords?.surge) {
           this.next('surge++');
         }
+        if (this.cards[action.event.card].props.keywords?.doomed) {
+          this.next({
+            player: 'each',
+            action: {
+              incrementThreat:
+                this.cards[action.event.card].props.keywords?.doomed,
+            },
+          });
+        }
         const whenRevealed =
           this.cards[action.event.card].rules.whenRevealed ?? [];
         if (whenRevealed.length > 0) {

@@ -1381,7 +1381,7 @@ export class CardCtx {
 
     if (target.keyword) {
       return (
-        (this.props.keywords && this.props.keywords[target.keyword]) ?? false
+        (this.props.keywords && !!this.props.keywords[target.keyword]) ?? false
       );
     }
 

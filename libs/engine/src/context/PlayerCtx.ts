@@ -461,6 +461,10 @@ export class PlayerCtx {
         return;
       }
 
+      if (this.game.state.firstPlayer === this.id) {
+        this.game.next('passFirstPlayerToken');
+      }
+
       this.game.next(
         {
           card: { zone: { player: this.id, type: 'engaged' } },

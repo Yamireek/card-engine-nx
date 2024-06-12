@@ -7,6 +7,7 @@ export type CardId = Flavor<number, 'CardId'>;
 export type ZoneId = GameZoneType | { player: PlayerId; type: PlayerZoneType };
 
 export type Keywords = {
+  doomed?: number;
   ranged?: boolean;
   sentinel?: boolean;
   surge?: boolean;
