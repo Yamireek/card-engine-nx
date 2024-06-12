@@ -478,7 +478,7 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
     throw new Error('unknown abiliy: ' + JSON.stringify(ability));
   }
 
-  evalMods(): View {
+  evalModifiers(): View {
     const base = this._modifiers;
 
     for (const card of values(this.cards)) {

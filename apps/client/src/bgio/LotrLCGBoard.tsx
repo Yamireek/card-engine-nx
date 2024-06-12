@@ -16,7 +16,11 @@ export type LotrLCGProps = BoardProps<State>;
 export const LotrLCGBoard = (props: LotrLCGProps) => {
   const settings = useSettings();
   const navigate = useNavigate();
-  const ctx = useMemo(() => new ViewCtx(props.G), [props.G]);
+  const ctx = useMemo(() => {
+    const view = new ViewCtx(props.G);
+    view.evalModifiers();
+    return view;
+  }, [props.G]);
 
   useEffect(() => {
     const value = localStorage.getItem('saved_state');

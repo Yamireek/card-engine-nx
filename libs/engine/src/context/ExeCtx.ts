@@ -1459,7 +1459,7 @@ export class ExeCtx {
   }
 
   get modifiers(): View {
-    return new ViewCtx(this.state).evalMods();
+    return new ViewCtx(this.state).evalModifiers();
   }
 
   chooseOnlyOption(skip: SkipOptions) {
