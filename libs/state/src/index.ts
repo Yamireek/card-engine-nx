@@ -1,5 +1,3 @@
-// created from 'create-ts-index'
-
 export * from './card';
 export * from './deck';
 export * from './definitions';
@@ -15,5 +13,4 @@ export * from './effect';
 export * from './factory';
 export * from './simple';
 export * from './state';
-export * from './types';
 export * from './view';

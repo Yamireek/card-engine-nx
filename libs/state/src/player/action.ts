@@ -4,7 +4,7 @@ import { Limit } from '../card/ability/limit';
 import { CardAction } from '../card/action';
 import { CardTarget } from '../card/target';
 import { NumberExpr } from '../expression/number';
-import { PlayerModifier } from './modifier/types';
+import { PlayerRules } from './rules';
 import { PlayerTarget } from './target';
 
 export type PlayerAction =
@@ -60,7 +60,7 @@ export type PlayerAction =
       };
       engaged?: CardAction;
       controlled?: CardAction;
-      modify?: PlayerModifier;
+      modify?: PlayerRules;
       until?: Until;
       deck?: CardAction;
       card?: {

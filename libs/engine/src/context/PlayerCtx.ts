@@ -1,5 +1,5 @@
 import { isArray, max, sum, sumBy } from 'lodash';
-import { action, computed, makeAutoObservable, makeObservable } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { PlayerId, values } from '@card-engine-nx/basic';
 import {
   Action,
@@ -142,7 +142,7 @@ export class PlayerCtx {
       }
 
       if (action.modify) {
-        if (action.modify.rules.multipleDefenders) {
+        if (action.modify.multipleDefenders) {
           return this.state.zones.engaged.cards.length > 0;
         }
 

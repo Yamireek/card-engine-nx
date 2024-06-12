@@ -9,13 +9,7 @@ import {
   uniq,
 } from 'lodash';
 import { min, multiply, takeRight } from 'lodash/fp';
-import {
-  action,
-  computed,
-  makeAutoObservable,
-  makeObservable,
-  toJS,
-} from 'mobx';
+import { action, computed, makeObservable, toJS } from 'mobx';
 import { CardId, Random, Token, keys, values } from '@card-engine-nx/basic';
 import {
   Action,

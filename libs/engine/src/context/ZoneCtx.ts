@@ -1,7 +1,7 @@
+import { makeAutoObservable } from 'mobx';
 import { ZoneId } from '@card-engine-nx/basic';
 import { isInPlay } from '@card-engine-nx/state';
 import { ExeCtx } from './internal';
-import { makeAutoObservable } from 'mobx';
 
 export class ZoneCtx {
   constructor(public game: ExeCtx, public id: ZoneId, observable: boolean) {

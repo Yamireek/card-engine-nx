@@ -1,7 +1,7 @@
 import { GameZoneType, Phase, PlayerZoneType } from '@card-engine-nx/basic';
 import { Action } from '../../action';
 import { BoolExpr } from '../../expression/bool';
-import { PlayerModifier } from '../../player/modifier/types';
+import { PlayerRules } from '../../player';
 import { PlayerTarget } from '../../player/target';
 import { CostModifier } from '../modifier/cost';
 import { PropertyIncrement } from '../modifier/increment';
@@ -11,7 +11,6 @@ import { CardRules } from '../rules';
 import { CardTarget } from '../target';
 import { Limit } from './limit';
 
-// TODO morf to rules modifiers
 export type Ability = { description: string } & (
   | {
       whenRevealed: Action;
@@ -34,7 +33,7 @@ export type Ability = { description: string } & (
     }
   | { rule: CardRules }
   | {
-      player: PlayerModifier;
+      player: PlayerRules;
       target: PlayerTarget;
       condition?: BoolExpr;
     }

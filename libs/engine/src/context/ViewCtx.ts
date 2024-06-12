@@ -9,7 +9,7 @@ import {
 import {
   Ability,
   CardModifier,
-  CardStateModifier,
+  CardPropsModifier,
   PlayerRules,
   State,
   View,
@@ -38,7 +38,7 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
     return this._modifiers;
   }
 
-  addCardModifier(id: CardId, modifier: CardStateModifier) {
+  addCardModifier(id: CardId, modifier: CardPropsModifier) {
     if (!this._modifiers.cards[id]) {
       this._modifiers.cards[id] = [];
     }
@@ -447,7 +447,7 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
           const players = this.getPlayers(ability.target);
 
           for (const player of players) {
-            this.addPlayerRule(player.id, ability.player.rules);
+            this.addPlayerRule(player.id, ability.player);
           }
         }
       }

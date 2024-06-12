@@ -1,12 +1,5 @@
 import { cloneDeep, intersection, isArray, last } from 'lodash';
-import {
-  action,
-  computed,
-  isObservable,
-  makeAutoObservable,
-  makeObservable,
-  toJS,
-} from 'mobx';
+import { action, computed, isObservable, makeObservable, toJS } from 'mobx';
 import { CardId, asArray, keys, zonesEqual } from '@card-engine-nx/basic';
 import {
   Action,

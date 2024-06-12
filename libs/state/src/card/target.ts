@@ -36,7 +36,7 @@ export type CardTarget =
       name?: string;
       owner?: PlayerTarget;
       simple?: SimpleCardTarget | SimpleCardTarget[];
-      and?: CardTarget[]; // TODO remove
+      and?: CardTarget[];
       not?: CardTarget;
       type?: CardType | CardType[];
       top?:

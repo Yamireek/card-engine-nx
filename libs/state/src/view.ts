@@ -11,14 +11,14 @@ import { EventType } from './event/type';
 import { BoolExpr } from './expression/bool';
 import { PlayerRules } from './player';
 
-export type CardStateModifier =
+export type CardPropsModifier =
   | { rule: CardRules }
   | { set: { type: CardType } }
   | { add: { trait?: Trait | Trait[] } }
   | { inc: Partial<Record<CardNumProp, number>> };
 
 export type View = {
-  cards: Record<CardId, CardStateModifier[]>;
+  cards: Record<CardId, CardPropsModifier[]>;
   players: Partial<Record<PlayerId, PlayerRules>>;
   actions: Array<{ source: CardId; description: string; action: Action }>;
   responses: Partial<

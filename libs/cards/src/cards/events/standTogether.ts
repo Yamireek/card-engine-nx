@@ -17,9 +17,7 @@ export const standTogether = event(
           title: 'Choose player',
           target: 'each',
           action: {
-            modify: {
-              rules: { multipleDefenders: true },
-            },
+            modify: { multipleDefenders: true },
             until: 'end_of_phase',
           },
         },
