@@ -53,7 +53,9 @@ export class CardCtx {
 
   get printed(): CardProps {
     if (this.state.sideUp === 'shadow') {
-      return {};
+      return {
+        type: 'shadow',
+      };
     }
 
     return this.state.definition[this.state.sideUp] ?? {};
@@ -63,12 +65,15 @@ export class CardCtx {
     if (this.state.sideUp === 'shadow') {
       if (this.state.definition.shadow) {
         return {
+          type: 'shadow',
           rules: {
             shadows: [this.state.definition.shadow],
           },
         };
       } else {
-        return {};
+        return {
+          type: 'shadow',
+        };
       }
     }
 
