@@ -13,7 +13,7 @@ const cards = {
     defense: 1,
   }),
   surge: enemy({
-    name: 'enemy',
+    name: 'surge enemy',
     engagement: 20,
     hitPoints: 1,
     threat: 0,
@@ -21,7 +21,7 @@ const cards = {
     attack: 1,
     defense: 1,
     keywords: {
-      surge: true,
+      surge: 1,
     },
   }),
   doomed: location({
@@ -62,7 +62,7 @@ const cards = {
     attack: 1,
     defense: 1,
     keywords: {
-      surge: true,
+      surge: 1,
     },
     victory: 5,
   }),
@@ -122,7 +122,7 @@ it('Sentinel', () => {
     encounterDeck: [cards.doomed],
   });
 
-  game.do({ player: '1', action: 'resolveEnemyAttacks' });  
+  game.do({ player: '1', action: 'resolveEnemyAttacks' });
   game.chooseOption('1');
 });
 
@@ -161,4 +161,24 @@ it('Victory', () => {
   expect(enemy.zone.type).toBe('victoryDisplay');
 });
 
-it.todo('Stacking');
+
+it('Stacking', () => {
+  const game = new TestEngine({
+    players: [
+      {
+        playerArea: [],
+        hand: [],
+        engaged: [],
+      },
+    ],
+    encounterDeck: [cards.enemy, cards.enemy, cards.surge],
+  });
+
+  game.state.modifiers.push({
+    source: 0,
+    card: { name: 'surge enemy' },
+    modifier: { add: { keyword: { surge: 1 } } },
+  });
+  game.do('revealEncounterCard');
+  expect(game.state.zones.encounterDeck.cards.length).toEqual(0);
+});

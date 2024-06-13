@@ -2,7 +2,9 @@ import {
   CardId,
   CardNumProp,
   CardType,
+  Keywords,
   PlayerId,
+  Sphere,
   Trait,
 } from '@card-engine-nx/basic';
 import { Action } from './action';
@@ -14,7 +16,13 @@ import { PlayerRules } from './player';
 export type CardPropsModifier =
   | { rule: CardRules }
   | { set: { type: CardType } }
-  | { add: { trait?: Trait | Trait[] } }
+  | {
+      add: {
+        trait?: Trait | Trait[];
+        sphere?: Sphere | Sphere[];
+        keyword?: Keywords;
+      };
+    }
   | { inc: Partial<Record<CardNumProp, number>> };
 
 export type View = {

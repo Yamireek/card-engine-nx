@@ -29,7 +29,7 @@ export const drivenByShadow = treachery(
       description: 'Surge',
       add: {
         keyword: {
-          surge: true,
+          surge: 1,
         },
       },
     },

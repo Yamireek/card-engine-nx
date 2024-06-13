@@ -1186,8 +1186,9 @@ export class ExeCtx {
         );
       }
       if (action.event.type === 'revealed') {
-        if (this.cards[action.event.card].props.keywords?.surge) {
-          this.next('surge++');
+        const surge = this.cards[action.event.card].props.keywords?.surge ?? 0;
+        if (surge) {
+          this.next({ repeat: { action: 'surge++', amount: surge } });
         }
         if (this.cards[action.event.card].props.keywords?.doomed) {
           this.next({

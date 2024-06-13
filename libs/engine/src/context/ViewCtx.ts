@@ -510,6 +510,19 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
             continue;
           }
 
+          if ('add' in mod.modifier) {
+            if (mod.modifier.add) {
+              for (const keyword of keys(mod.modifier.add)) {
+                this.addCardModifier(card.id, {
+                  add: {
+                    [keyword]: mod.modifier.add[keyword],
+                  },
+                });
+              }
+            }
+            continue;
+          }
+
           if ('rules' in mod.modifier) {
             this.addCardModifier(card.id, { rule: mod.modifier.rules });
             continue;

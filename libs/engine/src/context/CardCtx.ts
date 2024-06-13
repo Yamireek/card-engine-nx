@@ -1,6 +1,12 @@
 import { cloneDeep, intersection, isArray, last } from 'lodash';
 import { action, computed, isObservable, makeObservable, toJS } from 'mobx';
-import { CardId, asArray, keys, zonesEqual } from '@card-engine-nx/basic';
+import {
+  CardId,
+  asArray,
+  keys,
+  mergeKeywords,
+  zonesEqual,
+} from '@card-engine-nx/basic';
 import {
   Action,
   CardAction,
@@ -98,12 +104,23 @@ export class CardCtx {
       }
 
       if ('add' in modifier) {
-        if (!draft.traits) {
-          draft.traits = [];
+        if (modifier.add.trait) {
+          if (!draft.traits) {
+            draft.traits = [];
+          }
+          for (const trait of asArray(modifier.add.trait)) {
+            draft.traits.push(trait);
+          }
         }
-        for (const trait of asArray(modifier.add.trait)) {
-          draft.traits.push(trait);
+
+        if (modifier.add.keyword) {
+          draft.keywords = mergeKeywords(draft.keywords, modifier.add.keyword);
         }
+
+        if (modifier.add.sphere) {
+          throw new Error('not implemented');
+        }
+
         continue;
       }
 
