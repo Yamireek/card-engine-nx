@@ -1,5 +1,5 @@
 import { it, suite, expect } from 'vitest';
-import { ally, enemy, hero, location } from '@card-engine-nx/state';
+import { enemy, hero, location } from '@card-engine-nx/state';
 import { TestEngine } from './TestEngine';
 
 const cards = {
@@ -160,7 +160,6 @@ it('Victory', () => {
   enemy.execute({ dealDamage: 5 });
   expect(enemy.zone.type).toBe('victoryDisplay');
 });
-
 
 it('Stacking', () => {
   const game = new TestEngine({

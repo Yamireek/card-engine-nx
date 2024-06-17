@@ -89,15 +89,23 @@ export type Sphere = 'tactics' | 'spirit' | 'lore' | 'leadership' | 'neutral';
 
 export type Orientation = 'landscape' | 'portrait';
 
+export type Difficulty = 'easy' | 'normal';
+
+export type LimitType = 'round' | 'phase';
+
+export type Until = 'end_of_phase' | 'end_of_round';
+
+export const numberProps: CardNumProp[] = [
+  'attack',
+  'defense',
+  'hitPoints',
+  'threat',
+  'willpower',
+];
+
 export type CardNumProp =
   | 'attack'
   | 'defense'
   | 'willpower'
   | 'hitPoints'
   | 'threat';
-
-export type Difficulty = 'easy' | 'normal';
-
-export type LimitType = 'round' | 'phase';
-
-export type Until = 'end_of_phase' | 'end_of_round';

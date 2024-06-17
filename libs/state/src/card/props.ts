@@ -1,4 +1,10 @@
-import { CardType, Trait, Sphere, Keywords } from '@card-engine-nx/basic';
+import {
+  CardType,
+  Trait,
+  Sphere,
+  Keywords,
+  CardNumProp,
+} from '@card-engine-nx/basic';
 import { Ability } from './ability';
 
 export type PrintedProps = {
@@ -22,3 +28,35 @@ export type PrintedProps = {
   victory?: number;
   abilities?: Ability[];
 };
+
+export type PropertyModifier =
+  | {
+      prop: CardNumProp;
+      op: 'inc';
+      value: number;
+    }
+  | {
+      prop: CardNumProp;
+      op: 'mul';
+      value: number;
+    }
+  | {
+      prop: CardNumProp;
+      op: 'set';
+      value: number;
+    }
+  | {
+      prop: 'traits';
+      op: 'add';
+      value: Trait[];
+    }
+  | {
+      prop: 'sphere';
+      op: 'add';
+      value: Sphere[];
+    }
+  | {
+      prop: 'keywords';
+      op: 'add';
+      value: Keywords;
+    };
