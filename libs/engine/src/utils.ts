@@ -62,7 +62,7 @@ export function applyModifiers(
       const applied = last(sets);
       if (applied) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        draft[property] = applied.value as any;
+        (draft[property] as any) = applied.value as any;
       }
     } else {
       const incs = mods.flatMap((m) => (m.op === 'inc' ? m : []));
@@ -78,7 +78,7 @@ export function applyModifiers(
         value = 0;
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      draft[property] = Math.ceil(value) as any;
+      (draft[property] as any) = Math.ceil(value) as any;
     }
 
     if (property === 'traits') {
