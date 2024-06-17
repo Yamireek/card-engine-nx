@@ -1,11 +1,6 @@
 import { intersection, isArray, last } from 'lodash';
 import { action, computed, makeObservable } from 'mobx';
-import {
-  CardId,
-  asArray,
-  keys,
-  zonesEqual,
-} from '@card-engine-nx/basic';
+import { CardId, asArray, keys, zonesEqual } from '@card-engine-nx/basic';
 import {
   Action,
   CardAction,

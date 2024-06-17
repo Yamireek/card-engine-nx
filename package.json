@@ -12,8 +12,8 @@
     "run:server": "node dist/apps/server/main.js",
     "lint": "nx run-many -t lint --max-warnings=0 --fix",
     "storybook": "nx run ui:storybook",
-    "test": "npx vitest",
-    "test-ui": "npx vitest --ui --coverage",
+    "test": "npx vitest --no-isolate",
+    "test-ui": "npx vitest --ui --coverage --no-isolate",
     "prettier": "npx prettier -cw .",
     "postinstall": "patch-package"
   },
