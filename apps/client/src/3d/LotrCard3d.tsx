@@ -22,9 +22,7 @@ export const LotrCard3d = (props: {
   const { texture } = useTextures();
   const { floatingCards: cards } = useFloatingCards();
 
-  const cardActions = ctx.actions.filter(
-    (a) => a.source === props.cardId
-  );
+  const cardActions = ctx.actions.filter((a) => a.source === props.cardId);
 
   const state = ctx.state;
   const card = ctx.cards[props.cardId].state;

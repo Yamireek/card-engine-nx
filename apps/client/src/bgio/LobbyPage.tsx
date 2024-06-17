@@ -10,9 +10,7 @@ import { LobbyClient } from 'boardgame.io/client';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { keys } from '@card-engine-nx/basic';
-import {
-  emptyEvents,
-} from '@card-engine-nx/engine';
+import { emptyEvents } from '@card-engine-nx/engine';
 import { useDialogs } from '../dialogs/DialogsContext';
 import { GameSetupDialog } from '../game/GameSetupDialog';
 import { SetupParams } from '../game/types';

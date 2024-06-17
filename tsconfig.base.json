@@ -10,35 +10,19 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2021",
-      "dom"
-    ],
+    "lib": ["es2021", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "strict": true,
     "baseUrl": ".",
     "useUnknownInCatchVariables": false,
     "paths": {
-      "@card-engine-nx/basic": [
-        "libs/basic/src/index.ts"
-      ],
-      "@card-engine-nx/cards": [
-        "libs/cards/src/index.ts"
-      ],
-      "@card-engine-nx/engine": [
-        "libs/engine/src/index.ts"
-      ],
-      "@card-engine-nx/state": [
-        "libs/state/src/index.ts"
-      ],
-      "@card-engine-nx/ui": [
-        "libs/ui/src/index.ts"
-      ]
+      "@card-engine-nx/basic": ["libs/basic/src/index.ts"],
+      "@card-engine-nx/cards": ["libs/cards/src/index.ts"],
+      "@card-engine-nx/engine": ["libs/engine/src/index.ts"],
+      "@card-engine-nx/state": ["libs/state/src/index.ts"],
+      "@card-engine-nx/ui": ["libs/ui/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

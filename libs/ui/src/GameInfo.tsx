@@ -1,5 +1,4 @@
-
- //string
+//string
 import {
   Table,
   TableHead,

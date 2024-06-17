@@ -1,9 +1,5 @@
 import { Tooltip } from '@mui/material';
-import {
-  Environment,
-  MapControls,
-  Stats,
-  Text } from '@react-three/drei';
+import { Environment, MapControls, Stats, Text } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { Perf } from 'r3f-perf';
 import { Suspense, useContext } from 'react';
