@@ -83,7 +83,10 @@ export type Trait =
   | 'scout'
   | 'hobbit'
   | 'craftsman'
-  | 'minstrel';
+  | 'minstrel'
+  | 'troll'
+  | 'nazgul'
+  | 'undead';
 
 export type Sphere = 'tactics' | 'spirit' | 'lore' | 'leadership' | 'neutral';
 
