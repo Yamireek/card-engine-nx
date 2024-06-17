@@ -9,8 +9,9 @@ import {
 import {
   Ability,
   CardModifier,
-  CardPropsModifier,
+  CardRules,
   PlayerRules,
+  PropertyModifier,
   State,
   View,
 } from '@card-engine-nx/state';
@@ -37,12 +38,26 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
     return this._modifiers;
   }
 
-  addCardModifier(id: CardId, modifier: CardPropsModifier) {
+  addCardModifier(id: CardId, modifier: PropertyModifier) {
     if (!this._modifiers.cards[id]) {
-      this._modifiers.cards[id] = [];
+      this._modifiers.cards[id] = {
+        modifiers: [],
+        rules: [],
+      };
     }
 
-    this._modifiers.cards[id].push(modifier);
+    this._modifiers.cards[id].modifiers.push(modifier);
+  }
+
+  addCardRule(id: CardId, rule: CardRules) {
+    if (!this._modifiers.cards[id]) {
+      this._modifiers.cards[id] = {
+        modifiers: [],
+        rules: [],
+      };
+    }
+
+    this._modifiers.cards[id].rules.push(rule);
   }
 
   addPlayerRule(id: PlayerId, rule: PlayerRules) {
@@ -67,9 +82,7 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
       }
 
       if ('rules' in modifier) {
-        this.addCardModifier(self.id, {
-          rule: modifier.rules,
-        });
+        this.addCardRule(self.id, modifier.rules);
         continue;
       }
 
@@ -85,12 +98,39 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
       }
 
       if ('replaceType' in modifier) {
-        this.addCardModifier(self.id, { set: { type: modifier.replaceType } });
+        this.addCardModifier(self.id, {
+          prop: 'type',
+          op: 'set',
+          value: modifier.replaceType,
+        });
         continue;
       }
 
       if ('add' in modifier) {
-        this.addCardModifier(self.id, { add: modifier.add });
+        if (modifier.add.keyword) {
+          this.addCardModifier(self.id, {
+            prop: 'keywords',
+            op: 'add',
+            value: modifier.add.keyword,
+          });
+        }
+
+        if (modifier.add.sphere) {
+          this.addCardModifier(self.id, {
+            prop: 'sphere',
+            op: 'add',
+            value: asArray(modifier.add.sphere),
+          });
+        }
+
+        if (modifier.add.trait) {
+          this.addCardModifier(self.id, {
+            prop: 'traits',
+            op: 'add',
+            value: asArray(modifier.add.trait),
+          });
+        }
+
         continue;
       }
 
@@ -114,9 +154,9 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
                 () => this.getNumber(expr)
               );
               this.addCardModifier(target.id, {
-                inc: {
-                  [property]: amount,
-                },
+                prop: property,
+                op: 'inc',
+                value: amount,
               });
             }
           }
@@ -347,24 +387,20 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
     }
 
     if ('whenRevealed' in ability) {
-      this.addCardModifier(self.id, {
-        rule: {
-          whenRevealed: [
-            {
-              description: ability.description,
-              action: ability.whenRevealed,
-            },
-          ],
-        },
+      this.addCardRule(self.id, {
+        whenRevealed: [
+          {
+            description: ability.description,
+            action: ability.whenRevealed,
+          },
+        ],
       });
 
       return;
     }
 
     if ('rule' in ability) {
-      this.addCardModifier(self.id, {
-        rule: ability.rule,
-      });
+      this.addCardRule(self.id, ability.rule);
 
       return;
     }
@@ -375,10 +411,8 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
 
     if ('travel' in ability) {
       if (self.zone.type === 'stagingArea') {
-        this.addCardModifier(self.id, {
-          rule: {
-            travel: [ability.travel],
-          },
+        this.addCardRule(self.id, {
+          travel: [ability.travel],
         });
       }
 
@@ -424,10 +458,8 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
     }
 
     if ('setup' in ability) {
-      this.addCardModifier(self.id, {
-        rule: {
-          setup: [ability.setup],
-        },
+      this.addCardRule(self.id, {
+        setup: [ability.setup],
       });
 
       return;
@@ -504,9 +536,9 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
               if (expr) {
                 const amount = this.getNumber(expr);
                 this.addCardModifier(card.id, {
-                  inc: {
-                    [property]: amount,
-                  },
+                  prop: property,
+                  op: 'inc',
+                  value: amount,
                 });
               }
             }
@@ -517,9 +549,10 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
             if (mod.modifier.add) {
               for (const keyword of keys(mod.modifier.add)) {
                 this.addCardModifier(card.id, {
-                  add: {
-                    [keyword]: mod.modifier.add[keyword],
-                  },
+                  prop: 'keywords',
+                  op: 'add',
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  value: mod.modifier.add[keyword] as any,
                 });
               }
             }
@@ -527,7 +560,7 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
           }
 
           if ('rules' in mod.modifier) {
-            this.addCardModifier(card.id, { rule: mod.modifier.rules });
+            this.addCardRule(card.id, mod.modifier.rules);
             continue;
           }
 

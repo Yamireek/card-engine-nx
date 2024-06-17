@@ -59,4 +59,9 @@ export type PropertyModifier =
       prop: 'keywords';
       op: 'add';
       value: Keywords;
+    }
+  | {
+      prop: 'type';
+      op: 'set';
+      value: CardType;
     };

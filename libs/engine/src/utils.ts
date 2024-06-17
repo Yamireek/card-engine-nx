@@ -1,4 +1,5 @@
 import { uniq, cloneDeep, last } from 'lodash';
+import { isObservable, toJS } from 'mobx';
 import { Sphere, PlayerId, CardId, mergeKeywords } from '@card-engine-nx/basic';
 import { Action, PrintedProps, PropertyModifier } from '@card-engine-nx/state';
 
@@ -51,9 +52,8 @@ export function applyModifiers(
     return printed;
   }
 
+  const draft = isObservable(printed) ? toJS(printed) : cloneDeep(printed);
   const modified = uniq(modifiers.map((m) => m.prop));
-
-  const draft = cloneDeep(printed);
 
   for (const property of modified) {
     const mods = modifiers.flatMap((m) => (m.prop === property ? m : []));

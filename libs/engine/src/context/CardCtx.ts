@@ -1,10 +1,9 @@
-import { cloneDeep, intersection, isArray, last } from 'lodash';
-import { action, computed, isObservable, makeObservable, toJS } from 'mobx';
+import { intersection, isArray, last } from 'lodash';
+import { action, computed, makeObservable } from 'mobx';
 import {
   CardId,
   asArray,
   keys,
-  mergeKeywords,
   zonesEqual,
 } from '@card-engine-nx/basic';
 import {
@@ -15,10 +14,12 @@ import {
   CardProps,
   CardRules,
   CardTarget,
+  PrintedProps,
   isInPlay,
   mergeCardRules,
 } from '@card-engine-nx/state';
 import { uiEvent } from '../events';
+import { applyModifiers } from '../utils';
 import { ZoneCtx, ExeCtx } from './internal';
 import { createPayCostAction, getCardFromScope, getZoneType } from './utils';
 
@@ -61,14 +62,11 @@ export class CardCtx {
     return this.state.definition[this.state.sideUp] ?? {};
   }
 
-  get props(): CardProps {
+  get props(): PrintedProps {
     if (this.state.sideUp === 'shadow') {
       if (this.state.definition.shadow) {
         return {
           type: 'shadow',
-          rules: {
-            shadows: [this.state.definition.shadow],
-          },
         };
       } else {
         return {
@@ -77,68 +75,8 @@ export class CardCtx {
       }
     }
 
-    const modifiers = this.game.modifiers.cards[this.id];
-    const printed = this.state.definition[this.state.sideUp];
-
-    if (!modifiers || modifiers.length === 0) {
-      return printed;
-    }
-
-    const draft = isObservable(printed) ? toJS(printed) : cloneDeep(printed);
-
-    draft.rules = mergeCardRules(
-      ...modifiers.flatMap((m) => ('rule' in m ? m.rule : []))
-    );
-
-    for (const modifier of modifiers) {
-      if ('inc' in modifier) {
-        for (const property of keys(modifier.inc)) {
-          const prev = draft[property];
-          const amount = modifier.inc[property];
-          if (prev !== undefined && amount) {
-            draft[property] = prev + amount;
-          }
-        }
-        continue;
-      }
-
-      if ('rule' in modifier) {
-        continue;
-      }
-
-      if ('set' in modifier) {
-        draft.type = modifier.set.type;
-        continue;
-      }
-
-      if ('add' in modifier) {
-        if (modifier.add.trait) {
-          if (!draft.traits) {
-            draft.traits = [];
-          }
-          for (const trait of asArray(modifier.add.trait)) {
-            draft.traits.push(trait);
-          }
-        }
-
-        if (modifier.add.keyword) {
-          draft.keywords = mergeKeywords(
-            draft.keywords ?? {},
-            modifier.add.keyword ?? {}
-          );
-        }
-
-        if (modifier.add.sphere) {
-          throw new Error('not implemented');
-        }
-
-        continue;
-      }
-
-      throw new Error('unknown modifier: ' + JSON.stringify(modifier));
-    }
-
-    return draft;
+    const modifiers = this.game.modifiers.cards[this.id]?.modifiers ?? [];
+    return applyModifiers(this.state.definition[this.state.sideUp], modifiers);
   }
 
   get modifiers() {
@@ -146,7 +84,18 @@ export class CardCtx {
   }
 
   get rules(): CardRules {
-    return this.props.rules || {};
+    if (this.state.sideUp === 'shadow') {
+      if (this.state.definition.shadow) {
+        return {
+          shadows: [this.state.definition.shadow],
+        };
+      } else {
+        return {};
+      }
+    }
+
+    const rules = this.game.modifiers.cards[this.id]?.rules ?? [];
+    return mergeCardRules(...rules);
   }
 
   get zone(): ZoneCtx {

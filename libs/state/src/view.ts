@@ -1,32 +1,18 @@
-import {
-  CardId,
-  CardNumProp,
-  CardType,
-  Keywords,
-  PlayerId,
-  Sphere,
-  Trait,
-} from '@card-engine-nx/basic';
+import { CardId, PlayerId } from '@card-engine-nx/basic';
 import { Action } from './action';
-import { CardRules } from './card';
+import { CardRules, PropertyModifier } from './card';
 import { EventType } from './event/type';
 import { BoolExpr } from './expression/bool';
 import { PlayerRules } from './player';
 
-export type CardPropsModifier =
-  | { rule: CardRules }
-  | { set: { type: CardType } }
-  | {
-      add: {
-        trait?: Trait | Trait[];
-        sphere?: Sphere | Sphere[];
-        keyword?: Keywords;
-      };
-    }
-  | { inc: Partial<Record<CardNumProp, number>> };
-
 export type View = {
-  cards: Record<CardId, CardPropsModifier[]>;
+  cards: Record<
+    CardId,
+    {
+      modifiers: PropertyModifier[];
+      rules: CardRules[];
+    }
+  >;
   players: Partial<Record<PlayerId, PlayerRules[]>>;
   actions: Array<{ source: CardId; description: string; action: Action }>;
   responses: Partial<
