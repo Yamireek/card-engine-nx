@@ -7,3 +7,4 @@ export * from './response';
 export * from './rules';
 export * from './state';
 export * from './target';
+export * from './props';

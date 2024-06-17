@@ -1,26 +1,5 @@
-import { CardType, Mark, Sphere, Token, Trait } from './enums';
+import { Mark, Sphere, Token, Trait } from './enums';
 import { Keywords } from './types';
-
-export type PrintedProps = {
-  type: CardType;
-  name?: string;
-  threatCost?: number;
-  willpower?: number;
-  attack?: number;
-  defense?: number;
-  hitPoints?: number;
-  traits?: Trait[];
-  sphere?: Sphere[];
-  sequence?: number;
-  questPoints?: number;
-  cost?: number | 'X';
-  unique?: boolean;
-  engagement?: number;
-  threat?: number;
-  keywords?: Keywords;
-  hitpoints?: number;
-  victory?: number;
-};
 
 export type HeroProps = {
   type: 'hero';

@@ -27,7 +27,7 @@ export type CardPropsModifier =
 
 export type View = {
   cards: Record<CardId, CardPropsModifier[]>;
-  players: Partial<Record<PlayerId, PlayerRules>>;
+  players: Partial<Record<PlayerId, PlayerRules[]>>;
   actions: Array<{ source: CardId; description: string; action: Action }>;
   responses: Partial<
     Record<

@@ -9,6 +9,7 @@ import {
   PlayerAction,
   PlayerNumberExpr,
   PlayerRules,
+  mergePlayerRules,
 } from '@card-engine-nx/state';
 import {
   ExeCtx,
@@ -40,7 +41,7 @@ export class PlayerCtx {
   }
 
   get rules(): PlayerRules {
-    return this.game.modifiers.players[this.id] ?? {};
+    return mergePlayerRules(...this.game.modifiers.players[this.id] ?? []);
   }
 
   canExecute(action: PlayerAction): boolean {

@@ -13,7 +13,6 @@ import {
   PlayerRules,
   State,
   View,
-  mergePlayerRules,
 } from '@card-engine-nx/state';
 import { emptyEvents } from '../events';
 import { nullLogger } from '../logger';
@@ -47,10 +46,14 @@ export class ViewCtx extends ExeCtx implements IViewCtx {
   }
 
   addPlayerRule(id: PlayerId, rule: PlayerRules) {
-    this._modifiers.players[id] = mergePlayerRules(
-      this._modifiers.players[id],
-      rule
-    );
+    if (!this._modifiers.players[id]) {
+      this._modifiers.players[id] = [];
+    }
+
+    const list = this._modifiers.players[id];
+    if (list) {
+      list.push(rule);
+    }
   }
 
   evalModifier(self: CardCtx, modifiers: CardModifier | CardModifier[]) {

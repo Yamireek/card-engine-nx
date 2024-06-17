@@ -86,6 +86,10 @@ export class CardCtx {
 
     const draft = isObservable(printed) ? toJS(printed) : cloneDeep(printed);
 
+    draft.rules = mergeCardRules(
+      ...modifiers.flatMap((m) => ('rule' in m ? m.rule : []))
+    );
+
     for (const modifier of modifiers) {
       if ('inc' in modifier) {
         for (const property of keys(modifier.inc)) {
@@ -99,7 +103,6 @@ export class CardCtx {
       }
 
       if ('rule' in modifier) {
-        draft.rules = mergeCardRules(draft.rules, modifier.rule);
         continue;
       }
 
@@ -119,7 +122,10 @@ export class CardCtx {
         }
 
         if (modifier.add.keyword) {
-          draft.keywords = mergeKeywords(draft.keywords, modifier.add.keyword);
+          draft.keywords = mergeKeywords(
+            draft.keywords ?? {},
+            modifier.add.keyword ?? {}
+          );
         }
 
         if (modifier.add.sphere) {
