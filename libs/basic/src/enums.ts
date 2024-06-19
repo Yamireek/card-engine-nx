@@ -86,7 +86,11 @@ export type Trait =
   | 'minstrel'
   | 'troll'
   | 'nazgul'
-  | 'undead';
+  | 'undead'
+  | 'wasteland'
+  | 'dungeon'
+  | 'riverland'
+  | 'marshland';
 
 export type Sphere = 'tactics' | 'spirit' | 'lore' | 'leadership' | 'neutral';
 
